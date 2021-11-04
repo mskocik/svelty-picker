@@ -1,10 +1,7 @@
 import DatePicker from './../src/DatePicker.svelte';
+import DatePickerInput from './../src/DatePickerInput.svelte';
 
-const d = new Date();
-
-new DatePicker({
-  target: document.body,
-  props: {
-    date: d
-  }
+new DatePickerInput({
+  target: document.querySelector('.picker'),
+  props: {}
 });

@@ -2,12 +2,10 @@ export const MODE_DECADE = 0;
 export const MODE_YEAR = 1;
 export const MODE_MONTH = 2;
 
-export function compute(currentDate, view, locale) {
-  // TODO: return dataset based on 'view' prop
+export function compute(currentDate, selectedDate, view, locale) {
 
   // years 4 x 3
   if (view === MODE_DECADE) {
-    console.log('>', 'decade mode', currentDate);
     const nextFrom = 12;
     const prevTo = 1;
     const todayMark = -1;
@@ -21,7 +19,16 @@ export function compute(currentDate, view, locale) {
         yearRow = [];
       }
     }
-    const obj = { yearGrid, todayMark, nextFrom, prevTo}
+    let selectionMark = null;
+    if (!selectedDate) {
+      selectedDate = new Date();
+    }
+    if (selectedDate.getUTCFullYear() >= currYear) {
+      selectionMark = selectedDate.getUTCFullYear() % currYear;
+    }
+
+    const obj =
+      { yearGrid, todayMark, nextFrom, prevTo, selectionMark}
     return obj;
   }
 
@@ -43,9 +50,16 @@ export function compute(currentDate, view, locale) {
         monthRow = [];
       }
     }
+    let selectionMark = null;
+    if (!selectedDate) {
+      selectedDate = new Date();
+    }
+    if (selectedDate.getUTCFullYear() === currentDate.getUTCFullYear()) {
+      selectionMark = selectedDate.getUTCMonth();
+    }
 
     return {
-      monthGrid, todayMark, nextFrom, prevTo
+      monthGrid, todayMark, nextFrom, prevTo, selectionMark
     }
   } 
 
@@ -69,6 +83,7 @@ export function compute(currentDate, view, locale) {
   let dayGrid = [];
   let dayRow = [];
   let todayMark = -1;
+  let selectionMark = null;
   let prevTo = 0;
   let nextFrom = 42;
 
@@ -88,19 +103,18 @@ export function compute(currentDate, view, locale) {
       prevMonth.getUTCMonth() === today.getMonth() &&
       prevMonth.getUTCDate() === today.getDate()
     ) {
-      // todayMark = dayGrid.length * 7 + dayRow.length;
       todayMark = inc;
     }
-
+    if (!selectionMark && selectedDate && prevMonth.valueOf() === selectedDate.valueOf()) {
+      selectionMark = inc;
+    }
+    
     if (dayRow.length === 7) {
       dayGrid.push(dayRow);
       dayRow = [];
     }
   }
-
-  const obj = { dayGrid, todayMark, prevTo, nextFrom };
-  console.log(obj);
-  return obj;
+  return { dayGrid, todayMark, prevTo, nextFrom, selectionMark };
 }
 
 const utils = {
@@ -114,4 +128,123 @@ const utils = {
 
 function UTCDate() {
   return new Date(Date.UTC.apply(Date, arguments));
+}
+
+export function formatDate(date, format, i18n, type) {
+  if (date === null) {
+    return '';
+  }
+  var val;
+  if (type === 'standard') {
+    val = {
+      t:    date.getTime(),
+      // year
+      yy:   date.getUTCFullYear().toString().substring(2),
+      yyyy: date.getUTCFullYear(),
+      // month
+      m:    date.getUTCMonth() + 1,
+      M:    i18n.monthsShort[date.getUTCMonth()],
+      MM:   i18n.months[date.getUTCMonth()],
+      // day
+      d:    date.getUTCDate(),
+      D:    i18n.daysShort[date.getUTCDay()],
+      DD:   i18n.days[date.getUTCDay()],
+      p:    (i18n.meridiem.length === 2 ? i18n.meridiem[date.getUTCHours() < 12 ? 0 : 1] : ''),
+      // hour
+      h:    date.getUTCHours(),
+      // minute
+      i:    date.getUTCMinutes(),
+      // second
+      s:    date.getUTCSeconds(),
+      // timezone
+      z:    date.toLocaleDateString(undefined, {day:'2-digit',timeZoneName: 'long' }).substring(4)
+    };
+
+    if (i18n.meridiem.length === 2) {
+      val.H = (val.h % 12 === 0 ? 12 : val.h % 12);
+    }
+    else {
+      val.H = val.h;
+    }
+    val.HH = (val.H < 10 ? '0' : '') + val.H;
+    val.P = val.p.toUpperCase();
+    val.Z = val.z;
+    val.hh = (val.h < 10 ? '0' : '') + val.h;
+    val.ii = (val.i < 10 ? '0' : '') + val.i;
+    val.ss = (val.s < 10 ? '0' : '') + val.s;
+    val.dd = (val.d < 10 ? '0' : '') + val.d;
+    val.mm = (val.m < 10 ? '0' : '') + val.m;
+  } else if (type === 'php') {
+    // php format
+    val = {
+      // year
+      y: date.getUTCFullYear().toString().substring(2),
+      Y: date.getUTCFullYear(),
+      // month
+      F: i18n.months[date.getUTCMonth()],
+      M: i18n.monthsShort[date.getUTCMonth()],
+      n: date.getUTCMonth() + 1,
+      t: utils.getDaysInMonth(date.getUTCFullYear(), date.getUTCMonth()),
+      // day
+      j: date.getUTCDate(),
+      l: i18n.days[date.getUTCDay()],
+      D: i18n.daysShort[date.getUTCDay()],
+      w: date.getUTCDay(), // 0 -> 6
+      N: (date.getUTCDay() === 0 ? 7 : date.getUTCDay()),       // 1 -> 7
+      S: (date.getUTCDate() % 10 <= i18n.suffix.length ? i18n.suffix[date.getUTCDate() % 10 - 1] : ''),
+      // hour
+      a: (i18n.meridiem.length === 2 ? i18n.meridiem[date.getUTCHours() < 12 ? 0 : 1] : ''),
+      g: (date.getUTCHours() % 12 === 0 ? 12 : date.getUTCHours() % 12),
+      G: date.getUTCHours(),
+      // minute
+      i: date.getUTCMinutes(),
+      // second
+      s: date.getUTCSeconds()
+    };
+    val.m = (val.n < 10 ? '0' : '') + val.n;
+    val.d = (val.j < 10 ? '0' : '') + val.j;
+    val.A = val.a.toString().toUpperCase();
+    val.h = (val.g < 10 ? '0' : '') + val.g;
+    val.H = (val.G < 10 ? '0' : '') + val.G;
+    val.i = (val.i < 10 ? '0' : '') + val.i;
+    val.s = (val.s < 10 ? '0' : '') + val.s;
+  } else {
+    throw new Error('Invalid format type.');
+  }
+  let dateArr = [];
+  format = formatHelper.parseFormat(format, type);
+  console.log(format);
+  for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
+    if (format.separators.length) {
+      dateArr.push(format.separators.shift());
+    }
+    dateArr.push(val[format.parts[i]]);
+  }
+  if (format.separators.length) {
+    dateArr.push(format.separators.shift());
+  }
+  return dateArr.join('');
+}
+
+const formatHelper = {
+  validParts: function (type) {
+    if (type === 'standard') {
+      return /t|hh?|HH?|p|P|z|Z|ii?|ss?|dd?|DD?|mm?|MM?|yy(?:yy)?/g;
+    } else if (type === 'php') {
+      return /[dDjlNwzFmMnStyYaABgGhHis]/g;
+    } else {
+      throw new Error('Invalid format type.');
+    }
+  },
+  nonpunctuation: /[^ -\/:-@\[-`{-~\t\n\rTZ]+/g,
+  parseFormat: function (format, type) {
+      // IE treats \0 as a string end in inputs (truncating the value),
+      // so it's a bad format delimiter, anyway
+    var separators = format.replace(this.validParts(type), '\0').split('\0'),
+    parts = format.match(this.validParts(type));
+    if (!separators || !separators.length || !parts || parts.length === 0) {
+      throw new Error('Invalid date format.');
+    }
+    return {separators: separators, parts: parts};
+  },
 }
