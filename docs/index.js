@@ -1,7 +1,6 @@
-import DatePicker from './../src/DatePicker.svelte';
-import DatePickerInput from './../src/DatePickerInput.svelte';
+import Docs from './docs.svelte';
 
-new DatePickerInput({
-  target: document.querySelector('.picker'),
+new Docs({
+  target: document.body,
   props: {}
 });

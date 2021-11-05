@@ -105,7 +105,11 @@ export function compute(currentDate, selectedDate, view, locale) {
     ) {
       todayMark = inc;
     }
-    if (!selectionMark && selectedDate && prevMonth.valueOf() === selectedDate.valueOf()) {
+    if (!selectionMark && selectedDate
+      && prevMonth.getUTCFullYear() === selectedDate.getUTCFullYear()
+      && prevMonth.getMonth() === selectedDate.getMonth()
+      && prevMonth.getUTCDate() === selectedDate.getUTCDate()
+    ) {
       selectionMark = inc;
     }
     
@@ -213,7 +217,6 @@ export function formatDate(date, format, i18n, type) {
   }
   let dateArr = [];
   format = formatHelper.parseFormat(format, type);
-  console.log(format);
   for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
     if (format.separators.length) {
       dateArr.push(format.separators.shift());

@@ -6,6 +6,6 @@ export const en = {
   monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   meridiem:    ['am', 'pm'],
   suffix:      ['st', 'nd', 'rd', 'th'],
-  today:       'Today',
-  clear:       'Clear'
+  todayBtn:       'Today',
+  clearBtn:       'Clear'
 }
