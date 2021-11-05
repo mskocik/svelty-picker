@@ -1,5 +1,4 @@
 <script>
-  import { createEventDispatcher, tick } from 'svelte';
   import { fade } from 'svelte/transition';
   import Calendar from './Calendar.svelte';
   import { formatDate } from './dateUtils';
@@ -24,8 +23,6 @@
   
   let isFocused = false;
   let inputEl = null;
-
-  const dispatch = createEventDispatcher();
 
   if (typeof date === 'string') date = new Date(date);  // TODO: parse
   $: inputValue = formatDate(date, format, i18n, formatType)

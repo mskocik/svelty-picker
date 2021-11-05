@@ -40,7 +40,6 @@ export function compute(currentDate, selectedDate, view, locale) {
     let nextFrom = 12;
     const ISO = currentDate.toISOString().split('T')[0].substring(0, 8);
     const dateNormalized = new Date(ISO + '01 00:00:00');
-    // TODO: implement todayMark
     let todayMark = 0;
     for (let i = 0; i < 12; i++) {
       dateNormalized.setUTCMonth(i);
