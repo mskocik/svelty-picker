@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, formatDate } from './dateUtils.js';
+  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE } from './dateUtils.js';
 
   export let date = null;
   export let startDate = null;
@@ -9,10 +9,8 @@
   export let weekStart = 1;
   export let i18n;
 
-  let initial = (date || new Date()).toISOString().split('T')[0].substring(0, 10)
-
-  let internalDate = new Date(initial);
-  let activeDate = new Date(initial);
+  let internalDate = date;
+  let activeDate = date || new Date();
 
   const dispatch = createEventDispatcher();
 
@@ -23,10 +21,10 @@
       internalDate = date;
     }
   }
-  $: dataset = compute(activeDate, internalDate, currentView, i18n);
-  $: dayLabels = weekStart > 1
-    ? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 8)
-    : i18n.daysMin.slice(weekStart, 8)
+  $: dataset = compute(activeDate, internalDate, currentView, i18n, weekStart);
+  $: dayLabels = weekStart > -1
+    ? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 7 + weekStart)
+    : i18n.daysMin.slice(weekStart, 7 + weekStart)
 
   function isBetween(num) {
     return dataset.prevTo <= num && num < dataset.nextFrom;
@@ -96,7 +94,7 @@
   <table class="sdt-table">
     {#if currentView === MODE_DECADE}
     <tbody in:fade={{duration: 300}} class="sdt-tbody-lg">
-      {#each dataset.yearGrid as row, i}
+      {#each dataset.grid as row, i}
       <tr>
         {#each row as year, j(j)}
         <td class:is-selected={i*4+j === dataset.selectionMark}>
@@ -112,7 +110,7 @@
     {/if}
     {#if currentView === MODE_YEAR}
     <tbody in:fade={{duration: 300}} class="sdt-tbody-lg">
-      {#each dataset.monthGrid as row, i}
+      {#each dataset.grid as row, i}
       <tr>
         {#each row as month, j(j)}
         <td class:is-selected={i*4+j === dataset.selectionMark}>
@@ -134,7 +132,7 @@
       </tr>
     </tbody>
     <tbody in:fade={{duration: 200}}>
-      {#each dataset.dayGrid as row, i }
+      {#each dataset.grid as row, i }
       <tr>
         {#each row as currDate, j(j)}
         <td class="sdt-cal-td"

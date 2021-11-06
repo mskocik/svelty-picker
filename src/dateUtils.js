@@ -2,20 +2,19 @@ export const MODE_DECADE = 0;
 export const MODE_YEAR = 1;
 export const MODE_MONTH = 2;
 
-export function compute(currentDate, selectedDate, view, locale) {
-
+export function compute(currentDate, selectedDate, view, locale, weekStart) {
   // years 4 x 3
   if (view === MODE_DECADE) {
     const nextFrom = 12;
     const prevTo = 1;
     const todayMark = -1;
-    const yearGrid = [];
+    const grid = [];
     let yearRow = [];
     let currYear = currentDate.getUTCFullYear() - (currentDate.getUTCFullYear() % 10) - 1;
     for (let i = 0; i < 12; i++) {
       yearRow.push(currYear + i);
       if (yearRow.length === 4) {
-        yearGrid.push(yearRow);
+        grid.push(yearRow);
         yearRow = [];
       }
     }
@@ -27,14 +26,14 @@ export function compute(currentDate, selectedDate, view, locale) {
       selectionMark = selectedDate.getUTCFullYear() % currYear;
     }
 
-    const obj =
-      { yearGrid, todayMark, nextFrom, prevTo, selectionMark}
-    return obj;
+    return {
+      grid, todayMark, nextFrom, prevTo, selectionMark
+    }
   }
 
   // months 4 x 3
   if (view === MODE_YEAR) {
-    let monthGrid = [];
+    let grid = [];
     let monthRow = [];
     let prevTo = 0;
     let nextFrom = 12;
@@ -45,7 +44,7 @@ export function compute(currentDate, selectedDate, view, locale) {
       dateNormalized.setUTCMonth(i);
       monthRow.push(locale.monthsShort[i]);
       if (monthRow.length === 4) {
-        monthGrid.push(monthRow);
+        grid.push(monthRow);
         monthRow = [];
       }
     }
@@ -58,7 +57,7 @@ export function compute(currentDate, selectedDate, view, locale) {
     }
 
     return {
-      monthGrid, todayMark, nextFrom, prevTo, selectionMark
+      grid, todayMark, nextFrom, prevTo, selectionMark
     }
   } 
 
@@ -73,13 +72,13 @@ export function compute(currentDate, selectedDate, view, locale) {
       day = utils.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
   
   prevMonth.setUTCDate(day);
-  prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - /** this.weekStart */ 1 + 7) % 7);
+  prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - weekStart + 7) % 7);
 
   let nextMonth = new Date(prevMonth);
   nextMonth.setUTCDate(nextMonth.getUTCDate() + 42);
   let nextMonthValue = nextMonth.valueOf();
 
-  let dayGrid = [];
+  let grid = [];
   let dayRow = [];
   let todayMark = -1;
   let selectionMark = null;
@@ -113,11 +112,11 @@ export function compute(currentDate, selectedDate, view, locale) {
     }
     
     if (dayRow.length === 7) {
-      dayGrid.push(dayRow);
+      grid.push(dayRow);
       dayRow = [];
     }
   }
-  return { dayGrid, todayMark, prevTo, nextFrom, selectionMark };
+  return { grid, todayMark, prevTo, nextFrom, selectionMark };
 }
 
 const utils = {
@@ -131,6 +130,112 @@ const utils = {
 
 function UTCDate() {
   return new Date(Date.UTC.apply(Date, arguments));
+}
+
+export function parseDate(date, format, i18n, type) {
+  if (date instanceof Date) {
+    const dateUTC = new Date(date.valueOf() - date.getTimezoneOffset() * 60000);
+    dateUTC.setMilliseconds(0);
+    return dateUTC;
+  }
+  if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(date)) {
+    format = formatHelper.parseFormat('yyyy-mm-dd', type);
+  } else 
+  if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}$/.test(date)) {
+    format = formatHelper.parseFormat('yyyy-mm-dd hh:ii', type);
+  } else 
+  if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}\:\d{1,2}[Z]{0,1}$/.test(date)) {
+    format = formatHelper.parseFormat('yyyy-mm-dd hh:ii:ss', type);
+  } else {
+    format = formatHelper.parseFormat(format, type);
+  }
+  var parts = date && date.toString().match(formatHelper.nonpunctuation) || [],
+    date = new Date(0, 0, 0, 0, 0, 0, 0),
+    parsed = {},
+    setters_order = ['hh', 'h', 'ii', 'i', 'ss', 's', 'yyyy', 'yy', 'M', 'MM', 'm', 'mm', 'D', 'DD', 'd', 'dd', 'H', 'HH', 'p', 'P', 'z', 'Z'],
+    setters_map = {
+      hh:   function (d, v) {
+        return d.setUTCHours(v);
+      },
+      h:    function (d, v) {
+        return d.setUTCHours(v);
+      },
+      HH:   function (d, v) {
+        return d.setUTCHours(v === 12 ? 0 : v);
+      },
+      H:    function (d, v) {
+        return d.setUTCHours(v === 12 ? 0 : v);
+      },
+      ii:   function (d, v) {
+        return d.setUTCMinutes(v);
+      },
+      i:    function (d, v) {
+        return d.setUTCMinutes(v);
+      },
+      ss:   function (d, v) {
+        return d.setUTCSeconds(v);
+      },
+      s:    function (d, v) {
+        return d.setUTCSeconds(v);
+      },
+      yyyy: function (d, v) {
+        return d.setUTCFullYear(v);
+      },
+      yy:   function (d, v) {
+        return d.setUTCFullYear(2000 + v);
+      },
+      m:    function (d, v) {
+        v -= 1;
+        while (v < 0) v += 12;
+        v %= 12;
+        d.setUTCMonth(v);
+        while (d.getUTCMonth() !== v)
+          if (isNaN(d.getUTCMonth()))
+            return d;
+          else
+            d.setUTCDate(d.getUTCDate() - 1);
+        return d;
+      },
+      d:    function (d, v) {
+        return d.setUTCDate(v);
+      },
+      p:    function (d, v) {
+        return d.setUTCHours(v === 1 ? d.getUTCHours() + 12 : d.getUTCHours());
+      }
+    },
+    val, filtered, part;
+  setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
+  setters_map['dd'] = setters_map['d'];
+  setters_map['P'] = setters_map['p'];
+  date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
+  console.log('>>>', parts, format);
+  if (parts.length === format.parts.length) {
+    for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
+      val = parseInt(parts[i], 10);
+      part = format.parts[i];
+      if (isNaN(val)) {
+        switch (part) {
+          case 'MM':
+            val = i18n.months.indexOf(filtered[0]) + 1;;
+            break;
+          case 'M':
+            val= i18n.monthsShort.indexOf(val) + 1;
+            break;
+          case 'p':
+          case 'P':
+            val = i18n.meridiem.indexOf(val.toLowerCase());
+            break;
+        }
+      }
+      parsed[part] = val;
+    }
+    for (var i = 0, s; i < setters_order.length; i++) {
+      s = setters_order[i];
+      if (s in parsed && !isNaN(parsed[s]))
+        setters_map[s](date, parsed[s])
+    }
+  }
+  return date;
 }
 
 export function formatDate(date, format, i18n, type) {
