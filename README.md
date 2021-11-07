@@ -1,11 +1,24 @@
-# Simple date-picker
+# 📆 Svelty Picker [![NPM version](http://img.shields.io/npm/v/svelty-picker.svg?style=flat)](https://www.npmjs.org/package/svelty-picker)
 
-Simple date-picker implemented in svelte. Designed to be replacement of bootstrap-datepicker
+Simple date & time picker implemented in svelte.
 
 ## Install
 
 ```
-npm install s
+npm install svelty-picker
+```
+
+### Example
+
+```svelte
+<script>
+  import SveltyPicker from 'svelty-picker'
+  
+  let myDate = '2021-11-11';
+</script>
+
+<SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value={myDate}></SveltyPicker>
+```
 
 ### Options
 
