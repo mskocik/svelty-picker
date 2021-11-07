@@ -2,6 +2,8 @@
 
 Simple date & time picker implemented in svelte.
 
+![screenshot](docs/screenshot.png)
+
 ## Install
 
 ```

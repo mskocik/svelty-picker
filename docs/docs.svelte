@@ -37,7 +37,6 @@
       <div class="form-group">
         Date picker only:
         <SveltyPicker inputClasses="form-control" mode="date"
-          startDate="2021-11-04"
         ></SveltyPicker>
       </div>
     </div>
@@ -51,11 +50,13 @@
   
   <div class="row">
     <div class="col-6">
-      Date picker only (always visible)
+      Date picker
+       <!-- only (always visible) -->
       <SveltyPicker inputClasses="form-control" mode="date" pickerOnly></SveltyPicker>
     </div>
     <div class="col-6">
-      Time picker only (always visible)
+      Time picker
+       <!-- only (always visible) -->
       <SveltyPicker inputClasses="form-control" mode="time" value="23:00" format="hh:ii" pickerOnly></SveltyPicker>
     </div>
   </div>

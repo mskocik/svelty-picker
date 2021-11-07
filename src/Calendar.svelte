@@ -95,11 +95,15 @@
   }
 
   function isDisabledDate(date) {
+    console.log(startDate, endDate, date);
     if (startDate && startDate > date) return true;
-    if (endDate && (
-        endDate.getUTCFullYear() === date.getUTCFullYear() && endDate.getUTCMonth() === date.getUTCMonth() && endDate.getUTCDate() === date.getUTCDate()
-      ) || endDate <= date
+    if (endDate && ((
+        endDate.getUTCFullYear() === date.getUTCFullYear()
+        && endDate.getUTCMonth() === date.getUTCMonth()
+        && endDate.getUTCDate() === date.getUTCDate()
+      ) || endDate <= date)
     ) return true;
+    return false;
   }
 
   function onChangeMonth(val) {
