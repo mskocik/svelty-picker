@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import DateTimePicker from '../src/DateTimePicker.svelte';
+  import SveltyPicker from '../src/SveltyPicker.svelte';
   let myProp = null;
   let modalProp = null;
 
@@ -27,7 +27,7 @@
         <span class="form-label">
           Normal date picker (bootstrap style for input)
         </span>
-        <DateTimePicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value={myProp}></DateTimePicker>
+        <SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value={myProp}></SveltyPicker>
       </div>
     </div>
   </div>
@@ -36,13 +36,15 @@
     <div class="col-6">
       <div class="form-group">
         Date picker only:
-        <DateTimePicker inputClasses="form-control" mode="date"></DateTimePicker>
+        <SveltyPicker inputClasses="form-control" mode="date"
+          startDate="2021-11-04"
+        ></SveltyPicker>
       </div>
     </div>
     <div class="col-6">
       <div class="form-group">
         Time picker only:
-        <DateTimePicker inputClasses="form-control" mode="time" format="hh:ii"></DateTimePicker>
+        <SveltyPicker inputClasses="form-control" mode="time" format="hh:ii"></SveltyPicker>
       </div>
     </div>
   </div>
@@ -50,11 +52,11 @@
   <div class="row">
     <div class="col-6">
       Date picker only (always visible)
-      <DateTimePicker inputClasses="form-control" mode="date" pickerOnly></DateTimePicker>
+      <SveltyPicker inputClasses="form-control" mode="date" pickerOnly></SveltyPicker>
     </div>
     <div class="col-6">
       Time picker only (always visible)
-      <DateTimePicker inputClasses="form-control" mode="time" value="23:00" format="hh:ii" pickerOnly></DateTimePicker>
+      <SveltyPicker inputClasses="form-control" mode="time" value="23:00" format="hh:ii" pickerOnly></SveltyPicker>
     </div>
   </div>
 
@@ -88,7 +90,7 @@
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae harum explicabo optio mollitia, libero animi corporis quibusdam quia fuga odit exercitationem, iure, est neque ab officia facilis. Sequi, officiis at?</p>
         <p class="mt-2 mb-2">
         </p>
-        <DateTimePicker bind:value={modalProp} on:input={() => document.querySelector('[data-dismiss]').click()}></DateTimePicker>
+        <SveltyPicker bind:value={modalProp} on:input={() => document.querySelector('[data-dismiss]').click()}></SveltyPicker>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

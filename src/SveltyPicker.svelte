@@ -164,8 +164,8 @@
 <div on:mousedown|preventDefault use:positionFn={{inputEl, visible: internalVisibility}} class="std-calendar-wrap is-popup" transition:fade|local={{duration: 200}}>
   {#if currentMode === 'date'}
     <Calendar date={innerDate} 
-      startDate={parseDate(startDate, format, i18n, formatType)}
-      endDate={parseDate(endDate, format, i18n, formatType)}
+      startDate={startDate ? parseDate(startDate, format, i18n, formatType) : null}
+      endDate={endDate ? parseDate(endDate, format, i18n, formatType) : null}
       enableTimeToggle={resolvedMode.includes('time')}
       bind:this={calendarEl}
       {i18n} {weekStart} 

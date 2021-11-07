@@ -224,9 +224,7 @@ export function parseDate(date, format, i18n, type) {
   setters_map['P'] = setters_map['p'];
   date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getUTCHours(), date.getUTCMinutes(), date.getSeconds());
   if (parts.length === format.parts.length) {
-    console.log('parts', parts);
     for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
-      console.log(parts[i]);
       val = parseInt(parts[i], 10);
       part = format.parts[i];
       if (isNaN(val)) {

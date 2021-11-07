@@ -1,9 +1,9 @@
 {
-  "name": "dt-picker",
-  "version": "0.0.1",
-  "description": "My attempt to implement datepicker in svelte",
+  "name": "svelty-picker",
+  "version": "1.0.0",
+  "description": "Sweet date/time picker written in svelte",
   "main": "index.js",
-  "svelte": "src/DatePicker.svelte",
+  "svelte": "src/SveltyPicker.svelte",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
