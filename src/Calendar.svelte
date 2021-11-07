@@ -1,16 +1,77 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, tick } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE } from './dateUtils.js';
+  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid } from './dateUtils.js';
 
   export let date = null;
   export let startDate = null;
   export let endDate = null;
   export let weekStart = 1;
   export let i18n;
+  export let enableTimeToggle = false;
+  
+  export function handleGridNav(key, shiftKey) {
+    if (!internalDate) {
+      onClick(new Date);
+      return;
+    }
+    let pos;
+    switch (key) {
+      case 'ArrowDown':
+        pos = moveGrid(dataset.selectionMark + 7, currentView);
+        if (pos.y > 5) {
+          const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() + 1, 1);
+          const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
+          pos.y = tmpData.grid[0][pos.x].getUTCDate() === internalDate.getUTCDate()
+            ? 1
+            : 0;
+          onChangeMonth(1);
+          onClick(tmpData.grid[pos.y][pos.x]);
+          return;
+        }
+        if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+          onChangeMonth(1);
+        }
+        onClick(dataset.grid[pos.y][pos.x]);
+        break;
+      case 'ArrowUp':
+        pos = moveGrid(dataset.selectionMark - 7, currentView);
+        if (pos.y === 5) {
+          const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() > 0 ? activeDate.getMonth() : 11, 1);
+          const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
+          pos.y = tmpData.grid[5][pos.x].getUTCDate() === internalDate.getUTCDate()
+            ? 4
+            : 5;
+          onChangeMonth(-1);
+          onClick(tmpData.grid[pos.y][pos.x]);
+          return;
+        }
+        if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+          onChangeMonth(-1);
+        }
+        onClick(dataset.grid[pos.y][pos.x]);
+        break;
+      case 'ArrowLeft':
+        pos = moveGrid(dataset.selectionMark - 1, currentView);
+        console.log('p', pos);
+        if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+          onChangeMonth(-1);
+        }
+        onClick(dataset.grid[pos.y][pos.x]);
+        break;
+      case 'ArrowRight':
+        pos = moveGrid(dataset.selectionMark + 1, currentView);
+        if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+          onChangeMonth(1);
+        }
+        onClick(dataset.grid[pos.y][pos.x]);
+        break;
+    }
+  }
 
   let internalDate = date;
-  let activeDate = date || new Date();
+  let activeDate = date ? new Date(date.valueOf()) : new Date();
+  activeDate.setDate(1);
 
   const dispatch = createEventDispatcher();
 
@@ -35,7 +96,7 @@
     if (endDate && endDate < date) return true;
   }
 
-  function changeMonth(val) {
+  function onChangeMonth(val) {
     const multiplier = currentView === MODE_DECADE
       ? 120
       : (currentView === MODE_YEAR
@@ -50,7 +111,7 @@
     currentView && currentView--;
   }
 
-  function updateInternalDate(value) {
+  function onClick(value) {
     switch (currentView) {
       case 0:
         activeDate.setYear(value);
@@ -61,17 +122,21 @@
         activeDate = activeDate;
         break;
       case 2:
-        internalDate = new Date(value.toISOString().split('T')[0].substring(0, 10));
+        internalDate = new Date(value.getUTCFullYear(), value.getMonth(), value.getDate(), value.getUTCHours(), value.getMinutes(), 0);
         dispatch('date', internalDate);
         break;
     }
     currentView < MODE_MONTH && currentView++;
   }
 
+  function onTimeSwitch() {
+    dispatch('switch', 'time');
+  }
+
   function showCaption() {
     switch (currentView) {
       case 0:
-        return `${dataset.yearGrid[0][1]} - ${dataset.yearGrid[2][2]}`
+        return `${dataset.grid[0][1]} - ${dataset.grid[2][2]}`
       case 1:
         return activeDate.getUTCFullYear();
       case 2:
@@ -86,8 +151,17 @@
 <div class="sdt-thead-nav">
   <button class="std-btn std-btn-header sdt-toggle-btn" on:click|preventDefault={onSwitchView}>{tableCaption}</button>
   <div class="sdt-nav-btns">
-    <button class="std-btn std-btn-header" on:click|preventDefault={() => changeMonth(-1)}>⏶</button>
-    <button class="std-btn std-btn-header" on:click|preventDefault={() => changeMonth(1)}>⏷</button>
+    {#if enableTimeToggle && internalDate}
+    <button class="std-btn std-btn-header icon-btn" title={i18n.timeView} on:click|preventDefault={onTimeSwitch} >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.5 7.25a.75.75 0 00-1.5 0v5.5c0 .27.144.518.378.651l3.5 2a.75.75 0 00.744-1.302L12.5 12.315V7.25z"></path><path fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path></svg>
+    </button>
+    {/if}
+    <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onChangeMonth(-1)}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
+    </button>
+    <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onChangeMonth(1)}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
+    </button>
   </div>
 </div>
 <div class="sdt-calendar">
@@ -100,7 +174,7 @@
         <td class:is-selected={i*4+j === dataset.selectionMark}>
           <button
             class="std-btn"
-            on:click|preventDefault={() => { updateInternalDate(year)}}
+            on:click|preventDefault={() => { onClick(year)}}
           >{year}</button>
         </td>
         {/each}
@@ -115,7 +189,7 @@
         {#each row as month, j(j)}
         <td class:is-selected={i*4+j === dataset.selectionMark}>
           <button class="std-btn"
-            on:click|preventDefault={() => { updateInternalDate(month)}}
+            on:click|preventDefault={() => { onClick(month)}}
           >{month}</button>
         </td>
         {/each}
@@ -139,7 +213,7 @@
           class:sdt-today={i*7+j === dataset.todayMark}
           class:is-selected={i*7+j === dataset.selectionMark}
         >
-          <button on:click|preventDefault={() => {updateInternalDate(currDate)}}
+          <button on:click|preventDefault={() => {onClick(currDate)}}
             class="std-btn"
             class:not-current={!isBetween(i*7+j, currDate) }
             disabled={isDisabledDate(currDate)}
@@ -186,6 +260,14 @@
     width: auto;
     font-weight: bold;
     padding: 0.375rem 0.5rem;
+  }
+  .std-btn-header.icon-btn:first-of-type {
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+  }
+  .std-btn-header.icon-btn {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
   }
   .std-btn:hover {
     background-color: #eee;

@@ -119,6 +119,18 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
   return { grid, todayMark, prevTo, nextFrom, selectionMark };
 }
 
+export function moveGrid(newPos, view) {
+  if (view === MODE_MONTH) {
+    if (newPos < 0) {
+      newPos = 42 + newPos;
+    }
+    return {
+      x: newPos % 7,
+      y: Math.floor(newPos / 7)
+    }
+  }
+}
+
 const utils = {
   isLeapYear:       function (year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0))
@@ -207,8 +219,7 @@ export function parseDate(date, format, i18n, type) {
   setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
   setters_map['dd'] = setters_map['d'];
   setters_map['P'] = setters_map['p'];
-  date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
-  console.log('>>>', parts, format);
+  date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getUTCHours(), date.getUTCMinutes(), date.getSeconds());
   if (parts.length === format.parts.length) {
     for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
       val = parseInt(parts[i], 10);

@@ -2,6 +2,7 @@
   import { tick } from 'svelte';
   import { fade } from 'svelte/transition';
   import Calendar from './Calendar.svelte';
+  import Time from './Time.svelte';
   import { formatDate, parseDate } from './dateUtils';
   import { usePosition } from './utils';
   import { en } from './i18n.js';
@@ -14,6 +15,7 @@
   export let format = 'yyyy-mm-dd';
   export let formatType = 'standard';
   export let i18n = en;
+  export let mode = 'datetime';
 
   export let weekStart = 1;
   export let pickerOnly = false;
@@ -33,6 +35,11 @@
     )
   let isFocused = pickerOnly;
   let inputEl = null;
+  let calendarEl = null;
+  let preventClose = false;
+  let currentMode = mode === 'time'
+    ? 'time'
+    : 'date';
 
   $: internalVisibility = pickerOnly ? true : visible;
   $: {
@@ -40,8 +47,20 @@
   }
 
   function onDate(e) {
-    innerDate = e.detail || null;
-    if (autoclose && !pickerOnly) { isFocused = false }
+    let setter = e.detail || null;
+    if (e.detail && innerDate) {
+      if (innerDate.getUTCFullYear() === e.detail.getUTCFullYear()
+       && innerDate.getUTCMonth() === e.detail.getUTCMonth()
+       && innerDate.getUTCDate() === e.detail.getUTCDate()
+       && mode === 'date'
+      ) setter = null;
+    }
+    innerDate = setter;
+    if (autoclose && mode === 'date' && !pickerOnly && !preventClose) { isFocused = false }
+    if (!preventClose && mode === 'datetime' && currentMode === 'date') {
+      currentMode = 'time';
+    }
+    preventClose = false;
     tick().then(() => {
       inputEl.dispatchEvent(new Event('input'))
     });
@@ -55,24 +74,69 @@
     onDate({ detail: null })
   }
 
-</script>
+  function onKeyDown(e) {
+    if (!isFocused) {
+      ['Backspace', 'Delete'].includes(e.key) && onClear();
+      isFocused = true;
+      return;
+    }
+    switch (e.key) {
+      case 'ArrowDown':
+      case 'ArrowUp':
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        e.preventDefault();
+        preventClose = true;
+        calendarEl.handleGridNav(e.key, e.shiftKey);
+        break;
+      case 'Escape':
+        if (isFocused && !internalVisibility) {
+          isFocused = false;
+        }
+        break;
+      case 'Backspace':
+      case 'Delete':
+        onClear();
+      case 'Enter':
+        if (isFocused) isFocused = false;
+        break;
+      case 'Tab':
+      case 'F5':  
+        break;
+      default:
+        e.preventDefault();
+    }
+  }
 
+  function onModeSwitch(e) {
+    currentMode = e.detail;
+  }
+
+  function onBlur() {
+    isFocused = false;
+    if (mode.includes('date')) currentMode = 'date';
+  }
+
+</script>
 
 <input type="{pickerOnly ? 'hidden' : 'text'}" {name} bind:this={inputEl}
   class={inputClasses} 
   {required}
-  on:focus={() => { isFocused=true} }
-  on:blur={() => { isFocused=false} }
-  on:click={() => { if (!isFocused) isFocused = true }}
   value={value}
+  on:focus={() => { isFocused=true} }
+  on:blur={onBlur}
+  on:click={() => { if (!isFocused) isFocused = true }}
   on:input
   on:change
-
-  readonly
+  on:keydown={onKeyDown}
+  readonly={isFocused}
 >
 {#if visible || isFocused}
 <div on:mousedown|preventDefault use:positionFn={{inputEl, visible: internalVisibility}} class="std-calendar-wrap is-popup" transition:fade={{duration: 200}}>
-  <Calendar date={innerDate} {startDate} {endDate} on:date={onDate} {i18n} {weekStart}></Calendar>
+  {#if currentMode === 'date'}
+  <Calendar date={innerDate} {startDate} {endDate} on:date={onDate} {i18n} {weekStart} bind:this={calendarEl}
+    enableTimeToggle={mode.includes('time')} on:switch={onModeSwitch}
+  ></Calendar>
   {#if todayBtn || clearBtn}
   <div class="std-btn-row">
     {#if todayBtn}
@@ -82,6 +146,9 @@
       <button on:click={onClear} class="btn btn-outline-danger btn-sm">{i18n.clearBtn}</button>
     {/if}
   </div>
+  {/if}
+  {:else}
+    <Time date={innerDate} hasDateComponent on:time={onDate} on:switch={onModeSwitch} on:close={() => autoclose && onBlur()} {i18n}></Time>
   {/if}
 </div>
 {/if}
