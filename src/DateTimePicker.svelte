@@ -25,7 +25,9 @@
   export let clearBtn = true;
   export let required = false;
   export let inputClasses;
+  // actions
   export let positionFn = usePosition;
+  export let validatorAction = null;
   
   if (format === 'yyyy-mm-dd' && mode === 'time') {
     format = 'hh:ii'
@@ -38,6 +40,8 @@
     )
   let isFocused = pickerOnly;
   let inputEl = null;
+  let inputAction = validatorAction ? validatorAction.shift() : () => {};
+  let inputActionParams = validatorAction || [];
   let calendarEl = null;
   let preventClose = false;
   let resolvedMode = mode === 'auto'
@@ -105,6 +109,7 @@
         e.preventDefault();
         preventClose = true;
         if (currentMode === 'date') {
+          // TODO: handle shift
           calendarEl.handleGridNav(e.key, e.shiftKey);
         }
         if (currentMode === 'time') {
@@ -144,9 +149,9 @@
   }
 </script>
 
-<input type="{pickerOnly ? 'hidden' : 'text'}" {name} bind:this={inputEl}
-  class={inputClasses} 
-  {required}
+<input type="{pickerOnly ? 'hidden' : 'text'}" {name} bind:this={inputEl} use:inputAction={inputActionParams}
+  class={inputClasses} {required}
+  readonly={isFocused}
   value={value}
   on:focus={() => { isFocused=true} }
   on:blur={onBlur}
@@ -154,7 +159,6 @@
   on:input
   on:change
   on:keydown={onKeyDown}
-  readonly={isFocused}
 >
 {#if visible || isFocused}
 <div on:mousedown|preventDefault use:positionFn={{inputEl, visible: internalVisibility}} class="std-calendar-wrap is-popup" transition:fade|local={{duration: 200}}>
