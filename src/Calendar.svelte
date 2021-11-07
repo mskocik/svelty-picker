@@ -1,7 +1,7 @@
 <script>
-  import { createEventDispatcher, tick } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid } from './dateUtils.js';
+  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, UTCDate } from './dateUtils.js';
 
   export let date = null;
   export let startDate = null;
@@ -53,7 +53,6 @@
         break;
       case 'ArrowLeft':
         pos = moveGrid(dataset.selectionMark - 1, currentView);
-        console.log('p', pos);
         if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
           onChangeMonth(-1);
         }
@@ -80,6 +79,10 @@
   $: {
     if (date !== internalDate) {
       internalDate = date;
+      if (date) {
+        activeDate = new Date(date.valueOf())
+      };
+      currentView = MODE_MONTH;
     }
   }
   $: dataset = compute(activeDate, internalDate, currentView, i18n, weekStart);
@@ -122,7 +125,12 @@
         activeDate = activeDate;
         break;
       case 2:
-        internalDate = new Date(value.getUTCFullYear(), value.getMonth(), value.getDate(), value.getUTCHours(), value.getMinutes(), 0);
+        const newInternalDate = UTCDate(value.getUTCFullYear(), value.getMonth(), value.getDate());
+        if (internalDate) {
+          newInternalDate.setMinutes(internalDate.getMinutes());
+          newInternalDate.setUTCHours(internalDate.getUTCHours());
+        }
+        internalDate = newInternalDate;
         dispatch('date', internalDate);
         break;
     }
@@ -153,7 +161,7 @@
   <div class="sdt-nav-btns">
     {#if enableTimeToggle && internalDate}
     <button class="std-btn std-btn-header icon-btn" title={i18n.timeView} on:click|preventDefault={onTimeSwitch} >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.5 7.25a.75.75 0 00-1.5 0v5.5c0 .27.144.518.378.651l3.5 2a.75.75 0 00.744-1.302L12.5 12.315V7.25z"></path><path fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><path d="M12.5 7.25a.75.75 0 00-1.5 0v5.5c0 .27.144.518.378.651l3.5 2a.75.75 0 00.744-1.302L12.5 12.315V7.25z"></path><path fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path></svg>
     </button>
     {/if}
     <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onChangeMonth(-1)}>

@@ -7,5 +7,7 @@ export const en = {
   meridiem:    ['am', 'pm'],
   suffix:      ['st', 'nd', 'rd', 'th'],
   todayBtn:    'Today',
-  clearBtn:    'Clear'
+  clearBtn:    'Clear',
+  timeView:    'Show time view',
+  backToDate:  'Back to calendar view'
 }

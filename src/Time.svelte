@@ -1,7 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { fade } from 'svelte/transition';
 
-  export let date = new Date();
+  export let date = null;
   export let showMeridian = false;
   export let hasDateComponent = false;
   export let i18n;
@@ -10,16 +11,24 @@
   let isMinuteView = false;
   let handleMoveMove = false;
   let enableViewToggle = false;
-  let innerDate = date;
+  let innerDate = date || new Date();
+  if (!date) {
+    date = innerDate;
+  }
   const dispatch = createEventDispatcher();
+
+  console.log('I', innerDate);
 
   $: {
     if (date !== innerDate) {
       innerDate = date;
     }
   }
-  $: selectedHour = innerDate.getUTCHours();
-  $: selectedMinutes = innerDate.getUTCMinutes();
+  $: selectedHour = innerDate ? innerDate.getUTCHours() : 0;
+  $: isPM = showMeridian
+    ? selectedHour >= 12
+    : false;
+  $: selectedMinutes = innerDate ? innerDate.getUTCMinutes() : 0;
   $: handCss = isMinuteView 
     ? `transform: rotateZ(${selectedMinutes * 6}deg)`
     : (showMeridian 
@@ -50,16 +59,41 @@
   $: pos = positions(220, 130, isMinuteView ? '00' : '12', isMinuteView, 0);
   $: innerHours = positions(140, 130, '00', false, 12);
 
-  function view(value) {
-    return value < 10 ? `0${value}` : value;
+  function view(value, asMeridian) {
+    if (asMeridian) {
+      if (isPM && value === 12) return 12;
+      return value < 10 || (value % 12) < 10
+        ? `0${value % 12}`
+        : value;
+    }
+    return value < 10
+      ? `0${value}`
+      : value;
+  }
+
+  function isSelected(selected, val, i) {
+    if (isMinuteView) {
+      console.log('v', selected, val, i);
+      return val === selected || (i === 0 && i === selected)
+    } else {
+      if (showMeridian) {
+        if (isPM && val == 12 && selected === 12) return true;
+        if (!isPM && val == 12 && selected === 0) return true;
+        return val === (selected ? selected % 12 : 12);
+      } else if (val > 12) {
+        return (i ? multiplier * i + 12 : 0)  === selected;
+      } else {
+        return val === selected;
+      }
+    }
   }
 
   function onClick(e) {
     if (e.type === 'mousemove' && !handleMoveMove) return;
     if (e.target.tagName === 'BUTTON') {
-      const val = parseInt(e.target.dataset.value || e.target.textContent);
-      const setter = isMinuteView ? 'setUTCMinutes' : 'setUTCHours';
-      date[setter](val);
+      let val = parseInt(e.target.dataset.value);
+      const setter = e.meridianSwitch || !isMinuteView ? 'setUTCHours' : 'setUTCMinutes';
+      innerDate[setter](val);
     } else if (isMinuteView) {
       // compute it out of x,y 
       const rect = clockEl.getBoundingClientRect();
@@ -113,18 +147,19 @@
     }
     innerDate = innerDate;
     dispatch('time', innerDate);
-    if (!handleMoveMove && isMinuteView) dispatch('close');
+    if (!e.meridianSwitch && !handleMoveMove && isMinuteView) setTimeout(() => {
+      dispatch('close')
+    }, 300);
+    if (!e.meridianSwitch && !isMinuteView) isMinuteView = true;
     enableViewToggle = true;
-    setInterval(() => {
+    setTimeout(() => {
       enableViewToggle = false;
     }, 1000);
   }
 
-  function toggleView() {
-    if (enableViewToggle && !isMinuteView) {
-      enableViewToggle = false;
-      isMinuteView = true;
-    }
+  function onSwitchMeridian(e) {
+    e.meridianSwitch = true;
+    onClick(e)
   }
 
   function onToggleMove(e) {
@@ -140,42 +175,43 @@
   <div class="sdt-time-head">
     {#if hasDateComponent}
     <button class="sdt-time-btn sdt-back-btn" title={i18n.backToDate} on:click={onModeSwitch}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M6.75 0a.75.75 0 01.75.75V3h9V.75a.75.75 0 011.5 0V3h2.75c.966 0 1.75.784 1.75 1.75v16a1.75 1.75 0 01-1.75 1.75H3.25a1.75 1.75 0 01-1.75-1.75v-16C1.5 3.784 2.284 3 3.25 3H6V.75A.75.75 0 016.75 0zm-3.5 4.5a.25.25 0 00-.25.25V8h18V4.75a.25.25 0 00-.25-.25H3.25zM21 9.5H3v11.25c0 .138.112.25.25.25h17.5a.25.25 0 00.25-.25V9.5z"></path></svg>
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M15.28 5.22a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 000 1.06l6.25 6.25a.75.75 0 101.06-1.06L9.56 12l5.72-5.72a.75.75 0 000-1.06z"></path></svg> -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill-rule="evenodd" d="M6.75 0a.75.75 0 01.75.75V3h9V.75a.75.75 0 011.5 0V3h2.75c.966 0 1.75.784 1.75 1.75v16a1.75 1.75 0 01-1.75 1.75H3.25a1.75 1.75 0 01-1.75-1.75v-16C1.5 3.784 2.284 3 3.25 3H6V.75A.75.75 0 016.75 0zm-3.5 4.5a.25.25 0 00-.25.25V8h18V4.75a.25.25 0 00-.25-.25H3.25zM21 9.5H3v11.25c0 .138.112.25.25.25h17.5a.25.25 0 00.25-.25V9.5z"></path></svg>
     </button>
     {/if}
     <button class="sdt-time-btn sdt-time-figure"
       class:is-active={!isMinuteView}
       on:click={() => isMinuteView = false}
-    >{view(selectedHour)}</button>
+    >{view(selectedHour, showMeridian)}</button>
     <span>:</span>
     <button  class="sdt-time-btn sdt-time-figure"
       class:is-active={isMinuteView}
       on:click={() => isMinuteView = true}
-    >{view(selectedMinutes)}</button>
+    >{view(selectedMinutes, false)}</button>
     {#if showMeridian}
-    <div class="div">
-      <button>AM</button>
-      <button>PM</button>
+    <div class="sdt-meridian">
+      <button class="sdt-time-btn" class:is-active={selectedHour < 12} on:click={onSwitchMeridian} data-value={selectedHour % 12}>AM</button>
+      <button class="sdt-time-btn" class:is-active={selectedHour >= 12} on:click={onSwitchMeridian} data-value={selectedHour % 12 + 12}>PM</button>
     </div>
     {/if}
   </div>
-  <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={onClick} on:mouseup={onToggleMove} bind:this={clockEl}>
+  <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}
+    class:is-minute-view={isMinuteView}
+  >
     <div class="sdt-middle-dot"></div>
-    <div class="sdt-hand-pointer" style={handCss} on:transitionend={toggleView}>
+    <div class="sdt-hand-pointer" style={handCss}>
       <div class="sdt-hand-circle"></div>
     </div>
-    {#each pos as p, i}
-      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick"
+    {#each pos as p, i(p.val)}
+      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" transition:fade|local={{duration: 200}}
         data-value={p.val}
-        class:is-selected={(i ? multiplier * i : (isMinuteView ? 0 : 12)) === (isMinuteView ? selectedMinutes : selectedHour)}
+        class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
       >{p.val}</button>
     {/each}
     {#if !showMeridian && !isMinuteView}
       {#each innerHours as p, i}
-      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick"
+      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" transition:fade|local={{duration: 200}}
         data-value={p.val}
-        class:is-selected={(i ? multiplier * i + 12 : 0)  === selectedHour}
+        class:is-selected={isSelected(selectedHour, p.val, i)}
       >{p.val}</button>
     {/each}
     {/if}
@@ -204,6 +240,11 @@
     height: 260px;
     background-color: #eeeded;
     border-radius: 50%;
+    transition: background-color 0.3s;
+  }
+  .sdt-clock.is-minute-view {
+    background-color: rgb(238, 237, 237, 0.25);
+    box-shadow: 0 0 128px 2px #ddd inset;
   }
   .sdt-time-btn {
     border: 0;
@@ -225,6 +266,20 @@
     border: 1px solid #ddd;
     left: 0;
     opacity: 1 !important;
+  }
+  .sdt-meridian {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    display: flex;
+    flex-flow: column;
+    font-size: 90%;
+  }
+  .sdt-meridian .sdt-time-btn {
+    padding: 0.15rem 0.5rem;
+  }
+  .sdt-meridian .sdt-time-btn.is-active {
+    font-weight: bold;
   }
   .sdt-middle-dot {
     left: 50%;
@@ -273,26 +328,5 @@
   .sdt-tick.is-selected {
     background-color: #286090;
     color: #fff;
-  }
-  :global(.hour) {
-    position: absolute;
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
-    text-align: center;
-    background-color: transparent;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-  :global(.min) {
-    position: absolute;
-    height: 20px;
-    line-height: 20px;
-    width: 20px;
-    border-radius: 40px;
-    text-align: center;
-    font-size: 12px;
-    background-color: transparent;
-    border: 0;
   }
 </style>

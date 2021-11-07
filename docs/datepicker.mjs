@@ -80,6 +80,9 @@ function destroy_each(iterations, detaching) {
 function element(name) {
     return document.createElement(name);
 }
+function svg_element(name) {
+    return document.createElementNS('http://www.w3.org/2000/svg', name);
+}
 function text(data) {
     return document.createTextNode(data);
 }
@@ -113,12 +116,6 @@ function set_data(text, data) {
     data = '' + data;
     if (text.wholeText !== data)
         text.data = data;
-}
-function set_input_value(input, value) {
-    input.value = value == null ? '' : value;
-}
-function set_style(node, key, value, important) {
-    node.style.setProperty(key, value, important ? 'important' : '');
 }
 function toggle_class(element, name, toggle) {
     element.classList[toggle ? 'add' : 'remove'](name);
@@ -199,6 +196,9 @@ function get_current_component() {
         throw new Error('Function called outside component initialization');
     return current_component;
 }
+function onMount(fn) {
+    get_current_component().$$.on_mount.push(fn);
+}
 function createEventDispatcher() {
     const component = get_current_component();
     return (type, detail) => {
@@ -234,6 +234,10 @@ function schedule_update() {
         update_scheduled = true;
         resolved_promise.then(flush);
     }
+}
+function tick() {
+    schedule_update();
+    return resolved_promise;
 }
 function add_render_callback(fn) {
     render_callbacks.push(fn);
@@ -513,6 +517,11 @@ function destroy_block(block, lookup) {
     block.d(1);
     lookup.delete(block.key);
 }
+function outro_and_destroy_block(block, lookup) {
+    transition_out(block, 1, 1, () => {
+        lookup.delete(block.key);
+    });
+}
 function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
     let o = old_blocks.length;
     let n = list.length;
@@ -737,20 +746,19 @@ const MODE_DECADE = 0;
 const MODE_YEAR = 1;
 const MODE_MONTH = 2;
 
-function compute(currentDate, selectedDate, view, locale) {
-
+function compute(currentDate, selectedDate, view, locale, weekStart) {
   // years 4 x 3
   if (view === MODE_DECADE) {
     const nextFrom = 12;
     const prevTo = 1;
     const todayMark = -1;
-    const yearGrid = [];
+    const grid = [];
     let yearRow = [];
     let currYear = currentDate.getUTCFullYear() - (currentDate.getUTCFullYear() % 10) - 1;
     for (let i = 0; i < 12; i++) {
       yearRow.push(currYear + i);
       if (yearRow.length === 4) {
-        yearGrid.push(yearRow);
+        grid.push(yearRow);
         yearRow = [];
       }
     }
@@ -762,14 +770,14 @@ function compute(currentDate, selectedDate, view, locale) {
       selectionMark = selectedDate.getUTCFullYear() % currYear;
     }
 
-    const obj =
-      { yearGrid, todayMark, nextFrom, prevTo, selectionMark};
-    return obj;
+    return {
+      grid, todayMark, nextFrom, prevTo, selectionMark
+    }
   }
 
   // months 4 x 3
   if (view === MODE_YEAR) {
-    let monthGrid = [];
+    let grid = [];
     let monthRow = [];
     let prevTo = 0;
     let nextFrom = 12;
@@ -780,7 +788,7 @@ function compute(currentDate, selectedDate, view, locale) {
       dateNormalized.setUTCMonth(i);
       monthRow.push(locale.monthsShort[i]);
       if (monthRow.length === 4) {
-        monthGrid.push(monthRow);
+        grid.push(monthRow);
         monthRow = [];
       }
     }
@@ -793,7 +801,7 @@ function compute(currentDate, selectedDate, view, locale) {
     }
 
     return {
-      monthGrid, todayMark, nextFrom, prevTo, selectionMark
+      grid, todayMark, nextFrom, prevTo, selectionMark
     }
   } 
 
@@ -808,13 +816,13 @@ function compute(currentDate, selectedDate, view, locale) {
       day = utils.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
   
   prevMonth.setUTCDate(day);
-  prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - /** this.weekStart */ 1 + 7) % 7);
+  prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - weekStart + 7) % 7);
 
   let nextMonth = new Date(prevMonth);
   nextMonth.setUTCDate(nextMonth.getUTCDate() + 42);
   let nextMonthValue = nextMonth.valueOf();
 
-  let dayGrid = [];
+  let grid = [];
   let dayRow = [];
   let todayMark = -1;
   let selectionMark = null;
@@ -822,6 +830,7 @@ function compute(currentDate, selectedDate, view, locale) {
   let nextFrom = 42;
 
   let inc = 0;
+  console.log('SELECTED', selectedDate);
   while(prevMonth.valueOf() < nextMonthValue) {
     inc++;
     dayRow.push(new Date(prevMonth));
@@ -833,26 +842,40 @@ function compute(currentDate, selectedDate, view, locale) {
 
     prevMonth.setUTCDate(prevMonth.getUTCDate() + 1);
 
-    if (prevMonth.getUTCFullYear() === today.getFullYear() &&
-      prevMonth.getUTCMonth() === today.getMonth() &&
-      prevMonth.getUTCDate() === today.getDate()
+
+    if (prevMonth.getUTCFullYear() === today.getUTCFullYear() &&
+      prevMonth.getUTCMonth() === today.getUTCMonth() &&
+      prevMonth.getUTCDate() === today.getUTCDate()
     ) {
       todayMark = inc;
     }
     if (!selectionMark && selectedDate
       && prevMonth.getUTCFullYear() === selectedDate.getUTCFullYear()
-      && prevMonth.getMonth() === selectedDate.getMonth()
+      && prevMonth.getUTCMonth() === selectedDate.getUTCMonth()
       && prevMonth.getUTCDate() === selectedDate.getUTCDate()
     ) {
       selectionMark = inc;
+      console.log('s', selectionMark);
     }
     
     if (dayRow.length === 7) {
-      dayGrid.push(dayRow);
+      grid.push(dayRow);
       dayRow = [];
     }
   }
-  return { dayGrid, todayMark, prevTo, nextFrom, selectionMark };
+  return { grid, todayMark, prevTo, nextFrom, selectionMark };
+}
+
+function moveGrid(newPos, view) {
+  if (view === MODE_MONTH) {
+    if (newPos < 0) {
+      newPos = 42 + newPos;
+    }
+    return {
+      x: newPos % 7,
+      y: Math.floor(newPos / 7)
+    }
+  }
 }
 
 const utils = {
@@ -866,6 +889,114 @@ const utils = {
 
 function UTCDate() {
   return new Date(Date.UTC.apply(Date, arguments));
+}
+
+function parseDate(date, format, i18n, type) {
+  if (date instanceof Date) {
+    const dateUTC = new Date(date.valueOf() - date.getTimezoneOffset() * 60000);
+    dateUTC.setMilliseconds(0);
+    return dateUTC;
+  }
+  if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(date)) {
+    format = formatHelper.parseFormat('yyyy-mm-dd', type);
+  } else 
+  if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}$/.test(date)) {
+    format = formatHelper.parseFormat('yyyy-mm-dd hh:ii', type);
+  } else 
+  if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}\:\d{1,2}[Z]{0,1}$/.test(date)) {
+    format = formatHelper.parseFormat('yyyy-mm-dd hh:ii:ss', type);
+  } else {
+    format = formatHelper.parseFormat(format, type);
+  }
+  var parts = date && date.toString().match(formatHelper.nonpunctuation) || [],
+    date = new Date(0, 0, 0, 0, 0, 0, 0),
+    parsed = {},
+    setters_order = ['hh', 'h', 'ii', 'i', 'ss', 's', 'yyyy', 'yy', 'M', 'MM', 'm', 'mm', 'D', 'DD', 'd', 'dd', 'H', 'HH', 'p', 'P', 'z', 'Z'],
+    setters_map = {
+      hh:   function (d, v) {
+        return d.setUTCHours(v);
+      },
+      h:    function (d, v) {
+        return d.setUTCHours(v);
+      },
+      HH:   function (d, v) {
+        return d.setUTCHours(v === 12 ? 0 : v);
+      },
+      H:    function (d, v) {
+        return d.setUTCHours(v === 12 ? 0 : v);
+      },
+      ii:   function (d, v) {
+        return d.setUTCMinutes(v);
+      },
+      i:    function (d, v) {
+        return d.setUTCMinutes(v);
+      },
+      ss:   function (d, v) {
+        return d.setUTCSeconds(v);
+      },
+      s:    function (d, v) {
+        return d.setUTCSeconds(v);
+      },
+      yyyy: function (d, v) {
+        return d.setUTCFullYear(v);
+      },
+      yy:   function (d, v) {
+        return d.setUTCFullYear(2000 + v);
+      },
+      m:    function (d, v) {
+        v -= 1;
+        while (v < 0) v += 12;
+        v %= 12;
+        d.setUTCMonth(v);
+        while (d.getUTCMonth() !== v)
+          if (isNaN(d.getUTCMonth()))
+            return d;
+          else
+            d.setUTCDate(d.getUTCDate() - 1);
+        return d;
+      },
+      d:    function (d, v) {
+        return d.setUTCDate(v);
+      },
+      p:    function (d, v) {
+        return d.setUTCHours(v === 1 ? d.getUTCHours() + 12 : d.getUTCHours());
+      }
+    },
+    val, filtered, part;
+  setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
+  setters_map['dd'] = setters_map['d'];
+  setters_map['P'] = setters_map['p'];
+  date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getUTCHours(), date.getUTCMinutes(), date.getSeconds());
+  if (parts.length === format.parts.length) {
+    console.log('parts', parts);
+    for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
+      console.log(parts[i]);
+      val = parseInt(parts[i], 10);
+      part = format.parts[i];
+      if (isNaN(val)) {
+        switch (part) {
+          case 'MM':
+            val = i18n.months.indexOf(filtered[0]) + 1;
+            break;
+          case 'M':
+            val= i18n.monthsShort.indexOf(val) + 1;
+            break;
+          case 'p':
+          case 'P':
+            console.log(val);
+            val = i18n.meridiem.indexOf(parts[i].toLowerCase());
+            break;
+        }
+      }
+      parsed[part] = val;
+    }
+    for (var i = 0, s; i < setters_order.length; i++) {
+      s = setters_order[i];
+      if (s in parsed && !isNaN(parsed[s]))
+        setters_map[s](date, parsed[s]);
+    }
+  }
+  return date;
 }
 
 function formatDate(date, format, i18n, type) {
@@ -988,66 +1119,116 @@ const formatHelper = {
 
 /* src\Calendar.svelte generated by Svelte v3.37.0 */
 
-function add_css$1() {
+function add_css$2() {
 	var style = element("style");
-	style.id = "svelte-snram0-style";
-	style.textContent = ".sdt-cal-td.svelte-snram0.svelte-snram0{padding:0;font-size:90%;text-align:center}.sdt-calendar.svelte-snram0.svelte-snram0{padding-top:0.5rem}.sdt-table.svelte-snram0.svelte-snram0{width:100%}.sdt-today.svelte-snram0.svelte-snram0{color:red}.not-current.svelte-snram0.svelte-snram0{color:#ccc}.std-btn.svelte-snram0.svelte-snram0{border:0;background:transparent;text-align:center;width:100%;border-radius:4px;cursor:pointer;padding:0.375rem}.std-btn-header.svelte-snram0.svelte-snram0{width:auto;font-weight:bold;padding:0.375rem 0.5rem}.std-btn.svelte-snram0.svelte-snram0:hover{background-color:#eee;border-color:#ddd}.is-selected.svelte-snram0 .std-btn.svelte-snram0{background-color:#286090;border-color:#204d74;color:white;opacity:0.9}.std-btn-header.svelte-snram0.svelte-snram0:hover{background-color:rgb(223, 223, 223);color:black}.sdt-tbody-lg.svelte-snram0 .std-btn.svelte-snram0{height:60px}.sdt-thead-nav.svelte-snram0.svelte-snram0{display:flex}.sdt-nav-btns.svelte-snram0.svelte-snram0{white-space:nowrap}.sdt-toggle-btn.svelte-snram0.svelte-snram0{width:100%;text-align:left}.sdt-today.svelte-snram0.svelte-snram0:before{position:absolute;content:'';margin-left:4px;margin-top:4px;border-left:4px solid #ccc;border-top:4px solid #ccc;border-bottom:4px solid transparent;border-right:4px solid transparent;border-radius:2px;height:4px;z-index:2}.sdt-today.svelte-snram0.svelte-snram0:hover:before{border-left-color:#286090;border-top-color:#286090}.is-selected.sdt-today.svelte-snram0.svelte-snram0:before{border-left-color:#eee;border-top-color:#eee}";
+	style.id = "svelte-1thbrav-style";
+	style.textContent = ".sdt-cal-td.svelte-1thbrav.svelte-1thbrav{padding:0;font-size:90%;text-align:center}.sdt-calendar.svelte-1thbrav.svelte-1thbrav{padding-top:0.5rem}.sdt-table.svelte-1thbrav.svelte-1thbrav{width:100%}.sdt-today.svelte-1thbrav.svelte-1thbrav{color:red}.not-current.svelte-1thbrav.svelte-1thbrav{color:#ccc}.std-btn.svelte-1thbrav.svelte-1thbrav{border:0;background:transparent;text-align:center;width:100%;border-radius:4px;cursor:pointer;padding:0.375rem}.std-btn-header.svelte-1thbrav.svelte-1thbrav{width:auto;font-weight:bold;padding:0.375rem 0.5rem}.std-btn-header.icon-btn.svelte-1thbrav.svelte-1thbrav:first-of-type{padding-left:0.375rem;padding-right:0.375rem}.std-btn-header.icon-btn.svelte-1thbrav.svelte-1thbrav{padding-left:0.25rem;padding-right:0.25rem}.std-btn.svelte-1thbrav.svelte-1thbrav:hover{background-color:#eee;border-color:#ddd}.is-selected.svelte-1thbrav .std-btn.svelte-1thbrav{background-color:#286090;border-color:#204d74;color:white;opacity:0.9}.std-btn-header.svelte-1thbrav.svelte-1thbrav:hover{background-color:rgb(223, 223, 223);color:black}.sdt-tbody-lg.svelte-1thbrav .std-btn.svelte-1thbrav{height:60px}.sdt-thead-nav.svelte-1thbrav.svelte-1thbrav{display:flex}.sdt-nav-btns.svelte-1thbrav.svelte-1thbrav{white-space:nowrap}.sdt-toggle-btn.svelte-1thbrav.svelte-1thbrav{width:100%;text-align:left}.sdt-today.svelte-1thbrav.svelte-1thbrav:before{position:absolute;content:'';margin-left:4px;margin-top:4px;border-left:4px solid #ccc;border-top:4px solid #ccc;border-bottom:4px solid transparent;border-right:4px solid transparent;border-radius:2px;height:4px;z-index:2}.sdt-today.svelte-1thbrav.svelte-1thbrav:hover:before{border-left-color:#286090;border-top-color:#286090}.is-selected.sdt-today.svelte-1thbrav.svelte-1thbrav:before{border-left-color:#eee;border-top-color:#eee}";
 	append(document.head, style);
 }
 
-function get_each_context(ctx, list, i) {
+function get_each_context$1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[24] = list[i];
-	child_ctx[26] = i;
+	child_ctx[26] = list[i];
+	child_ctx[28] = i;
 	return child_ctx;
 }
 
-function get_each_context_1(ctx, list, i) {
+function get_each_context_1$1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[27] = list[i];
-	child_ctx[29] = i;
+	child_ctx[29] = list[i];
+	child_ctx[31] = i;
 	return child_ctx;
 }
 
 function get_each_context_2(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[30] = list[i];
+	child_ctx[32] = list[i];
 	return child_ctx;
 }
 
 function get_each_context_3(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[24] = list[i];
-	child_ctx[26] = i;
+	child_ctx[26] = list[i];
+	child_ctx[28] = i;
 	return child_ctx;
 }
 
 function get_each_context_4(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[34] = list[i];
-	child_ctx[29] = i;
+	child_ctx[36] = list[i];
+	child_ctx[31] = i;
 	return child_ctx;
 }
 
 function get_each_context_5(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[24] = list[i];
-	child_ctx[26] = i;
+	child_ctx[26] = list[i];
+	child_ctx[28] = i;
 	return child_ctx;
 }
 
 function get_each_context_6(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[37] = list[i];
-	child_ctx[29] = i;
+	child_ctx[39] = list[i];
+	child_ctx[31] = i;
 	return child_ctx;
 }
 
-// (97:4) {#if currentView === MODE_DECADE}
-function create_if_block_2$1(ctx) {
+// (162:4) {#if enableTimeToggle && internalDate}
+function create_if_block_3$1(ctx) {
+	let button;
+	let svg;
+	let path0;
+	let path1;
+	let button_title_value;
+	let mounted;
+	let dispose;
+
+	return {
+		c() {
+			button = element("button");
+			svg = svg_element("svg");
+			path0 = svg_element("path");
+			path1 = svg_element("path");
+			attr(path0, "d", "M12.5 7.25a.75.75 0 00-1.5 0v5.5c0 .27.144.518.378.651l3.5 2a.75.75 0 00.744-1.302L12.5 12.315V7.25z");
+			attr(path1, "fill-rule", "evenodd");
+			attr(path1, "d", "M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z");
+			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
+			attr(svg, "viewBox", "0 0 24 24");
+			attr(svg, "width", "16");
+			attr(svg, "height", "16");
+			attr(button, "class", "std-btn std-btn-header icon-btn svelte-1thbrav");
+			attr(button, "title", button_title_value = /*i18n*/ ctx[0].timeView);
+		},
+		m(target, anchor) {
+			insert(target, button, anchor);
+			append(button, svg);
+			append(svg, path0);
+			append(svg, path1);
+
+			if (!mounted) {
+				dispose = listen(button, "click", prevent_default(/*onTimeSwitch*/ ctx[12]));
+				mounted = true;
+			}
+		},
+		p(ctx, dirty) {
+			if (dirty[0] & /*i18n*/ 1 && button_title_value !== (button_title_value = /*i18n*/ ctx[0].timeView)) {
+				attr(button, "title", button_title_value);
+			}
+		},
+		d(detaching) {
+			if (detaching) detach(button);
+			mounted = false;
+			dispose();
+		}
+	};
+}
+
+// (177:4) {#if currentView === MODE_DECADE}
+function create_if_block_2$2(ctx) {
 	let tbody;
 	let tbody_intro;
-	let each_value_5 = /*dataset*/ ctx[1].yearGrid;
+	let each_value_5 = /*dataset*/ ctx[4].grid;
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value_5.length; i += 1) {
@@ -1062,7 +1243,7 @@ function create_if_block_2$1(ctx) {
 				each_blocks[i].c();
 			}
 
-			attr(tbody, "class", "sdt-tbody-lg svelte-snram0");
+			attr(tbody, "class", "sdt-tbody-lg svelte-1thbrav");
 		},
 		m(target, anchor) {
 			insert(target, tbody, anchor);
@@ -1072,8 +1253,8 @@ function create_if_block_2$1(ctx) {
 			}
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*dataset, updateInternalDate*/ 258) {
-				each_value_5 = /*dataset*/ ctx[1].yearGrid;
+			if (dirty[0] & /*dataset, onClick*/ 2064) {
+				each_value_5 = /*dataset*/ ctx[4].grid;
 				let i;
 
 				for (i = 0; i < each_value_5.length; i += 1) {
@@ -1111,17 +1292,17 @@ function create_if_block_2$1(ctx) {
 	};
 }
 
-// (101:8) {#each row as year, j(j)}
+// (181:8) {#each row as year, j(j)}
 function create_each_block_6(key_1, ctx) {
 	let td;
 	let button;
-	let t_value = /*year*/ ctx[37] + "";
+	let t_value = /*year*/ ctx[39] + "";
 	let t;
 	let mounted;
 	let dispose;
 
 	function click_handler_2() {
-		return /*click_handler_2*/ ctx[18](/*year*/ ctx[37]);
+		return /*click_handler_2*/ ctx[21](/*year*/ ctx[39]);
 	}
 
 	return {
@@ -1131,9 +1312,9 @@ function create_each_block_6(key_1, ctx) {
 			td = element("td");
 			button = element("button");
 			t = text(t_value);
-			attr(button, "class", "std-btn svelte-snram0");
-			attr(td, "class", "svelte-snram0");
-			toggle_class(td, "is-selected", /*i*/ ctx[26] * 4 + /*j*/ ctx[29] === /*dataset*/ ctx[1].selectionMark);
+			attr(button, "class", "std-btn svelte-1thbrav");
+			attr(td, "class", "svelte-1thbrav");
+			toggle_class(td, "is-selected", /*i*/ ctx[28] * 4 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
 			this.first = td;
 		},
 		m(target, anchor) {
@@ -1148,10 +1329,10 @@ function create_each_block_6(key_1, ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty[0] & /*dataset*/ 2 && t_value !== (t_value = /*year*/ ctx[37] + "")) set_data(t, t_value);
+			if (dirty[0] & /*dataset*/ 16 && t_value !== (t_value = /*year*/ ctx[39] + "")) set_data(t, t_value);
 
-			if (dirty[0] & /*dataset*/ 2) {
-				toggle_class(td, "is-selected", /*i*/ ctx[26] * 4 + /*j*/ ctx[29] === /*dataset*/ ctx[1].selectionMark);
+			if (dirty[0] & /*dataset*/ 16) {
+				toggle_class(td, "is-selected", /*i*/ ctx[28] * 4 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
 			}
 		},
 		d(detaching) {
@@ -1162,14 +1343,14 @@ function create_each_block_6(key_1, ctx) {
 	};
 }
 
-// (99:6) {#each dataset.yearGrid as row, i}
+// (179:6) {#each dataset.grid as row, i}
 function create_each_block_5(ctx) {
 	let tr;
 	let each_blocks = [];
 	let each_1_lookup = new Map();
 	let t;
-	let each_value_6 = /*row*/ ctx[24];
-	const get_key = ctx => /*j*/ ctx[29];
+	let each_value_6 = /*row*/ ctx[26];
+	const get_key = ctx => /*j*/ ctx[31];
 
 	for (let i = 0; i < each_value_6.length; i += 1) {
 		let child_ctx = get_each_context_6(ctx, each_value_6, i);
@@ -1197,8 +1378,8 @@ function create_each_block_5(ctx) {
 			append(tr, t);
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*dataset, updateInternalDate*/ 258) {
-				each_value_6 = /*row*/ ctx[24];
+			if (dirty[0] & /*dataset, onClick*/ 2064) {
+				each_value_6 = /*row*/ ctx[26];
 				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value_6, each_1_lookup, tr, destroy_block, create_each_block_6, t, get_each_context_6);
 			}
 		},
@@ -1212,11 +1393,11 @@ function create_each_block_5(ctx) {
 	};
 }
 
-// (113:4) {#if currentView === MODE_YEAR}
-function create_if_block_1$1(ctx) {
+// (193:4) {#if currentView === MODE_YEAR}
+function create_if_block_1$2(ctx) {
 	let tbody;
 	let tbody_intro;
-	let each_value_3 = /*dataset*/ ctx[1].monthGrid;
+	let each_value_3 = /*dataset*/ ctx[4].grid;
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value_3.length; i += 1) {
@@ -1231,7 +1412,7 @@ function create_if_block_1$1(ctx) {
 				each_blocks[i].c();
 			}
 
-			attr(tbody, "class", "sdt-tbody-lg svelte-snram0");
+			attr(tbody, "class", "sdt-tbody-lg svelte-1thbrav");
 		},
 		m(target, anchor) {
 			insert(target, tbody, anchor);
@@ -1241,8 +1422,8 @@ function create_if_block_1$1(ctx) {
 			}
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*dataset, updateInternalDate*/ 258) {
-				each_value_3 = /*dataset*/ ctx[1].monthGrid;
+			if (dirty[0] & /*dataset, onClick*/ 2064) {
+				each_value_3 = /*dataset*/ ctx[4].grid;
 				let i;
 
 				for (i = 0; i < each_value_3.length; i += 1) {
@@ -1280,17 +1461,17 @@ function create_if_block_1$1(ctx) {
 	};
 }
 
-// (117:8) {#each row as month, j(j)}
+// (197:8) {#each row as month, j(j)}
 function create_each_block_4(key_1, ctx) {
 	let td;
 	let button;
-	let t_value = /*month*/ ctx[34] + "";
+	let t_value = /*month*/ ctx[36] + "";
 	let t;
 	let mounted;
 	let dispose;
 
 	function click_handler_3() {
-		return /*click_handler_3*/ ctx[19](/*month*/ ctx[34]);
+		return /*click_handler_3*/ ctx[22](/*month*/ ctx[36]);
 	}
 
 	return {
@@ -1300,9 +1481,9 @@ function create_each_block_4(key_1, ctx) {
 			td = element("td");
 			button = element("button");
 			t = text(t_value);
-			attr(button, "class", "std-btn svelte-snram0");
-			attr(td, "class", "svelte-snram0");
-			toggle_class(td, "is-selected", /*i*/ ctx[26] * 4 + /*j*/ ctx[29] === /*dataset*/ ctx[1].selectionMark);
+			attr(button, "class", "std-btn svelte-1thbrav");
+			attr(td, "class", "svelte-1thbrav");
+			toggle_class(td, "is-selected", /*i*/ ctx[28] * 4 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
 			this.first = td;
 		},
 		m(target, anchor) {
@@ -1317,10 +1498,10 @@ function create_each_block_4(key_1, ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty[0] & /*dataset*/ 2 && t_value !== (t_value = /*month*/ ctx[34] + "")) set_data(t, t_value);
+			if (dirty[0] & /*dataset*/ 16 && t_value !== (t_value = /*month*/ ctx[36] + "")) set_data(t, t_value);
 
-			if (dirty[0] & /*dataset*/ 2) {
-				toggle_class(td, "is-selected", /*i*/ ctx[26] * 4 + /*j*/ ctx[29] === /*dataset*/ ctx[1].selectionMark);
+			if (dirty[0] & /*dataset*/ 16) {
+				toggle_class(td, "is-selected", /*i*/ ctx[28] * 4 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
 			}
 		},
 		d(detaching) {
@@ -1331,14 +1512,14 @@ function create_each_block_4(key_1, ctx) {
 	};
 }
 
-// (115:6) {#each dataset.monthGrid as row, i}
+// (195:6) {#each dataset.grid as row, i}
 function create_each_block_3(ctx) {
 	let tr;
 	let each_blocks = [];
 	let each_1_lookup = new Map();
 	let t;
-	let each_value_4 = /*row*/ ctx[24];
-	const get_key = ctx => /*j*/ ctx[29];
+	let each_value_4 = /*row*/ ctx[26];
+	const get_key = ctx => /*j*/ ctx[31];
 
 	for (let i = 0; i < each_value_4.length; i += 1) {
 		let child_ctx = get_each_context_4(ctx, each_value_4, i);
@@ -1366,8 +1547,8 @@ function create_each_block_3(ctx) {
 			append(tr, t);
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*dataset, updateInternalDate*/ 258) {
-				each_value_4 = /*row*/ ctx[24];
+			if (dirty[0] & /*dataset, onClick*/ 2064) {
+				each_value_4 = /*row*/ ctx[26];
 				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value_4, each_1_lookup, tr, destroy_block, create_each_block_4, t, get_each_context_4);
 			}
 		},
@@ -1381,25 +1562,25 @@ function create_each_block_3(ctx) {
 	};
 }
 
-// (128:4) {#if currentView === MODE_MONTH}
-function create_if_block$1(ctx) {
+// (208:4) {#if currentView === MODE_MONTH}
+function create_if_block$2(ctx) {
 	let tbody0;
 	let tr;
 	let t;
 	let tbody1;
 	let tbody1_intro;
-	let each_value_2 = /*dayLabels*/ ctx[2];
+	let each_value_2 = /*dayLabels*/ ctx[5];
 	let each_blocks_1 = [];
 
 	for (let i = 0; i < each_value_2.length; i += 1) {
 		each_blocks_1[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
 	}
 
-	let each_value = /*dataset*/ ctx[1].dayGrid;
+	let each_value = /*dataset*/ ctx[4].grid;
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value.length; i += 1) {
-		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
 	}
 
 	return {
@@ -1418,7 +1599,7 @@ function create_if_block$1(ctx) {
 				each_blocks[i].c();
 			}
 
-			attr(tr, "class", "sdt-cal-td svelte-snram0");
+			attr(tr, "class", "sdt-cal-td svelte-1thbrav");
 			attr(tbody0, "class", "c-section-center");
 		},
 		m(target, anchor) {
@@ -1437,8 +1618,8 @@ function create_if_block$1(ctx) {
 			}
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*dayLabels*/ 4) {
-				each_value_2 = /*dayLabels*/ ctx[2];
+			if (dirty[0] & /*dayLabels*/ 32) {
+				each_value_2 = /*dayLabels*/ ctx[5];
 				let i;
 
 				for (i = 0; i < each_value_2.length; i += 1) {
@@ -1460,17 +1641,17 @@ function create_if_block$1(ctx) {
 				each_blocks_1.length = each_value_2.length;
 			}
 
-			if (dirty[0] & /*dataset, isDisabledDate, isBetween, updateInternalDate*/ 306) {
-				each_value = /*dataset*/ ctx[1].dayGrid;
+			if (dirty[0] & /*dataset, isDisabledDate, isBetween, onClick*/ 2448) {
+				each_value = /*dataset*/ ctx[4].grid;
 				let i;
 
 				for (i = 0; i < each_value.length; i += 1) {
-					const child_ctx = get_each_context(ctx, each_value, i);
+					const child_ctx = get_each_context$1(ctx, each_value, i);
 
 					if (each_blocks[i]) {
 						each_blocks[i].p(child_ctx, dirty);
 					} else {
-						each_blocks[i] = create_each_block(child_ctx);
+						each_blocks[i] = create_each_block$1(child_ctx);
 						each_blocks[i].c();
 						each_blocks[i].m(tbody1, null);
 					}
@@ -1502,10 +1683,10 @@ function create_if_block$1(ctx) {
 	};
 }
 
-// (131:6) {#each dayLabels as header}
+// (211:6) {#each dayLabels as header}
 function create_each_block_2(ctx) {
 	let th;
-	let t_value = /*header*/ ctx[30] + "";
+	let t_value = /*header*/ ctx[32] + "";
 	let t;
 
 	return {
@@ -1518,7 +1699,7 @@ function create_each_block_2(ctx) {
 			append(th, t);
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*dayLabels*/ 4 && t_value !== (t_value = /*header*/ ctx[30] + "")) set_data(t, t_value);
+			if (dirty[0] & /*dayLabels*/ 32 && t_value !== (t_value = /*header*/ ctx[32] + "")) set_data(t, t_value);
 		},
 		d(detaching) {
 			if (detaching) detach(th);
@@ -1526,18 +1707,18 @@ function create_each_block_2(ctx) {
 	};
 }
 
-// (139:8) {#each row as currDate, j(j)}
-function create_each_block_1(key_1, ctx) {
+// (219:8) {#each row as currDate, j(j)}
+function create_each_block_1$1(key_1, ctx) {
 	let td;
 	let button;
-	let t_value = /*currDate*/ ctx[27].getUTCDate() + "";
+	let t_value = /*currDate*/ ctx[29].getUTCDate() + "";
 	let t;
 	let button_disabled_value;
 	let mounted;
 	let dispose;
 
 	function click_handler_4() {
-		return /*click_handler_4*/ ctx[20](/*currDate*/ ctx[27]);
+		return /*click_handler_4*/ ctx[23](/*currDate*/ ctx[29]);
 	}
 
 	return {
@@ -1547,12 +1728,12 @@ function create_each_block_1(key_1, ctx) {
 			td = element("td");
 			button = element("button");
 			t = text(t_value);
-			attr(button, "class", "std-btn svelte-snram0");
-			button.disabled = button_disabled_value = /*isDisabledDate*/ ctx[5](/*currDate*/ ctx[27]);
-			toggle_class(button, "not-current", !/*isBetween*/ ctx[4](/*i*/ ctx[26] * 7 + /*j*/ ctx[29], /*currDate*/ ctx[27]));
-			attr(td, "class", "sdt-cal-td svelte-snram0");
-			toggle_class(td, "sdt-today", /*i*/ ctx[26] * 7 + /*j*/ ctx[29] === /*dataset*/ ctx[1].todayMark);
-			toggle_class(td, "is-selected", /*i*/ ctx[26] * 7 + /*j*/ ctx[29] === /*dataset*/ ctx[1].selectionMark);
+			attr(button, "class", "std-btn svelte-1thbrav");
+			button.disabled = button_disabled_value = /*isDisabledDate*/ ctx[8](/*currDate*/ ctx[29]);
+			toggle_class(button, "not-current", !/*isBetween*/ ctx[7](/*i*/ ctx[28] * 7 + /*j*/ ctx[31], /*currDate*/ ctx[29]));
+			attr(td, "class", "sdt-cal-td svelte-1thbrav");
+			toggle_class(td, "sdt-today", /*i*/ ctx[28] * 7 + /*j*/ ctx[31] === /*dataset*/ ctx[4].todayMark);
+			toggle_class(td, "is-selected", /*i*/ ctx[28] * 7 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
 			this.first = td;
 		},
 		m(target, anchor) {
@@ -1567,22 +1748,22 @@ function create_each_block_1(key_1, ctx) {
 		},
 		p(new_ctx, dirty) {
 			ctx = new_ctx;
-			if (dirty[0] & /*dataset*/ 2 && t_value !== (t_value = /*currDate*/ ctx[27].getUTCDate() + "")) set_data(t, t_value);
+			if (dirty[0] & /*dataset*/ 16 && t_value !== (t_value = /*currDate*/ ctx[29].getUTCDate() + "")) set_data(t, t_value);
 
-			if (dirty[0] & /*dataset*/ 2 && button_disabled_value !== (button_disabled_value = /*isDisabledDate*/ ctx[5](/*currDate*/ ctx[27]))) {
+			if (dirty[0] & /*dataset*/ 16 && button_disabled_value !== (button_disabled_value = /*isDisabledDate*/ ctx[8](/*currDate*/ ctx[29]))) {
 				button.disabled = button_disabled_value;
 			}
 
-			if (dirty[0] & /*isBetween, dataset*/ 18) {
-				toggle_class(button, "not-current", !/*isBetween*/ ctx[4](/*i*/ ctx[26] * 7 + /*j*/ ctx[29], /*currDate*/ ctx[27]));
+			if (dirty[0] & /*isBetween, dataset*/ 144) {
+				toggle_class(button, "not-current", !/*isBetween*/ ctx[7](/*i*/ ctx[28] * 7 + /*j*/ ctx[31], /*currDate*/ ctx[29]));
 			}
 
-			if (dirty[0] & /*dataset*/ 2) {
-				toggle_class(td, "sdt-today", /*i*/ ctx[26] * 7 + /*j*/ ctx[29] === /*dataset*/ ctx[1].todayMark);
+			if (dirty[0] & /*dataset*/ 16) {
+				toggle_class(td, "sdt-today", /*i*/ ctx[28] * 7 + /*j*/ ctx[31] === /*dataset*/ ctx[4].todayMark);
 			}
 
-			if (dirty[0] & /*dataset*/ 2) {
-				toggle_class(td, "is-selected", /*i*/ ctx[26] * 7 + /*j*/ ctx[29] === /*dataset*/ ctx[1].selectionMark);
+			if (dirty[0] & /*dataset*/ 16) {
+				toggle_class(td, "is-selected", /*i*/ ctx[28] * 7 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
 			}
 		},
 		d(detaching) {
@@ -1593,19 +1774,19 @@ function create_each_block_1(key_1, ctx) {
 	};
 }
 
-// (137:6) {#each dataset.dayGrid as row, i }
-function create_each_block(ctx) {
+// (217:6) {#each dataset.grid as row, i }
+function create_each_block$1(ctx) {
 	let tr;
 	let each_blocks = [];
 	let each_1_lookup = new Map();
 	let t;
-	let each_value_1 = /*row*/ ctx[24];
-	const get_key = ctx => /*j*/ ctx[29];
+	let each_value_1 = /*row*/ ctx[26];
+	const get_key = ctx => /*j*/ ctx[31];
 
 	for (let i = 0; i < each_value_1.length; i += 1) {
-		let child_ctx = get_each_context_1(ctx, each_value_1, i);
+		let child_ctx = get_each_context_1$1(ctx, each_value_1, i);
 		let key = get_key(child_ctx);
-		each_1_lookup.set(key, each_blocks[i] = create_each_block_1(key, child_ctx));
+		each_1_lookup.set(key, each_blocks[i] = create_each_block_1$1(key, child_ctx));
 	}
 
 	return {
@@ -1628,9 +1809,9 @@ function create_each_block(ctx) {
 			append(tr, t);
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*dataset, isDisabledDate, isBetween, updateInternalDate*/ 306) {
-				each_value_1 = /*row*/ ctx[24];
-				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value_1, each_1_lookup, tr, destroy_block, create_each_block_1, t, get_each_context_1);
+			if (dirty[0] & /*dataset, isDisabledDate, isBetween, onClick*/ 2448) {
+				each_value_1 = /*row*/ ctx[26];
+				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value_1, each_1_lookup, tr, destroy_block, create_each_block_1$1, t, get_each_context_1$1);
 			}
 		},
 		d(detaching) {
@@ -1643,53 +1824,57 @@ function create_each_block(ctx) {
 	};
 }
 
-function create_fragment$2(ctx) {
+function create_fragment$3(ctx) {
 	let div1;
 	let button0;
 	let t0;
 	let t1;
 	let div0;
+	let t2;
 	let button1;
 	let t3;
 	let button2;
-	let t5;
+	let t4;
 	let div2;
 	let table;
+	let t5;
 	let t6;
-	let t7;
 	let mounted;
 	let dispose;
-	let if_block0 = /*currentView*/ ctx[0] === MODE_DECADE && create_if_block_2$1(ctx);
-	let if_block1 = /*currentView*/ ctx[0] === MODE_YEAR && create_if_block_1$1(ctx);
-	let if_block2 = /*currentView*/ ctx[0] === MODE_MONTH && create_if_block$1(ctx);
+	let if_block0 = /*enableTimeToggle*/ ctx[1] && /*internalDate*/ ctx[2] && create_if_block_3$1(ctx);
+	let if_block1 = /*currentView*/ ctx[3] === MODE_DECADE && create_if_block_2$2(ctx);
+	let if_block2 = /*currentView*/ ctx[3] === MODE_YEAR && create_if_block_1$2(ctx);
+	let if_block3 = /*currentView*/ ctx[3] === MODE_MONTH && create_if_block$2(ctx);
 
 	return {
 		c() {
 			div1 = element("div");
 			button0 = element("button");
-			t0 = text(/*tableCaption*/ ctx[3]);
+			t0 = text(/*tableCaption*/ ctx[6]);
 			t1 = space();
 			div0 = element("div");
+			if (if_block0) if_block0.c();
+			t2 = space();
 			button1 = element("button");
-			button1.textContent = "⏶";
+			button1.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>`;
 			t3 = space();
 			button2 = element("button");
-			button2.textContent = "⏷";
-			t5 = space();
+			button2.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>`;
+			t4 = space();
 			div2 = element("div");
 			table = element("table");
-			if (if_block0) if_block0.c();
-			t6 = space();
 			if (if_block1) if_block1.c();
-			t7 = space();
+			t5 = space();
 			if (if_block2) if_block2.c();
-			attr(button0, "class", "std-btn std-btn-header sdt-toggle-btn svelte-snram0");
-			attr(button1, "class", "std-btn std-btn-header svelte-snram0");
-			attr(button2, "class", "std-btn std-btn-header svelte-snram0");
-			attr(div0, "class", "sdt-nav-btns svelte-snram0");
-			attr(div1, "class", "sdt-thead-nav svelte-snram0");
-			attr(table, "class", "sdt-table svelte-snram0");
-			attr(div2, "class", "sdt-calendar svelte-snram0");
+			t6 = space();
+			if (if_block3) if_block3.c();
+			attr(button0, "class", "std-btn std-btn-header sdt-toggle-btn svelte-1thbrav");
+			attr(button1, "class", "std-btn std-btn-header icon-btn svelte-1thbrav");
+			attr(button2, "class", "std-btn std-btn-header icon-btn svelte-1thbrav");
+			attr(div0, "class", "sdt-nav-btns svelte-1thbrav");
+			attr(div1, "class", "sdt-thead-nav svelte-1thbrav");
+			attr(table, "class", "sdt-table svelte-1thbrav");
+			attr(div2, "class", "sdt-calendar svelte-1thbrav");
 		},
 		m(target, anchor) {
 			insert(target, div1, anchor);
@@ -1697,105 +1882,121 @@ function create_fragment$2(ctx) {
 			append(button0, t0);
 			append(div1, t1);
 			append(div1, div0);
+			if (if_block0) if_block0.m(div0, null);
+			append(div0, t2);
 			append(div0, button1);
 			append(div0, t3);
 			append(div0, button2);
-			insert(target, t5, anchor);
+			insert(target, t4, anchor);
 			insert(target, div2, anchor);
 			append(div2, table);
-			if (if_block0) if_block0.m(table, null);
-			append(table, t6);
 			if (if_block1) if_block1.m(table, null);
-			append(table, t7);
+			append(table, t5);
 			if (if_block2) if_block2.m(table, null);
+			append(table, t6);
+			if (if_block3) if_block3.m(table, null);
 
 			if (!mounted) {
 				dispose = [
-					listen(button0, "click", prevent_default(/*onSwitchView*/ ctx[7])),
-					listen(button1, "click", prevent_default(/*click_handler*/ ctx[16])),
-					listen(button2, "click", prevent_default(/*click_handler_1*/ ctx[17]))
+					listen(button0, "click", prevent_default(/*onSwitchView*/ ctx[10])),
+					listen(button1, "click", prevent_default(/*click_handler*/ ctx[19])),
+					listen(button2, "click", prevent_default(/*click_handler_1*/ ctx[20]))
 				];
 
 				mounted = true;
 			}
 		},
 		p(ctx, dirty) {
-			if (dirty[0] & /*tableCaption*/ 8) set_data(t0, /*tableCaption*/ ctx[3]);
+			if (dirty[0] & /*tableCaption*/ 64) set_data(t0, /*tableCaption*/ ctx[6]);
 
-			if (/*currentView*/ ctx[0] === MODE_DECADE) {
+			if (/*enableTimeToggle*/ ctx[1] && /*internalDate*/ ctx[2]) {
 				if (if_block0) {
 					if_block0.p(ctx, dirty);
-
-					if (dirty[0] & /*currentView*/ 1) {
-						transition_in(if_block0, 1);
-					}
 				} else {
-					if_block0 = create_if_block_2$1(ctx);
+					if_block0 = create_if_block_3$1(ctx);
 					if_block0.c();
-					transition_in(if_block0, 1);
-					if_block0.m(table, t6);
+					if_block0.m(div0, t2);
 				}
 			} else if (if_block0) {
 				if_block0.d(1);
 				if_block0 = null;
 			}
 
-			if (/*currentView*/ ctx[0] === MODE_YEAR) {
+			if (/*currentView*/ ctx[3] === MODE_DECADE) {
 				if (if_block1) {
 					if_block1.p(ctx, dirty);
 
-					if (dirty[0] & /*currentView*/ 1) {
+					if (dirty[0] & /*currentView*/ 8) {
 						transition_in(if_block1, 1);
 					}
 				} else {
-					if_block1 = create_if_block_1$1(ctx);
+					if_block1 = create_if_block_2$2(ctx);
 					if_block1.c();
 					transition_in(if_block1, 1);
-					if_block1.m(table, t7);
+					if_block1.m(table, t5);
 				}
 			} else if (if_block1) {
 				if_block1.d(1);
 				if_block1 = null;
 			}
 
-			if (/*currentView*/ ctx[0] === MODE_MONTH) {
+			if (/*currentView*/ ctx[3] === MODE_YEAR) {
 				if (if_block2) {
 					if_block2.p(ctx, dirty);
 
-					if (dirty[0] & /*currentView*/ 1) {
+					if (dirty[0] & /*currentView*/ 8) {
 						transition_in(if_block2, 1);
 					}
 				} else {
-					if_block2 = create_if_block$1(ctx);
+					if_block2 = create_if_block_1$2(ctx);
 					if_block2.c();
 					transition_in(if_block2, 1);
-					if_block2.m(table, null);
+					if_block2.m(table, t6);
 				}
 			} else if (if_block2) {
 				if_block2.d(1);
 				if_block2 = null;
 			}
+
+			if (/*currentView*/ ctx[3] === MODE_MONTH) {
+				if (if_block3) {
+					if_block3.p(ctx, dirty);
+
+					if (dirty[0] & /*currentView*/ 8) {
+						transition_in(if_block3, 1);
+					}
+				} else {
+					if_block3 = create_if_block$2(ctx);
+					if_block3.c();
+					transition_in(if_block3, 1);
+					if_block3.m(table, null);
+				}
+			} else if (if_block3) {
+				if_block3.d(1);
+				if_block3 = null;
+			}
 		},
 		i(local) {
-			transition_in(if_block0);
 			transition_in(if_block1);
 			transition_in(if_block2);
+			transition_in(if_block3);
 		},
 		o: noop,
 		d(detaching) {
 			if (detaching) detach(div1);
-			if (detaching) detach(t5);
-			if (detaching) detach(div2);
 			if (if_block0) if_block0.d();
+			if (detaching) detach(t4);
+			if (detaching) detach(div2);
 			if (if_block1) if_block1.d();
 			if (if_block2) if_block2.d();
+			if (if_block3) if_block3.d();
 			mounted = false;
 			run_all(dispose);
 		}
 	};
 }
 
-function instance$2($$self, $$props, $$invalidate) {
+function instance$3($$self, $$props, $$invalidate) {
 	let dataset;
 	let dayLabels;
 	let tableCaption;
@@ -1804,9 +2005,75 @@ function instance$2($$self, $$props, $$invalidate) {
 	let { endDate = null } = $$props;
 	let { weekStart = 1 } = $$props;
 	let { i18n } = $$props;
-	let initial = (date || new Date()).toISOString().split("T")[0].substring(0, 10);
-	let internalDate = new Date(initial);
-	let activeDate = new Date(initial);
+	let { enableTimeToggle = false } = $$props;
+
+	function handleGridNav(key, shiftKey) {
+		if (!internalDate) {
+			onClick(new Date());
+			return;
+		}
+
+		let pos;
+
+		switch (key) {
+			case "ArrowDown":
+				pos = moveGrid(dataset.selectionMark + 7, currentView);
+				if (pos.y > 5) {
+					const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() + 1, 1);
+					const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
+
+					pos.y = tmpData.grid[0][pos.x].getUTCDate() === internalDate.getUTCDate()
+					? 1
+					: 0;
+
+					onChangeMonth(1);
+					onClick(tmpData.grid[pos.y][pos.x]);
+					return;
+				}
+				if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+					onChangeMonth(1);
+				}
+				onClick(dataset.grid[pos.y][pos.x]);
+				break;
+			case "ArrowUp":
+				pos = moveGrid(dataset.selectionMark - 7, currentView);
+				if (pos.y === 5) {
+					const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() > 0 ? activeDate.getMonth() : 11, 1);
+					const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
+
+					pos.y = tmpData.grid[5][pos.x].getUTCDate() === internalDate.getUTCDate()
+					? 4
+					: 5;
+
+					onChangeMonth(-1);
+					onClick(tmpData.grid[pos.y][pos.x]);
+					return;
+				}
+				if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+					onChangeMonth(-1);
+				}
+				onClick(dataset.grid[pos.y][pos.x]);
+				break;
+			case "ArrowLeft":
+				pos = moveGrid(dataset.selectionMark - 1, currentView);
+				if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+					onChangeMonth(-1);
+				}
+				onClick(dataset.grid[pos.y][pos.x]);
+				break;
+			case "ArrowRight":
+				pos = moveGrid(dataset.selectionMark + 1, currentView);
+				if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+					onChangeMonth(1);
+				}
+				onClick(dataset.grid[pos.y][pos.x]);
+				break;
+		}
+	}
+
+	let internalDate = date;
+	let activeDate = date ? new Date(date.valueOf()) : new Date();
+	activeDate.setDate(1);
 	const dispatch = createEventDispatcher();
 	let currentView = MODE_MONTH;
 
@@ -1819,42 +2086,51 @@ function instance$2($$self, $$props, $$invalidate) {
 		if (endDate && endDate < date) return true;
 	}
 
-	function changeMonth(val) {
+	function onChangeMonth(val) {
 		const multiplier = currentView === MODE_DECADE
 		? 120
 		: currentView === MODE_YEAR ? 12 : 1;
 
 		activeDate.setUTCMonth(activeDate.getUTCMonth() + val * multiplier);
-		$$invalidate(15, activeDate);
+		(($$invalidate(18, activeDate), $$invalidate(13, date)), $$invalidate(2, internalDate));
 	}
 
 	function onSwitchView() {
-		currentView && $$invalidate(0, currentView--, currentView);
+		currentView && $$invalidate(3, currentView--, currentView);
 	}
 
-	function updateInternalDate(value) {
+	function onClick(value) {
 		switch (currentView) {
 			case 0:
 				activeDate.setYear(value);
-				$$invalidate(15, activeDate);
+				(($$invalidate(18, activeDate), $$invalidate(13, date)), $$invalidate(2, internalDate));
 				break;
 			case 1:
 				activeDate.setUTCMonth(i18n.monthsShort.indexOf(value));
-				$$invalidate(15, activeDate);
+				(($$invalidate(18, activeDate), $$invalidate(13, date)), $$invalidate(2, internalDate));
 				break;
 			case 2:
-				$$invalidate(14, internalDate = new Date(value.toISOString().split("T")[0].substring(0, 10)));
+				const newInternalDate = UTCDate(value.getUTCFullYear(), value.getMonth(), value.getDate());
+				if (internalDate) {
+					newInternalDate.setMinutes(internalDate.getMinutes());
+					newInternalDate.setUTCHours(internalDate.getUTCHours());
+				}
+				$$invalidate(2, internalDate = newInternalDate);
 				dispatch("date", internalDate);
 				break;
 		}
 
-		currentView < MODE_MONTH && $$invalidate(0, currentView++, currentView);
+		currentView < MODE_MONTH && $$invalidate(3, currentView++, currentView);
+	}
+
+	function onTimeSwitch() {
+		dispatch("switch", "time");
 	}
 
 	function showCaption() {
 		switch (currentView) {
 			case 0:
-				return `${dataset.yearGrid[0][1]} - ${dataset.yearGrid[2][2]}`;
+				return `${dataset.grid[0][1]} - ${dataset.grid[2][2]}`;
 			case 1:
 				return activeDate.getUTCFullYear();
 			case 2:
@@ -1862,69 +2138,80 @@ function instance$2($$self, $$props, $$invalidate) {
 		}
 	}
 
-	const click_handler = () => changeMonth(-1);
-	const click_handler_1 = () => changeMonth(1);
+	const click_handler = () => onChangeMonth(-1);
+	const click_handler_1 = () => onChangeMonth(1);
 
 	const click_handler_2 = year => {
-		updateInternalDate(year);
+		onClick(year);
 	};
 
 	const click_handler_3 = month => {
-		updateInternalDate(month);
+		onClick(month);
 	};
 
 	const click_handler_4 = currDate => {
-		updateInternalDate(currDate);
+		onClick(currDate);
 	};
 
 	$$self.$$set = $$props => {
-		if ("date" in $$props) $$invalidate(9, date = $$props.date);
-		if ("startDate" in $$props) $$invalidate(10, startDate = $$props.startDate);
-		if ("endDate" in $$props) $$invalidate(11, endDate = $$props.endDate);
-		if ("weekStart" in $$props) $$invalidate(12, weekStart = $$props.weekStart);
-		if ("i18n" in $$props) $$invalidate(13, i18n = $$props.i18n);
+		if ("date" in $$props) $$invalidate(13, date = $$props.date);
+		if ("startDate" in $$props) $$invalidate(14, startDate = $$props.startDate);
+		if ("endDate" in $$props) $$invalidate(15, endDate = $$props.endDate);
+		if ("weekStart" in $$props) $$invalidate(16, weekStart = $$props.weekStart);
+		if ("i18n" in $$props) $$invalidate(0, i18n = $$props.i18n);
+		if ("enableTimeToggle" in $$props) $$invalidate(1, enableTimeToggle = $$props.enableTimeToggle);
 	};
 
 	$$self.$$.update = () => {
-		if ($$self.$$.dirty[0] & /*date, internalDate*/ 16896) {
+		if ($$self.$$.dirty[0] & /*date, internalDate*/ 8196) {
 			{
 				if (date !== internalDate) {
-					$$invalidate(14, internalDate = date);
+					$$invalidate(2, internalDate = date);
+
+					if (date) {
+						$$invalidate(18, activeDate = new Date(date.valueOf()));
+					}
+
+					
+					$$invalidate(3, currentView = MODE_MONTH);
 				}
 			}
 		}
 
-		if ($$self.$$.dirty[0] & /*activeDate, internalDate, currentView, i18n*/ 57345) {
-			$$invalidate(1, dataset = compute(activeDate, internalDate, currentView, i18n));
+		if ($$self.$$.dirty[0] & /*activeDate, internalDate, currentView, i18n, weekStart*/ 327693) {
+			$$invalidate(4, dataset = compute(activeDate, internalDate, currentView, i18n, weekStart));
 		}
 
-		if ($$self.$$.dirty[0] & /*weekStart, i18n*/ 12288) {
-			$$invalidate(2, dayLabels = weekStart > 1
-			? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 8)
-			: i18n.daysMin.slice(weekStart, 8));
+		if ($$self.$$.dirty[0] & /*weekStart, i18n*/ 65537) {
+			$$invalidate(5, dayLabels = weekStart > -1
+			? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 7 + weekStart)
+			: i18n.daysMin.slice(weekStart, 7 + weekStart));
 		}
 
-		if ($$self.$$.dirty[0] & /*currentView, activeDate*/ 32769) {
-			$$invalidate(3, tableCaption = showCaption());
+		if ($$self.$$.dirty[0] & /*currentView, activeDate*/ 262152) {
+			$$invalidate(6, tableCaption = showCaption());
 		}
 	};
 
 	return [
+		i18n,
+		enableTimeToggle,
+		internalDate,
 		currentView,
 		dataset,
 		dayLabels,
 		tableCaption,
 		isBetween,
 		isDisabledDate,
-		changeMonth,
+		onChangeMonth,
 		onSwitchView,
-		updateInternalDate,
+		onClick,
+		onTimeSwitch,
 		date,
 		startDate,
 		endDate,
 		weekStart,
-		i18n,
-		internalDate,
+		handleGridNav,
 		activeDate,
 		click_handler,
 		click_handler_1,
@@ -1937,7 +2224,911 @@ function instance$2($$self, $$props, $$invalidate) {
 class Calendar extends SvelteComponent {
 	constructor(options) {
 		super();
-		if (!document.getElementById("svelte-snram0-style")) add_css$1();
+		if (!document.getElementById("svelte-1thbrav-style")) add_css$2();
+
+		init(
+			this,
+			options,
+			instance$3,
+			create_fragment$3,
+			safe_not_equal,
+			{
+				date: 13,
+				startDate: 14,
+				endDate: 15,
+				weekStart: 16,
+				i18n: 0,
+				enableTimeToggle: 1,
+				handleGridNav: 17
+			},
+			[-1, -1]
+		);
+	}
+
+	get handleGridNav() {
+		return this.$$.ctx[17];
+	}
+}
+
+/* src\Time.svelte generated by Svelte v3.37.0 */
+
+function add_css$1() {
+	var style = element("style");
+	style.id = "svelte-vg2bsw-style";
+	style.textContent = ".sdt-timer.svelte-vg2bsw.svelte-vg2bsw{position:relative;width:272px}.sdt-time-head.svelte-vg2bsw.svelte-vg2bsw{position:relative;display:flex;justify-content:center;align-items:center}.sdt-time-figure.svelte-vg2bsw.svelte-vg2bsw{font-size:1.5rem;font-weight:bold}.sdt-clock.svelte-vg2bsw.svelte-vg2bsw{margin:auto;position:relative;width:260px;height:260px;background-color:#eeeded;border-radius:50%;transition:background-color 0.3s}.sdt-clock.is-minute-view.svelte-vg2bsw.svelte-vg2bsw{background-color:rgb(238, 237, 237, 0.25);box-shadow:0 0 128px 2px #ddd inset}.sdt-time-btn.svelte-vg2bsw.svelte-vg2bsw{border:0;background:transparent;text-align:center;border-radius:4px;cursor:pointer;padding:0.375rem}.sdt-time-btn.svelte-vg2bsw.svelte-vg2bsw:not(.is-active){opacity:0.5}.sdt-time-btn.svelte-vg2bsw.svelte-vg2bsw:hover{background-color:rgb(223, 223, 223);color:black}.sdt-back-btn.svelte-vg2bsw.svelte-vg2bsw{position:absolute;border:1px solid #ddd;left:0;opacity:1 !important}.sdt-meridian.svelte-vg2bsw.svelte-vg2bsw{position:absolute;top:0.25rem;right:0.25rem;display:flex;flex-flow:column;font-size:90%}.sdt-meridian.svelte-vg2bsw .sdt-time-btn.svelte-vg2bsw{padding:0.15rem 0.5rem}.sdt-meridian.svelte-vg2bsw .sdt-time-btn.is-active.svelte-vg2bsw{font-weight:bold}.sdt-middle-dot.svelte-vg2bsw.svelte-vg2bsw{left:50%;top:50%;width:6px;height:6px;position:absolute;transform:translate(-50%, -50%);background-color:#286090;border-radius:50%}.sdt-hand-pointer.svelte-vg2bsw.svelte-vg2bsw{width:2px;height:calc(40% + 1px);bottom:50%;left:calc(50% - 1px);position:absolute;background-color:#286090;transform-origin:center bottom 0;transition:transform 0.2s ease, height 0.15s ease}.sdt-hand-circle.svelte-vg2bsw.svelte-vg2bsw{left:-15px;top:-21px;position:relative;width:4px;height:4px;background-color:transparent;border:14px solid #286090;border-radius:50%;box-sizing:content-box}.sdt-tick.svelte-vg2bsw.svelte-vg2bsw{position:absolute;width:30px;height:30px;border-width:0;transform:translate(-50%, -50%);text-align:center;border-radius:50%;line-height:28px;cursor:pointer;background-color:transparent}.sdt-tick.is-selected.svelte-vg2bsw.svelte-vg2bsw{background-color:#286090;color:#fff}";
+	append(document.head, style);
+}
+
+function get_each_context(ctx, list, i) {
+	const child_ctx = ctx.slice();
+	child_ctx[28] = list[i];
+	child_ctx[30] = i;
+	return child_ctx;
+}
+
+function get_each_context_1(ctx, list, i) {
+	const child_ctx = ctx.slice();
+	child_ctx[28] = list[i];
+	child_ctx[30] = i;
+	return child_ctx;
+}
+
+// (176:4) {#if hasDateComponent}
+function create_if_block_2$1(ctx) {
+	let button;
+	let svg;
+	let path;
+	let button_title_value;
+	let mounted;
+	let dispose;
+
+	return {
+		c() {
+			button = element("button");
+			svg = svg_element("svg");
+			path = svg_element("path");
+			attr(path, "fill-rule", "evenodd");
+			attr(path, "d", "M6.75 0a.75.75 0 01.75.75V3h9V.75a.75.75 0 011.5 0V3h2.75c.966 0 1.75.784 1.75 1.75v16a1.75 1.75 0 01-1.75 1.75H3.25a1.75 1.75 0 01-1.75-1.75v-16C1.5 3.784 2.284 3 3.25 3H6V.75A.75.75 0 016.75 0zm-3.5 4.5a.25.25 0 00-.25.25V8h18V4.75a.25.25 0 00-.25-.25H3.25zM21 9.5H3v11.25c0 .138.112.25.25.25h17.5a.25.25 0 00.25-.25V9.5z");
+			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
+			attr(svg, "viewBox", "0 0 24 24");
+			attr(svg, "width", "20");
+			attr(svg, "height", "20");
+			attr(button, "class", "sdt-time-btn sdt-back-btn svelte-vg2bsw");
+			attr(button, "title", button_title_value = /*i18n*/ ctx[2].backToDate);
+		},
+		m(target, anchor) {
+			insert(target, button, anchor);
+			append(button, svg);
+			append(svg, path);
+
+			if (!mounted) {
+				dispose = listen(button, "click", /*onModeSwitch*/ ctx[16]);
+				mounted = true;
+			}
+		},
+		p(ctx, dirty) {
+			if (dirty[0] & /*i18n*/ 4 && button_title_value !== (button_title_value = /*i18n*/ ctx[2].backToDate)) {
+				attr(button, "title", button_title_value);
+			}
+		},
+		d(detaching) {
+			if (detaching) detach(button);
+			mounted = false;
+			dispose();
+		}
+	};
+}
+
+// (190:4) {#if showMeridian}
+function create_if_block_1$1(ctx) {
+	let div;
+	let button0;
+	let t0;
+	let button0_data_value_value;
+	let t1;
+	let button1;
+	let t2;
+	let button1_data_value_value;
+	let mounted;
+	let dispose;
+
+	return {
+		c() {
+			div = element("div");
+			button0 = element("button");
+			t0 = text("AM");
+			t1 = space();
+			button1 = element("button");
+			t2 = text("PM");
+			attr(button0, "class", "sdt-time-btn svelte-vg2bsw");
+			attr(button0, "data-value", button0_data_value_value = /*selectedHour*/ ctx[4] % 12);
+			toggle_class(button0, "is-active", /*selectedHour*/ ctx[4] < 12);
+			attr(button1, "class", "sdt-time-btn svelte-vg2bsw");
+			attr(button1, "data-value", button1_data_value_value = /*selectedHour*/ ctx[4] % 12 + 12);
+			toggle_class(button1, "is-active", /*selectedHour*/ ctx[4] >= 12);
+			attr(div, "class", "sdt-meridian svelte-vg2bsw");
+		},
+		m(target, anchor) {
+			insert(target, div, anchor);
+			append(div, button0);
+			append(button0, t0);
+			append(div, t1);
+			append(div, button1);
+			append(button1, t2);
+
+			if (!mounted) {
+				dispose = [
+					listen(button0, "click", /*onSwitchMeridian*/ ctx[14]),
+					listen(button1, "click", /*onSwitchMeridian*/ ctx[14])
+				];
+
+				mounted = true;
+			}
+		},
+		p(ctx, dirty) {
+			if (dirty[0] & /*selectedHour*/ 16 && button0_data_value_value !== (button0_data_value_value = /*selectedHour*/ ctx[4] % 12)) {
+				attr(button0, "data-value", button0_data_value_value);
+			}
+
+			if (dirty[0] & /*selectedHour*/ 16) {
+				toggle_class(button0, "is-active", /*selectedHour*/ ctx[4] < 12);
+			}
+
+			if (dirty[0] & /*selectedHour*/ 16 && button1_data_value_value !== (button1_data_value_value = /*selectedHour*/ ctx[4] % 12 + 12)) {
+				attr(button1, "data-value", button1_data_value_value);
+			}
+
+			if (dirty[0] & /*selectedHour*/ 16) {
+				toggle_class(button1, "is-active", /*selectedHour*/ ctx[4] >= 12);
+			}
+		},
+		d(detaching) {
+			if (detaching) detach(div);
+			mounted = false;
+			run_all(dispose);
+		}
+	};
+}
+
+// (204:4) {#each pos as p, i(p.val)}
+function create_each_block_1(key_1, ctx) {
+	let button;
+	let t_value = /*p*/ ctx[28].val + "";
+	let t;
+	let button_style_value;
+	let button_data_value_value;
+	let button_transition;
+	let current;
+
+	return {
+		key: key_1,
+		first: null,
+		c() {
+			button = element("button");
+			t = text(t_value);
+			attr(button, "style", button_style_value = `left:${/*p*/ ctx[28].x}px; top:${/*p*/ ctx[28].y}px`);
+			attr(button, "class", "sdt-tick svelte-vg2bsw");
+			attr(button, "data-value", button_data_value_value = /*p*/ ctx[28].val);
+
+			toggle_class(button, "is-selected", /*isSelected*/ ctx[12](
+				/*isMinuteView*/ ctx[3]
+				? /*selectedMinutes*/ ctx[5]
+				: /*selectedHour*/ ctx[4],
+				/*p*/ ctx[28].val,
+				/*i*/ ctx[30]
+			));
+
+			this.first = button;
+		},
+		m(target, anchor) {
+			insert(target, button, anchor);
+			append(button, t);
+			current = true;
+		},
+		p(new_ctx, dirty) {
+			ctx = new_ctx;
+			if ((!current || dirty[0] & /*pos*/ 512) && t_value !== (t_value = /*p*/ ctx[28].val + "")) set_data(t, t_value);
+
+			if (!current || dirty[0] & /*pos*/ 512 && button_style_value !== (button_style_value = `left:${/*p*/ ctx[28].x}px; top:${/*p*/ ctx[28].y}px`)) {
+				attr(button, "style", button_style_value);
+			}
+
+			if (!current || dirty[0] & /*pos*/ 512 && button_data_value_value !== (button_data_value_value = /*p*/ ctx[28].val)) {
+				attr(button, "data-value", button_data_value_value);
+			}
+
+			if (dirty[0] & /*isSelected, isMinuteView, selectedMinutes, selectedHour, pos*/ 4664) {
+				toggle_class(button, "is-selected", /*isSelected*/ ctx[12](
+					/*isMinuteView*/ ctx[3]
+					? /*selectedMinutes*/ ctx[5]
+					: /*selectedHour*/ ctx[4],
+					/*p*/ ctx[28].val,
+					/*i*/ ctx[30]
+				));
+			}
+		},
+		i(local) {
+			if (current) return;
+
+			if (local) {
+				add_render_callback(() => {
+					if (!button_transition) button_transition = create_bidirectional_transition(button, fade, { duration: 200 }, true);
+					button_transition.run(1);
+				});
+			}
+
+			current = true;
+		},
+		o(local) {
+			if (local) {
+				if (!button_transition) button_transition = create_bidirectional_transition(button, fade, { duration: 200 }, false);
+				button_transition.run(0);
+			}
+
+			current = false;
+		},
+		d(detaching) {
+			if (detaching) detach(button);
+			if (detaching && button_transition) button_transition.end();
+		}
+	};
+}
+
+// (210:4) {#if !showMeridian && !isMinuteView}
+function create_if_block$1(ctx) {
+	let each_1_anchor;
+	let current;
+	let each_value = /*innerHours*/ ctx[10];
+	let each_blocks = [];
+
+	for (let i = 0; i < each_value.length; i += 1) {
+		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+	}
+
+	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+		each_blocks[i] = null;
+	});
+
+	return {
+		c() {
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				each_blocks[i].c();
+			}
+
+			each_1_anchor = empty();
+		},
+		m(target, anchor) {
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				each_blocks[i].m(target, anchor);
+			}
+
+			insert(target, each_1_anchor, anchor);
+			current = true;
+		},
+		p(ctx, dirty) {
+			if (dirty[0] & /*innerHours, isSelected, selectedHour*/ 5136) {
+				each_value = /*innerHours*/ ctx[10];
+				let i;
+
+				for (i = 0; i < each_value.length; i += 1) {
+					const child_ctx = get_each_context(ctx, each_value, i);
+
+					if (each_blocks[i]) {
+						each_blocks[i].p(child_ctx, dirty);
+						transition_in(each_blocks[i], 1);
+					} else {
+						each_blocks[i] = create_each_block(child_ctx);
+						each_blocks[i].c();
+						transition_in(each_blocks[i], 1);
+						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+					}
+				}
+
+				group_outros();
+
+				for (i = each_value.length; i < each_blocks.length; i += 1) {
+					out(i);
+				}
+
+				check_outros();
+			}
+		},
+		i(local) {
+			if (current) return;
+
+			for (let i = 0; i < each_value.length; i += 1) {
+				transition_in(each_blocks[i]);
+			}
+
+			current = true;
+		},
+		o(local) {
+			each_blocks = each_blocks.filter(Boolean);
+
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				transition_out(each_blocks[i]);
+			}
+
+			current = false;
+		},
+		d(detaching) {
+			destroy_each(each_blocks, detaching);
+			if (detaching) detach(each_1_anchor);
+		}
+	};
+}
+
+// (211:6) {#each innerHours as p, i}
+function create_each_block(ctx) {
+	let button;
+	let t_value = /*p*/ ctx[28].val + "";
+	let t;
+	let button_style_value;
+	let button_data_value_value;
+	let button_transition;
+	let current;
+
+	return {
+		c() {
+			button = element("button");
+			t = text(t_value);
+			attr(button, "style", button_style_value = `left:${/*p*/ ctx[28].x}px; top:${/*p*/ ctx[28].y}px`);
+			attr(button, "class", "sdt-tick svelte-vg2bsw");
+			attr(button, "data-value", button_data_value_value = /*p*/ ctx[28].val);
+			toggle_class(button, "is-selected", /*isSelected*/ ctx[12](/*selectedHour*/ ctx[4], /*p*/ ctx[28].val, /*i*/ ctx[30]));
+		},
+		m(target, anchor) {
+			insert(target, button, anchor);
+			append(button, t);
+			current = true;
+		},
+		p(ctx, dirty) {
+			if ((!current || dirty[0] & /*innerHours*/ 1024) && t_value !== (t_value = /*p*/ ctx[28].val + "")) set_data(t, t_value);
+
+			if (!current || dirty[0] & /*innerHours*/ 1024 && button_style_value !== (button_style_value = `left:${/*p*/ ctx[28].x}px; top:${/*p*/ ctx[28].y}px`)) {
+				attr(button, "style", button_style_value);
+			}
+
+			if (!current || dirty[0] & /*innerHours*/ 1024 && button_data_value_value !== (button_data_value_value = /*p*/ ctx[28].val)) {
+				attr(button, "data-value", button_data_value_value);
+			}
+
+			if (dirty[0] & /*isSelected, selectedHour, innerHours*/ 5136) {
+				toggle_class(button, "is-selected", /*isSelected*/ ctx[12](/*selectedHour*/ ctx[4], /*p*/ ctx[28].val, /*i*/ ctx[30]));
+			}
+		},
+		i(local) {
+			if (current) return;
+
+			if (local) {
+				add_render_callback(() => {
+					if (!button_transition) button_transition = create_bidirectional_transition(button, fade, { duration: 200 }, true);
+					button_transition.run(1);
+				});
+			}
+
+			current = true;
+		},
+		o(local) {
+			if (local) {
+				if (!button_transition) button_transition = create_bidirectional_transition(button, fade, { duration: 200 }, false);
+				button_transition.run(0);
+			}
+
+			current = false;
+		},
+		d(detaching) {
+			if (detaching) detach(button);
+			if (detaching && button_transition) button_transition.end();
+		}
+	};
+}
+
+function create_fragment$2(ctx) {
+	let div5;
+	let div0;
+	let t0;
+	let button0;
+	let t1_value = /*view*/ ctx[11](/*selectedHour*/ ctx[4], /*showMeridian*/ ctx[0]) + "";
+	let t1;
+	let t2;
+	let span;
+	let t4;
+	let button1;
+	let t5_value = /*view*/ ctx[11](/*selectedMinutes*/ ctx[5], false) + "";
+	let t5;
+	let t6;
+	let t7;
+	let div4;
+	let div1;
+	let t8;
+	let div3;
+	let div2;
+	let t9;
+	let each_blocks = [];
+	let each_1_lookup = new Map();
+	let t10;
+	let current;
+	let mounted;
+	let dispose;
+	let if_block0 = /*hasDateComponent*/ ctx[1] && create_if_block_2$1(ctx);
+	let if_block1 = /*showMeridian*/ ctx[0] && create_if_block_1$1(ctx);
+	let each_value_1 = /*pos*/ ctx[9];
+	const get_key = ctx => /*p*/ ctx[28].val;
+
+	for (let i = 0; i < each_value_1.length; i += 1) {
+		let child_ctx = get_each_context_1(ctx, each_value_1, i);
+		let key = get_key(child_ctx);
+		each_1_lookup.set(key, each_blocks[i] = create_each_block_1(key, child_ctx));
+	}
+
+	let if_block2 = !/*showMeridian*/ ctx[0] && !/*isMinuteView*/ ctx[3] && create_if_block$1(ctx);
+
+	return {
+		c() {
+			div5 = element("div");
+			div0 = element("div");
+			if (if_block0) if_block0.c();
+			t0 = space();
+			button0 = element("button");
+			t1 = text(t1_value);
+			t2 = space();
+			span = element("span");
+			span.textContent = ":";
+			t4 = space();
+			button1 = element("button");
+			t5 = text(t5_value);
+			t6 = space();
+			if (if_block1) if_block1.c();
+			t7 = space();
+			div4 = element("div");
+			div1 = element("div");
+			t8 = space();
+			div3 = element("div");
+			div2 = element("div");
+			t9 = space();
+
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				each_blocks[i].c();
+			}
+
+			t10 = space();
+			if (if_block2) if_block2.c();
+			attr(button0, "class", "sdt-time-btn sdt-time-figure svelte-vg2bsw");
+			toggle_class(button0, "is-active", !/*isMinuteView*/ ctx[3]);
+			attr(button1, "class", "sdt-time-btn sdt-time-figure svelte-vg2bsw");
+			toggle_class(button1, "is-active", /*isMinuteView*/ ctx[3]);
+			attr(div0, "class", "sdt-time-head svelte-vg2bsw");
+			attr(div1, "class", "sdt-middle-dot svelte-vg2bsw");
+			attr(div2, "class", "sdt-hand-circle svelte-vg2bsw");
+			attr(div3, "class", "sdt-hand-pointer svelte-vg2bsw");
+			attr(div3, "style", /*handCss*/ ctx[8]);
+			attr(div4, "class", "sdt-clock svelte-vg2bsw");
+			toggle_class(div4, "is-minute-view", /*isMinuteView*/ ctx[3]);
+			attr(div5, "class", "sdt-timer svelte-vg2bsw");
+		},
+		m(target, anchor) {
+			insert(target, div5, anchor);
+			append(div5, div0);
+			if (if_block0) if_block0.m(div0, null);
+			append(div0, t0);
+			append(div0, button0);
+			append(button0, t1);
+			append(div0, t2);
+			append(div0, span);
+			append(div0, t4);
+			append(div0, button1);
+			append(button1, t5);
+			append(div0, t6);
+			if (if_block1) if_block1.m(div0, null);
+			append(div5, t7);
+			append(div5, div4);
+			append(div4, div1);
+			append(div4, t8);
+			append(div4, div3);
+			append(div3, div2);
+			append(div4, t9);
+
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				each_blocks[i].m(div4, null);
+			}
+
+			append(div4, t10);
+			if (if_block2) if_block2.m(div4, null);
+			/*div4_binding*/ ctx[22](div4);
+			current = true;
+
+			if (!mounted) {
+				dispose = [
+					listen(button0, "click", /*click_handler*/ ctx[19]),
+					listen(button1, "click", /*click_handler_1*/ ctx[20]),
+					listen(div4, "click", /*onClick*/ ctx[13]),
+					listen(div4, "mousedown", /*onToggleMove*/ ctx[15]),
+					listen(div4, "mousemove", /*mousemove_handler*/ ctx[21]),
+					listen(div4, "mouseup", /*onToggleMove*/ ctx[15])
+				];
+
+				mounted = true;
+			}
+		},
+		p(ctx, dirty) {
+			if (/*hasDateComponent*/ ctx[1]) {
+				if (if_block0) {
+					if_block0.p(ctx, dirty);
+				} else {
+					if_block0 = create_if_block_2$1(ctx);
+					if_block0.c();
+					if_block0.m(div0, t0);
+				}
+			} else if (if_block0) {
+				if_block0.d(1);
+				if_block0 = null;
+			}
+
+			if ((!current || dirty[0] & /*selectedHour, showMeridian*/ 17) && t1_value !== (t1_value = /*view*/ ctx[11](/*selectedHour*/ ctx[4], /*showMeridian*/ ctx[0]) + "")) set_data(t1, t1_value);
+
+			if (dirty[0] & /*isMinuteView*/ 8) {
+				toggle_class(button0, "is-active", !/*isMinuteView*/ ctx[3]);
+			}
+
+			if ((!current || dirty[0] & /*selectedMinutes*/ 32) && t5_value !== (t5_value = /*view*/ ctx[11](/*selectedMinutes*/ ctx[5], false) + "")) set_data(t5, t5_value);
+
+			if (dirty[0] & /*isMinuteView*/ 8) {
+				toggle_class(button1, "is-active", /*isMinuteView*/ ctx[3]);
+			}
+
+			if (/*showMeridian*/ ctx[0]) {
+				if (if_block1) {
+					if_block1.p(ctx, dirty);
+				} else {
+					if_block1 = create_if_block_1$1(ctx);
+					if_block1.c();
+					if_block1.m(div0, null);
+				}
+			} else if (if_block1) {
+				if_block1.d(1);
+				if_block1 = null;
+			}
+
+			if (!current || dirty[0] & /*handCss*/ 256) {
+				attr(div3, "style", /*handCss*/ ctx[8]);
+			}
+
+			if (dirty[0] & /*pos, isSelected, isMinuteView, selectedMinutes, selectedHour*/ 4664) {
+				each_value_1 = /*pos*/ ctx[9];
+				group_outros();
+				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value_1, each_1_lookup, div4, outro_and_destroy_block, create_each_block_1, t10, get_each_context_1);
+				check_outros();
+			}
+
+			if (!/*showMeridian*/ ctx[0] && !/*isMinuteView*/ ctx[3]) {
+				if (if_block2) {
+					if_block2.p(ctx, dirty);
+
+					if (dirty[0] & /*showMeridian, isMinuteView*/ 9) {
+						transition_in(if_block2, 1);
+					}
+				} else {
+					if_block2 = create_if_block$1(ctx);
+					if_block2.c();
+					transition_in(if_block2, 1);
+					if_block2.m(div4, null);
+				}
+			} else if (if_block2) {
+				group_outros();
+
+				transition_out(if_block2, 1, 1, () => {
+					if_block2 = null;
+				});
+
+				check_outros();
+			}
+
+			if (dirty[0] & /*isMinuteView*/ 8) {
+				toggle_class(div4, "is-minute-view", /*isMinuteView*/ ctx[3]);
+			}
+		},
+		i(local) {
+			if (current) return;
+
+			for (let i = 0; i < each_value_1.length; i += 1) {
+				transition_in(each_blocks[i]);
+			}
+
+			transition_in(if_block2);
+			current = true;
+		},
+		o(local) {
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				transition_out(each_blocks[i]);
+			}
+
+			transition_out(if_block2);
+			current = false;
+		},
+		d(detaching) {
+			if (detaching) detach(div5);
+			if (if_block0) if_block0.d();
+			if (if_block1) if_block1.d();
+
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				each_blocks[i].d();
+			}
+
+			if (if_block2) if_block2.d();
+			/*div4_binding*/ ctx[22](null);
+			mounted = false;
+			run_all(dispose);
+		}
+	};
+}
+
+function instance$2($$self, $$props, $$invalidate) {
+	let selectedHour;
+	let isPM;
+	let selectedMinutes;
+	let handCss;
+	let multiplier;
+	let pos;
+	let innerHours;
+	let { date = null } = $$props;
+	let { showMeridian = false } = $$props;
+	let { hasDateComponent = false } = $$props;
+	let { i18n } = $$props;
+	let clockEl;
+	let isMinuteView = false;
+	let handleMoveMove = false;
+	let innerDate = date || new Date();
+
+	if (!date) {
+		date = innerDate;
+	}
+
+	const dispatch = createEventDispatcher();
+	console.log("I", innerDate);
+
+	function positions(size, offset, valueForZero, minuteView, hourAdded) {
+		const r = size / 2;
+		offset = offset || r;
+		const coeff = [0, 1 - 0.5, 1 - 0.134, 1, 1 - 0.134, 1 - 0.5];
+		const xCoeff = coeff.concat(coeff);
+		const yCoeff = coeff.slice(3).concat(coeff).concat(coeff.slice(0, 3));
+		const pos = [];
+
+		for (let i = 0; i < 12; i++) {
+			pos.push({
+				x: Math.abs(xCoeff[i] * r + (i <= 6 ? 1 : -1) * offset),
+				y: Math.abs(yCoeff[i] * r + (i >= 9 || i < 3 ? -1 : 1) * offset),
+				val: minuteView
+				? i * 5 || valueForZero
+				: i ? i + hourAdded : valueForZero
+			});
+		}
+
+		return pos;
+	}
+
+	function view(value, asMeridian) {
+		if (asMeridian) {
+			if (isPM && value === 12) return 12;
+			return value < 10 || value % 12 < 10 ? `0${value % 12}` : value;
+		}
+
+		return value < 10 ? `0${value}` : value;
+	}
+
+	function isSelected(selected, val, i) {
+		if (isMinuteView) {
+			console.log("v", selected, val, i);
+			return val === selected || i === 0 && i === selected;
+		} else {
+			if (showMeridian) {
+				if (isPM && val == 12 && selected === 12) return true;
+				if (!isPM && val == 12 && selected === 0) return true;
+				return val === (selected ? selected % 12 : 12);
+			} else if (val > 12) {
+				return (i ? multiplier * i + 12 : 0) === selected;
+			} else {
+				return val === selected;
+			}
+		}
+	}
+
+	function onClick(e) {
+		if (e.type === "mousemove" && !handleMoveMove) return;
+
+		if (e.target.tagName === "BUTTON") {
+			let val = parseInt(e.target.dataset.value);
+
+			const setter = e.meridianSwitch || !isMinuteView
+			? "setUTCHours"
+			: "setUTCMinutes";
+
+			innerDate[setter](val);
+		} else if (isMinuteView) {
+			// compute it out of x,y 
+			const rect = clockEl.getBoundingClientRect();
+
+			const clientX = e.clientX - rect.left;
+			const clientY = e.clientY - rect.top;
+			const cntX = 130, cntY = 130;
+			let quadrant = null;
+			let a, b;
+
+			if (clientX > cntX) {
+				quadrant = clientY > cntY ? 2 : 1;
+			} else {
+				quadrant = clientY > cntY ? 3 : 4;
+			}
+
+			switch (quadrant) {
+				case 1:
+					a = clientX - cntX;
+					b = cntY - clientY;
+					break;
+				case 2:
+					a = clientX - cntX;
+					b = clientY - cntY;
+					break;
+				case 3:
+					a = cntX - clientX;
+					b = clientY - cntY;
+					break;
+				case 4:
+					a = cntX - clientX;
+					b = cntY - clientY;
+					break;
+			}
+
+			const c = Math.sqrt(a * a + b * b);
+			const beta = 90 - Math.asin(a / c) * (180 / Math.PI);
+			let degree;
+
+			switch (quadrant) {
+				case 1:
+					degree = 90 - beta;
+					break;
+				case 2:
+					degree = beta + 90;
+					break;
+				case 3:
+					degree = 270 - beta;
+					break;
+				case 4:
+					degree = beta + 270;
+					break;
+			}
+
+			degree = Math.floor(degree / 6);
+			innerDate.setMinutes(degree);
+		}
+
+		($$invalidate(18, innerDate), $$invalidate(17, date));
+		dispatch("time", innerDate);
+
+		if (!e.meridianSwitch && !handleMoveMove && isMinuteView) setTimeout(
+			() => {
+				dispatch("close");
+			},
+			300
+		);
+
+		if (!e.meridianSwitch && !isMinuteView) $$invalidate(3, isMinuteView = true);
+
+		setTimeout(
+			() => {
+			},
+			1000
+		);
+	}
+
+	function onSwitchMeridian(e) {
+		e.meridianSwitch = true;
+		onClick(e);
+	}
+
+	function onToggleMove(e) {
+		$$invalidate(7, handleMoveMove = e.type === "mousedown");
+	}
+
+	function onModeSwitch() {
+		dispatch("switch", "date");
+	}
+
+	const click_handler = () => $$invalidate(3, isMinuteView = false);
+	const click_handler_1 = () => $$invalidate(3, isMinuteView = true);
+
+	const mousemove_handler = e => {
+		handleMoveMove && onClick(e);
+	};
+
+	function div4_binding($$value) {
+		binding_callbacks[$$value ? "unshift" : "push"](() => {
+			clockEl = $$value;
+			$$invalidate(6, clockEl);
+		});
+	}
+
+	$$self.$$set = $$props => {
+		if ("date" in $$props) $$invalidate(17, date = $$props.date);
+		if ("showMeridian" in $$props) $$invalidate(0, showMeridian = $$props.showMeridian);
+		if ("hasDateComponent" in $$props) $$invalidate(1, hasDateComponent = $$props.hasDateComponent);
+		if ("i18n" in $$props) $$invalidate(2, i18n = $$props.i18n);
+	};
+
+	$$self.$$.update = () => {
+		if ($$self.$$.dirty[0] & /*date, innerDate*/ 393216) {
+			{
+				if (date !== innerDate) {
+					$$invalidate(18, innerDate = date);
+				}
+			}
+		}
+
+		if ($$self.$$.dirty[0] & /*innerDate*/ 262144) {
+			$$invalidate(4, selectedHour = innerDate ? innerDate.getUTCHours() : 0);
+		}
+
+		if ($$self.$$.dirty[0] & /*showMeridian, selectedHour*/ 17) {
+			isPM = showMeridian ? selectedHour >= 12 : false;
+		}
+
+		if ($$self.$$.dirty[0] & /*innerDate*/ 262144) {
+			$$invalidate(5, selectedMinutes = innerDate ? innerDate.getUTCMinutes() : 0);
+		}
+
+		if ($$self.$$.dirty[0] & /*isMinuteView, selectedMinutes, showMeridian, selectedHour*/ 57) {
+			$$invalidate(8, handCss = isMinuteView
+			? `transform: rotateZ(${selectedMinutes * 6}deg)`
+			: showMeridian
+				? `transform: rotateZ(${selectedHour % 12 * 30}deg);`
+				: `transform: rotateZ(${selectedHour % 12 * 30}deg); ${selectedHour > 12 || !selectedHour
+					? "height: calc(25% + 1px)"
+					: ""}`);
+		}
+
+		if ($$self.$$.dirty[0] & /*isMinuteView*/ 8) {
+			multiplier = isMinuteView ? 5 : 1;
+		}
+
+		if ($$self.$$.dirty[0] & /*isMinuteView*/ 8) {
+			$$invalidate(9, pos = positions(220, 130, isMinuteView ? "00" : "12", isMinuteView, 0));
+		}
+	};
+
+	$$invalidate(10, innerHours = positions(140, 130, "00", false, 12));
+
+	return [
+		showMeridian,
+		hasDateComponent,
+		i18n,
+		isMinuteView,
+		selectedHour,
+		selectedMinutes,
+		clockEl,
+		handleMoveMove,
+		handCss,
+		pos,
+		innerHours,
+		view,
+		isSelected,
+		onClick,
+		onSwitchMeridian,
+		onToggleMove,
+		onModeSwitch,
+		date,
+		innerDate,
+		click_handler,
+		click_handler_1,
+		mousemove_handler,
+		div4_binding
+	];
+}
+
+class Time extends SvelteComponent {
+	constructor(options) {
+		super();
+		if (!document.getElementById("svelte-vg2bsw-style")) add_css$1();
 
 		init(
 			this,
@@ -1946,11 +3137,10 @@ class Calendar extends SvelteComponent {
 			create_fragment$2,
 			safe_not_equal,
 			{
-				date: 9,
-				startDate: 10,
-				endDate: 11,
-				weekStart: 12,
-				i18n: 13
+				date: 17,
+				showMeridian: 0,
+				hasDateComponent: 1,
+				i18n: 2
 			},
 			[-1, -1]
 		);
@@ -1961,7 +3151,7 @@ function usePosition(el, { inputEl, visible }) {
     if (!visible) {
       const rect = inputEl.getBoundingClientRect();
       const calRect = el.getBoundingClientRect();
-      const style = ['position: absolute'];
+      const style = ['position: absolute', 'z-index: 12250'];
       style.push(calRect.x + calRect.width > window.innerWidth
         ? `right: 1rem`
         : `left: ${rect.left}px`
@@ -1996,62 +3186,58 @@ const en = {
   meridiem:    ['am', 'pm'],
   suffix:      ['st', 'nd', 'rd', 'th'],
   todayBtn:    'Today',
-  clearBtn:    'Clear'
+  clearBtn:    'Clear',
+  timeView:    'Show time view',
+  backToDate:  'Back to calendar view'
 };
 
-/* src\DatePicker.svelte generated by Svelte v3.37.0 */
+/* src\DateTimePicker.svelte generated by Svelte v3.37.0 */
 
 function add_css() {
 	var style = element("style");
-	style.id = "svelte-18bbo59-style";
-	style.textContent = ".std-calendar-wrap.svelte-18bbo59{width:280px;background-color:white;box-shadow:0 0 4px #777;border-radius:4px;padding:0.25rem 0.25rem 0.5rem}.std-btn-row.svelte-18bbo59{margin-top:0.5rem;display:flex;justify-content:space-evenly}";
+	style.id = "svelte-1up2u1m-style";
+	style.textContent = ".std-calendar-wrap.svelte-1up2u1m{width:280px;background-color:white;box-shadow:0 1px 6px #ccc;border-radius:4px;padding:0.25rem 0.25rem 0.5rem}.std-calendar-wrap.is-popup.svelte-1up2u1m{box-shadow:0 1px 6px #ccc}.std-btn-row.svelte-1up2u1m{margin-top:0.5rem;display:flex;justify-content:space-evenly}";
 	append(document.head, style);
 }
 
-// (59:0) {#if visible || isFocused}
+// (159:0) {#if visible || isFocused}
 function create_if_block(ctx) {
 	let div;
-	let calendar;
-	let t;
+	let current_block_type_index;
+	let if_block;
 	let positionFn_action;
 	let div_transition;
 	let current;
 	let mounted;
 	let dispose;
+	const if_block_creators = [create_if_block_1, create_else_block];
+	const if_blocks = [];
 
-	calendar = new Calendar({
-			props: {
-				date: /*date*/ ctx[0],
-				startDate: /*startDate*/ ctx[2],
-				endDate: /*endDate*/ ctx[3],
-				i18n: /*i18n*/ ctx[4]
-			}
-		});
+	function select_block_type(ctx, dirty) {
+		if (/*currentMode*/ ctx[20] === "date") return 0;
+		return 1;
+	}
 
-	calendar.$on("date", /*onDate*/ ctx[14]);
-	let if_block = (/*todayBtn*/ ctx[6] || /*clearBtn*/ ctx[7]) && create_if_block_1(ctx);
+	current_block_type_index = select_block_type(ctx);
+	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
 	return {
 		c() {
 			div = element("div");
-			create_component(calendar.$$.fragment);
-			t = space();
-			if (if_block) if_block.c();
-			attr(div, "class", "std-calendar-wrap svelte-18bbo59");
+			if_block.c();
+			attr(div, "class", "std-calendar-wrap is-popup svelte-1up2u1m");
 		},
 		m(target, anchor) {
 			insert(target, div, anchor);
-			mount_component(calendar, div, null);
-			append(div, t);
-			if (if_block) if_block.m(div, null);
+			if_blocks[current_block_type_index].m(div, null);
 			current = true;
 
 			if (!mounted) {
 				dispose = [
-					listen(div, "mousedown", prevent_default(/*mousedown_handler*/ ctx[20])),
-					action_destroyer(positionFn_action = /*positionFn*/ ctx[10].call(null, div, {
-						inputEl: /*inputEl*/ ctx[12],
-						visible: /*visible*/ ctx[5]
+					listen(div, "mousedown", prevent_default(/*mousedown_handler*/ ctx[31])),
+					action_destroyer(positionFn_action = /*positionFn*/ ctx[15].call(null, div, {
+						inputEl: /*inputEl*/ ctx[18],
+						visible: /*internalVisibility*/ ctx[21]
 					}))
 				];
 
@@ -2059,52 +3245,63 @@ function create_if_block(ctx) {
 			}
 		},
 		p(ctx, dirty) {
-			const calendar_changes = {};
-			if (dirty & /*date*/ 1) calendar_changes.date = /*date*/ ctx[0];
-			if (dirty & /*startDate*/ 4) calendar_changes.startDate = /*startDate*/ ctx[2];
-			if (dirty & /*endDate*/ 8) calendar_changes.endDate = /*endDate*/ ctx[3];
-			if (dirty & /*i18n*/ 16) calendar_changes.i18n = /*i18n*/ ctx[4];
-			calendar.$set(calendar_changes);
+			let previous_block_index = current_block_type_index;
+			current_block_type_index = select_block_type(ctx);
 
-			if (/*todayBtn*/ ctx[6] || /*clearBtn*/ ctx[7]) {
-				if (if_block) {
-					if_block.p(ctx, dirty);
-				} else {
-					if_block = create_if_block_1(ctx);
+			if (current_block_type_index === previous_block_index) {
+				if_blocks[current_block_type_index].p(ctx, dirty);
+			} else {
+				group_outros();
+
+				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+					if_blocks[previous_block_index] = null;
+				});
+
+				check_outros();
+				if_block = if_blocks[current_block_type_index];
+
+				if (!if_block) {
+					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 					if_block.c();
-					if_block.m(div, null);
+				} else {
+					if_block.p(ctx, dirty);
 				}
-			} else if (if_block) {
-				if_block.d(1);
-				if_block = null;
+
+				transition_in(if_block, 1);
+				if_block.m(div, null);
 			}
 
-			if (positionFn_action && is_function(positionFn_action.update) && dirty & /*inputEl, visible*/ 4128) positionFn_action.update.call(null, {
-				inputEl: /*inputEl*/ ctx[12],
-				visible: /*visible*/ ctx[5]
+			if (positionFn_action && is_function(positionFn_action.update) && dirty[0] & /*inputEl, internalVisibility*/ 2359296) positionFn_action.update.call(null, {
+				inputEl: /*inputEl*/ ctx[18],
+				visible: /*internalVisibility*/ ctx[21]
 			});
 		},
 		i(local) {
 			if (current) return;
-			transition_in(calendar.$$.fragment, local);
+			transition_in(if_block);
 
-			add_render_callback(() => {
-				if (!div_transition) div_transition = create_bidirectional_transition(div, fade, { duration: 200 }, true);
-				div_transition.run(1);
-			});
+			if (local) {
+				add_render_callback(() => {
+					if (!div_transition) div_transition = create_bidirectional_transition(div, fade, { duration: 200 }, true);
+					div_transition.run(1);
+				});
+			}
 
 			current = true;
 		},
 		o(local) {
-			transition_out(calendar.$$.fragment, local);
-			if (!div_transition) div_transition = create_bidirectional_transition(div, fade, { duration: 200 }, false);
-			div_transition.run(0);
+			transition_out(if_block);
+
+			if (local) {
+				if (!div_transition) div_transition = create_bidirectional_transition(div, fade, { duration: 200 }, false);
+				div_transition.run(0);
+			}
+
 			current = false;
 		},
 		d(detaching) {
 			if (detaching) detach(div);
-			destroy_component(calendar);
-			if (if_block) if_block.d();
+			if_blocks[current_block_type_index].d();
 			if (detaching && div_transition) div_transition.end();
 			mounted = false;
 			run_all(dispose);
@@ -2112,12 +3309,137 @@ function create_if_block(ctx) {
 	};
 }
 
-// (62:2) {#if todayBtn || clearBtn}
+// (181:2) {:else}
+function create_else_block(ctx) {
+	let time;
+	let current;
+
+	time = new Time({
+			props: {
+				date: /*innerDate*/ ctx[16],
+				hasDateComponent: /*resolvedMode*/ ctx[22] !== "time",
+				showMeridian: /*format*/ ctx[0].match("p|P"),
+				i18n: /*i18n*/ ctx[6]
+			}
+		});
+
+	time.$on("time", /*onDate*/ ctx[23]);
+	time.$on("switch", /*onModeSwitch*/ ctx[27]);
+	time.$on("close", /*close_handler*/ ctx[38]);
+
+	return {
+		c() {
+			create_component(time.$$.fragment);
+		},
+		m(target, anchor) {
+			mount_component(time, target, anchor);
+			current = true;
+		},
+		p(ctx, dirty) {
+			const time_changes = {};
+			if (dirty[0] & /*innerDate*/ 65536) time_changes.date = /*innerDate*/ ctx[16];
+			if (dirty[0] & /*format*/ 1) time_changes.showMeridian = /*format*/ ctx[0].match("p|P");
+			if (dirty[0] & /*i18n*/ 64) time_changes.i18n = /*i18n*/ ctx[6];
+			time.$set(time_changes);
+		},
+		i(local) {
+			if (current) return;
+			transition_in(time.$$.fragment, local);
+			current = true;
+		},
+		o(local) {
+			transition_out(time.$$.fragment, local);
+			current = false;
+		},
+		d(detaching) {
+			destroy_component(time, detaching);
+		}
+	};
+}
+
+// (161:2) {#if currentMode === 'date'}
 function create_if_block_1(ctx) {
+	let calendar;
+	let t;
+	let if_block_anchor;
+	let current;
+
+	let calendar_props = {
+		date: /*innerDate*/ ctx[16],
+		startDate: parseDate(/*startDate*/ ctx[3], /*format*/ ctx[0], /*i18n*/ ctx[6], /*formatType*/ ctx[5]),
+		endDate: parseDate(/*endDate*/ ctx[4], /*format*/ ctx[0], /*i18n*/ ctx[6], /*formatType*/ ctx[5]),
+		enableTimeToggle: /*resolvedMode*/ ctx[22].includes("time"),
+		i18n: /*i18n*/ ctx[6],
+		weekStart: /*weekStart*/ ctx[7]
+	};
+
+	calendar = new Calendar({ props: calendar_props });
+	/*calendar_binding*/ ctx[37](calendar);
+	calendar.$on("date", /*onDate*/ ctx[23]);
+	calendar.$on("switch", /*onModeSwitch*/ ctx[27]);
+	let if_block = (/*todayBtn*/ ctx[11] || /*clearBtn*/ ctx[12]) && create_if_block_2(ctx);
+
+	return {
+		c() {
+			create_component(calendar.$$.fragment);
+			t = space();
+			if (if_block) if_block.c();
+			if_block_anchor = empty();
+		},
+		m(target, anchor) {
+			mount_component(calendar, target, anchor);
+			insert(target, t, anchor);
+			if (if_block) if_block.m(target, anchor);
+			insert(target, if_block_anchor, anchor);
+			current = true;
+		},
+		p(ctx, dirty) {
+			const calendar_changes = {};
+			if (dirty[0] & /*innerDate*/ 65536) calendar_changes.date = /*innerDate*/ ctx[16];
+			if (dirty[0] & /*startDate, format, i18n, formatType*/ 105) calendar_changes.startDate = parseDate(/*startDate*/ ctx[3], /*format*/ ctx[0], /*i18n*/ ctx[6], /*formatType*/ ctx[5]);
+			if (dirty[0] & /*endDate, format, i18n, formatType*/ 113) calendar_changes.endDate = parseDate(/*endDate*/ ctx[4], /*format*/ ctx[0], /*i18n*/ ctx[6], /*formatType*/ ctx[5]);
+			if (dirty[0] & /*i18n*/ 64) calendar_changes.i18n = /*i18n*/ ctx[6];
+			if (dirty[0] & /*weekStart*/ 128) calendar_changes.weekStart = /*weekStart*/ ctx[7];
+			calendar.$set(calendar_changes);
+
+			if (/*todayBtn*/ ctx[11] || /*clearBtn*/ ctx[12]) {
+				if (if_block) {
+					if_block.p(ctx, dirty);
+				} else {
+					if_block = create_if_block_2(ctx);
+					if_block.c();
+					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+				}
+			} else if (if_block) {
+				if_block.d(1);
+				if_block = null;
+			}
+		},
+		i(local) {
+			if (current) return;
+			transition_in(calendar.$$.fragment, local);
+			current = true;
+		},
+		o(local) {
+			transition_out(calendar.$$.fragment, local);
+			current = false;
+		},
+		d(detaching) {
+			/*calendar_binding*/ ctx[37](null);
+			destroy_component(calendar, detaching);
+			if (detaching) detach(t);
+			if (if_block) if_block.d(detaching);
+			if (detaching) detach(if_block_anchor);
+		}
+	};
+}
+
+// (171:4) {#if todayBtn || clearBtn}
+function create_if_block_2(ctx) {
 	let div;
 	let t;
-	let if_block0 = /*todayBtn*/ ctx[6] && create_if_block_3(ctx);
-	let if_block1 = /*clearBtn*/ ctx[7] && create_if_block_2(ctx);
+	let if_block0 = /*todayBtn*/ ctx[11] && create_if_block_4(ctx);
+	let if_block1 = /*clearBtn*/ ctx[12] && create_if_block_3(ctx);
 
 	return {
 		c() {
@@ -2125,7 +3447,7 @@ function create_if_block_1(ctx) {
 			if (if_block0) if_block0.c();
 			t = space();
 			if (if_block1) if_block1.c();
-			attr(div, "class", "std-btn-row svelte-18bbo59");
+			attr(div, "class", "std-btn-row svelte-1up2u1m");
 		},
 		m(target, anchor) {
 			insert(target, div, anchor);
@@ -2134,11 +3456,11 @@ function create_if_block_1(ctx) {
 			if (if_block1) if_block1.m(div, null);
 		},
 		p(ctx, dirty) {
-			if (/*todayBtn*/ ctx[6]) {
+			if (/*todayBtn*/ ctx[11]) {
 				if (if_block0) {
 					if_block0.p(ctx, dirty);
 				} else {
-					if_block0 = create_if_block_3(ctx);
+					if_block0 = create_if_block_4(ctx);
 					if_block0.c();
 					if_block0.m(div, t);
 				}
@@ -2147,11 +3469,11 @@ function create_if_block_1(ctx) {
 				if_block0 = null;
 			}
 
-			if (/*clearBtn*/ ctx[7]) {
+			if (/*clearBtn*/ ctx[12]) {
 				if (if_block1) {
 					if_block1.p(ctx, dirty);
 				} else {
-					if_block1 = create_if_block_2(ctx);
+					if_block1 = create_if_block_3(ctx);
 					if_block1.c();
 					if_block1.m(div, null);
 				}
@@ -2168,10 +3490,10 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (64:4) {#if todayBtn}
-function create_if_block_3(ctx) {
+// (173:6) {#if todayBtn}
+function create_if_block_4(ctx) {
 	let button;
-	let t_value = /*i18n*/ ctx[4].todayBtn + "";
+	let t_value = /*i18n*/ ctx[6].todayBtn + "";
 	let t;
 	let mounted;
 	let dispose;
@@ -2187,12 +3509,12 @@ function create_if_block_3(ctx) {
 			append(button, t);
 
 			if (!mounted) {
-				dispose = listen(button, "click", /*onToday*/ ctx[15]);
+				dispose = listen(button, "click", /*onToday*/ ctx[24]);
 				mounted = true;
 			}
 		},
 		p(ctx, dirty) {
-			if (dirty & /*i18n*/ 16 && t_value !== (t_value = /*i18n*/ ctx[4].todayBtn + "")) set_data(t, t_value);
+			if (dirty[0] & /*i18n*/ 64 && t_value !== (t_value = /*i18n*/ ctx[6].todayBtn + "")) set_data(t, t_value);
 		},
 		d(detaching) {
 			if (detaching) detach(button);
@@ -2202,10 +3524,10 @@ function create_if_block_3(ctx) {
 	};
 }
 
-// (67:4) {#if clearBtn}
-function create_if_block_2(ctx) {
+// (176:6) {#if clearBtn}
+function create_if_block_3(ctx) {
 	let button;
-	let t_value = /*i18n*/ ctx[4].clearBtn + "";
+	let t_value = /*i18n*/ ctx[6].clearBtn + "";
 	let t;
 	let mounted;
 	let dispose;
@@ -2221,12 +3543,12 @@ function create_if_block_2(ctx) {
 			append(button, t);
 
 			if (!mounted) {
-				dispose = listen(button, "click", /*onClear*/ ctx[16]);
+				dispose = listen(button, "click", /*onClear*/ ctx[25]);
 				mounted = true;
 			}
 		},
 		p(ctx, dirty) {
-			if (dirty & /*i18n*/ 16 && t_value !== (t_value = /*i18n*/ ctx[4].clearBtn + "")) set_data(t, t_value);
+			if (dirty[0] & /*i18n*/ 64 && t_value !== (t_value = /*i18n*/ ctx[6].clearBtn + "")) set_data(t, t_value);
 		},
 		d(detaching) {
 			if (detaching) detach(button);
@@ -2238,13 +3560,14 @@ function create_if_block_2(ctx) {
 
 function create_fragment$1(ctx) {
 	let input;
+	let input_type_value;
 	let input_class_value;
 	let t;
 	let if_block_anchor;
 	let current;
 	let mounted;
 	let dispose;
-	let if_block = (/*visible*/ ctx[5] || /*isFocused*/ ctx[11]) && create_if_block(ctx);
+	let if_block = (/*visible*/ ctx[9] || /*isFocused*/ ctx[17]) && create_if_block(ctx);
 
 	return {
 		c() {
@@ -2252,16 +3575,16 @@ function create_fragment$1(ctx) {
 			t = space();
 			if (if_block) if_block.c();
 			if_block_anchor = empty();
-			attr(input, "type", "text");
-			attr(input, "name", /*name*/ ctx[1]);
-			attr(input, "class", input_class_value = "" + (null_to_empty(/*inputClasses*/ ctx[9]) + " svelte-18bbo59"));
-			input.required = /*required*/ ctx[8];
-			input.readOnly = true;
+			attr(input, "type", input_type_value = /*pickerOnly*/ ctx[8] ? "hidden" : "text");
+			attr(input, "name", /*name*/ ctx[2]);
+			attr(input, "class", input_class_value = "" + (null_to_empty(/*inputClasses*/ ctx[14]) + " svelte-1up2u1m"));
+			input.required = /*required*/ ctx[13];
+			input.value = /*value*/ ctx[1];
+			input.readOnly = /*isFocused*/ ctx[17];
 		},
 		m(target, anchor) {
 			insert(target, input, anchor);
-			/*input_binding*/ ctx[23](input);
-			set_input_value(input, /*inputValue*/ ctx[13]);
+			/*input_binding*/ ctx[34](input);
 			insert(target, t, anchor);
 			if (if_block) if_block.m(target, anchor);
 			insert(target, if_block_anchor, anchor);
@@ -2269,39 +3592,47 @@ function create_fragment$1(ctx) {
 
 			if (!mounted) {
 				dispose = [
-					listen(input, "focus", /*focus_handler*/ ctx[24]),
-					listen(input, "blur", /*blur_handler*/ ctx[25]),
-					listen(input, "click", /*click_handler*/ ctx[26]),
-					listen(input, "input", /*input_input_handler*/ ctx[27]),
-					listen(input, "input", /*input_handler*/ ctx[21]),
-					listen(input, "change", /*change_handler*/ ctx[22])
+					listen(input, "focus", /*focus_handler*/ ctx[35]),
+					listen(input, "blur", /*onBlur*/ ctx[28]),
+					listen(input, "click", /*click_handler*/ ctx[36]),
+					listen(input, "input", /*input_handler*/ ctx[32]),
+					listen(input, "change", /*change_handler*/ ctx[33]),
+					listen(input, "keydown", /*onKeyDown*/ ctx[26])
 				];
 
 				mounted = true;
 			}
 		},
-		p(ctx, [dirty]) {
-			if (!current || dirty & /*name*/ 2) {
-				attr(input, "name", /*name*/ ctx[1]);
+		p(ctx, dirty) {
+			if (!current || dirty[0] & /*pickerOnly*/ 256 && input_type_value !== (input_type_value = /*pickerOnly*/ ctx[8] ? "hidden" : "text")) {
+				attr(input, "type", input_type_value);
 			}
 
-			if (!current || dirty & /*inputClasses*/ 512 && input_class_value !== (input_class_value = "" + (null_to_empty(/*inputClasses*/ ctx[9]) + " svelte-18bbo59"))) {
+			if (!current || dirty[0] & /*name*/ 4) {
+				attr(input, "name", /*name*/ ctx[2]);
+			}
+
+			if (!current || dirty[0] & /*inputClasses*/ 16384 && input_class_value !== (input_class_value = "" + (null_to_empty(/*inputClasses*/ ctx[14]) + " svelte-1up2u1m"))) {
 				attr(input, "class", input_class_value);
 			}
 
-			if (!current || dirty & /*required*/ 256) {
-				input.required = /*required*/ ctx[8];
+			if (!current || dirty[0] & /*required*/ 8192) {
+				input.required = /*required*/ ctx[13];
 			}
 
-			if (dirty & /*inputValue*/ 8192 && input.value !== /*inputValue*/ ctx[13]) {
-				set_input_value(input, /*inputValue*/ ctx[13]);
+			if (!current || dirty[0] & /*value*/ 2 && input.value !== /*value*/ ctx[1]) {
+				input.value = /*value*/ ctx[1];
 			}
 
-			if (/*visible*/ ctx[5] || /*isFocused*/ ctx[11]) {
+			if (!current || dirty[0] & /*isFocused*/ 131072) {
+				input.readOnly = /*isFocused*/ ctx[17];
+			}
+
+			if (/*visible*/ ctx[9] || /*isFocused*/ ctx[17]) {
 				if (if_block) {
 					if_block.p(ctx, dirty);
 
-					if (dirty & /*visible, isFocused*/ 2080) {
+					if (dirty[0] & /*visible, isFocused*/ 131584) {
 						transition_in(if_block, 1);
 					}
 				} else {
@@ -2331,7 +3662,7 @@ function create_fragment$1(ctx) {
 		},
 		d(detaching) {
 			if (detaching) detach(input);
-			/*input_binding*/ ctx[23](null);
+			/*input_binding*/ ctx[34](null);
 			if (detaching) detach(t);
 			if (if_block) if_block.d(detaching);
 			if (detaching) detach(if_block_anchor);
@@ -2342,14 +3673,18 @@ function create_fragment$1(ctx) {
 }
 
 function instance$1($$self, $$props, $$invalidate) {
-	let inputValue;
+	let internalVisibility;
 	let { name = "date" } = $$props;
-	let { date = null } = $$props;
+	let { value = null } = $$props;
+	let { initialDate = null } = $$props;
 	let { startDate = null } = $$props;
 	let { endDate = null } = $$props;
+	let { mode = "auto" } = $$props;
 	let { format = "yyyy-mm-dd" } = $$props;
 	let { formatType = "standard" } = $$props;
 	let { i18n = en } = $$props;
+	let { weekStart = 1 } = $$props;
+	let { pickerOnly = false } = $$props;
 	let { visible = false } = $$props;
 	let { autoclose = true } = $$props;
 	let { todayBtn = true } = $$props;
@@ -2357,26 +3692,116 @@ function instance$1($$self, $$props, $$invalidate) {
 	let { required = false } = $$props;
 	let { inputClasses } = $$props;
 	let { positionFn = usePosition } = $$props;
-	let isFocused = false;
+
+	if (format === "yyyy-mm-dd" && mode === "time") {
+		format = "hh:ii";
+	}
+
+	let innerDate = initialDate && initialDate instanceof Date
+	? initialDate
+	: value
+		? parseDate(value, format, i18n, formatType)
+		: null;
+
+	let isFocused = pickerOnly;
 	let inputEl = null;
-	if (typeof date === "string") date = new Date(date); // TODO: parse
+	let calendarEl = null;
+	let preventClose = false;
+
+	let resolvedMode = mode === "auto"
+	? format.match(/hh?|ii?/i) && format.match(/y|m|d/i)
+		? "datetime"
+		: format.match(/hh?|ii?/i) ? "time" : "date"
+	: mode;
+
+	let currentMode = resolvedMode === "time" ? "time" : "date";
 
 	function onDate(e) {
-		$$invalidate(0, date = e.detail || null);
+		let setter = e.detail || null;
 
-		if (autoclose) {
-			$$invalidate(11, isFocused = false);
+		if (e.detail && innerDate) {
+			if (innerDate.getUTCFullYear() === e.detail.getUTCFullYear() && innerDate.getUTCMonth() === e.detail.getUTCMonth() && innerDate.getUTCDate() === e.detail.getUTCDate() && resolvedMode === "date") setter = null;
 		}
 
-		tick().then(() => inputEl.dispatchEvent(new Event("input")));
+		$$invalidate(16, innerDate = setter);
+
+		if (autoclose && resolvedMode === "date" && !pickerOnly && !preventClose) {
+			$$invalidate(17, isFocused = false);
+		}
+
+		if (!preventClose && resolvedMode === "datetime" && currentMode === "date") {
+			$$invalidate(20, currentMode = "time");
+		}
+
+		preventClose = false;
+
+		tick().then(() => {
+			inputEl.dispatchEvent(new Event("input"));
+		});
 	}
 
 	function onToday() {
-		onDate({ detail: new Date() });
+		const today = new Date();
+
+		onDate({
+			detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes(), 0)
+		});
 	}
 
 	function onClear() {
 		onDate({ detail: null });
+		$$invalidate(20, currentMode = "date");
+		if (resolvedMode === "date" && autoclose) $$invalidate(17, isFocused = false);
+	}
+
+	function onKeyDown(e) {
+		if (!isFocused) {
+			["Backspace", "Delete"].includes(e.key) && onClear();
+			$$invalidate(17, isFocused = true);
+			return;
+		}
+
+		switch (e.key) {
+			case "ArrowDown":
+			case "ArrowUp":
+			case "ArrowLeft":
+			case "ArrowRight":
+				e.preventDefault();
+				preventClose = true;
+				if (currentMode === "date") {
+					calendarEl.handleGridNav(e.key, e.shiftKey);
+				}
+				break;
+			case "Escape":
+				if (isFocused && !internalVisibility) {
+					$$invalidate(17, isFocused = false); // TODO: keyboard nav for timepicker
+				}
+				break;
+			case "Backspace":
+			case "Delete":
+				onClear();
+			case "Enter":
+				if (isFocused && resolvedMode === "date") $$invalidate(17, isFocused = false);
+				if (resolvedMode.includes("time")) {
+					$$invalidate(20, currentMode = "time");
+				}
+				break;
+			case "Tab":
+			case "F5":
+				break;
+			default:
+				e.preventDefault();
+		}
+	}
+
+	function onModeSwitch(e) {
+		$$invalidate(20, currentMode = e.detail);
+	}
+
+	function onBlur() {
+		$$invalidate(17, isFocused = false);
+		if (resolvedMode.includes("date")) $$invalidate(20, currentMode = "date");
+		dispatchEvent("blur");
 	}
 
 	function mousedown_handler(event) {
@@ -2394,240 +3819,505 @@ function instance$1($$self, $$props, $$invalidate) {
 	function input_binding($$value) {
 		binding_callbacks[$$value ? "unshift" : "push"](() => {
 			inputEl = $$value;
-			$$invalidate(12, inputEl);
+			$$invalidate(18, inputEl);
 		});
 	}
 
 	const focus_handler = () => {
-		$$invalidate(11, isFocused = true);
-	};
-
-	const blur_handler = () => {
-		$$invalidate(11, isFocused = false);
+		$$invalidate(17, isFocused = true);
 	};
 
 	const click_handler = () => {
-		if (!isFocused) $$invalidate(11, isFocused = true);
+		if (!isFocused) $$invalidate(17, isFocused = true);
 	};
 
-	function input_input_handler() {
-		inputValue = this.value;
-		(((($$invalidate(13, inputValue), $$invalidate(0, date)), $$invalidate(17, format)), $$invalidate(4, i18n)), $$invalidate(18, formatType));
+	function calendar_binding($$value) {
+		binding_callbacks[$$value ? "unshift" : "push"](() => {
+			calendarEl = $$value;
+			$$invalidate(19, calendarEl);
+		});
 	}
 
+	const close_handler = () => autoclose && !pickerOnly && onBlur();
+
 	$$self.$$set = $$props => {
-		if ("name" in $$props) $$invalidate(1, name = $$props.name);
-		if ("date" in $$props) $$invalidate(0, date = $$props.date);
-		if ("startDate" in $$props) $$invalidate(2, startDate = $$props.startDate);
-		if ("endDate" in $$props) $$invalidate(3, endDate = $$props.endDate);
-		if ("format" in $$props) $$invalidate(17, format = $$props.format);
-		if ("formatType" in $$props) $$invalidate(18, formatType = $$props.formatType);
-		if ("i18n" in $$props) $$invalidate(4, i18n = $$props.i18n);
-		if ("visible" in $$props) $$invalidate(5, visible = $$props.visible);
-		if ("autoclose" in $$props) $$invalidate(19, autoclose = $$props.autoclose);
-		if ("todayBtn" in $$props) $$invalidate(6, todayBtn = $$props.todayBtn);
-		if ("clearBtn" in $$props) $$invalidate(7, clearBtn = $$props.clearBtn);
-		if ("required" in $$props) $$invalidate(8, required = $$props.required);
-		if ("inputClasses" in $$props) $$invalidate(9, inputClasses = $$props.inputClasses);
-		if ("positionFn" in $$props) $$invalidate(10, positionFn = $$props.positionFn);
+		if ("name" in $$props) $$invalidate(2, name = $$props.name);
+		if ("value" in $$props) $$invalidate(1, value = $$props.value);
+		if ("initialDate" in $$props) $$invalidate(29, initialDate = $$props.initialDate);
+		if ("startDate" in $$props) $$invalidate(3, startDate = $$props.startDate);
+		if ("endDate" in $$props) $$invalidate(4, endDate = $$props.endDate);
+		if ("mode" in $$props) $$invalidate(30, mode = $$props.mode);
+		if ("format" in $$props) $$invalidate(0, format = $$props.format);
+		if ("formatType" in $$props) $$invalidate(5, formatType = $$props.formatType);
+		if ("i18n" in $$props) $$invalidate(6, i18n = $$props.i18n);
+		if ("weekStart" in $$props) $$invalidate(7, weekStart = $$props.weekStart);
+		if ("pickerOnly" in $$props) $$invalidate(8, pickerOnly = $$props.pickerOnly);
+		if ("visible" in $$props) $$invalidate(9, visible = $$props.visible);
+		if ("autoclose" in $$props) $$invalidate(10, autoclose = $$props.autoclose);
+		if ("todayBtn" in $$props) $$invalidate(11, todayBtn = $$props.todayBtn);
+		if ("clearBtn" in $$props) $$invalidate(12, clearBtn = $$props.clearBtn);
+		if ("required" in $$props) $$invalidate(13, required = $$props.required);
+		if ("inputClasses" in $$props) $$invalidate(14, inputClasses = $$props.inputClasses);
+		if ("positionFn" in $$props) $$invalidate(15, positionFn = $$props.positionFn);
 	};
 
 	$$self.$$.update = () => {
-		if ($$self.$$.dirty & /*date, format, i18n, formatType*/ 393233) {
-			$$invalidate(13, inputValue = formatDate(date, format, i18n, formatType));
+		if ($$self.$$.dirty[0] & /*pickerOnly, visible*/ 768) {
+			$$invalidate(21, internalVisibility = pickerOnly ? true : visible);
+		}
+
+		if ($$self.$$.dirty[0] & /*innerDate, format, i18n, formatType*/ 65633) {
+			{
+				$$invalidate(1, value = formatDate(innerDate, format, i18n, formatType));
+			}
 		}
 	};
 
 	return [
-		date,
+		format,
+		value,
 		name,
 		startDate,
 		endDate,
+		formatType,
 		i18n,
+		weekStart,
+		pickerOnly,
 		visible,
+		autoclose,
 		todayBtn,
 		clearBtn,
 		required,
 		inputClasses,
 		positionFn,
+		innerDate,
 		isFocused,
 		inputEl,
-		inputValue,
+		calendarEl,
+		currentMode,
+		internalVisibility,
+		resolvedMode,
 		onDate,
 		onToday,
 		onClear,
-		format,
-		formatType,
-		autoclose,
+		onKeyDown,
+		onModeSwitch,
+		onBlur,
+		initialDate,
+		mode,
 		mousedown_handler,
 		input_handler,
 		change_handler,
 		input_binding,
 		focus_handler,
-		blur_handler,
 		click_handler,
-		input_input_handler
+		calendar_binding,
+		close_handler
 	];
 }
 
-class DatePicker extends SvelteComponent {
+class DateTimePicker extends SvelteComponent {
 	constructor(options) {
 		super();
-		if (!document.getElementById("svelte-18bbo59-style")) add_css();
+		if (!document.getElementById("svelte-1up2u1m-style")) add_css();
 
-		init(this, options, instance$1, create_fragment$1, safe_not_equal, {
-			name: 1,
-			date: 0,
-			startDate: 2,
-			endDate: 3,
-			format: 17,
-			formatType: 18,
-			i18n: 4,
-			visible: 5,
-			autoclose: 19,
-			todayBtn: 6,
-			clearBtn: 7,
-			required: 8,
-			inputClasses: 9,
-			positionFn: 10
-		});
+		init(
+			this,
+			options,
+			instance$1,
+			create_fragment$1,
+			safe_not_equal,
+			{
+				name: 2,
+				value: 1,
+				initialDate: 29,
+				startDate: 3,
+				endDate: 4,
+				mode: 30,
+				format: 0,
+				formatType: 5,
+				i18n: 6,
+				weekStart: 7,
+				pickerOnly: 8,
+				visible: 9,
+				autoclose: 10,
+				todayBtn: 11,
+				clearBtn: 12,
+				required: 13,
+				inputClasses: 14,
+				positionFn: 15
+			},
+			[-1, -1]
+		);
 	}
 }
 
 /* docs\docs.svelte generated by Svelte v3.37.0 */
 
 function create_fragment(ctx) {
-	let div4;
-	let h3;
-	let t1;
-	let div2;
+	let div15;
 	let div0;
-	let datepicker0;
-	let updating_date;
-	let t2;
-	let div1;
-	let datepicker1;
-	let t3;
+	let t1;
 	let div3;
+	let div2;
+	let div1;
+	let span0;
+	let t3;
+	let datetimepicker0;
+	let updating_value;
 	let t4;
-	let hr;
+	let div8;
+	let div5;
+	let div4;
 	let t5;
-	let p0;
+	let datetimepicker1;
+	let t6;
+	let div7;
+	let div6;
 	let t7;
-	let p1;
+	let datetimepicker2;
+	let t8;
+	let div11;
+	let div9;
 	let t9;
-	let p2;
+	let datetimepicker3;
+	let t10;
+	let div10;
+	let t11;
+	let datetimepicker4;
+	let t12;
+	let div13;
+	let div12;
+	let button0;
+	let t13;
+	let t14_value = (/*modalProp*/ ctx[1] || "None yet") + "";
+	let t14;
+	let t15;
+	let hr;
+	let t16;
+	let div14;
+	let t17;
+	let div21;
+	let div20;
+	let div19;
+	let div16;
+	let t21;
+	let div17;
+	let p0;
+	let t23;
+	let p1;
+	let t24;
+	let datetimepicker5;
+	let updating_value_1;
+	let t25;
+	let div18;
 	let current;
 
-	function datepicker0_date_binding(value) {
-		/*datepicker0_date_binding*/ ctx[1](value);
+	function datetimepicker0_value_binding(value) {
+		/*datetimepicker0_value_binding*/ ctx[2](value);
 	}
 
-	let datepicker0_props = { visible: false };
+	let datetimepicker0_props = {
+		inputClasses: "form-control",
+		format: "yyyy-mm-dd hh:ii"
+	};
 
 	if (/*myProp*/ ctx[0] !== void 0) {
-		datepicker0_props.date = /*myProp*/ ctx[0];
+		datetimepicker0_props.value = /*myProp*/ ctx[0];
 	}
 
-	datepicker0 = new DatePicker({ props: datepicker0_props });
-	binding_callbacks.push(() => bind(datepicker0, "date", datepicker0_date_binding));
-	datepicker0.$on("input", /*input_handler*/ ctx[2]);
-	datepicker1 = new DatePicker({ props: { visible: false } });
+	datetimepicker0 = new DateTimePicker({ props: datetimepicker0_props });
+	binding_callbacks.push(() => bind(datetimepicker0, "value", datetimepicker0_value_binding));
+
+	datetimepicker1 = new DateTimePicker({
+			props: {
+				inputClasses: "form-control",
+				mode: "date"
+			}
+		});
+
+	datetimepicker2 = new DateTimePicker({
+			props: {
+				inputClasses: "form-control",
+				mode: "time",
+				format: "hh:ii"
+			}
+		});
+
+	datetimepicker3 = new DateTimePicker({
+			props: {
+				inputClasses: "form-control",
+				mode: "date",
+				pickerOnly: true
+			}
+		});
+
+	datetimepicker4 = new DateTimePicker({
+			props: {
+				inputClasses: "form-control",
+				mode: "time",
+				value: "23:00",
+				format: "hh:ii",
+				pickerOnly: true
+			}
+		});
+
+	function datetimepicker5_value_binding(value) {
+		/*datetimepicker5_value_binding*/ ctx[3](value);
+	}
+
+	let datetimepicker5_props = {};
+
+	if (/*modalProp*/ ctx[1] !== void 0) {
+		datetimepicker5_props.value = /*modalProp*/ ctx[1];
+	}
+
+	datetimepicker5 = new DateTimePicker({ props: datetimepicker5_props });
+	binding_callbacks.push(() => bind(datetimepicker5, "value", datetimepicker5_value_binding));
+	datetimepicker5.$on("input", /*input_handler*/ ctx[4]);
 
 	return {
 		c() {
-			div4 = element("div");
-			h3 = element("h3");
-			h3.textContent = "Datepicker";
-			t1 = space();
-			div2 = element("div");
+			div15 = element("div");
 			div0 = element("div");
-			create_component(datepicker0.$$.fragment);
-			t2 = space();
-			div1 = element("div");
-			create_component(datepicker1.$$.fragment);
-			t3 = space();
+			div0.innerHTML = `<h1>Simple Date &amp; time picker</h1>`;
+			t1 = space();
 			div3 = element("div");
-			div3.innerHTML = `<input class="bootstrap-datepicker" size="16" type="text" value="2021-04-19" data-provide="datepicker" data-date-weekstart="1" data-date-autoclose="true" data-date-format="yyyy-mm-dd"/>`;
+			div2 = element("div");
+			div1 = element("div");
+			span0 = element("span");
+			span0.textContent = "Normal date picker (bootstrap style for input)";
+			t3 = space();
+			create_component(datetimepicker0.$$.fragment);
 			t4 = space();
+			div8 = element("div");
+			div5 = element("div");
+			div4 = element("div");
+			t5 = text("Date picker only:\r\n        ");
+			create_component(datetimepicker1.$$.fragment);
+			t6 = space();
+			div7 = element("div");
+			div6 = element("div");
+			t7 = text("Time picker only:\r\n        ");
+			create_component(datetimepicker2.$$.fragment);
+			t8 = space();
+			div11 = element("div");
+			div9 = element("div");
+			t9 = text("Date picker only (always visible)\r\n      ");
+			create_component(datetimepicker3.$$.fragment);
+			t10 = space();
+			div10 = element("div");
+			t11 = text("Time picker only (always visible)\r\n      ");
+			create_component(datetimepicker4.$$.fragment);
+			t12 = space();
+			div13 = element("div");
+			div12 = element("div");
+			button0 = element("button");
+			t13 = text("Picked date from modal: ");
+			t14 = text(t14_value);
+			t15 = space();
 			hr = element("hr");
-			t5 = space();
+			t16 = space();
+			div14 = element("div");
+			t17 = space();
+			div21 = element("div");
+			div20 = element("div");
+			div19 = element("div");
+			div16 = element("div");
+
+			div16.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Modal title</h5> 
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>`;
+
+			t21 = space();
+			div17 = element("div");
 			p0 = element("p");
-			p0.textContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis commodi autem saepe iusto rem reiciendis adipisci officia id ea, repudiandae, perspiciatis maiores consequatur aperiam quos ab quia omnis explicabo accusamus?";
-			t7 = space();
+			p0.textContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae harum explicabo optio mollitia, libero animi corporis quibusdam quia fuga odit exercitationem, iure, est neque ab officia facilis. Sequi, officiis at?";
+			t23 = space();
 			p1 = element("p");
-			p1.textContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis commodi autem saepe iusto rem reiciendis adipisci officia id ea, repudiandae, perspiciatis maiores consequatur aperiam quos ab quia omnis explicabo accusamus?";
-			t9 = space();
-			p2 = element("p");
-			p2.textContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis commodi autem saepe iusto rem reiciendis adipisci officia id ea, repudiandae, perspiciatis maiores consequatur aperiam quos ab quia omnis explicabo accusamus?";
-			attr(div0, "class", "mr-2");
-			set_style(div0, "position", "relative");
-			attr(div1, "class", "ml-4");
-			attr(div2, "class", "d-flex");
-			attr(div4, "class", "p-4");
+			t24 = space();
+			create_component(datetimepicker5.$$.fragment);
+			t25 = space();
+			div18 = element("div");
+
+			div18.innerHTML = `<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>`;
+
+			attr(div0, "class", "text-center");
+			attr(span0, "class", "form-label");
+			attr(div1, "class", "form-group");
+			attr(div2, "class", "col-12");
+			attr(div3, "class", "row");
+			attr(div4, "class", "form-group");
+			attr(div5, "class", "col-6");
+			attr(div6, "class", "form-group");
+			attr(div7, "class", "col-6");
+			attr(div8, "class", "row");
+			attr(div9, "class", "col-6");
+			attr(div10, "class", "col-6");
+			attr(div11, "class", "row");
+			attr(button0, "type", "button");
+			attr(button0, "class", "btn btn-primary");
+			attr(button0, "data-toggle", "modal");
+			attr(button0, "data-target", "#exampleModal");
+			attr(div12, "class", "col");
+			attr(div13, "class", "row mt-4");
+			attr(div14, "id", "readme");
+			attr(div15, "class", "container");
+			attr(div16, "class", "modal-header");
+			attr(p1, "class", "mt-2 mb-2");
+			attr(div17, "class", "modal-body");
+			attr(div18, "class", "modal-footer");
+			attr(div19, "class", "modal-content");
+			attr(div20, "class", "modal-dialog");
+			attr(div21, "class", "modal fade");
+			attr(div21, "id", "exampleModal");
+			attr(div21, "tabindex", "-1");
+			attr(div21, "aria-labelledby", "exampleModalLabel");
+			attr(div21, "aria-hidden", "true");
 		},
 		m(target, anchor) {
-			insert(target, div4, anchor);
-			append(div4, h3);
-			append(div4, t1);
-			append(div4, div2);
-			append(div2, div0);
-			mount_component(datepicker0, div0, null);
-			append(div2, t2);
+			insert(target, div15, anchor);
+			append(div15, div0);
+			append(div15, t1);
+			append(div15, div3);
+			append(div3, div2);
 			append(div2, div1);
-			mount_component(datepicker1, div1, null);
-			append(div4, t3);
-			append(div4, div3);
-			append(div4, t4);
-			append(div4, hr);
+			append(div1, span0);
+			append(div1, t3);
+			mount_component(datetimepicker0, div1, null);
+			append(div15, t4);
+			append(div15, div8);
+			append(div8, div5);
+			append(div5, div4);
 			append(div4, t5);
-			append(div4, p0);
-			append(div4, t7);
-			append(div4, p1);
-			append(div4, t9);
-			append(div4, p2);
+			mount_component(datetimepicker1, div4, null);
+			append(div8, t6);
+			append(div8, div7);
+			append(div7, div6);
+			append(div6, t7);
+			mount_component(datetimepicker2, div6, null);
+			append(div15, t8);
+			append(div15, div11);
+			append(div11, div9);
+			append(div9, t9);
+			mount_component(datetimepicker3, div9, null);
+			append(div11, t10);
+			append(div11, div10);
+			append(div10, t11);
+			mount_component(datetimepicker4, div10, null);
+			append(div15, t12);
+			append(div15, div13);
+			append(div13, div12);
+			append(div12, button0);
+			append(button0, t13);
+			append(button0, t14);
+			append(div15, t15);
+			append(div15, hr);
+			append(div15, t16);
+			append(div15, div14);
+			insert(target, t17, anchor);
+			insert(target, div21, anchor);
+			append(div21, div20);
+			append(div20, div19);
+			append(div19, div16);
+			append(div19, t21);
+			append(div19, div17);
+			append(div17, p0);
+			append(div17, t23);
+			append(div17, p1);
+			append(div17, t24);
+			mount_component(datetimepicker5, div17, null);
+			append(div19, t25);
+			append(div19, div18);
 			current = true;
 		},
 		p(ctx, [dirty]) {
-			const datepicker0_changes = {};
+			const datetimepicker0_changes = {};
 
-			if (!updating_date && dirty & /*myProp*/ 1) {
-				updating_date = true;
-				datepicker0_changes.date = /*myProp*/ ctx[0];
-				add_flush_callback(() => updating_date = false);
+			if (!updating_value && dirty & /*myProp*/ 1) {
+				updating_value = true;
+				datetimepicker0_changes.value = /*myProp*/ ctx[0];
+				add_flush_callback(() => updating_value = false);
 			}
 
-			datepicker0.$set(datepicker0_changes);
+			datetimepicker0.$set(datetimepicker0_changes);
+			if ((!current || dirty & /*modalProp*/ 2) && t14_value !== (t14_value = (/*modalProp*/ ctx[1] || "None yet") + "")) set_data(t14, t14_value);
+			const datetimepicker5_changes = {};
+
+			if (!updating_value_1 && dirty & /*modalProp*/ 2) {
+				updating_value_1 = true;
+				datetimepicker5_changes.value = /*modalProp*/ ctx[1];
+				add_flush_callback(() => updating_value_1 = false);
+			}
+
+			datetimepicker5.$set(datetimepicker5_changes);
 		},
 		i(local) {
 			if (current) return;
-			transition_in(datepicker0.$$.fragment, local);
-			transition_in(datepicker1.$$.fragment, local);
+			transition_in(datetimepicker0.$$.fragment, local);
+			transition_in(datetimepicker1.$$.fragment, local);
+			transition_in(datetimepicker2.$$.fragment, local);
+			transition_in(datetimepicker3.$$.fragment, local);
+			transition_in(datetimepicker4.$$.fragment, local);
+			transition_in(datetimepicker5.$$.fragment, local);
 			current = true;
 		},
 		o(local) {
-			transition_out(datepicker0.$$.fragment, local);
-			transition_out(datepicker1.$$.fragment, local);
+			transition_out(datetimepicker0.$$.fragment, local);
+			transition_out(datetimepicker1.$$.fragment, local);
+			transition_out(datetimepicker2.$$.fragment, local);
+			transition_out(datetimepicker3.$$.fragment, local);
+			transition_out(datetimepicker4.$$.fragment, local);
+			transition_out(datetimepicker5.$$.fragment, local);
 			current = false;
 		},
 		d(detaching) {
-			if (detaching) detach(div4);
-			destroy_component(datepicker0);
-			destroy_component(datepicker1);
+			if (detaching) detach(div15);
+			destroy_component(datetimepicker0);
+			destroy_component(datetimepicker1);
+			destroy_component(datetimepicker2);
+			destroy_component(datetimepicker3);
+			destroy_component(datetimepicker4);
+			if (detaching) detach(t17);
+			if (detaching) detach(div21);
+			destroy_component(datetimepicker5);
 		}
 	};
 }
 
 function instance($$self, $$props, $$invalidate) {
-	let myProp = "2021-01-04";
+	let myProp = null;
+	let modalProp = null;
 
-	function datepicker0_date_binding(value) {
+	onMount(() => {
+		const requestURL = location.href === "http://localhost:5000/"
+		? "http://localhost:8000/README.md"
+		: "https://raw.githubusercontent.com/mskocik/simple-datepicker/master/README.md";
+
+		fetch(requestURL).then(resp => resp.text()).then(textResponse => {
+			document.getElementById("readme").innerHTML = marked.parse(textResponse);
+		});
+	});
+
+	function datetimepicker0_value_binding(value) {
 		myProp = value;
 		$$invalidate(0, myProp);
 	}
 
-	const input_handler = e => console.log(e.target.value);
-	return [myProp, datepicker0_date_binding, input_handler];
+	function datetimepicker5_value_binding(value) {
+		modalProp = value;
+		$$invalidate(1, modalProp);
+	}
+
+	const input_handler = () => document.querySelector("[data-dismiss]").click();
+
+	return [
+		myProp,
+		modalProp,
+		datetimepicker0_value_binding,
+		datetimepicker5_value_binding,
+		input_handler
+	];
 }
 
 class Docs extends SvelteComponent {

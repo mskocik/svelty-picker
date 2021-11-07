@@ -7,7 +7,8 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv docs",
+    "start": "sirv docs --port 5000",
+    "start-doc": "sirv . --port 8000 --cors",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

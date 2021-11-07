@@ -86,6 +86,7 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
   let nextFrom = 42;
 
   let inc = 0;
+  console.log('SELECTED', selectedDate);
   while(prevMonth.valueOf() < nextMonthValue) {
     inc++;
     dayRow.push(new Date(prevMonth));
@@ -97,18 +98,20 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
 
     prevMonth.setUTCDate(prevMonth.getUTCDate() + 1);
 
-    if (prevMonth.getUTCFullYear() === today.getFullYear() &&
-      prevMonth.getUTCMonth() === today.getMonth() &&
-      prevMonth.getUTCDate() === today.getDate()
+
+    if (prevMonth.getUTCFullYear() === today.getUTCFullYear() &&
+      prevMonth.getUTCMonth() === today.getUTCMonth() &&
+      prevMonth.getUTCDate() === today.getUTCDate()
     ) {
       todayMark = inc;
     }
     if (!selectionMark && selectedDate
       && prevMonth.getUTCFullYear() === selectedDate.getUTCFullYear()
-      && prevMonth.getMonth() === selectedDate.getMonth()
+      && prevMonth.getUTCMonth() === selectedDate.getUTCMonth()
       && prevMonth.getUTCDate() === selectedDate.getUTCDate()
     ) {
       selectionMark = inc;
+      console.log('s', selectionMark);
     }
     
     if (dayRow.length === 7) {
@@ -140,7 +143,7 @@ const utils = {
   },
 }
 
-function UTCDate() {
+export function UTCDate() {
   return new Date(Date.UTC.apply(Date, arguments));
 }
 
@@ -221,20 +224,23 @@ export function parseDate(date, format, i18n, type) {
   setters_map['P'] = setters_map['p'];
   date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getUTCHours(), date.getUTCMinutes(), date.getSeconds());
   if (parts.length === format.parts.length) {
+    console.log('parts', parts);
     for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
+      console.log(parts[i]);
       val = parseInt(parts[i], 10);
       part = format.parts[i];
       if (isNaN(val)) {
         switch (part) {
           case 'MM':
-            val = i18n.months.indexOf(filtered[0]) + 1;;
+            val = i18n.months.indexOf(filtered[0]) + 1;
             break;
           case 'M':
             val= i18n.monthsShort.indexOf(val) + 1;
             break;
           case 'p':
           case 'P':
-            val = i18n.meridiem.indexOf(val.toLowerCase());
+            console.log(val);
+            val = i18n.meridiem.indexOf(parts[i].toLowerCase());
             break;
         }
       }

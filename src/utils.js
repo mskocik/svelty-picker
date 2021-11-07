@@ -2,7 +2,7 @@
     if (!visible) {
       const rect = inputEl.getBoundingClientRect();
       const calRect = el.getBoundingClientRect();
-      const style = ['position: absolute'];
+      const style = ['position: absolute', 'z-index: 12250'];
       style.push(calRect.x + calRect.width > window.innerWidth
         ? `right: 1rem`
         : `left: ${rect.left}px`

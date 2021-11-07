@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition';
   import Calendar from './Calendar.svelte';
   import Time from './Time.svelte';
-  import { formatDate, parseDate } from './dateUtils';
+  import { formatDate, parseDate, UTCDate } from './dateUtils';
   import { usePosition } from './utils';
   import { en } from './i18n.js';
 
@@ -12,10 +12,10 @@
   export let initialDate = null;
   export let startDate = null;
   export let endDate = null;
+  export let mode = 'auto';
   export let format = 'yyyy-mm-dd';
   export let formatType = 'standard';
   export let i18n = en;
-  export let mode = 'datetime';
 
   export let weekStart = 1;
   export let pickerOnly = false;
@@ -27,6 +27,9 @@
   export let inputClasses;
   export let positionFn = usePosition;
   
+  if (format === 'yyyy-mm-dd' && mode === 'time') {
+    format = 'hh:ii'
+  }
   let innerDate = initialDate && initialDate instanceof Date
     ? initialDate
     : (value 
@@ -37,7 +40,17 @@
   let inputEl = null;
   let calendarEl = null;
   let preventClose = false;
-  let currentMode = mode === 'time'
+  let resolvedMode = mode === 'auto'
+    ? (
+      format.match(/hh?|ii?/i) && format.match(/y|m|d/i)
+        ? 'datetime'
+        : (format.match(/hh?|ii?/i)
+          ? 'time'
+          : 'date'
+        )
+    )
+    : mode;
+  let currentMode = resolvedMode === 'time'
     ? 'time'
     : 'date';
 
@@ -52,12 +65,12 @@
       if (innerDate.getUTCFullYear() === e.detail.getUTCFullYear()
        && innerDate.getUTCMonth() === e.detail.getUTCMonth()
        && innerDate.getUTCDate() === e.detail.getUTCDate()
-       && mode === 'date'
+       && resolvedMode === 'date'
       ) setter = null;
     }
     innerDate = setter;
-    if (autoclose && mode === 'date' && !pickerOnly && !preventClose) { isFocused = false }
-    if (!preventClose && mode === 'datetime' && currentMode === 'date') {
+    if (autoclose && resolvedMode === 'date' && !pickerOnly && !preventClose) { isFocused = false }
+    if (!preventClose && resolvedMode === 'datetime' && currentMode === 'date') {
       currentMode = 'time';
     }
     preventClose = false;
@@ -67,11 +80,15 @@
   }
 
   function onToday() {
-    onDate({ detail: new Date()});
+    const today = new Date()
+    onDate({ detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes(), 0)});
+    
   }
 
   function onClear() {
-    onDate({ detail: null })
+    onDate({ detail: null });
+    currentMode = 'date';
+    if (resolvedMode === 'date' && autoclose) isFocused = false;
   }
 
   function onKeyDown(e) {
@@ -87,7 +104,12 @@
       case 'ArrowRight':
         e.preventDefault();
         preventClose = true;
-        calendarEl.handleGridNav(e.key, e.shiftKey);
+        if (currentMode === 'date') {
+          calendarEl.handleGridNav(e.key, e.shiftKey);
+        }
+        if (currentMode === 'time') {
+          // TODO: keyboard nav for timepicker
+        }
         break;
       case 'Escape':
         if (isFocused && !internalVisibility) {
@@ -98,7 +120,10 @@
       case 'Delete':
         onClear();
       case 'Enter':
-        if (isFocused) isFocused = false;
+        if (isFocused && resolvedMode === 'date') isFocused = false;
+        if (resolvedMode.includes('time')) {
+          currentMode = 'time';
+        }
         break;
       case 'Tab':
       case 'F5':  
@@ -114,9 +139,9 @@
 
   function onBlur() {
     isFocused = false;
-    if (mode.includes('date')) currentMode = 'date';
+    if (resolvedMode.includes('date')) currentMode = 'date';
+    dispatchEvent('blur');
   }
-
 </script>
 
 <input type="{pickerOnly ? 'hidden' : 'text'}" {name} bind:this={inputEl}
@@ -132,23 +157,35 @@
   readonly={isFocused}
 >
 {#if visible || isFocused}
-<div on:mousedown|preventDefault use:positionFn={{inputEl, visible: internalVisibility}} class="std-calendar-wrap is-popup" transition:fade={{duration: 200}}>
+<div on:mousedown|preventDefault use:positionFn={{inputEl, visible: internalVisibility}} class="std-calendar-wrap is-popup" transition:fade|local={{duration: 200}}>
   {#if currentMode === 'date'}
-  <Calendar date={innerDate} {startDate} {endDate} on:date={onDate} {i18n} {weekStart} bind:this={calendarEl}
-    enableTimeToggle={mode.includes('time')} on:switch={onModeSwitch}
-  ></Calendar>
-  {#if todayBtn || clearBtn}
-  <div class="std-btn-row">
-    {#if todayBtn}
-      <button on:click={onToday} class="btn btn-primary btn-sm">{i18n.todayBtn}</button>
+    <Calendar date={innerDate} 
+      startDate={parseDate(startDate, format, i18n, formatType)}
+      endDate={parseDate(endDate, format, i18n, formatType)}
+      enableTimeToggle={resolvedMode.includes('time')}
+      bind:this={calendarEl}
+      {i18n} {weekStart} 
+      on:date={onDate} 
+      on:switch={onModeSwitch}
+    ></Calendar>
+    {#if todayBtn || clearBtn}
+    <div class="std-btn-row">
+      {#if todayBtn}
+        <button on:click={onToday} class="btn btn-primary btn-sm">{i18n.todayBtn}</button>
+      {/if}
+      {#if clearBtn}
+        <button on:click={onClear} class="btn btn-outline-danger btn-sm">{i18n.clearBtn}</button>
+      {/if}
+    </div>
     {/if}
-    {#if clearBtn}
-      <button on:click={onClear} class="btn btn-outline-danger btn-sm">{i18n.clearBtn}</button>
-    {/if}
-  </div>
-  {/if}
   {:else}
-    <Time date={innerDate} hasDateComponent on:time={onDate} on:switch={onModeSwitch} on:close={() => autoclose && onBlur()} {i18n}></Time>
+    <Time date={innerDate} hasDateComponent={resolvedMode!=='time'}
+      showMeridian={format.match('p|P')}
+      {i18n}
+      on:time={onDate}
+      on:switch={onModeSwitch}
+      on:close={() => autoclose && !pickerOnly && onBlur()}
+    ></Time>
   {/if}
 </div>
 {/if}
