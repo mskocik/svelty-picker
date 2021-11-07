@@ -96,7 +96,10 @@
 
   function isDisabledDate(date) {
     if (startDate && startDate > date) return true;
-    if (endDate && endDate < date) return true;
+    if (endDate && (
+        endDate.getUTCFullYear() === date.getUTCFullYear() && endDate.getUTCMonth() === date.getUTCMonth() && endDate.getUTCDate() === date.getUTCDate()
+      ) || endDate <= date
+    ) return true;
   }
 
   function onChangeMonth(val) {
@@ -263,6 +266,10 @@
     border-radius: 4px;
     cursor: pointer;
     padding: 0.375rem;
+  }
+  .std-btn[disabled] {
+    cursor: not-allowed;
+    opacity: 0.35;
   }
   .std-btn-header {
     width: auto;
