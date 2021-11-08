@@ -321,6 +321,7 @@
     text-align: left;
   }
   .sdt-today:before {
+    box-sizing: border-box;
     position: absolute;
     content: '';
     margin-left: 4px;
