@@ -322,7 +322,7 @@
     transform: translate(-50%, -50%);
     text-align: center;
     border-radius: 50%;
-    line-height: 28px;
+    line-height: 20px;
     cursor: pointer;
     background-color: transparent;
   }
