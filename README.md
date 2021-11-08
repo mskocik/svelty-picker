@@ -1,16 +1,25 @@
 # 📆 Svelty Picker [![NPM version](http://img.shields.io/npm/v/svelty-picker.svg?style=flat)](https://www.npmjs.org/package/svelty-picker)
 
-Simple date & time picker implemented in svelte.
+Simple date & time picker implemented in svelte. 
+
+Features: 
+- datepicker
+- timepicker (with meridian support)
+- various format
+- keyboard navigation (date only for now)
+- includes `<input>` element
+- 🚧 [WIP] custom element 
+- validator action for `<input>` using `svelte-use-forms` (optional)
 
 ![screenshot](docs/screenshot.png)
 
-## Install
+## ⚙️ Install
 
 ```
 npm install svelty-picker
 ```
 
-### Example
+## 👀 Example
 
 ```svelte
 <script>
@@ -24,7 +33,7 @@ npm install svelty-picker
 
 Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?version=3.44.1).
 
-### Options
+## 📓 Options
 
 | Property        | Type         | Default       | Description |
 |-----------------|--------------|---------------| ------------------|
@@ -47,12 +56,7 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | positionFn      | `function`   | _`internal`_  | function used to position picker. Used as action. Acceps following object: `{ inputEl, visible}`, where `visible` is `visible` parameter & `inputEl` is underlying `<input>` element |
 | validatorAction | `array`      | `null`        | Bind validator action for inner `<input>` element. Designed to be used with `svelte-use-form`.
 
-### Events
-
-Component emits following events: `input`, `change`, `blur`.
-
-### Format settings
-
+### 🗒️ Format settings
 
 - `p` : meridian in lower case ('am' or 'pm') - according to locale file
 - `P` : meridian in upper case ('AM' or 'PM') - according to locale file
@@ -73,8 +77,11 @@ Component emits following events: `input`, `change`, `blur`.
 - `yy` : two digit representation of a year
 - `yyyy` : full numeric representation of a year, 4 digits
 
+## 🗯️ Events
 
-### Localization
+Component emits following events: `input`, `change`, `blur`.
+
+## 🌐 Localization
 
 Localization file has following structure.
 
@@ -93,4 +100,8 @@ export const en = {
   backToDate:  'Back to calendar view'
 }
 ```
-PRs for extending built in localization are welcome 🥳
+PRs for extending built-in localization are welcome 🥳
+
+## 🏆 Thanks to:
+
+- [Bootstrap datepicker](https://github.com/smalot/bootstrap-datetimepicker/blob/master/js/bootstrap-datetimepicker.js) for some internal date and format handling
