@@ -151,6 +151,23 @@ class PickerElement extends HTMLElement {
     this.picker.$on('blur', e => {
       this.dispatchEvent(new Event('blur'));
     });
+
+    // bind from/to
+    setTimeout(() => {
+      if (this.hasAttribute('from')) {
+        const el = document.getElementById(this.getAttribute('from'));
+        el.oninput = e => {
+          this.picker.$set({ startDate: el.value });
+          this.focus();
+        }
+      }
+      if (this.hasAttribute('to')) {
+        const el = document.getElementById(this.getAttribute('to'));
+        el.oninput = e => {
+          this.picker.$set({ endDate: el.value });
+        }
+      }
+    });
   }
 
   disconnectedCallback() {
