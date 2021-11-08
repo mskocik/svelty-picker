@@ -8,7 +8,7 @@ Features:
 - various format
 - keyboard navigation (date only for now)
 - includes `<input>` element
-- 🚧 [WIP] custom element 
+- custom element 
 - validator action for `<input>` using `svelte-use-forms` (optional)
 
 ![screenshot](docs/screenshot.png)
