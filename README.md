@@ -56,7 +56,7 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | positionFn      | `function`   | _`internal`_  | function used to position picker. Used as action. Acceps following object: `{ inputEl, visible}`, where `visible` is `visible` parameter & `inputEl` is underlying `<input>` element |
 | validatorAction | `array`      | `null`        | Bind validator action for inner `<input>` element. Designed to be used with `svelte-use-form`.
 
-### 🗒️ Format settings
+### Format settings
 
 - `p` : meridian in lower case ('am' or 'pm') - according to locale file
 - `P` : meridian in upper case ('AM' or 'PM') - according to locale file
