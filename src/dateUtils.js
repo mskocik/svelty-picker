@@ -216,7 +216,7 @@ export function parseDate(date, format, i18n, type) {
         return d.setUTCHours(v === 1 ? d.getUTCHours() + 12 : d.getUTCHours());
       }
     },
-    val, filtered, part;
+    val, part;
   setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
   setters_map['dd'] = setters_map['d'];
   setters_map['P'] = setters_map['p'];
@@ -228,10 +228,11 @@ export function parseDate(date, format, i18n, type) {
       if (isNaN(val)) {
         switch (part) {
           case 'MM':
-            val = i18n.months.indexOf(filtered[0]) + 1;
+            val = i18n.months.indexOf(parts[i]) + 1;
             break;
           case 'M':
-            val= i18n.monthsShort.indexOf(val) + 1;
+            console.log('>', val, parts, format);
+            val= i18n.monthsShort.indexOf(parts[i]) + 1;
             break;
           case 'p':
           case 'P':

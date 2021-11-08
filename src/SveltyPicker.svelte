@@ -80,7 +80,9 @@
       prevValue = value;
     }
     if (currentFormat !== format && innerDate) {
-      value = formatDate(setter, format, i18n, formatType);
+      value = formatDate(innerDate, format, i18n, formatType);
+      prevValue = value;
+      currentFormat = format;
     }
   }
 
