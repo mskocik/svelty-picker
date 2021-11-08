@@ -34,7 +34,7 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | startDate       | `string|Date`| `null`        | limit minimal selectable date |
 | endDate         | `string|Date`| `null`        | limit maximal selectable date |
 | mode            | `string`     | `auto`        | restrict picker's mode. Possible values: `auto|date|datetime|time`. By default it try to guess the mode from `format` |
-| format          | `string`     | `yyyy-mm-dd`  | Format of entered date/time |
+| format          | `string`     | `yyyy-mm-dd`  | Format of entered date/time. See [format settings](#format-settings) for available options |
 | i18n            | `object`     | `en`          | localization object, english is by default |
 | weekStart       | `number`     | `1`           | number in range `0-6` to select first day of the week. Sunday is `0` |
 | pickerOnly      | `bool`       | `false`       | Picker is always visible and input field is then hidden, but still present |
@@ -50,6 +50,29 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 ### Events
 
 Component emits following events: `input`, `change`, `blur`.
+
+### Format settings
+
+
+- `p` : meridian in lower case ('am' or 'pm') - according to locale file
+- `P` : meridian in upper case ('AM' or 'PM') - according to locale file
+- `s` : seconds without leading zeros
+- `ss` : seconds, 2 digits with leading zeros
+- `i` : minutes without leading zeros
+- `ii` : minutes, 2 digits with leading zeros
+- `h` : hour without leading zeros - 24-hour format
+- `hh` : hour, 2 digits with leading zeros - 24-hour format
+- `H` : hour without leading zeros - 12-hour format
+- `HH` : hour, 2 digits with leading zeros - 12-hour format
+- `d` : day of the month without leading zeros
+- `dd` : day of the month, 2 digits with leading zeros
+- `m` : numeric representation of month without leading zeros
+- `mm` : numeric representation of the month, 2 digits with leading zeros
+- `M` : short textual representation of a month, three letters
+- `MM` : full textual representation of a month, such as January or March
+- `yy` : two digit representation of a year
+- `yyyy` : full numeric representation of a year, 4 digits
+
 
 ### Localization
 

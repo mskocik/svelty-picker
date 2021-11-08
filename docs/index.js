@@ -1,4 +1,4 @@
-import Docs from './docs.svelte';
+import Docs from './Docs.svelte';
 
 new Docs({
   target: document.body,

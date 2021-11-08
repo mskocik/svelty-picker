@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
+  import { UTCDate } from './dateUtils';
 
   export let date = null;
   export let showMeridian = false;
@@ -11,13 +12,11 @@
   let isMinuteView = false;
   let handleMoveMove = false;
   let enableViewToggle = false;
-  let innerDate = date || new Date();
+  let innerDate = date || UTCDate(0,0,0,0,0,0);
   if (!date) {
     date = innerDate;
   }
   const dispatch = createEventDispatcher();
-
-  console.log('I', innerDate);
 
   $: {
     if (date !== innerDate) {
@@ -73,7 +72,6 @@
 
   function isSelected(selected, val, i) {
     if (isMinuteView) {
-      console.log('v', selected, val, i);
       return val === selected || (i === 0 && i === selected)
     } else {
       if (showMeridian) {
@@ -83,7 +81,9 @@
       } else if (val > 12) {
         return (i ? multiplier * i + 12 : 0)  === selected;
       } else {
-        return val === selected;
+        return val === '00' || val === '12'
+          ? ((selected === 12 && val == 12) || (val === '00' && selected === 0))
+          : val === selected;
       }
     }
   }

@@ -1,5 +1,5 @@
 <script>
-  import { tick } from 'svelte';
+  import { createEventDispatcher, tick } from 'svelte';
   import { fade } from 'svelte/transition';
   import Calendar from './Calendar.svelte';
   import Time from './Time.svelte';
@@ -8,6 +8,7 @@
   import { en } from './i18n.js';
 
   export let name = 'date';
+  export let placeholder = null;
   export let value = null;
   export let initialDate = null;
   export let startDate = null;
@@ -32,6 +33,8 @@
   if (format === 'yyyy-mm-dd' && mode === 'time') {
     format = 'hh:ii'
   }
+  
+  const dispatch = createEventDispatcher();
   let innerDate = initialDate && initialDate instanceof Date
     ? initialDate
     : (value 
@@ -92,7 +95,7 @@
   function onClear() {
     onDate({ detail: null });
     currentMode = 'date';
-    if (resolvedMode === 'date' && autoclose) isFocused = false;
+    if (resolvedMode === 'date' && !pickerOnly && autoclose) isFocused = false;
   }
 
   function onKeyDown(e) {
@@ -145,11 +148,12 @@
   function onBlur() {
     isFocused = false;
     if (resolvedMode.includes('date')) currentMode = 'date';
-    dispatchEvent('blur');
+    dispatch('blur');
   }
 </script>
 
 <input type="{pickerOnly ? 'hidden' : 'text'}" {name} bind:this={inputEl} use:inputAction={inputActionParams}
+  {placeholder}
   class={inputClasses} {required}
   readonly={isFocused}
   value={value}

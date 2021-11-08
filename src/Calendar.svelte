@@ -72,6 +72,12 @@
   let activeDate = date ? new Date(date.valueOf()) : new Date();
   activeDate.setDate(1);
 
+  $: {
+    if (startDate) {
+      startDate.setUTCDate(startDate.getUTCDate() - 1);
+    }
+  }
+
   const dispatch = createEventDispatcher();
 
   let currentView = MODE_MONTH;
@@ -95,14 +101,8 @@
   }
 
   function isDisabledDate(date) {
-    console.log(startDate, endDate, date);
     if (startDate && startDate > date) return true;
-    if (endDate && ((
-        endDate.getUTCFullYear() === date.getUTCFullYear()
-        && endDate.getUTCMonth() === date.getUTCMonth()
-        && endDate.getUTCDate() === date.getUTCDate()
-      ) || endDate <= date)
-    ) return true;
+    if (endDate && endDate <= date) return true;
     return false;
   }
 
