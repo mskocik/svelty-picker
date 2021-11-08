@@ -1,3 +1,9 @@
+<script context="module">
+  import settings from './settings';
+  // your script goes here
+  export const config = settings;
+</script>
+
 <script>
   import { createEventDispatcher, tick } from 'svelte';
   import { fade } from 'svelte/transition';
@@ -5,36 +11,41 @@
   import Time from './Time.svelte';
   import { formatDate, parseDate, UTCDate } from './dateUtils';
   import { usePosition } from './utils';
-  import { en } from './i18n.js';
 
   export let name = 'date';
+  export let disabled = false;
   export let placeholder = null;
   export let value = null;
   export let initialDate = null;
   export let startDate = null;
   export let endDate = null;
-  export let mode = 'auto';
-  export let format = 'yyyy-mm-dd';
-  export let formatType = 'standard';
-  export let i18n = en;
-
-  export let weekStart = 1;
   export let pickerOnly = false;
-  export let visible = false;
-  export let autoclose = true;
-  export let todayBtn = true;
-  export let clearBtn = true;
   export let required = false;
-  export let inputClasses;
+  // configurable globally
+  export let mode = config.mode;
+  export let format =  config.format;
+  export let formatType = config.formatType;
+  export let weekStart = config.weekStart;
+  export let visible = config.visible;
+  export let inputClasses = config.inputClasses;
+  export let todayBtn = config.todayBtn;
+  export let clearBtn = config.clearBtn;
+  export let autoclose = config.autoclose;
+  export let i18n =  config.i18n;
   // actions
   export let positionFn = usePosition;
   export let validatorAction = null;
+  export function setDateValue(val) {
+    innerDate = parseDate(val, format, i18n, formatType);
+  }
   
   if (format === 'yyyy-mm-dd' && mode === 'time') {
     format = 'hh:ii'
   }
   
   const dispatch = createEventDispatcher();
+  let prevValue = value;
+  let currentFormat = format;
   let innerDate = initialDate && initialDate instanceof Date
     ? initialDate
     : (value 
@@ -63,7 +74,14 @@
 
   $: internalVisibility = pickerOnly ? true : visible;
   $: {
-    value = formatDate(innerDate, format, i18n, formatType)
+    if (value !== prevValue) {
+      const parsed = value ? parseDate(value, format, i18n, formatType) : null;
+      innerDate = parsed;
+      prevValue = value;
+    }
+    if (currentFormat !== format && innerDate) {
+      value = formatDate(setter, format, i18n, formatType);
+    }
   }
 
   function onDate(e) {
@@ -75,7 +93,7 @@
        && resolvedMode === 'date'
       ) setter = null;
     }
-    innerDate = setter;
+    value = setter ? formatDate(setter, format, i18n, formatType) : null;
     if (autoclose && resolvedMode === 'date' && !pickerOnly && !preventClose) { isFocused = false }
     if (!preventClose && resolvedMode === 'datetime' && currentMode === 'date') {
       currentMode = 'time';
@@ -153,6 +171,7 @@
 </script>
 
 <input type="{pickerOnly ? 'hidden' : 'text'}" {name} bind:this={inputEl} use:inputAction={inputActionParams}
+  {disabled}
   {placeholder}
   class={inputClasses} {required}
   readonly={isFocused}

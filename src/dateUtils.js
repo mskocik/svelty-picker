@@ -86,7 +86,6 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
   let nextFrom = 42;
 
   let inc = 0;
-  console.log('SELECTED', selectedDate);
   while(prevMonth.valueOf() < nextMonthValue) {
     inc++;
     dayRow.push(new Date(prevMonth));
@@ -111,7 +110,6 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
       && prevMonth.getUTCDate() === selectedDate.getUTCDate()
     ) {
       selectionMark = inc;
-      console.log('s', selectionMark);
     }
     
     if (dayRow.length === 7) {
@@ -237,7 +235,6 @@ export function parseDate(date, format, i18n, type) {
             break;
           case 'p':
           case 'P':
-            console.log(val);
             val = i18n.meridiem.indexOf(parts[i].toLowerCase());
             break;
         }

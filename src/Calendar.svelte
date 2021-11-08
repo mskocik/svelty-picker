@@ -70,7 +70,6 @@
 
   let internalDate = date;
   let activeDate = date ? new Date(date.valueOf()) : new Date();
-  activeDate.setDate(1);
 
   $: {
     if (startDate) {
