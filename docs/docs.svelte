@@ -47,7 +47,11 @@
     <div class="col-sm-6">
       <div class="form-group">
         Date picker only (used as custom element)
-        <el-picker input-classes="form-control" mode="date"></el-picker>
+        <div class="input-group">
+          <el-picker input-classes="form-control" mode="date" id="fromPicker" to="toPicker"></el-picker>
+          <span class="input-group-text">&ndash;</span>
+          <el-picker input-classes="form-control" mode="date" id="toPicker" from="fromPicker"></el-picker>
+        </div>
       </div>
     </div>
     <div class="col-sm-6">

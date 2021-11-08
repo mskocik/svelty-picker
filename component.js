@@ -158,7 +158,6 @@ class PickerElement extends HTMLElement {
         const el = document.getElementById(this.getAttribute('from'));
         el.oninput = e => {
           this.picker.$set({ startDate: el.value });
-          this.focus();
         }
       }
       if (this.hasAttribute('to')) {
