@@ -58,7 +58,7 @@
     <div class="col-sm-6">
       Date picker
        <!-- only (always visible) -->
-      <SveltyPicker inputClasses="form-control" mode="date" pickerOnly  endDate="2021-11-14"></SveltyPicker>
+      <SveltyPicker inputClasses="form-control" mode="date" pickerOnly></SveltyPicker>
     </div>
     <div class="col-sm-6">
       Time picker

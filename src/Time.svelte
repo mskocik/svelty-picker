@@ -263,7 +263,8 @@
   }
   .sdt-back-btn {
     position: absolute;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
+    top: 0;
     left: 0;
     opacity: 1 !important;
   }

@@ -1141,8 +1141,8 @@
 
     function add_css$3() {
     	var style = element("style");
-    	style.id = "svelte-118err4-style";
-    	style.textContent = ".sdt-cal-td.svelte-118err4.svelte-118err4{padding:0;font-size:90%;text-align:center}.sdt-calendar.svelte-118err4.svelte-118err4{padding-top:0.5rem}.sdt-table.svelte-118err4.svelte-118err4{width:100%}.sdt-today.svelte-118err4.svelte-118err4{color:red}.not-current.svelte-118err4.svelte-118err4{color:#ccc}.std-btn.svelte-118err4.svelte-118err4{border:0;background:transparent;text-align:center;width:100%;border-radius:4px;cursor:pointer;padding:0.375rem}.std-btn[disabled].svelte-118err4.svelte-118err4{cursor:not-allowed;opacity:0.35}.std-btn-header.svelte-118err4.svelte-118err4{width:auto;font-weight:bold;padding:0.375rem 0.5rem}.std-btn-header.icon-btn.svelte-118err4.svelte-118err4:first-of-type{padding-left:0.375rem;padding-right:0.375rem}.std-btn-header.icon-btn.svelte-118err4.svelte-118err4{padding-left:0.25rem;padding-right:0.25rem}.std-btn.svelte-118err4.svelte-118err4:hover{background-color:#eee;border-color:#ddd}.is-selected.svelte-118err4 .std-btn.svelte-118err4{background-color:#286090;border-color:#204d74;color:white;opacity:0.9}.std-btn-header.svelte-118err4.svelte-118err4:hover{background-color:rgb(223, 223, 223);color:black}.sdt-tbody-lg.svelte-118err4 .std-btn.svelte-118err4{height:60px}.sdt-thead-nav.svelte-118err4.svelte-118err4{display:flex}.sdt-nav-btns.svelte-118err4.svelte-118err4{white-space:nowrap}.sdt-toggle-btn.svelte-118err4.svelte-118err4{width:100%;text-align:left}.sdt-today.svelte-118err4.svelte-118err4:before{position:absolute;content:'';margin-left:4px;margin-top:4px;border-left:4px solid #ccc;border-top:4px solid #ccc;border-bottom:4px solid transparent;border-right:4px solid transparent;border-radius:2px;height:4px;z-index:2}.sdt-today.svelte-118err4.svelte-118err4:hover:before{border-left-color:#286090;border-top-color:#286090}.is-selected.sdt-today.svelte-118err4.svelte-118err4:before{border-left-color:#eee;border-top-color:#eee}";
+    	style.id = "svelte-fq8uva-style";
+    	style.textContent = ".sdt-cal-td.svelte-fq8uva.svelte-fq8uva{padding:0;font-size:90%;text-align:center}.sdt-calendar.svelte-fq8uva.svelte-fq8uva{padding-top:0.5rem}.sdt-table.svelte-fq8uva.svelte-fq8uva{width:100%}.sdt-today.svelte-fq8uva.svelte-fq8uva{color:red}.not-current.svelte-fq8uva.svelte-fq8uva{color:#ccc}.std-btn.svelte-fq8uva.svelte-fq8uva{border:0;background:transparent;text-align:center;width:100%;border-radius:4px;cursor:pointer;padding:0.375rem}.std-btn[disabled].svelte-fq8uva.svelte-fq8uva{cursor:not-allowed;opacity:0.35}.std-btn-header.svelte-fq8uva.svelte-fq8uva{width:auto;font-weight:bold;padding:0.375rem 0.5rem}.std-btn-header.icon-btn.svelte-fq8uva.svelte-fq8uva:first-of-type{padding-left:0.375rem;padding-right:0.375rem}.std-btn-header.icon-btn.svelte-fq8uva.svelte-fq8uva{padding-left:0.25rem;padding-right:0.25rem}.std-btn.svelte-fq8uva.svelte-fq8uva:hover{background-color:#eee;border-color:#ddd}.is-selected.svelte-fq8uva .std-btn.svelte-fq8uva{background-color:#286090;border-color:#204d74;color:white;opacity:0.9}.std-btn-header.svelte-fq8uva.svelte-fq8uva:hover{background-color:rgb(223, 223, 223);color:black}.sdt-time-icon.svelte-fq8uva.svelte-fq8uva{margin-right:-4px}.sdt-time-icon.svelte-fq8uva svg.svelte-fq8uva{margin:4px 0}.sdt-tbody-lg.svelte-fq8uva .std-btn.svelte-fq8uva{height:60px}.sdt-thead-nav.svelte-fq8uva.svelte-fq8uva{display:flex}.sdt-nav-btns.svelte-fq8uva.svelte-fq8uva{white-space:nowrap}.sdt-toggle-btn.svelte-fq8uva.svelte-fq8uva{width:100%;text-align:left}.sdt-today.svelte-fq8uva.svelte-fq8uva:before{position:absolute;content:'';margin-left:4px;margin-top:4px;border-left:4px solid #ccc;border-top:4px solid #ccc;border-bottom:4px solid transparent;border-right:4px solid transparent;border-radius:2px;height:4px;z-index:2}.sdt-today.svelte-fq8uva.svelte-fq8uva:hover:before{border-left-color:#286090;border-top-color:#286090}.is-selected.sdt-today.svelte-fq8uva.svelte-fq8uva:before{border-left-color:#eee;border-top-color:#eee}";
     	append(document.head, style);
     }
 
@@ -1198,8 +1198,7 @@
     function create_if_block_3$1(ctx) {
     	let button;
     	let svg;
-    	let path0;
-    	let path1;
+    	let path;
     	let button_title_value;
     	let mounted;
     	let dispose;
@@ -1208,23 +1207,21 @@
     		c() {
     			button = element("button");
     			svg = svg_element("svg");
-    			path0 = svg_element("path");
-    			path1 = svg_element("path");
-    			attr(path0, "d", "M12.5 7.25a.75.75 0 00-1.5 0v5.5c0 .27.144.518.378.651l3.5 2a.75.75 0 00.744-1.302L12.5 12.315V7.25z");
-    			attr(path1, "fill-rule", "evenodd");
-    			attr(path1, "d", "M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z");
+    			path = svg_element("path");
+    			attr(path, "fill-rule", "evenodd");
+    			attr(path, "d", "M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z");
     			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
-    			attr(svg, "viewBox", "0 0 24 24");
+    			attr(svg, "viewBox", "0 0 16 16");
     			attr(svg, "width", "16");
     			attr(svg, "height", "16");
-    			attr(button, "class", "std-btn std-btn-header icon-btn svelte-118err4");
+    			attr(svg, "class", "svelte-fq8uva");
+    			attr(button, "class", "std-btn std-btn-header icon-btn sdt-time-icon svelte-fq8uva");
     			attr(button, "title", button_title_value = /*i18n*/ ctx[0].timeView);
     		},
     		m(target, anchor) {
     			insert(target, button, anchor);
     			append(button, svg);
-    			append(svg, path0);
-    			append(svg, path1);
+    			append(svg, path);
 
     			if (!mounted) {
     				dispose = listen(button, "click", prevent_default(/*onTimeSwitch*/ ctx[12]));
@@ -1263,7 +1260,7 @@
     				each_blocks[i].c();
     			}
 
-    			attr(tbody, "class", "sdt-tbody-lg svelte-118err4");
+    			attr(tbody, "class", "sdt-tbody-lg svelte-fq8uva");
     		},
     		m(target, anchor) {
     			insert(target, tbody, anchor);
@@ -1332,8 +1329,8 @@
     			td = element("td");
     			button = element("button");
     			t = text(t_value);
-    			attr(button, "class", "std-btn svelte-118err4");
-    			attr(td, "class", "svelte-118err4");
+    			attr(button, "class", "std-btn svelte-fq8uva");
+    			attr(td, "class", "svelte-fq8uva");
     			toggle_class(td, "is-selected", /*i*/ ctx[28] * 4 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
     			this.first = td;
     		},
@@ -1432,7 +1429,7 @@
     				each_blocks[i].c();
     			}
 
-    			attr(tbody, "class", "sdt-tbody-lg svelte-118err4");
+    			attr(tbody, "class", "sdt-tbody-lg svelte-fq8uva");
     		},
     		m(target, anchor) {
     			insert(target, tbody, anchor);
@@ -1501,8 +1498,8 @@
     			td = element("td");
     			button = element("button");
     			t = text(t_value);
-    			attr(button, "class", "std-btn svelte-118err4");
-    			attr(td, "class", "svelte-118err4");
+    			attr(button, "class", "std-btn svelte-fq8uva");
+    			attr(td, "class", "svelte-fq8uva");
     			toggle_class(td, "is-selected", /*i*/ ctx[28] * 4 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
     			this.first = td;
     		},
@@ -1619,7 +1616,7 @@
     				each_blocks[i].c();
     			}
 
-    			attr(tr, "class", "sdt-cal-td svelte-118err4");
+    			attr(tr, "class", "sdt-cal-td svelte-fq8uva");
     			attr(tbody0, "class", "c-section-center");
     		},
     		m(target, anchor) {
@@ -1748,10 +1745,10 @@
     			td = element("td");
     			button = element("button");
     			t = text(t_value);
-    			attr(button, "class", "std-btn svelte-118err4");
+    			attr(button, "class", "std-btn svelte-fq8uva");
     			button.disabled = button_disabled_value = /*isDisabledDate*/ ctx[8](/*currDate*/ ctx[29]);
     			toggle_class(button, "not-current", !/*isBetween*/ ctx[7](/*i*/ ctx[28] * 7 + /*j*/ ctx[31], /*currDate*/ ctx[29]));
-    			attr(td, "class", "sdt-cal-td svelte-118err4");
+    			attr(td, "class", "sdt-cal-td svelte-fq8uva");
     			toggle_class(td, "sdt-today", /*i*/ ctx[28] * 7 + /*j*/ ctx[31] === /*dataset*/ ctx[4].todayMark);
     			toggle_class(td, "is-selected", /*i*/ ctx[28] * 7 + /*j*/ ctx[31] === /*dataset*/ ctx[4].selectionMark);
     			this.first = td;
@@ -1888,13 +1885,13 @@
     			if (if_block2) if_block2.c();
     			t6 = space();
     			if (if_block3) if_block3.c();
-    			attr(button0, "class", "std-btn std-btn-header sdt-toggle-btn svelte-118err4");
-    			attr(button1, "class", "std-btn std-btn-header icon-btn svelte-118err4");
-    			attr(button2, "class", "std-btn std-btn-header icon-btn svelte-118err4");
-    			attr(div0, "class", "sdt-nav-btns svelte-118err4");
-    			attr(div1, "class", "sdt-thead-nav svelte-118err4");
-    			attr(table, "class", "sdt-table svelte-118err4");
-    			attr(div2, "class", "sdt-calendar svelte-118err4");
+    			attr(button0, "class", "std-btn std-btn-header sdt-toggle-btn svelte-fq8uva");
+    			attr(button1, "class", "std-btn std-btn-header icon-btn svelte-fq8uva");
+    			attr(button2, "class", "std-btn std-btn-header icon-btn svelte-fq8uva");
+    			attr(div0, "class", "sdt-nav-btns svelte-fq8uva");
+    			attr(div1, "class", "sdt-thead-nav svelte-fq8uva");
+    			attr(table, "class", "sdt-table svelte-fq8uva");
+    			attr(div2, "class", "sdt-calendar svelte-fq8uva");
     		},
     		m(target, anchor) {
     			insert(target, div1, anchor);
@@ -2253,7 +2250,7 @@
     class Calendar extends SvelteComponent {
     	constructor(options) {
     		super();
-    		if (!document.getElementById("svelte-118err4-style")) add_css$3();
+    		if (!document.getElementById("svelte-fq8uva-style")) add_css$3();
 
     		init(
     			this,
@@ -2283,8 +2280,8 @@
 
     function add_css$2() {
     	var style = element("style");
-    	style.id = "svelte-vg2bsw-style";
-    	style.textContent = ".sdt-timer.svelte-vg2bsw.svelte-vg2bsw{position:relative;width:272px}.sdt-time-head.svelte-vg2bsw.svelte-vg2bsw{position:relative;display:flex;justify-content:center;align-items:center}.sdt-time-figure.svelte-vg2bsw.svelte-vg2bsw{font-size:1.5rem;font-weight:bold}.sdt-clock.svelte-vg2bsw.svelte-vg2bsw{margin:auto;position:relative;width:260px;height:260px;background-color:#eeeded;border-radius:50%;transition:background-color 0.3s}.sdt-clock.is-minute-view.svelte-vg2bsw.svelte-vg2bsw{background-color:rgb(238, 237, 237, 0.25);box-shadow:0 0 128px 2px #ddd inset}.sdt-time-btn.svelte-vg2bsw.svelte-vg2bsw{border:0;background:transparent;text-align:center;border-radius:4px;cursor:pointer;padding:0.375rem}.sdt-time-btn.svelte-vg2bsw.svelte-vg2bsw:not(.is-active){opacity:0.5}.sdt-time-btn.svelte-vg2bsw.svelte-vg2bsw:hover{background-color:rgb(223, 223, 223);color:black}.sdt-back-btn.svelte-vg2bsw.svelte-vg2bsw{position:absolute;border:1px solid #ddd;left:0;opacity:1 !important}.sdt-meridian.svelte-vg2bsw.svelte-vg2bsw{position:absolute;top:0.25rem;right:0.25rem;display:flex;flex-flow:column;font-size:90%}.sdt-meridian.svelte-vg2bsw .sdt-time-btn.svelte-vg2bsw{padding:0.15rem 0.5rem}.sdt-meridian.svelte-vg2bsw .sdt-time-btn.is-active.svelte-vg2bsw{font-weight:bold}.sdt-middle-dot.svelte-vg2bsw.svelte-vg2bsw{left:50%;top:50%;width:6px;height:6px;position:absolute;transform:translate(-50%, -50%);background-color:#286090;border-radius:50%}.sdt-hand-pointer.svelte-vg2bsw.svelte-vg2bsw{width:2px;height:calc(40% + 1px);bottom:50%;left:calc(50% - 1px);position:absolute;background-color:#286090;transform-origin:center bottom 0;transition:transform 0.2s ease, height 0.15s ease}.sdt-hand-circle.svelte-vg2bsw.svelte-vg2bsw{left:-15px;top:-21px;position:relative;width:4px;height:4px;background-color:transparent;border:14px solid #286090;border-radius:50%;box-sizing:content-box}.sdt-tick.svelte-vg2bsw.svelte-vg2bsw{position:absolute;width:30px;height:30px;border-width:0;transform:translate(-50%, -50%);text-align:center;border-radius:50%;line-height:28px;cursor:pointer;background-color:transparent}.sdt-tick.is-selected.svelte-vg2bsw.svelte-vg2bsw{background-color:#286090;color:#fff}";
+    	style.id = "svelte-1xoqn6e-style";
+    	style.textContent = ".sdt-timer.svelte-1xoqn6e.svelte-1xoqn6e{position:relative;width:272px}.sdt-time-head.svelte-1xoqn6e.svelte-1xoqn6e{position:relative;display:flex;justify-content:center;align-items:center}.sdt-time-figure.svelte-1xoqn6e.svelte-1xoqn6e{font-size:1.5rem;font-weight:bold}.sdt-clock.svelte-1xoqn6e.svelte-1xoqn6e{margin:auto;position:relative;width:260px;height:260px;background-color:#eeeded;border-radius:50%;transition:background-color 0.3s}.sdt-clock.is-minute-view.svelte-1xoqn6e.svelte-1xoqn6e{background-color:rgb(238, 237, 237, 0.25);box-shadow:0 0 128px 2px #ddd inset}.sdt-time-btn.svelte-1xoqn6e.svelte-1xoqn6e{border:0;background:transparent;text-align:center;border-radius:4px;cursor:pointer;padding:0.375rem}.sdt-time-btn.svelte-1xoqn6e.svelte-1xoqn6e:not(.is-active){opacity:0.5}.sdt-time-btn.svelte-1xoqn6e.svelte-1xoqn6e:hover{background-color:rgb(223, 223, 223);color:black}.sdt-back-btn.svelte-1xoqn6e.svelte-1xoqn6e{position:absolute;top:0;left:0;opacity:1 !important}.sdt-meridian.svelte-1xoqn6e.svelte-1xoqn6e{position:absolute;top:0.25rem;right:0.25rem;display:flex;flex-flow:column;font-size:90%}.sdt-meridian.svelte-1xoqn6e .sdt-time-btn.svelte-1xoqn6e{padding:0.15rem 0.5rem}.sdt-meridian.svelte-1xoqn6e .sdt-time-btn.is-active.svelte-1xoqn6e{font-weight:bold}.sdt-middle-dot.svelte-1xoqn6e.svelte-1xoqn6e{left:50%;top:50%;width:6px;height:6px;position:absolute;transform:translate(-50%, -50%);background-color:#286090;border-radius:50%}.sdt-hand-pointer.svelte-1xoqn6e.svelte-1xoqn6e{width:2px;height:calc(40% + 1px);bottom:50%;left:calc(50% - 1px);position:absolute;background-color:#286090;transform-origin:center bottom 0;transition:transform 0.2s ease, height 0.15s ease}.sdt-hand-circle.svelte-1xoqn6e.svelte-1xoqn6e{left:-15px;top:-21px;position:relative;width:4px;height:4px;background-color:transparent;border:14px solid #286090;border-radius:50%;box-sizing:content-box}.sdt-tick.svelte-1xoqn6e.svelte-1xoqn6e{position:absolute;width:30px;height:30px;border-width:0;transform:translate(-50%, -50%);text-align:center;border-radius:50%;line-height:28px;cursor:pointer;background-color:transparent}.sdt-tick.is-selected.svelte-1xoqn6e.svelte-1xoqn6e{background-color:#286090;color:#fff}";
     	append(document.head, style);
     }
 
@@ -2322,7 +2319,7 @@
     			attr(svg, "viewBox", "0 0 24 24");
     			attr(svg, "width", "20");
     			attr(svg, "height", "20");
-    			attr(button, "class", "sdt-time-btn sdt-back-btn svelte-vg2bsw");
+    			attr(button, "class", "sdt-time-btn sdt-back-btn svelte-1xoqn6e");
     			attr(button, "title", button_title_value = /*i18n*/ ctx[2].backToDate);
     		},
     		m(target, anchor) {
@@ -2369,13 +2366,13 @@
     			t1 = space();
     			button1 = element("button");
     			t2 = text("PM");
-    			attr(button0, "class", "sdt-time-btn svelte-vg2bsw");
+    			attr(button0, "class", "sdt-time-btn svelte-1xoqn6e");
     			attr(button0, "data-value", button0_data_value_value = /*selectedHour*/ ctx[4] % 12);
     			toggle_class(button0, "is-active", /*selectedHour*/ ctx[4] < 12);
-    			attr(button1, "class", "sdt-time-btn svelte-vg2bsw");
+    			attr(button1, "class", "sdt-time-btn svelte-1xoqn6e");
     			attr(button1, "data-value", button1_data_value_value = /*selectedHour*/ ctx[4] % 12 + 12);
     			toggle_class(button1, "is-active", /*selectedHour*/ ctx[4] >= 12);
-    			attr(div, "class", "sdt-meridian svelte-vg2bsw");
+    			attr(div, "class", "sdt-meridian svelte-1xoqn6e");
     		},
     		m(target, anchor) {
     			insert(target, div, anchor);
@@ -2436,7 +2433,7 @@
     			button = element("button");
     			t = text(t_value);
     			attr(button, "style", button_style_value = `left:${/*p*/ ctx[28].x}px; top:${/*p*/ ctx[28].y}px`);
-    			attr(button, "class", "sdt-tick svelte-vg2bsw");
+    			attr(button, "class", "sdt-tick svelte-1xoqn6e");
     			attr(button, "data-value", button_data_value_value = /*p*/ ctx[28].val);
 
     			toggle_class(button, "is-selected", /*isSelected*/ ctx[12](
@@ -2602,7 +2599,7 @@
     			button = element("button");
     			t = text(t_value);
     			attr(button, "style", button_style_value = `left:${/*p*/ ctx[28].x}px; top:${/*p*/ ctx[28].y}px`);
-    			attr(button, "class", "sdt-tick svelte-vg2bsw");
+    			attr(button, "class", "sdt-tick svelte-1xoqn6e");
     			attr(button, "data-value", button_data_value_value = /*p*/ ctx[28].val);
     			toggle_class(button, "is-selected", /*isSelected*/ ctx[12](/*selectedHour*/ ctx[4], /*p*/ ctx[28].val, /*i*/ ctx[30]));
     		},
@@ -2723,18 +2720,18 @@
 
     			t10 = space();
     			if (if_block2) if_block2.c();
-    			attr(button0, "class", "sdt-time-btn sdt-time-figure svelte-vg2bsw");
+    			attr(button0, "class", "sdt-time-btn sdt-time-figure svelte-1xoqn6e");
     			toggle_class(button0, "is-active", !/*isMinuteView*/ ctx[3]);
-    			attr(button1, "class", "sdt-time-btn sdt-time-figure svelte-vg2bsw");
+    			attr(button1, "class", "sdt-time-btn sdt-time-figure svelte-1xoqn6e");
     			toggle_class(button1, "is-active", /*isMinuteView*/ ctx[3]);
-    			attr(div0, "class", "sdt-time-head svelte-vg2bsw");
-    			attr(div1, "class", "sdt-middle-dot svelte-vg2bsw");
-    			attr(div2, "class", "sdt-hand-circle svelte-vg2bsw");
-    			attr(div3, "class", "sdt-hand-pointer svelte-vg2bsw");
+    			attr(div0, "class", "sdt-time-head svelte-1xoqn6e");
+    			attr(div1, "class", "sdt-middle-dot svelte-1xoqn6e");
+    			attr(div2, "class", "sdt-hand-circle svelte-1xoqn6e");
+    			attr(div3, "class", "sdt-hand-pointer svelte-1xoqn6e");
     			attr(div3, "style", /*handCss*/ ctx[8]);
-    			attr(div4, "class", "sdt-clock svelte-vg2bsw");
+    			attr(div4, "class", "sdt-clock svelte-1xoqn6e");
     			toggle_class(div4, "is-minute-view", /*isMinuteView*/ ctx[3]);
-    			attr(div5, "class", "sdt-timer svelte-vg2bsw");
+    			attr(div5, "class", "sdt-timer svelte-1xoqn6e");
     		},
     		m(target, anchor) {
     			insert(target, div5, anchor);
@@ -3157,7 +3154,7 @@
     class Time extends SvelteComponent {
     	constructor(options) {
     		super();
-    		if (!document.getElementById("svelte-vg2bsw-style")) add_css$2();
+    		if (!document.getElementById("svelte-1xoqn6e-style")) add_css$2();
 
     		init(
     			this,
@@ -4165,8 +4162,7 @@
     			props: {
     				inputClasses: "form-control",
     				mode: "date",
-    				pickerOnly: true,
-    				endDate: "2021-11-14"
+    				pickerOnly: true
     			}
     		});
 
