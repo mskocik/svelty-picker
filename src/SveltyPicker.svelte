@@ -54,6 +54,7 @@
     )
   let isFocused = pickerOnly;
   let inputEl = null;
+  let inputRect = null;
   let inputAction = validatorAction ? validatorAction.shift() : () => {};
   let inputActionParams = validatorAction || [];
   let calendarEl = null;
@@ -118,11 +119,15 @@
     if (resolvedMode === 'date' && !pickerOnly && autoclose) isFocused = false;
   }
 
+  function onFocus() {
+    inputRect = inputEl.getBoundingClientRect();
+    isFocused = true;
+  }
+
   function onKeyDown(e) {
     if (!isFocused) {
       ['Backspace', 'Delete'].includes(e.key) && onClear();
-      isFocused = true;
-      return;
+      return onFocus();
     }
     switch (e.key) {
       case 'ArrowDown':
@@ -173,20 +178,21 @@
 </script>
 
 <input type="{pickerOnly ? 'hidden' : 'text'}" {name} bind:this={inputEl} use:inputAction={inputActionParams}
+  autocomplete="off"
   {disabled}
   {placeholder}
   class={inputClasses} {required}
   readonly={isFocused}
   value={value}
-  on:focus={() => { isFocused=true} }
+  on:focus={onFocus}
   on:blur={onBlur}
-  on:click={() => { if (!isFocused) isFocused = true }}
+  on:click={() => { !isFocused && onFocus() }}
   on:input
   on:change
   on:keydown={onKeyDown}
 >
 {#if visible || isFocused}
-<div on:mousedown|preventDefault use:positionFn={{inputEl, visible: internalVisibility}} class="std-calendar-wrap is-popup" transition:fade|local={{duration: 200}}>
+<div on:mousedown|preventDefault use:positionFn={{inputEl, visible: internalVisibility, inputRect}} class="std-calendar-wrap is-popup" transition:fade|local={{duration: 200}}>
   {#if currentMode === 'date'}
     <Calendar date={innerDate} 
       startDate={startDate ? parseDate(startDate, format, i18n, formatType) : null}
