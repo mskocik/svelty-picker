@@ -28,6 +28,8 @@
   export let weekStart = config.weekStart;
   export let visible = config.visible;
   export let inputClasses = config.inputClasses;
+  export let todayBtnClasses = config.todayBtnClasses;
+  export let clearBtnClasses = config.clearBtnClasses;
   export let todayBtn = config.todayBtn;
   export let clearBtn = config.clearBtn;
   export let autoclose = config.autoclose;
@@ -108,9 +110,9 @@
   }
 
   function onToday() {
-    const today = new Date()
-    onDate({ detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes(), 0)});
-    
+    const today = new Date();
+    if (startDate && parseDate(startDate, format, i18n, formatType) < today) return;
+    onDate({ detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), 0, 0, 0)});
   }
 
   function onClear() {
@@ -206,10 +208,10 @@
     {#if todayBtn || clearBtn}
     <div class="std-btn-row">
       {#if todayBtn}
-        <button on:click={onToday} class="btn btn-primary btn-sm">{i18n.todayBtn}</button>
+        <button on:click={onToday} class={todayBtnClasses} disabled={startDate > formatDate(new Date(), format, i18n, formatType)}>{i18n.todayBtn}</button>
       {/if}
       {#if clearBtn}
-        <button on:click={onClear} class="btn btn-outline-danger btn-sm">{i18n.clearBtn}</button>
+        <button on:click={onClear} class={clearBtnClasses} disabled={!innerDate}>{i18n.clearBtn}</button>
       {/if}
     </div>
     {/if}
@@ -241,5 +243,37 @@
     margin-top: 0.5rem;
     display: flex;
     justify-content: space-evenly;
+  }
+  .sdt-action-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: .875rem; 
+    border-radius: 0.2rem;
+  }
+  .sdt-today-btn {
+    background-color: #286090;
+    color: #fff;
+    padding: 0.25rem 0.5rem;
+    font-size: .875rem; 
+    border-radius: 0.2rem;
+    border: 1px solid #1e486d;
+  }
+  .sdt-today-btn[disabled] {
+    opacity: 0.75;
+  }
+  .sdt-today-btn:focus,
+  .sdt-today-btn:active,
+  .sdt-today-btn:hover:not([disabled]) {
+      background-color: #1e486d;
+  }
+  .sdt-clear-btn {
+    border: 1px solid #dc3545;
+    background-color: transparent;
+    color: #dc3545;
+  }
+  .sdt-clear-btn:focus,
+  .sdt-clear-btn:active,
+  .sdt-clear-btn:hover:not([disabled]) {
+    background-color: #dc3545;
+    color: #fff;
   }
 </style>

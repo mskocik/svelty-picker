@@ -157,6 +157,7 @@ class PickerElement extends HTMLElement {
       if (this.hasAttribute('from')) {
         const el = document.getElementById(this.getAttribute('from'));
         el.oninput = e => {
+          console.log('st', el.value);
           this.picker.$set({ startDate: el.value });
         }
       }
@@ -174,6 +175,11 @@ class PickerElement extends HTMLElement {
   }
 }
 
-export function registerSveltyPicker(name) {
+/**
+ * Define custom element
+ * 
+ * @param {string} name name of custom element
+ */
+export function registerElement(name) {
   window.customElements.define(name, PickerElement);
 }

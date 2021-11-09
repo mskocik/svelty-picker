@@ -16,6 +16,7 @@
   if (!date) {
     date = innerDate;
   }
+  let canSelect = true;
   const dispatch = createEventDispatcher();
 
   $: {
@@ -89,7 +90,8 @@
   }
 
   function onClick(e) {
-    if (e.type === 'mousemove' && !handleMoveMove) return;
+    if (!canSelect) return;
+    if ((e.type === 'mousemove' && !handleMoveMove) || (!isMinuteView && e.target.tagName !== 'BUTTON')) return;
     if (e.target.tagName === 'BUTTON') {
       let val = parseInt(e.target.dataset.value);
       const setter = e.meridianSwitch || !isMinuteView ? 'setUTCHours' : 'setUTCMinutes';
@@ -146,15 +148,12 @@
       innerDate.setMinutes(degree);
     }
     innerDate = innerDate;
+    canSelect = false;
     dispatch('time', innerDate);
-    if (!e.meridianSwitch && !handleMoveMove && isMinuteView) setTimeout(() => {
-      dispatch('close')
-    }, 300);
+    if (!e.meridianSwitch && !handleMoveMove && isMinuteView) setTimeout(() => { dispatch('close') }, 300);
     if (!e.meridianSwitch && !isMinuteView) isMinuteView = true;
     enableViewToggle = true;
-    setTimeout(() => {
-      enableViewToggle = false;
-    }, 1000);
+    setTimeout(() => { enableViewToggle = false; canSelect = true }, 200);
   }
 
   function onSwitchMeridian(e) {
@@ -300,7 +299,7 @@
     position: absolute;
     background-color: #286090;
     transform-origin: center bottom 0;
-    transition: transform 0.2s ease, height 0.15s ease;
+    transition: transform 0.3s ease, height 0.15s ease;
     
   }
   .sdt-hand-circle {
