@@ -2,9 +2,9 @@
   import { onMount } from 'svelte';
   import SveltyPicker from './../src/SveltyPicker.svelte';
   import { config } from './../index';
-  import { registerSveltyPicker } from './../component.js';
+  import { registerElement } from './../component.js';
 
-  let myProp = '2021-11-01';
+  let myProp = '2021-11-11 11:11';
   let modalProp = null;
 
   let pickerFormat = 'yyyy-mm-dd';
@@ -17,7 +17,7 @@
       .then(textResponse => {
         document.getElementById('readme').innerHTML = marked.parse(textResponse)
       });
-    registerSveltyPicker('el-picker')
+    registerElement('el-picker')
   });
 </script>
 
@@ -36,9 +36,10 @@
         </span>
         <SveltyPicker placeholder="Pick your date and time"
           inputClasses="form-control"
-          format="yyyy-mm-dd"
+          format="yyyy-mm-dd hh:ii"
           bind:value={myProp}
-        ></SveltyPicker>
+        >
+      </SveltyPicker>
       </div>
     </div>
   </div>
