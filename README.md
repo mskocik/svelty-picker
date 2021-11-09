@@ -53,6 +53,8 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | clearBtn        | `bool`       | `true`        | Show clear button |
 | required        | `bool`       | `false`       | Renders `<input>`'s `required parameter |
 | inputClasses    | `string`     | ``            | input css class string |
+| todayBtnClasses | `string`     | `sdt-action-btn sdt-today-btn` | today button css classes |
+| clearBtnClasses | `string`     | `sdt-action-btn sdt-clear-btn` | clear button css classes |
 | positionFn      | `function`   | _`internal`_  | function used to position picker. Used as action. Acceps following object: `{ inputEl, visible}`, where `visible` is `visible` parameter & `inputEl` is underlying `<input>` element |
 | validatorAction | `array`      | `null`        | Bind validator action for inner `<input>` element. Designed to be used with `svelte-use-form`.
 
