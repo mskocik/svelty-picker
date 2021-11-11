@@ -16,6 +16,7 @@
   export let disabled = false;
   export let placeholder = null;
   export let value = null;
+  export let initialDate = null;
   export let startDate = null;
   export let endDate = null;
   export let pickerOnly = false;
@@ -47,9 +48,15 @@
   const dispatch = createEventDispatcher();
   let prevValue = value;
   let currentFormat = format;
-  let innerDate = value 
-    ? parseDate(value, format, i18n, formatType)
-    : null
+  let innerDate = initialDate && initialDate instanceof Date
+    ? UTCDate(initialDate.getUTCFullYear(), initialDate.getUTCMonth(), initialDate.getUTCDate(), initialDate.getHours(), initialDate.getUTCMinutes())
+    : (value 
+      ? parseDate(value, format, i18n, formatType)
+      : null
+    )
+  if (innerDate && initialDate) {
+    value = formatDate(innerDate, format, i18n, formatType);
+  }
   let isFocused = pickerOnly;
   let inputEl = null;
   let inputRect = null;
