@@ -10,14 +10,13 @@
   let pickerFormat = 'yyyy-mm-dd';
 
   onMount(() => {
-    const requestURL = location.href === 'http://localhost:5000/'
-      ? 'http://localhost:8000/README.md'
-      : 'https://raw.githubusercontent.com/mskocik/simple-datepicker/master/README.md'
+    registerElement('el-picker')
+    if (location.href === 'http://localhost:5000/') return;
+    const requestURL = 'https://raw.githubusercontent.com/mskocik/simple-datepicker/master/README.md'
     fetch(requestURL).then(resp => resp.text())
       .then(textResponse => {
         document.getElementById('readme').innerHTML = marked.parse(textResponse)
       });
-    registerElement('el-picker')
   });
 </script>
 
