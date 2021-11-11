@@ -123,7 +123,9 @@
   function onToday() {
     const today = new Date();
     if (startDate && parseDate(startDate, format, i18n, formatType) < today) return;
-    onDate({ detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getUTCMinutes(), 0)});
+    const todayHours = innerDate ? innerDate.getHours() : today.getHours();
+    const todayMinutes = innerDate ? innerDate.getUTCMinutes() : innerDate.getUTCMinutes();
+    onDate({ detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), todayHours, todayMinutes, 0)});
   }
 
   function onClear() {
