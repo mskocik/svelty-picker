@@ -1,6 +1,7 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-  import { fade } from 'svelte/transition';
+  import { createEventDispatcher, tick } from 'svelte';
+  import { quadInOut } from 'svelte/easing';
+  import { fade, scale } from 'svelte/transition';
   import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, UTCDate } from './dateUtils.js';
 
   export let date = null;
@@ -80,6 +81,17 @@
   const dispatch = createEventDispatcher();
 
   let currentView = MODE_MONTH;
+  let viewDelta = -2;
+  let viewChanged = false;
+  $: start = viewDelta < 1 ? 1.5 : 2;
+  let duration = 200;
+  const TRANSFORM_CONST = 222;
+  let transform = TRANSFORM_CONST;  // month +/- constant
+  let onMonthTransitionTrigger = null;
+
+  $: swapTransition = viewDelta === -2
+    ? fade
+    : (viewDelta !== null ? scale : () => {});
 
   $: {
     if (date !== internalDate) {
@@ -106,21 +118,40 @@
   }
 
   function onChangeMonth(val) {
+
     const multiplier = currentView === MODE_DECADE
       ? 120
       : (currentView === MODE_YEAR
-        ? 12
-        : 1
-      )
+      ? 12
+      : 1
+    )
     activeDate.setUTCMonth(activeDate.getUTCMonth() + (val*multiplier));
     activeDate = activeDate;
+    onMonthTransitionTrigger = null;
+    transform = 222;
+  }
+
+  function onTransformChangeMonth(val) {
+    if (currentView !== MODE_YEAR) {
+      return onChangeMonth(val);
+    }
+    onMonthTransitionTrigger = () => {
+      onChangeMonth(val)
+    };
+    
+    transform = val === -1 ? transform - TRANSFORM_CONST : transform + TRANSFORM_CONST;
   }
 
   function onSwitchView() {
+    viewDelta = -1
+    viewChanged = true;
     currentView && currentView--;
   }
 
+
   function onClick(value) {
+    viewDelta = 1;
+    viewChanged = true;
     switch (currentView) {
       case 0:
         activeDate.setYear(value);
@@ -142,6 +173,12 @@
     }
     currentView < MODE_MONTH && currentView++;
   }
+
+  
+  function onTransitionOut() {
+    viewChanged = false;
+  }
+  
 
   function onTimeSwitch() {
     dispatch('switch', 'time');
@@ -170,18 +207,18 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
     </button>
     {/if}
-    <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onChangeMonth(-1)}>
+    <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(-1)}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
     </button>
-    <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onChangeMonth(1)}>
+    <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(1)}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
     </button>
   </div>
 </div>
-<div class="sdt-calendar">
-  <table class="sdt-table">
-    {#if currentView === MODE_DECADE}
-    <tbody in:fade={{duration: 300}} class="sdt-tbody-lg">
+<div class="sdt-calendar" class:is-grid={viewChanged}>
+  {#if currentView === MODE_DECADE}
+  <table class="sdt-table" style="max-height: 221px; height: 221px">
+    <tbody in:swapTransition={{duration, start}} class="sdt-tbody-lg" out:swapTransition|local={{duration, start: 0}} on:outroend={onTransitionOut}>
       {#each dataset.grid as row, i}
       <tr>
         {#each row as year, j(j)}
@@ -195,9 +232,14 @@
       </tr>
       {/each}
     </tbody>  
-    {/if}
-    {#if currentView === MODE_YEAR}
-    <tbody in:fade={{duration: 300}} class="sdt-tbody-lg">
+  </table>
+  {/if}
+  {#if currentView === MODE_YEAR}
+  <table class="sdt-table">
+    <tbody in:swapTransition={{duration, start}} class="sdt-tbody-lg" out:swapTransition|local={{duration, start: 0}} on:outroend={onTransitionOut} style={`transform: translateY(-${transform}px)`}
+      class:animate-transition={onMonthTransitionTrigger ? true : false}
+      on:transitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
+    >
       {#each dataset.grid as row, i}
       <tr>
         {#each row as month, j(j)}
@@ -209,17 +251,17 @@
         {/each}
       </tr>
       {/each}
-    </tbody>  
-    {/if}
-    {#if currentView === MODE_MONTH}
-    <tbody class="c-section-center">
+    </tbody>
+  </table>
+  {/if}
+  {#if currentView === MODE_MONTH}
+  <table class="sdt-table" style="max-height: 221px; height: 221px">
+    <tbody in:swapTransition={{duration}} out:swapTransition|local={{duration, start: Math.abs(viewDelta)}} on:outroend={onTransitionOut}>
       <tr class="sdt-cal-td">
       {#each dayLabels as header}
         <th>{header}</th>
       {/each}
       </tr>
-    </tbody>
-    <tbody in:fade={{duration: 200}}>
       {#each dataset.grid as row, i }
       <tr>
         {#each row as currDate, j(j)}
@@ -237,8 +279,8 @@
       </tr>
       {/each}
     </tbody>
-    {/if}
   </table>
+  {/if}
 </div>
 
 
@@ -250,10 +292,22 @@
   }
   .sdt-calendar {
     /* padding: 0.25rem; */
-    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+    height: 221px;
+    overflow: hidden;
+  }
+  .sdt-calendar.is-grid {
+    display: grid;
+  }
+  .sdt-calendar.is-grid .sdt-table {
+		grid-column: 1/2;
+		grid-row: 1/2
   }
   .sdt-table {
     width: 100%;
+  }
+  .animate-transition {
+    transition: transform 0.3s ease
   }
   .sdt-today {
     color: red;
@@ -308,7 +362,7 @@
     margin: 4px 0;
   }
   .sdt-tbody-lg .std-btn {
-    height: 60px;
+    height: 72px;
   }
   .sdt-thead-nav {
     display: flex;

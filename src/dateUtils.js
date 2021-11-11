@@ -39,23 +39,27 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     let nextFrom = 12;
     const ISO = currentDate.toISOString().split('T')[0].substring(0, 8);
     const dateNormalized = new Date(ISO + '01 00:00:00');
+    const initYear = dateNormalized.getFullYear() - 1;
+    dateNormalized.setFullYear(initYear);
     let todayMark = 0;
-    for (let i = 0; i < 12; i++) {
-      dateNormalized.setUTCMonth(i);
-      monthRow.push(locale.monthsShort[i]);
-      if (monthRow.length === 4) {
-        grid.push(monthRow);
-        monthRow = [];
+    for (let y = 0; y < 3; y++) {
+      for (let i = 0; i < 12; i++) {
+        dateNormalized.setUTCMonth(i);
+        monthRow.push(locale.monthsShort[i % 12]);
+        if (monthRow.length === 4) {
+          grid.push(monthRow);
+          monthRow = [];
+        }
       }
+      dateNormalized.setFullYear(dateNormalized.getFullYear() + 1);
     }
     let selectionMark = null;
     if (!selectedDate) {
       selectedDate = new Date();
     }
-    if (selectedDate.getUTCFullYear() === currentDate.getUTCFullYear()) {
-      selectionMark = selectedDate.getUTCMonth();
+    if (selectedDate.getUTCFullYear() - initYear >= 0 && selectedDate.getUTCFullYear() - initYear <= 2) {
+      selectionMark = selectedDate.getUTCMonth() + ((selectedDate.getUTCFullYear() - initYear || 0) * 12);
     }
-
     return {
       grid, todayMark, nextFrom, prevTo, selectionMark
     }
