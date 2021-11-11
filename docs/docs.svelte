@@ -4,10 +4,12 @@
   import { config } from './../index';
   import { registerElement } from './../component.js';
 
-  let myProp = '2021-11-11 11:11';
+  let now = new Date();
+  let myProp = `${now.getFullYear()}-${now.getUTCMonth() + 1}-${now.getDate()} `
+    + `${now.getHours()}:${now.getUTCMinutes() < 10 ? `0${now.getUTCMinutes()}` : now.getUTCMinutes()}`;
   let modalProp = null;
 
-  let pickerFormat = 'yyyy-mm-dd';
+  let pickerFormat = 'yyyy-mm-dd hh:ii';
 
   onMount(() => {
     registerElement('el-picker')
@@ -27,112 +29,98 @@
   </div>
 
   
+  <h5 class="mt-5">
+    Full example. Selected format determines, if time picker is active.
+    <small>They affect each other</small>
+  </h5>
+
   <div class="row">
-    <div class="col-12">
+    <div class="col-sm-6">
       <div class="form-group">
         <span class="form-label">
           Full date-time picker
         </span>
         <SveltyPicker placeholder="Pick your date and time"
           inputClasses="form-control"
-          format="yyyy-mm-dd hh:ii"
-          bind:value={myProp}
-        >
-      </SveltyPicker>
+          format={pickerFormat}
+          bind:value={myProp} initialDate={new Date()}
+        ></SveltyPicker>
       </div>
+    </div>
+    <div class="col-sm-6">
+      
+      Format:
+      <select name="" id="" class="form-select" bind:value={pickerFormat}>
+        <optgroup label="Date & time">
+          <option value="yyyy-mm-dd hh:ii">yyyy-mm-dd hh:ii</option>
+          <option value="mm/dd/yyyy hh:ii">mm/dd/yyyy hh:ii</option>
+          <option value="dd.mm.yyyy hh:ii">dd.mm.yyyy hh:ii</option>
+          <option value="dd-M-yy hh:ii">dd-M-yy hh:ii</option>
+        </optgroup>
+        <optgroup label="Date only">
+          <option value="yyyy-mm-dd">yyyy-mm-dd</option>
+          <option value="mm/dd/yyyy">mm/dd/yyyy</option>
+          <option value="dd.mm.yyyy">dd.mm.yyyy</option>
+          <option value="dd-M-yy">dd-M-yy</option>
+        </optgroup>
+      </select>
     </div>
   </div>
 
+
   <div class="row">
     <div class="col-sm-6">
+      <h5 class="mt-5">
+        Disabled dates with <code>startDate</code> &amp; <code>endDate</code> properties
+      </h5>
       <div class="form-group">
-        Date picker only (used as custom element)
         <div class="input-group">
-          <el-picker input-classes="form-control" mode="date" id="fromPicker" to="toPicker"></el-picker>
+          <el-picker input-classes="form-control" mode="date" id="fromPicker" to="toPicker" placeholder="From"></el-picker>
           <span class="input-group-text">&ndash;</span>
-          <el-picker input-classes="form-control" mode="date" id="toPicker" from="fromPicker"></el-picker>
+          <el-picker input-classes="form-control" mode="date" id="toPicker" from="fromPicker" placeholder="To"></el-picker>
         </div>
       </div>
+      <p>
+        Selected date of <b>From</b> serves as <code>startDate</code> for <b>To</b> date picker and vice versa, where <b>To</b>
+        serves as <code>endDate</code> for <b>From</b> date picker.
+      </p>
     </div>
     <div class="col-sm-6">
+      <h5 class="mt-5">
+        Timepicker only. Forced by <code>mode</code> set to <code>time</code>.
+      </h5>
       <div class="form-group">
         Time picker only:
         <SveltyPicker inputClasses="form-control" mode="time" format="hh:ii"></SveltyPicker>
       </div>
     </div>
   </div>
-  
-  <div class="row">
-    <div class="col-sm-6">
-      Date picker
-       <!-- only (always visible) -->
-      <SveltyPicker inputClasses="form-control" mode="date" pickerOnly></SveltyPicker>
-    </div>
-    <div class="col-sm-6">
-      Time picker
-       <!-- only (always visible) -->
-      <SveltyPicker inputClasses="form-control" mode="time" format="hh:ii" pickerOnly></SveltyPicker>
-    </div>
-  </div>
 
-  
-  <div class="row mt-4">
-    <div class="col">
-      <!-- Button trigger modal -->
-      Select date (and it's format) in modal dialog:<br>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Currently selected date: {modalProp || 'None yet'}
-      </button>
+  <h5 class="mt-5">
+    Pickers with <code>pickerOnly</code> property set.
+  </h5>
+
+  <div class="row mb-4">
+    <div class="col d-flex">
+      <div class="me-4">
+        Date picker
+        <!-- only (always visible) -->
+        <SveltyPicker inputClasses="form-control" mode="date" pickerOnly></SveltyPicker>
+      </div>
+      <div class="me-4">
+        Date time picker
+        <!-- only (always visible) -->
+        <SveltyPicker inputClasses="form-control" mode="datetime" pickerOnly></SveltyPicker>
+      </div>
+      <div>
+        Time picker
+        <!-- only (always visible) -->
+        <SveltyPicker inputClasses="form-control" mode="time" format="hh:ii" pickerOnly></SveltyPicker>
+      </div>
     </div>
-      
   </div>
   <hr>
   <div id="readme"></div>
-</div>
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Date dialog</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>This modal demonstrates how the positioning works. Even in modal window.<br>Also you can customize output format on-the-fly.</p>
-        <p class="mt-2 mb-2">
-        </p>
-        <div class="row">
-          <div class="col">
-            Pick your date:<br>
-            <SveltyPicker inputClasses="form-control" format={pickerFormat} bind:value={modalProp}></SveltyPicker>
-          </div>
-          <div class="col">
-            Format:
-            <select name="" id="" class="form-select" bind:value={pickerFormat}>
-              <option value="yyyy-mm-dd">yyyy-mm-dd </option>
-              <option value="mm/dd/yyyy">mm/dd/yyyy</option>
-              <option value="dd.mm.yyyy">dd.mm.yyyy</option>
-              <option value="dd-M-yy">dd-M-yy</option>
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            {#if modalProp}
-            <div class="alert alert-success mt-2">Date selected!</div>
-            {/if}
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <style>
