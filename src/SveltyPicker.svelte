@@ -16,7 +16,6 @@
   export let disabled = false;
   export let placeholder = null;
   export let value = null;
-  export let initialDate = null;
   export let startDate = null;
   export let endDate = null;
   export let pickerOnly = false;
@@ -48,12 +47,9 @@
   const dispatch = createEventDispatcher();
   let prevValue = value;
   let currentFormat = format;
-  let innerDate = initialDate && initialDate instanceof Date
-    ? initialDate
-    : (value 
-      ? parseDate(value, format, i18n, formatType)
-      : null
-    )
+  let innerDate = value 
+    ? parseDate(value, format, i18n, formatType)
+    : null
   let isFocused = pickerOnly;
   let inputEl = null;
   let inputRect = null;
@@ -86,6 +82,14 @@
       value = formatDate(innerDate, format, i18n, formatType);
       prevValue = value;
       currentFormat = format;
+      if (mode === 'auto') {
+        resolvedMode = format.match(/hh?|ii?/i) && format.match(/y|m|d/i)
+          ? 'datetime'
+          : (format.match(/hh?|ii?/i)
+            ? 'time'
+            : 'date'
+          )
+      }
     }
   }
 
@@ -112,7 +116,7 @@
   function onToday() {
     const today = new Date();
     if (startDate && parseDate(startDate, format, i18n, formatType) < today) return;
-    onDate({ detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), 0, 0, 0)});
+    onDate({ detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getUTCMinutes(), 0)});
   }
 
   function onClear() {

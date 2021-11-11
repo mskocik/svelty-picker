@@ -39,7 +39,6 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 |-----------------|--------------|---------------| ------------------|
 | name            | `string`     | `date`        | input name property for underlying `<input>` element |
 | value           | `string`     | `null`        | string representation of selected value |
-| initialDate     | `Date`       | `null`        | initial date object, if you prefer that to `value` |
 | startDate       | `string|Date`| `null`        | limit minimal selectable date |
 | endDate         | `string|Date`| `null`        | limit maximal selectable date |
 | mode            | `string`     | `auto`        | restrict picker's mode. Possible values: `auto|date|datetime|time`. By default it try to guess the mode from `format` |
