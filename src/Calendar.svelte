@@ -1,8 +1,8 @@
 <script>
-  import { createEventDispatcher, tick } from 'svelte';
-  import { quadInOut } from 'svelte/easing';
-  import { fade, scale } from 'svelte/transition';
+  import { createEventDispatcher } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, UTCDate } from './dateUtils.js';
+  import { scale } from './utils'
 
   export let date = null;
   export let startDate = null;
@@ -83,8 +83,9 @@
   let currentView = MODE_MONTH;
   let viewDelta = -2;
   let viewChanged = false;
-  $: start = viewDelta < 1 ? 1.5 : 2;
-  let duration = 200;
+  let duration = 400;
+  $: start = viewDelta < 1 ? 1.5 : 0.5;
+  $: end = viewDelta < 1 ? 1 : 1.5;
   const TRANSFORM_CONST = 222;
   let transform = TRANSFORM_CONST;  // month +/- constant
   let onMonthTransitionTrigger = null;
@@ -218,7 +219,7 @@
 <div class="sdt-calendar" class:is-grid={viewChanged}>
   {#if currentView === MODE_DECADE}
   <table class="sdt-table" style="max-height: 221px; height: 221px">
-    <tbody in:swapTransition={{duration, start}} class="sdt-tbody-lg" out:swapTransition|local={{duration, start: 0}} on:outroend={onTransitionOut}>
+    <tbody in:swapTransition={{duration, start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1}} on:outroend={onTransitionOut}>
       {#each dataset.grid as row, i}
       <tr>
         {#each row as year, j(j)}
@@ -236,7 +237,7 @@
   {/if}
   {#if currentView === MODE_YEAR}
   <table class="sdt-table">
-    <tbody in:swapTransition={{duration, start}} class="sdt-tbody-lg" out:swapTransition|local={{duration, start: 0}} on:outroend={onTransitionOut} style={`transform: translateY(-${transform}px)`}
+    <tbody in:swapTransition={{duration, start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1 }} on:outroend={onTransitionOut} style={`transform: translateY(-${transform}px)`}
       class:animate-transition={onMonthTransitionTrigger ? true : false}
       on:transitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
     >
@@ -256,7 +257,7 @@
   {/if}
   {#if currentView === MODE_MONTH}
   <table class="sdt-table" style="max-height: 221px; height: 221px">
-    <tbody in:swapTransition={{duration}} out:swapTransition|local={{duration, start: Math.abs(viewDelta)}} on:outroend={onTransitionOut}>
+    <tbody in:swapTransition={{duration, start: 0.5, opacity: 1}} out:swapTransition|local={{duration, start: Math.abs(viewDelta)}} on:outroend={onTransitionOut}>
       <tr class="sdt-cal-td">
       {#each dayLabels as header}
         <th>{header}</th>
@@ -307,6 +308,7 @@
     width: 100%;
   }
   .animate-transition {
+    will-change: transform;
     transition: transform 0.3s ease
   }
   .sdt-today {
