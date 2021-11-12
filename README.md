@@ -161,3 +161,7 @@ PRs for extending built-in localization are welcome 🥳
 ## 🏆 Thanks to:
 
 - [Bootstrap datepicker](https://github.com/smalot/bootstrap-datetimepicker/blob/master/js/bootstrap-datetimepicker.js) for some internal date and format handling
+
+## Licence:
+
+MIT
