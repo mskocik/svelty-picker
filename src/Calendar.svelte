@@ -320,8 +320,6 @@
     height: 24px;
   }
   .sdt-calendar {
-    /* padding: 0.25rem; */
-    margin-top: 0.5rem;
     height: 221px;
     overflow: hidden;
   }
@@ -334,6 +332,7 @@
   }
   .sdt-table {
     width: 100%;
+    border-collapse: collapse;
   }
   .sdt-table-height {
     height: 222px;
@@ -349,6 +348,7 @@
     opacity: 0.55;
   }
   .std-btn {
+    margin: 0;
     border: 0;
     background: transparent;
     text-align: center;
@@ -405,6 +405,7 @@
   }
   .sdt-thead-nav {
     display: flex;
+    margin-bottom: 0.25rem;
   }
   .sdt-nav-btns {
     white-space: nowrap;
