@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "rollup": "^2.59.0",
+    "@rollup/plugin-node-resolve": "^13.0.6",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-svelte": "^6.1.1",
@@ -38,6 +39,5 @@
     "calendar"
   ],
   "dependencies": {
-    "@rollup/plugin-node-resolve": "^13.0.6"
   }
 }
