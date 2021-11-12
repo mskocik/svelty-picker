@@ -5,7 +5,7 @@ export const MODE_MONTH = 2;
 export function compute(currentDate, selectedDate, view, locale, weekStart) {
   // years 4 x 3
   if (view === MODE_DECADE) {
-    const nextFrom = 12;
+    const nextFrom = 11;
     const prevTo = 1;
     const todayMark = -1;
     const grid = [];
@@ -35,8 +35,8 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
   if (view === MODE_YEAR) {
     let grid = [];
     let monthRow = [];
-    let prevTo = 0;
-    let nextFrom = 12;
+    let prevTo = 12;
+    let nextFrom = 24;
     const ISO = currentDate.toISOString().split('T')[0].substring(0, 8);
     const dateNormalized = new Date(ISO + '01 00:00:00');
     const initYear = dateNormalized.getFullYear() - 1;

@@ -250,6 +250,7 @@
         <td class:is-selected={i*4+j === dataset.selectionMark}>
           <button
             class="std-btn"
+            class:not-current={!isBetween(i*4+j)}
             on:click|preventDefault={() => { onClick(year)}}
           >{year}</button>
         </td>
@@ -270,6 +271,7 @@
         {#each row as month, j(j)}
         <td class:is-selected={i*4+j === dataset.selectionMark}>
           <button class="std-btn"
+            class:not-current={!isBetween(i*4+j)}
             on:click|preventDefault={() => { onClick(month)}}
           >{month}</button>
         </td>
