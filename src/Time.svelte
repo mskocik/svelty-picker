@@ -7,6 +7,32 @@
   export let showMeridian = false;
   export let hasDateComponent = false;
   export let i18n;
+  export function minuteSwitch(val) {
+    if (val === undefined) return isMinuteView;
+    isMinuteView = val;
+  }
+
+  export function makeTick(val) {
+    if (isMinuteView) {
+      val = val * 5 + selectedMinutes;
+      if (val % 5 !== 0) {
+        val = val < selectedMinutes
+          ? val + (5 - (val % 5))
+          : val - (val % 5);
+      }
+    } else {
+      val = selectedHour + val;
+    }
+    onClick({
+      meridianSwitch: !isMinuteView,
+      target: {
+        tagName: 'BUTTON',
+        dataset: {
+          value: val
+        }
+      }
+    });
+  }
 
   let clockEl;
   let isMinuteView = false;
@@ -64,7 +90,7 @@
       if (isPM && value === 12) return 12;
       return value < 10 || (value % 12) < 10
         ? `0${value % 12}`
-        : value;
+        : value % 12;
     }
     return value < 10
       ? `0${value}`
@@ -168,13 +194,16 @@
   function onModeSwitch() {
     dispatch('switch', 'date');
   }
+  $: {
+    dispatch('time-switch', isMinuteView)
+  }
 </script>
 
-<div class="sdt-timer">
+<div class="sdt-timer" in:fade={{duration: 200}}>
   <div class="sdt-time-head">
     {#if hasDateComponent}
     <button class="sdt-time-btn sdt-back-btn" title={i18n.backToDate} on:click={onModeSwitch}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill-rule="evenodd" d="M6.75 0a.75.75 0 01.75.75V3h9V.75a.75.75 0 011.5 0V3h2.75c.966 0 1.75.784 1.75 1.75v16a1.75 1.75 0 01-1.75 1.75H3.25a1.75 1.75 0 01-1.75-1.75v-16C1.5 3.784 2.284 3 3.25 3H6V.75A.75.75 0 016.75 0zm-3.5 4.5a.25.25 0 00-.25.25V8h18V4.75a.25.25 0 00-.25-.25H3.25zM21 9.5H3v11.25c0 .138.112.25.25.25h17.5a.25.25 0 00.25-.25V9.5z"></path></svg>
+      <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill-rule="evenodd" d="M6.75 0a.75.75 0 01.75.75V3h9V.75a.75.75 0 011.5 0V3h2.75c.966 0 1.75.784 1.75 1.75v16a1.75 1.75 0 01-1.75 1.75H3.25a1.75 1.75 0 01-1.75-1.75v-16C1.5 3.784 2.284 3 3.25 3H6V.75A.75.75 0 016.75 0zm-3.5 4.5a.25.25 0 00-.25.25V8h18V4.75a.25.25 0 00-.25-.25H3.25zM21 9.5H3v11.25c0 .138.112.25.25.25h17.5a.25.25 0 00.25-.25V9.5z"></path></svg>
     </button>
     {/if}
     <button class="sdt-time-btn sdt-time-figure"
@@ -237,13 +266,13 @@
     position: relative;
     width: 260px;
     height: 260px;
-    background-color: #eeeded;
+    background-color: var(--sdt-clock-bg);
     border-radius: 50%;
     transition: background-color 0.3s;
   }
   .sdt-clock.is-minute-view {
-    background-color: rgb(238, 237, 237, 0.25);
-    box-shadow: 0 0 128px 2px #ddd inset;
+    background-color: var(--sdt-clock-bg-minute, var(--sdt-clock-bg));
+    box-shadow: var(--sdt-clock-bg-shadow);
   }
   .sdt-time-btn {
     border: 0;
@@ -252,17 +281,19 @@
     border-radius: 4px;
     cursor: pointer;
     padding: 0.375rem;
+    color: var(--sdt-color);
+  }
+  .sdt-svg {
+    fill: var(--sdt-color);
   }
   .sdt-time-btn:not(.is-active) {
     opacity: 0.5;
   }
   .sdt-time-btn:hover {
-    background-color: rgb(223, 223, 223);
-    color: black;
+    background-color: var(--sdt-btn-header-bg-hover);
   }
   .sdt-back-btn {
     position: absolute;
-    /* border: 1px solid #ddd; */
     top: 0;
     left: 0;
     opacity: 1 !important;
@@ -288,7 +319,7 @@
     height: 6px;
     position: absolute;
     transform: translate(-50%, -50%);
-    background-color: #286090;
+    background-color: var(--sdt-primary);
     border-radius: 50%;
   }
   .sdt-hand-pointer {
@@ -297,7 +328,7 @@
     bottom: 50%;
     left: calc(50% - 1px);
     position: absolute;
-    background-color: #286090;
+    background-color: var(--sdt-primary);
     transform-origin: center bottom 0;
     transition: transform 0.3s ease, height 0.15s ease;
     
@@ -309,7 +340,7 @@
     width: 4px;
     height: 4px;
     background-color: transparent;
-    border: 14px solid #286090;
+    border: 14px solid var(--sdt-primary);
     border-radius: 50%;
     box-sizing: content-box;
   }
@@ -326,7 +357,16 @@
     background-color: transparent;
   }
   .sdt-tick.is-selected {
-    background-color: #286090;
-    color: #fff;
+    animation: tick-selection 0s 0.175s ease-out forwards;
+  }
+  @keyframes tick-selection {
+    0% {
+      color: initial;
+      background-color: transparent;
+    }
+    100% {
+      background-color: var(--sdt-primary);
+      color: var(--sdt-color-selected, var(--sdt-bg-main));
+    }
   }
 </style>

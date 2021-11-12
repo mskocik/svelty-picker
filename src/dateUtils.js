@@ -74,7 +74,6 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
       today = new Date();
   let prevMonth = UTCDate(y, m-1, 28, 0, 0, 0, 0),
       day = utils.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
-  
   prevMonth.setUTCDate(day);
   prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - weekStart + 7) % 7);
 
@@ -235,7 +234,6 @@ export function parseDate(date, format, i18n, type) {
             val = i18n.months.indexOf(parts[i]) + 1;
             break;
           case 'M':
-            console.log('>', val, parts, format);
             val= i18n.monthsShort.indexOf(parts[i]) + 1;
             break;
           case 'p':

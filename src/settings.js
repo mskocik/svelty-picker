@@ -1,6 +1,7 @@
 import { en } from './i18n.js';
 
 export default {
+  theme: 'sdt-calendar-colors',
   mode: 'auto',
   format: 'yyyy-mm-dd',
   formatType: 'standard',

@@ -12,16 +12,19 @@
   import { formatDate, parseDate, UTCDate } from './dateUtils';
   import { usePosition } from './utils';
 
+  // html
   export let name = 'date';
   export let disabled = false;
   export let placeholder = null;
+  export let required = false;
+  // dates
   export let value = null;
   export let initialDate = null;
   export let startDate = null;
   export let endDate = null;
   export let pickerOnly = false;
-  export let required = false;
   // configurable globally
+  export let theme = config.theme;
   export let mode = config.mode;
   export let format =  config.format;
   export let formatType = config.formatType;
@@ -63,7 +66,9 @@
   let inputAction = validatorAction ? validatorAction.shift() : () => {};
   let inputActionParams = validatorAction || [];
   let calendarEl = null;
+  let timeEl;
   let preventClose = false;
+  let preventCloseTimer = null;
   let resolvedMode = mode === 'auto'
     ? (
       format.match(/hh?|ii?/i) && format.match(/y|m|d/i)
@@ -110,28 +115,35 @@
       ) setter = null;
     }
     value = setter ? formatDate(setter, format, i18n, formatType) : null;
-    if (autoclose && resolvedMode === 'date' && !pickerOnly && !preventClose) { isFocused = false }
-    if (!preventClose && resolvedMode === 'datetime' && currentMode === 'date') {
+    if (autoclose && (resolvedMode === 'date' || !setter) && !pickerOnly && !preventClose) {
+      onBlur(false);
+    }
+    if (setter && !preventClose && resolvedMode === 'datetime' && currentMode === 'date') {
       currentMode = 'time';
     }
-    preventClose = false;
+    if (preventClose && currentMode === 'time') {
+      preventCloseTimer = setTimeout(() => {
+        preventClose = false;
+      }, 400);
+    } else {
+      preventClose = false;
+    }
     tick().then(() => {
-      inputEl.dispatchEvent(new Event('input'))
+      inputEl.dispatchEvent(new Event('input'));
+      dispatch('change', value);
     });
   }
 
   function onToday() {
     const today = new Date();
     if (startDate && parseDate(startDate, format, i18n, formatType) < today) return;
-    const todayHours = innerDate ? innerDate.getHours() : today.getHours();
-    const todayMinutes = innerDate ? innerDate.getUTCMinutes() : innerDate.getUTCMinutes();
+    const todayHours = innerDate ? innerDate.getUTCHours() : today.getHours();
+    const todayMinutes = innerDate ? innerDate.getUTCMinutes() : today.getUTCMinutes();
     onDate({ detail: UTCDate(today.getUTCFullYear(), today.getMonth(), today.getDate(), todayHours, todayMinutes, 0)});
   }
 
   function onClear() {
     onDate({ detail: null });
-    currentMode = 'date';
-    if (resolvedMode === 'date' && !pickerOnly && autoclose) isFocused = false;
   }
 
   function onFocus() {
@@ -142,21 +154,23 @@
   function onKeyDown(e) {
     if (!isFocused) {
       ['Backspace', 'Delete'].includes(e.key) && onClear();
-      return onFocus();
+      if (e.key !== 'Enter') return onFocus();
     }
     switch (e.key) {
+      case 'PageDown':
+      case 'PageUp':
       case 'ArrowDown':
       case 'ArrowUp':
       case 'ArrowLeft':
       case 'ArrowRight':
         e.preventDefault();
+        preventCloseTimer && clearTimeout(preventCloseTimer);
         preventClose = true;
         if (currentMode === 'date') {
-          // TODO: handle shift
           calendarEl.handleGridNav(e.key, e.shiftKey);
-        }
-        if (currentMode === 'time') {
-          // TODO: keyboard nav for timepicker
+        } else {
+        // if (currentMode === 'time') {
+          timeEl.makeTick(['ArrowDown', 'ArrowLeft', 'PageDown'].includes(e.key) ? -1 : 1)
         }
         break;
       case 'Escape':
@@ -167,9 +181,17 @@
       case 'Backspace':
       case 'Delete':
         onClear();
+        break;
       case 'Enter':
+        isFocused && e.preventDefault();
+        if (currentMode === 'time') {
+          if (!timeEl.minuteSwitch()) {
+            return timeEl.minuteSwitch(true);
+          }
+          return onBlur(false);
+        }
         if (isFocused && resolvedMode === 'date') isFocused = false;
-        if (resolvedMode.includes('time')) {
+        if (innerDate && resolvedMode.includes('time')) {
           currentMode = 'time';
         }
         break;
@@ -185,10 +207,14 @@
     currentMode = e.detail;
   }
 
-  function onBlur() {
+  function onTimeClose() {
+    autoclose && !preventClose && !pickerOnly && onBlur(false);
+  }
+
+  function onBlur(e) {
     isFocused = false;
     if (resolvedMode.includes('date')) currentMode = 'date';
-    dispatch('blur');
+    e && dispatch('blur');
   }
 </script>
 
@@ -207,7 +233,11 @@
   on:keydown={onKeyDown}
 >
 {#if visible || isFocused}
-<div on:mousedown|preventDefault use:positionFn={{inputEl, visible: internalVisibility, inputRect}} class="std-calendar-wrap is-popup" transition:fade|local={{duration: 200}}>
+<div class="std-calendar-wrap is-popup {theme}"
+  transition:fade|local={{duration: 200}}
+  use:positionFn={{inputEl, visible: internalVisibility, inputRect}} 
+  on:mousedown|preventDefault 
+>
   {#if currentMode === 'date'}
     <Calendar date={innerDate} 
       startDate={startDate ? parseDate(startDate, format, i18n, formatType) : null}
@@ -229,12 +259,12 @@
     </div>
     {/if}
   {:else}
-    <Time date={innerDate} hasDateComponent={resolvedMode!=='time'}
+    <Time date={innerDate} hasDateComponent={resolvedMode!=='time'} bind:this={timeEl}
       showMeridian={format.match('p|P')}
       {i18n}
       on:time={onDate}
       on:switch={onModeSwitch}
-      on:close={() => autoclose && !pickerOnly && onBlur()}
+      on:close={onTimeClose}
     ></Time>
   {/if}
 </div>
@@ -242,15 +272,31 @@
 
 
 <style>
+  .sdt-calendar-colors {
+    --sdt-primary: #286090;
+    --sdt-color: #000;
+    --sdt-bg-main: #fff;
+    --sdt-bg-today: var(--sdt-primary);
+    --sdt-bg-clear: #dc3545;
+    --sdt-today-bg: #1e486d;
+    --sdt-clear-color: #dc3545;
+    --sdt-btn-bg-hover: #eee;
+    --sdt-btn-header-bg-hover: #dfdfdf;
+    --sdt-clock-bg: #eeeded;
+    --sdt-clock-bg-minute: rgb(238, 237, 237, 0.25);
+    --sdt-clock-bg-shadow: 0 0 128px 2px #ddd inset;
+    --sdt-shadow: #ccc;
+  }
   .std-calendar-wrap {
     width: 280px;
-    background-color: white;
-    box-shadow: 0 1px 6px #ccc;
+    background-color: var(--sdt-bg-main);
+    box-shadow: 0 1px 6px var(--sdt-shadow);
     border-radius: 4px;
     padding: 0.25rem 0.25rem 0.5rem;
+    color: var(--sdt-color);
   }
   .std-calendar-wrap.is-popup {
-    box-shadow: 0 1px 6px #ccc;
+    box-shadow: 0 1px 6px var(--sdt-shadow);
   }
   .std-btn-row {
     margin-top: 0.5rem;
@@ -263,12 +309,12 @@
     border-radius: 0.2rem;
   }
   .sdt-today-btn {
-    background-color: #286090;
-    color: #fff;
+    background-color:var(--sdt-primary);
+    color: var(--sdt-today-color, var(--sdt-bg-main));
     padding: 0.25rem 0.5rem;
     font-size: .875rem; 
     border-radius: 0.2rem;
-    border: 1px solid #1e486d;
+    border: 1px solid var(--sdt-today-bg);
   }
   .sdt-today-btn[disabled] {
     opacity: 0.75;
@@ -276,17 +322,17 @@
   .sdt-today-btn:focus,
   .sdt-today-btn:active,
   .sdt-today-btn:hover:not([disabled]) {
-      background-color: #1e486d;
+    background-color: var(--sdt-today-bg);
   }
   .sdt-clear-btn {
-    border: 1px solid #dc3545;
+    border: 1px solid var(--sdt-clear-color);
     background-color: transparent;
-    color: #dc3545;
+    color: var(--sdt-clear-color);
   }
   .sdt-clear-btn:focus,
-  .sdt-clear-btn:active,
+  .sdt-clear-btn:active:not([disabled]),
   .sdt-clear-btn:hover:not([disabled]) {
-    background-color: #dc3545;
-    color: #fff;
+    background-color: var(--sdt-clear-color);
+    color: var(--sdt-clear-hover-color, var(--sdt-bg-main));
   }
 </style>

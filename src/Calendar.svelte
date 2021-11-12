@@ -18,11 +18,18 @@
     }
     let pos;
     switch (key) {
+      case 'PageDown':
+        shiftKey = true;
       case 'ArrowDown':
+        if (shiftKey) return handleShiftNav(activeDate.getUTCFullYear(), activeDate.getMonth() + 1, 1);
         pos = moveGrid(dataset.selectionMark + 7, currentView);
         if (pos.y > 5) {
-          const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() + 1, 1);
-          const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
+          const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() + 1, activeDate.getDate());
+          let tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
+          if (tmpData.grid[0][pos.x].getUTCMonth() < internalDate.getUTCMonth()) {
+            tmpDate.setMonth(tmpDate.getMonth() + 1);
+            tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
+          }
           pos.y = tmpData.grid[0][pos.x].getUTCDate() === internalDate.getUTCDate()
             ? 1
             : 0;
@@ -35,14 +42,20 @@
         }
         onClick(dataset.grid[pos.y][pos.x]);
         break;
+      case 'PageUp':
+        shiftKey = true;
       case 'ArrowUp':
+        if (shiftKey) return handleShiftNav(activeDate.getUTCFullYear(), activeDate.getMonth() - 1, -1);
         pos = moveGrid(dataset.selectionMark - 7, currentView);
         if (pos.y === 5) {
           const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() > 0 ? activeDate.getMonth() : 11, 1);
           const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
           pos.y = tmpData.grid[5][pos.x].getUTCDate() === internalDate.getUTCDate()
             ? 4
-            : 5;
+            : (tmpData.grid[5][pos.x].getUTCMonth() === internalDate.getUTCMonth()
+              ? 3
+              : 5
+            );
           onChangeMonth(-1);
           onClick(tmpData.grid[pos.y][pos.x]);
           return;
@@ -53,6 +66,7 @@
         onClick(dataset.grid[pos.y][pos.x]);
         break;
       case 'ArrowLeft':
+        if (shiftKey) return handleShiftNav(activeDate.getUTCFullYear() - 1, activeDate.getMonth(), 1);
         pos = moveGrid(dataset.selectionMark - 1, currentView);
         if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
           onChangeMonth(-1);
@@ -60,6 +74,7 @@
         onClick(dataset.grid[pos.y][pos.x]);
         break;
       case 'ArrowRight':
+        if (shiftKey) return handleShiftNav(activeDate.getUTCFullYear() + 1, activeDate.getMonth(), 1);
         pos = moveGrid(dataset.selectionMark + 1, currentView);
         if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
           onChangeMonth(1);
@@ -67,6 +82,13 @@
         onClick(dataset.grid[pos.y][pos.x]);
         break;
     }
+  }
+
+  function handleShiftNav(year, month, monthChange) {
+    const tmpDate = new Date(year, month, activeDate.getDate() + 1);
+    const tmpData = compute(tmpDate, tmpDate, currentView, i18n, weekStart);
+    onChangeMonth(monthChange);
+    onClick(tmpData.grid[Math.floor(tmpData.selectionMark / 7)][tmpData.selectionMark % 7]);
   }
 
   let internalDate = date;
@@ -100,6 +122,8 @@
       if (date) {
         activeDate = new Date(date.valueOf())
       };
+      viewDelta = 1;
+      viewChanged = true;
       currentView = MODE_MONTH;
     }
   }
@@ -205,14 +229,14 @@
   <div class="sdt-nav-btns">
     {#if enableTimeToggle && internalDate}
     <button class="std-btn std-btn-header icon-btn sdt-time-icon" title={i18n.timeView} on:click|preventDefault={onTimeSwitch} >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
+      <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
     </button>
     {/if}
     <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(-1)}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
+      <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
     </button>
     <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(1)}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
+      <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
     </button>
   </div>
 </div>
@@ -256,11 +280,11 @@
   </table>
   {/if}
   {#if currentView === MODE_MONTH}
-  <table class="sdt-table" style="max-height: 221px; height: 221px">
+  <table class="sdt-table sdt-table-height">
     <tbody in:swapTransition={{duration, start: 0.5, opacity: 1}} out:swapTransition|local={{duration, start: Math.abs(viewDelta)}} on:outroend={onTransitionOut}>
       <tr class="sdt-cal-td">
       {#each dayLabels as header}
-        <th>{header}</th>
+        <th class="sdt-cal-th">{header}</th>
       {/each}
       </tr>
       {#each dataset.grid as row, i }
@@ -271,7 +295,7 @@
           class:is-selected={i*7+j === dataset.selectionMark}
         >
           <button on:click|preventDefault={() => {onClick(currDate)}}
-            class="std-btn"
+            class="std-btn  sdt-btn-day"
             class:not-current={!isBetween(i*7+j, currDate) }
             disabled={isDisabledDate(currDate)}
           >{currDate.getUTCDate()}</button>
@@ -290,6 +314,10 @@
     padding: 0;
     font-size: 90%;
     text-align: center;
+    background-color: var(--sdt-bg-main);;
+  }
+  .sdt-cal-th {
+    height: 24px;
   }
   .sdt-calendar {
     /* padding: 0.25rem; */
@@ -307,15 +335,18 @@
   .sdt-table {
     width: 100%;
   }
+  .sdt-table-height {
+    height: 222px;
+  }
   .animate-transition {
     will-change: transform;
     transition: transform 0.3s ease
   }
-  .sdt-today {
-    color: red;
-  }
   .not-current {
-    color: #ccc;
+    opacity: 0.3;
+  }
+  .not-current:hover {
+    opacity: 0.55;
   }
   .std-btn {
     border: 0;
@@ -324,7 +355,12 @@
     width: 100%;
     border-radius: 4px;
     cursor: pointer;
-    padding: 0.375rem;
+    padding: 0.3rem;
+    box-sizing: border-box;
+    color: var(--sdt-color);
+  }
+  .sdt-btn-day {
+    max-height: 32px;
   }
   .std-btn[disabled] {
     cursor: not-allowed;
@@ -344,24 +380,25 @@
     padding-right: 0.25rem;
   }
   .std-btn:hover {
-    background-color: #eee;
-    border-color: #ddd;
+    background-color: var(--sdt-btn-bg-hover);
   }
   .is-selected .std-btn {
-    background-color: #286090;
-    border-color: #204d74;
-    color: white;
+    background-color: var(--sdt-primary);
+    color: var(--sdt-color-selected, var(--sdt-bg-main));
     opacity: 0.9;
   }
   .std-btn-header:hover {
-    background-color: rgb(223, 223, 223);
-    color: black;
+    background-color: var(--sdt-btn-header-bg-hover);
+    /* color: black; */
   }
   .sdt-time-icon {
     margin-right: -4px;
   }
   .sdt-time-icon svg {
     margin: 4px 0;
+  }
+  .sdt-tbody-lg {
+    background-color: var(--sdt-bg-main);
   }
   .sdt-tbody-lg .std-btn {
     height: 72px;
@@ -382,17 +419,20 @@
     content: '';
     margin-left: 4px;
     margin-top: 4px;
-    border-left: 4px solid #ccc;
-    border-top: 4px solid #ccc;
+    border-left: 4px solid var(--sdt-shadow);
+    border-top: 4px solid var(--sdt-shadow);
     border-bottom: 4px solid transparent;
     border-right: 4px solid transparent;
     border-radius: 2px;
     height: 4px;
     z-index: 2;
   }
+  .sdt-svg {
+    fill: var(--sdt-color);
+  }
   .sdt-today:hover:before {
-    border-left-color: #286090;
-    border-top-color: #286090;
+    border-left-color: var(--sdt-primary);
+    border-top-color: var(--sdt-primary);
   }
   .is-selected.sdt-today:before {
     border-left-color: #eee;
