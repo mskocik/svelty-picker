@@ -151,6 +151,7 @@
       <textarea placeholder="Event log" id="" cols="30" rows="4" class="form-control" bind:value={log}></textarea>
     </div>
   </div>
+  <p>Below is README from <a href="https://github.com/mskocik/svelty-picker" target="_blank">GitHub repository</a>.</p>
   <hr>
   <div id="readme"></div>
 </div>
