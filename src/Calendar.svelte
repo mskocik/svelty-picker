@@ -85,7 +85,8 @@
   }
 
   function handleShiftNav(year, month, monthChange) {
-    const tmpDate = new Date(year, month, activeDate.getDate() + 1);
+    const tzOffset = activeDate.getTimezoneOffset() >= 0 ? 0 : 1;
+    const tmpDate = new Date(year, month, activeDate.getUTCDate() + tzOffset);
     const tmpData = compute(tmpDate, tmpDate, currentView, i18n, weekStart);
     onChangeMonth(monthChange);
     onClick(tmpData.grid[Math.floor(tmpData.selectionMark / 7)][tmpData.selectionMark % 7]);
@@ -187,7 +188,7 @@
         activeDate = activeDate;
         break;
       case 2:
-        const newInternalDate = UTCDate(value.getUTCFullYear(), value.getMonth(), value.getDate());
+        const newInternalDate = UTCDate(value.getUTCFullYear(), value.getMonth(), value.getUTCDate());
         if (internalDate) {
           newInternalDate.setMinutes(internalDate.getMinutes());
           newInternalDate.setUTCHours(internalDate.getUTCHours());
