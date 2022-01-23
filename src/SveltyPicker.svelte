@@ -49,6 +49,7 @@
   }
   
   const dispatch = createEventDispatcher();
+  if (value) value = value.substr(0, format.length);  // strip seconds if present in initial value
   let prevValue = value;
   let currentFormat = format;
   let innerDate = initialDate && initialDate instanceof Date
