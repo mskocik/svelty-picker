@@ -157,8 +157,6 @@
       innerDate[setter](val);
 
     } else if (isMinuteView) {
-      console.log('b')
-      
       // compute it out of x,y 
       const rect = clockEl.getBoundingClientRect();
       const clientX = e.clientX - rect.left;
