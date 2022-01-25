@@ -188,7 +188,7 @@
         activeDate = activeDate;
         break;
       case 2:
-        const newInternalDate = UTCDate(value.getUTCFullYear(), value.getMonth(), value.getUTCDate());
+        const newInternalDate = UTCDate(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate());
         if (internalDate) {
           newInternalDate.setMinutes(internalDate.getMinutes());
           newInternalDate.setUTCHours(internalDate.getUTCHours());
