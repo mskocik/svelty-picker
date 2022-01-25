@@ -2,9 +2,8 @@
   "name": "svelty-picker",
   "version": "1.2.3",
   "description": "Sweet date/time picker written in svelte",
-  "main": "dist/svelty-picker-element.js",
-  "module": "dist/svelty-picker.mjs",
-  "svelte": "index.js",
+  "main": "index.js",
+  "svelte": "src/SveltyPicker.svelte",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
