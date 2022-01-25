@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import css from 'rollup-plugin-css-only';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import pkg from './package.json';
 
 const isProduction = !process.env.ROLLUP_WATCH;
 
@@ -34,7 +35,7 @@ const module = {
     {
       sourcemap: false,
       format: 'es',
-      file: 'dist/svelty-picker.mjs'
+      file: pkg.module
     }
   ],
   plugins: [
@@ -55,7 +56,7 @@ const component = {
       sourcemap: false,
       format: 'iife',
       name: 'SveltyPicker',
-      file: 'dist/svelty-picker-element.js'
+      file: pkg.main
     }
   ],
   plugins: [
