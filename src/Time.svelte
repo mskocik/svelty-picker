@@ -7,6 +7,8 @@
   export let showMeridian = false;
   export let hasDateComponent = false;
   export let i18n;
+  export let startDate;
+  export let endDate;
   export function minuteSwitch(val) {
     if (val === undefined) return isMinuteView;
     isMinuteView = val;
@@ -63,6 +65,30 @@
     );
   $: multiplier = isMinuteView ? 5 : 1;
 
+  $: startDateHour = startDate && new Date(startDate).getHours();
+  $: startDateMinutes = startDate && new Date(startDate).getMinutes();
+  $: endDateHour = endDate && new Date(endDate).getHours();
+  $: endDateMinutes = endDate && new Date(endDate).getMinutes();
+  
+  $: isHourDisabled = (hour) => {
+    if (startDate && endDate) {
+      return startDateHour > hour && endDateHour < hour;
+    } else if (startDate) {
+      return startDateHour > hour;
+    } else if (endDate) {
+      return endDateHour < hour;
+    }
+  }
+
+  $: isMinuteDisabled = (minute) => {
+    if (startDate && endDate) {
+      return startDateMinutes > minute && endDateMinutes < minute;
+    } else if (startDate) {
+      return startDateMinutes > minute;
+    } else if (endDate) {
+      return endDateMinutes < minute;
+    }
+  }
 
   function positions(size, offset, valueForZero, minuteView, hourAdded) {
     const r = size / 2;
@@ -116,13 +142,23 @@
   }
 
   function onClick(e) {
+    const isSelectionInvalid = (value) => isMinuteView ? isMinuteDisabled(value) : isHourDisabled(value);
+    
     if (!canSelect) return;
+
     if ((e.type === 'mousemove' && !handleMoveMove) || (!isMinuteView && e.target.tagName !== 'BUTTON')) return;
+    
     if (e.target.tagName === 'BUTTON') {
       let val = parseInt(e.target.dataset.value);
+
+      if (isSelectionInvalid(val)) return;
+
       const setter = e.meridianSwitch || !isMinuteView ? 'setUTCHours' : 'setUTCMinutes';
       innerDate[setter](val);
+
     } else if (isMinuteView) {
+      console.log('b')
+      
       // compute it out of x,y 
       const rect = clockEl.getBoundingClientRect();
       const clientX = e.clientX - rect.left;
@@ -130,11 +166,13 @@
       const cntX = 130, cntY = 130;
       let quadrant = null;
       let a, b;
+      
       if (clientX > cntX) {
         quadrant = clientY > cntY ? 2 : 1
       } else {
         quadrant = clientY > cntY ? 3 : 4
       }
+
       switch (quadrant) {
         case 1:
           a = clientX - cntX;
@@ -153,9 +191,11 @@
           b = cntY - clientY;
           break;
       }
+      
+      let degree;
       const c = Math.sqrt(a*a + b*b);
       const beta = 90 - (Math.asin(a/c) * (180 / Math.PI));
-      let degree;
+
       switch (quadrant) {
         case 1:
           degree = 90 - beta;
@@ -171,8 +211,12 @@
           break;
       }
       degree = Math.floor(degree / 6)
+      
+      if (isSelectionInvalid(degree)) return;
+
       innerDate.setMinutes(degree);
     }
+
     innerDate = innerDate;
     canSelect = false;
     dispatch('time', innerDate);
@@ -206,15 +250,19 @@
       <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill-rule="evenodd" d="M6.75 0a.75.75 0 01.75.75V3h9V.75a.75.75 0 011.5 0V3h2.75c.966 0 1.75.784 1.75 1.75v16a1.75 1.75 0 01-1.75 1.75H3.25a1.75 1.75 0 01-1.75-1.75v-16C1.5 3.784 2.284 3 3.25 3H6V.75A.75.75 0 016.75 0zm-3.5 4.5a.25.25 0 00-.25.25V8h18V4.75a.25.25 0 00-.25-.25H3.25zM21 9.5H3v11.25c0 .138.112.25.25.25h17.5a.25.25 0 00.25-.25V9.5z"></path></svg>
     </button>
     {/if}
+
     <button class="sdt-time-btn sdt-time-figure"
       class:is-active={!isMinuteView}
       on:click={() => isMinuteView = false}
     >{view(selectedHour, showMeridian)}</button>
+    
     <span>:</span>
+    
     <button  class="sdt-time-btn sdt-time-figure"
       class:is-active={isMinuteView}
       on:click={() => isMinuteView = true}
     >{view(selectedMinutes, false)}</button>
+    
     {#if showMeridian}
     <div class="sdt-meridian">
       <button class="sdt-time-btn" class:is-active={selectedHour < 12} on:click={onSwitchMeridian} data-value={selectedHour % 12}>AM</button>
@@ -222,6 +270,8 @@
     </div>
     {/if}
   </div>
+  
+  
   <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}
     class:is-minute-view={isMinuteView}
   >
@@ -229,17 +279,21 @@
     <div class="sdt-hand-pointer" style={handCss}>
       <div class="sdt-hand-circle"></div>
     </div>
+
     {#each pos as p, i(p.val)}
       <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" transition:fade|local={{duration: 200}}
         data-value={p.val}
         class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
+        disabled={ isMinuteView ? isMinuteDisabled(p.val) : isHourDisabled(p.val)}
       >{p.val}</button>
     {/each}
+
     {#if !showMeridian && !isMinuteView}
       {#each innerHours as p, i}
       <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" transition:fade|local={{duration: 200}}
         data-value={p.val}
         class:is-selected={isSelected(selectedHour, p.val, i)}
+        disabled={ isHourDisabled(p.val)}
       >{p.val}</button>
     {/each}
     {/if}
@@ -355,6 +409,9 @@
     line-height: 20px;
     cursor: pointer;
     background-color: transparent;
+  }
+  .sdt-tick:disabled {
+    color: var(--sdt-clock-disabled);
   }
   .sdt-tick.is-selected {
     animation: tick-selection 0s 0.175s ease-out forwards;

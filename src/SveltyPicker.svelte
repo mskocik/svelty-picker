@@ -260,9 +260,11 @@
     </div>
     {/if}
   {:else}
-    <Time date={innerDate} hasDateComponent={resolvedMode!=='time'} bind:this={timeEl}
+    <Time date={innerDate} hasDateComponent={resolvedMode!=='time'} bind:this={timeEl} 
       showMeridian={format.match('p|P')}
       {i18n}
+      {startDate}
+      {endDate}
       on:time={onDate}
       on:switch={onModeSwitch}
       on:close={onTimeClose}
@@ -286,6 +288,7 @@
     --sdt-clock-bg: #eeeded;
     --sdt-clock-bg-minute: rgb(238, 237, 237, 0.25);
     --sdt-clock-bg-shadow: 0 0 128px 2px #ddd inset;
+    --sdt-clock-disabled: rgb(0, 0, 20, 0.25);
     --sdt-shadow: #ccc;
   }
   .std-calendar-wrap {
