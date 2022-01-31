@@ -1,167 +1,84 @@
-# 📆 Svelty Picker [![NPM version](http://img.shields.io/npm/v/svelty-picker.svg?style=flat)](https://www.npmjs.org/package/svelty-picker)
+# sveltekit-package-template
 
-Simple date & time picker implemented in svelte. 
+A barebones project that provides the essentials for writing highly-optimized, reusable packages in Svelte using SvelteKit's [`package`](https://kit.svelte.dev/docs#packaging) feature.
 
-Features: 
-- datepicker
-- timepicker (with meridian support)
-- various format
-- keyboard navigation
-- includes `<input>` element
-- custom element 
-- validator action for `<input>` using `svelte-use-forms` (optional)
-- easily themable
+All styles are component-scoped and preprocessed into minified and prefixed CSS during packaging using [cssnano](https://cssnano.co/) and [autoprefixer](https://github.com/postcss/autoprefixer). TypeScript type definitions are generated automatically from your components using [svelte2tsx](https://github.com/sveltejs/language-tools/tree/master/packages/svelte2tsx).
 
-![screenshot](docs/screenshot.png)
+## The Problem
 
-## ⚙️ Install
+One of Svelte's largest pitfalls currently is it's ecosystem. Compared to more mainstream frameworks, it's userland is tiny in comparison to the thousands of available components on npm. While popularity is a large contribution to this, lack of documentation and resources is also a problem.
 
+Many packages at the moment have some sort of pitfall. Some require bundling a large stylesheet for the entire library just to use a single component. Others require developers using it to setup a package such as [`svelte-preprocess`](https://github.com/sveltejs/svelte-preprocess) because they use TypeScript internally. Most of all, there really just isn't much information out there on library authoring. What many don't realize is that all of these aformentioned pitfalls can be worked around.
+
+While svelte does offer an [official component template](https://github.com/sveltejs/component-template), it lacks many features required for a production-ready package (typescript, preprocessing, styling conventions).
+
+## Getting Started
+
+These commands will set you up with a SvelteKit development environment:
+
+```bash
+npx degit tropix126/sveltekit-package-template my-package
+cd my-package
+npm install # or pnpm, yarn, etc...
+npm run dev
 ```
-npm install svelty-picker
+
+From there, you can edit the example Counter component in [src/lib/Counter/Counter.svelte](/src/lib/Counter/Counter.svelte).
+
+The [`index.ts`](/src/lib/index.ts) file in [`src/lib`](/src/lib) exports your components for use in the package.
+
+## Packaging and Publishing
+
+### Packaging
+
+To package your components, simply run the package command:
+
+```bash
+npm run package
 ```
 
-## 👀 Example
+This will preprocess the contents of [`src/lib`](/src/lib) into a `package` folder at the root of your project.
 
-```svelte
+### Publishing to NPM
+
+After you have generated the `package` folder, run `npm publish ./package` to publish your library to NPM.
+
+Be sure to properly configure `package.json` with the correct data before publishing.
+
+## Routes
+
+Since the package command only generates it's files from [`src/lib`](/src/lib), you are free to put whatever you wish in the [`routes`](/src/routes) folder. This could be used as a documentation site for your component, as an example.
+
+## Using your Package
+
+Consumers of your package can import components from it in external projects like so:
+```html
 <script>
-  import SveltyPicker from 'svelty-picker'
-  
-  let myDate = '2021-11-11';
+    import { Component } from "my-package";
 </script>
 
-<SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value={myDate}></SveltyPicker>
+<Component />
 ```
 
-Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?version=3.44.1).
+## Setting up Documentation
 
-## 📓 Options
+Most components will need documentation in some form. This template doesn't have any opinions on how documentation should be handled, however it does provide you with SvelteKit's `routes` folder which can be used for this. Below are some very useful svelte-focused tools that can make your life considerably easier when documenting components:
+- [vite-plugin-svled](https://github.com/mattjennings/vite-plugin-sveld) is a vite port of [sveld](https://github.com/carbon-design-system/sveld/), which allows you to automatically generate API documentation for your svelte components using typescript types and JSDoc comments.
+- [mdsvex](https://mdsvex.pngwn.io/) is a superset of markdown that allows the usage of Svelte components and interactive logic. Since mdsvex preprocesses your markdown files into Svelte components, it can also be used as SvelteKit routes.
+- [mdsvex-sveld](https://github.com/mattjennings/mdsvex-sveld) is an mdsvex plugin that automatically outputs markdown tables for component API documentation using [sveld](https://github.com/carbon-design-system/sveld/).
 
-| Property        | Type         | Default       | Description |
-|-----------------|--------------|---------------| ------------------|
-| name            | `string`     | `date`        | html attribute for underlying `<input>` element  |
-| disabled        | `bool`       | `false`       | html attribute for underlying `<input>` element  |
-| placeholder     | `string`     | `null`        | html attribute for underlying `<input>` element  |
-| required        | `bool`       | `false`       | html attribute for underlying `<input>` element  |
-| value           | `string`     | `null`        | string representation of selected value |
-| initialDate     | `Date`       | `null`        | initial date object, if you prefer that to `value` |
-| startDate       | `string|Date`| `null`        | limit minimal selectable date |
-| endDate         | `string|Date`| `null`        | limit maximal selectable date |
-| pickerOnly      | `bool`       | `false`       | Picker is always visible and input field is then hidden, but still present |
-| theme           | `string`     | `sdt-calendar-colors` | css class defining [css variables](#css-variables) |
-| mode            | `string`     | `auto`        | restrict picker's mode. Possible values: `auto|date|datetime|time`. By default it try to guess the mode from `format` |
-| format          | `string`     | `yyyy-mm-dd`  | Format of entered date/time. See [format settings](#format-settings) for available options |
-| weekStart       | `number`     | `1`           | number in range `0-6` to select first day of the week. Sunday is `0` |
-| visible         | `bool`       | `false`       | Whether place picker inline after focus. By default picker is floating
-| inputClasses    | `string`     | ``            | input css class string |
-| todayBtnClasses | `string`     | `sdt-action-btn sdt-today-btn` | today button css classes |
-| clearBtnClasses | `string`     | `sdt-action-btn sdt-clear-btn` | clear button css classes |
-| todayBtn        | `bool`       | `true`        | Show today button |
-| clearBtn        | `bool`       | `true`        | Show clear button |
-| autoclose       | `bool`       | `true`        | Hides picker after selection is done. If mode includes _time picker_, it closes automatically only after minute selection |
-| i18n            | `object`     | `en`          | localization object, english is by default |
-| positionFn      | `function`   | _`internal`_  | function used to position picker. Used as action. Acceps following object: `{ inputEl, visible}`, where `visible` is `visible` parameter & `inputEl` is underlying `<input>` element |
-| validatorAction | `array`      | `null`        | Bind validator action for inner `<input>` element. Designed to be used with `svelte-use-form`.
+## Setting up Theming
 
-Note: Properties starting by `theme` to `i18n` are configurable globally by overriding it in globally available `config`
+If you plan to develop a large amount of components, it may become necessary to have people import a theme stylesheet containing variables. This can be done by creating a `theme.css` file in [`src/lib`](/src/lib) and having people import it from `node_modules`.
 
-```js
-import { config } from 'svelty-picker';
-
-// set new locale 
-config.i18n = {
-  // my localization object
-}
-// default for all pickers in the app
-config.todayBtn = false;
-```
-### Format settings
-
-- `p` : meridian in lower case ('am' or 'pm') - according to locale file
-- `P` : meridian in upper case ('AM' or 'PM') - according to locale file
-- `s` : seconds without leading zeros
-- `ss` : seconds, 2 digits with leading zeros
-- `i` : minutes without leading zeros
-- `ii` : minutes, 2 digits with leading zeros
-- `h` : hour without leading zeros - 24-hour format
-- `hh` : hour, 2 digits with leading zeros - 24-hour format
-- `H` : hour without leading zeros - 12-hour format
-- `HH` : hour, 2 digits with leading zeros - 12-hour format
-- `d` : day of the month without leading zeros
-- `dd` : day of the month, 2 digits with leading zeros
-- `m` : numeric representation of month without leading zeros
-- `mm` : numeric representation of the month, 2 digits with leading zeros
-- `M` : short textual representation of a month, three letters
-- `MM` : full textual representation of a month, such as January or March
-- `yy` : two digit representation of a year
-- `yyyy` : full numeric representation of a year, 4 digits
-
-### CSS variables
-
-```css
-/** defaults */
-.sdt-calendar-colors {
-  --sdt-primary: #286090;
-  --sdt-color: #000;
-  --sdt-bg-main: #fff;
-  --sdt-bg-today: var(--sdt-primary);
-  --sdt-bg-clear: #dc3545;
-  --sdt-today-bg: #1e486d;
-  --sdt-clear-color: #dc3545;
-  --sdt-btn-bg-hover: #eee;
-  --sdt-btn-header-bg-hover: #dfdfdf;
-  --sdt-clock-bg: #eeeded;
-  --sdt-clock-bg-minute: rgb(238, 237, 237, 0.25);
-  --sdt-clock-bg-shadow: 0 0 128px 2px #ddd inset;
-  --sdt-shadow: #ccc;
-}
-```
-
-## 🗯️ Events
-
-Component emits `input`, `change` and `blur` events.
-
-- `input` is dispatched on `<input>` element therefore you can get current value like from every native event:
-- `change` event is using Svelte's `eventDispatcher`, therefore triggered event contains `detail` property
-
-```js
+Developers using your library could import the theme file like so:
+```html
 <script>
-function onInput(event) {
-  console.log(event.target.value) // logs currently selected date or empty string
-}
-
-function onChange(event) {
-  console.log(event.detail) // logs currently selected date or null
-}
+    import "my-package/theme.css";
+    import { ComponentThatUsesTheming } from "my-package";
 </script>
 
-<SveltyPicker on:input={onInput} on:change={onChange}></SveltyPicker>
+<ComponentThatUsesTheming />
 ```
 
-## 🌐 Localization
-
-Localization file has following structure.
-
-```js
-export const en = {
-  days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-  daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-  daysMin:     ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-  months:      ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  meridiem:    ['am', 'pm'],
-  suffix:      ['st', 'nd', 'rd', 'th'],
-  todayBtn:    'Today',
-  clearBtn:    'Clear',
-  timeView:    'Show time view',
-  backToDate:  'Back to calendar view'
-}
-```
-PRs for extending built-in localization are welcome 🥳
-
-## 🏆 Thanks to:
-
-- [Bootstrap datepicker](https://github.com/smalot/bootstrap-datetimepicker/blob/master/js/bootstrap-datetimepicker.js) for some internal date and format handling
-
-## Licence:
-
-MIT
+Many modern bundlers support importing CSS as ES Modules. This is likely to be the best way of importing theme files, as they can be easily resolved from `node_modules`. Alternatively, you can use @import syntax with the postcss-import plugin or sass in your \<style> tags, or consider CDNS such as [unpkg](https://unpkg.com/).

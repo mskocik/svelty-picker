@@ -1,42 +1,58 @@
 {
-  "name": "svelty-picker",
-  "version": "1.2.4",
-  "description": "Sweet date/time picker written in svelte",
-  "main": "index.js",
-  "svelte": "src/SveltyPicker.svelte",
-  "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "start": "sirv docs --port 5000",
-    "start-doc": "sirv . --port 8000 --cors",
-    "prepublishOnly": "npm run build"
-  },
-  "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.1.3",
-    "rollup": "^2.66.0",
-    "rollup-plugin-css-only": "^3.1.0",
-    "rollup-plugin-livereload": "^2.0.5",
-    "rollup-plugin-svelte": "^6.1.1",
-    "rollup-plugin-terser": "^7.0.0",
-    "sirv-cli": "^1.0.14",
-    "svelte": "^3.46.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mskocik/svelty-picker.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mskocik/svelty-picker/issues"
-  },
-  "homepage": "https://github.com/mskocik/svelty-picker#readme",
-  "keywords": [
-    "svelte",
-    "datepicker",
-    "timepicker",
-    "datetime",
-    "calendar"
-  ],
-  "dependencies": {}
+	"name": "svelty-picker",
+	"version": "1.2.4",
+	"description": "Sweet date/time picker written in svelte",
+	"main": "index.js",
+	"scripts": {
+		"dev": "svelte-kit dev",
+		"build": "svelte-kit build",
+		"package": "svelte-kit package",
+		"preview": "svelte-kit preview",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
+		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/kit": "next",
+		"@tailwindcss/typography": "^0.5.1",
+		"@typescript-eslint/eslint-plugin": "^5.10.1",
+		"@typescript-eslint/parser": "^5.10.1",
+		"autoprefixer": "^10.4.0",
+		"cssnano": "^5.0.10",
+		"eslint": "^7.32.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-svelte3": "^3.2.1",
+		"mdsvex": "^0.9.8",
+		"postcss": "^8.3.11",
+		"prettier": "^2.4.1",
+		"prettier-plugin-svelte": "^2.4.0",
+		"rehype-slug": "^5.0.0",
+		"sass": "^1.43.4",
+		"svelte": "^3.42.6",
+		"svelte-check": "^2.2.6",
+		"svelte-preprocess": "^4.9.4",
+		"svelte2tsx": "^0.4.8",
+		"tailwindcss": "^3.0.18",
+		"tslib": "^2.3.1",
+		"typescript": "^4.4.3"
+	},
+	"bugs": {
+		"url": "https://github.com/mskocik/svelty-picker/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mskocik/svelty-picker.git"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/mskocik/svelty-picker#readme",
+	"keywords": [
+		"svelte",
+		"datepicker",
+		"timepicker",
+		"datetime",
+		"calendar"
+	],
+	"type": "module"
 }

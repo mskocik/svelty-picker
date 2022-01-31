@@ -1,0 +1,36 @@
+# Getting Started
+
+## Simple date & time picker implemented in svelte.
+
+Features:
+
+- Datepicker
+- Timepicker (with meridian support)
+- Various format
+- Keyboard navigation
+- Includes `<input>` element
+- Custom element
+- Validator action for `<input>` using `svelte-use-forms` (optional)
+- Easily themable
+
+## Installation
+
+Run this command
+
+```bash
+	npm install svelty-picker
+```
+
+## 👀 Example
+
+```html
+<script>
+	import SveltyPicker from 'svelty-picker';
+
+	let myDate = '2021-11-11';
+</script>
+
+<SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value="{myDate}" />
+```
+
+Try yourself in a [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?version=3.44.1).

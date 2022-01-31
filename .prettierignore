@@ -1,0 +1,4 @@
+# ignore internal library
+/src/lib/types.d.ts
+/src/lib/i18n.ts
+/src/lib/settings.ts
