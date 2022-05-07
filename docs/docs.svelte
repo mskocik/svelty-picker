@@ -69,6 +69,7 @@
           <option value="mm/dd/yyyy">mm/dd/yyyy</option>
           <option value="dd.mm.yyyy">dd.mm.yyyy</option>
           <option value="dd-M-yy">dd-M-yy</option>
+          <option value="dd MM yyyy">dd MM yyyy</option>
         </optgroup>
       </select>
     </div>
