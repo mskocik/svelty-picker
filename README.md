@@ -57,6 +57,7 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | clearBtnClasses | `string`     | `sdt-action-btn sdt-clear-btn` | clear button css classes |
 | todayBtn        | `bool`       | `true`        | Show today button |
 | clearBtn        | `bool`       | `true`        | Show clear button |
+| clearToggle     | `bool`       | `true`        | Allows to clear selected date when clicking on the same date when in `mode='date'` or `mode='auto'` resolving to `'date'` |
 | autoclose       | `bool`       | `true`        | Hides picker after selection is done. If mode includes _time picker_, it closes automatically only after minute selection |
 | i18n            | `object`     | `en`          | localization object, english is by default |
 | positionFn      | `function`   | _`internal`_  | function used to position picker. Used as action. Acceps following object: `{ inputEl, visible}`, where `visible` is `visible` parameter & `inputEl` is underlying `<input>` element |

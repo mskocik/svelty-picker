@@ -35,6 +35,7 @@
   export let clearBtnClasses = config.clearBtnClasses;
   export let todayBtn = config.todayBtn;
   export let clearBtn = config.clearBtn;
+  export let clearToggle = config.clearToggle;
   export let autoclose = config.autoclose;
   export let i18n =  config.i18n;
   // actions
@@ -113,6 +114,7 @@
        && innerDate.getUTCMonth() === e.detail.getUTCMonth()
        && innerDate.getUTCDate() === e.detail.getUTCDate()
        && resolvedMode === 'date'
+       && clearToggle
       ) setter = null;
     }
     value = setter ? formatDate(setter, format, i18n, formatType) : null;
