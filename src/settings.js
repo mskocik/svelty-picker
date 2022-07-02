@@ -7,6 +7,7 @@ export default {
   formatType: 'standard',
   weekStart: 1,
   visible: false,
+  /**@type {string|null|undefined} */
   inputClasses: null,
   todayBtnClasses: 'sdt-action-btn sdt-today-btn',
   clearBtnClasses: 'sdt-action-btn sdt-clear-btn',

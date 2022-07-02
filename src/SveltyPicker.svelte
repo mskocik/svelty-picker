@@ -15,6 +15,7 @@
   // html
   export let name = 'date';
   export let disabled = false;
+  /**@type {string|null|undefined} */
   export let placeholder = null;
   export let required = false;
   // dates
