@@ -50,11 +50,11 @@
       innerDate = date;
     }
   }
-  $: selectedHour = innerDate ? innerDate.getUTCHours() : 0;
+  $: selectedHour = innerDate ? innerDate.getHours() : 0;
   $: isPM = showMeridian
     ? selectedHour >= 12
     : false;
-  $: selectedMinutes = innerDate ? innerDate.getUTCMinutes() : 0;
+  $: selectedMinutes = innerDate ? innerDate.getMinutes() : 0;
   $: handCss = isMinuteView 
     ? `transform: rotateZ(${selectedMinutes * 6}deg)`
     : (showMeridian 
@@ -120,7 +120,7 @@
     if ((e.type === 'mousemove' && !handleMoveMove) || (!isMinuteView && e.target.tagName !== 'BUTTON')) return;
     if (e.target.tagName === 'BUTTON') {
       let val = parseInt(e.target.dataset.value);
-      const setter = e.meridianSwitch || !isMinuteView ? 'setUTCHours' : 'setUTCMinutes';
+      const setter = e.meridianSwitch || !isMinuteView ? 'setHours' : 'setMinutes';
       innerDate[setter](val);
     } else if (isMinuteView) {
       // compute it out of x,y 

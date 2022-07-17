@@ -14,21 +14,38 @@
 
   // html
 
-  /** @type {string} */
+  /**
+   * @type {string}
+   */
   export let name = "date";
-  /** @type {bool} */
+  /**
+   * @type {bool}
+   */
   export let disabled = false;
-  /**@type {string|null|undefined} */
+  /**
+   * @type {string|null|undefined}
+   */
   export let placeholder = null;
-  /** @type {bool} */
+  /**
+   * @type {bool}
+   */
   export let required = false;
   // dates
-  /** @type {string|null} */
+  /**
+   * @type {string|null}
+   */
   export let value = null;
-  /** @type {Date|null} */
+  /**
+   * @type {Date|null}
+   */
   export let initialDate = null;
-  /** @type {Date | null} */
+  /**
+   * @type {Date | null}
+   */
   let startDate = null;
+  /**
+   * @type {Date | null}
+   */
   export let endDate = null;
   export let pickerOnly = false;
   // configurable globally
@@ -58,21 +75,15 @@
   }
 
   const dispatch = createEventDispatcher();
-  if (value) value = value.replace(/(:\d+):\d+/, "$1"); // strip seconds if present in initial value
+  if (value) value = value.replace(/(:\d+):\d+/, "$1") // strip seconds if present in initial value
   let prevValue = value;
   let currentFormat = format;
-  let innerDate =
-    initialDate && initialDate instanceof Date
-      ? UTCDate(
-          initialDate.getUTCFullYear(),
-          initialDate.getUTCMonth(),
-          initialDate.getUTCDate(),
-          initialDate.getHours(),
-          initialDate.getUTCMinutes()
-        )
-      : value
-      ? parseDate(value, format, i18n, formatType)
-      : null;
+  let innerDate = initialDate && initialDate instanceof Date
+      ? parseDate(initialDate)
+      : (value 
+        ? parseDate(value, format, i18n, formatType)
+        : null
+      );
   if (innerDate && initialDate) {
     value = formatDate(innerDate, format, i18n, formatType);
   }
@@ -85,15 +96,20 @@
   let timeEl;
   let preventClose = false;
   let preventCloseTimer = null;
-  let resolvedMode =
-    mode === "auto"
+  let resolvedMode = null;
+  let currentMode = resolvedMode === "time" ? "time" : "date";
+  $: {
+    resolvedMode = mode === "auto"
       ? format.match(/hh?|ii?/i) && format.match(/y|m|d/i)
         ? "datetime"
         : format.match(/hh?|ii?/i)
         ? "time"
         : "date"
       : mode;
-  let currentMode = resolvedMode === "time" ? "time" : "date";
+    if (resolvedMode === 'time' && currentMode !== resolvedMode) {
+      currentMode = resolvedMode;
+    }
+  }
 
   $: internalVisibility = pickerOnly ? true : visible;
   $: {
@@ -121,9 +137,9 @@
     let setter = e.detail || null;
     if (e.detail && innerDate) {
       if (
-        innerDate.getUTCFullYear() === e.detail.getUTCFullYear() &&
-        innerDate.getUTCMonth() === e.detail.getUTCMonth() &&
-        innerDate.getUTCDate() === e.detail.getUTCDate() &&
+        innerDate.getFullYear() === e.detail.getFullYear() &&
+        innerDate.getMonth() === e.detail.getMonth() &&
+        innerDate.getDate() === e.detail.getDate() &&
         resolvedMode === "date" &&
         clearToggle
       )
@@ -163,13 +179,13 @@
     const today = new Date();
     if (startDate && parseDate(startDate, format, i18n, formatType) < today)
       return;
-    const todayHours = innerDate ? innerDate.getUTCHours() : today.getHours();
+    const todayHours = innerDate ? innerDate.getHours() : today.getHours();
     const todayMinutes = innerDate
-      ? innerDate.getUTCMinutes()
-      : today.getUTCMinutes();
+      ? innerDate.getMinutes()
+      : today.getMinutes();
     onDate({
       detail: UTCDate(
-        today.getUTCFullYear(),
+        today.getFullYear(),
         today.getMonth(),
         today.getDate(),
         todayHours,
@@ -292,7 +308,7 @@
           ? parseDate(startDate, format, i18n, formatType)
           : null}
         endDate={endDate ? parseDate(endDate, format, i18n, formatType) : null}
-        enableTimeToggle={resolvedMode.includes("time")}
+        enableTimeToggle={resolvedMode?.includes("time")}
         bind:this={calendarEl}
         {i18n}
         {weekStart}

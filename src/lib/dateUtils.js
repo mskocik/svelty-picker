@@ -10,7 +10,7 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     const todayMark = -1;
     const grid = [];
     let yearRow = [];
-    let currYear = currentDate.getUTCFullYear() - (currentDate.getUTCFullYear() % 10) - 1;
+    let currYear = currentDate.getFullYear() - (currentDate.getFullYear() % 10) - 1;
     for (let i = 0; i < 12; i++) {
       yearRow.push(currYear + i);
       if (yearRow.length === 4) {
@@ -22,8 +22,8 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     if (!selectedDate) {
       selectedDate = new Date();
     }
-    if (selectedDate.getUTCFullYear() >= currYear) {
-      selectionMark = selectedDate.getUTCFullYear() % currYear;
+    if (selectedDate.getFullYear() >= currYear) {
+      selectionMark = selectedDate.getFullYear() % currYear;
     }
 
     return {
@@ -44,7 +44,7 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     let todayMark = 0;
     for (let y = 0; y < 3; y++) {
       for (let i = 0; i < 12; i++) {
-        dateNormalized.setUTCMonth(i);
+        dateNormalized.setMonth(i);
         monthRow.push(locale.monthsShort[i % 12]);
         if (monthRow.length === 4) {
           grid.push(monthRow);
@@ -57,8 +57,8 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     if (!selectedDate) {
       selectedDate = new Date();
     }
-    if (selectedDate.getUTCFullYear() - initYear >= 0 && selectedDate.getUTCFullYear() - initYear <= 2) {
-      selectionMark = selectedDate.getUTCMonth() + ((selectedDate.getUTCFullYear() - initYear || 0) * 12);
+    if (selectedDate.getFullYear() - initYear >= 0 && selectedDate.getFullYear() - initYear <= 2) {
+      selectionMark = selectedDate.getMonth() + ((selectedDate.getFullYear() - initYear || 0) * 12);
     }
     return {
       grid, todayMark, nextFrom, prevTo, selectionMark
@@ -67,18 +67,18 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
 
   // days 7x6
   let d = currentDate || new Date(), // or currently selected date
-      y = d.getUTCFullYear(),
-      m = d.getUTCMonth(),
-      dM = d.getUTCDate(),
-      h = d.getUTCHours(),
+      y = d.getFullYear(),
+      m = d.getMonth(),
+      dM = d.getDate(),
+      h = d.getHours(),
       today = new Date();
   let prevMonth = UTCDate(y, m-1, 28, 0, 0, 0, 0),
-      day = utils.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
-  prevMonth.setUTCDate(day);
-  prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - weekStart + 7) % 7);
+      day = utils.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
+  prevMonth.setDate(day);
+  prevMonth.setDate(day - (prevMonth.getDay() - weekStart + 7) % 7);
 
   let nextMonth = new Date(prevMonth);
-  nextMonth.setUTCDate(nextMonth.getUTCDate() + 42);
+  nextMonth.setDate(nextMonth.getDate() + 42);
   let nextMonthValue = nextMonth.valueOf();
 
   let grid = [];
@@ -92,25 +92,25 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
   while(prevMonth.valueOf() < nextMonthValue) {
     inc++;
     dayRow.push(new Date(prevMonth));
-    if (prevMonth.getUTCFullYear() < y || (prevMonth.getUTCFullYear() === y && prevMonth.getUTCMonth() < m)) {
+    if (prevMonth.getFullYear() < y || (prevMonth.getFullYear() === y && prevMonth.getMonth() < m)) {
       prevTo = inc;
-    } else if (nextFrom === 42 && (prevMonth.getUTCFullYear() > y || (prevMonth.getUTCFullYear() === y && prevMonth.getUTCMonth() > m))) {
+    } else if (nextFrom === 42 && (prevMonth.getFullYear() > y || (prevMonth.getFullYear() === y && prevMonth.getMonth() > m))) {
       nextFrom = inc - 1;
     }
 
-    prevMonth.setUTCDate(prevMonth.getUTCDate() + 1);
+    prevMonth.setDate(prevMonth.getDate() + 1);
 
 
-    if (prevMonth.getUTCFullYear() === today.getUTCFullYear() &&
-      prevMonth.getUTCMonth() === today.getUTCMonth() &&
-      prevMonth.getUTCDate() === today.getUTCDate()
+    if (prevMonth.getFullYear() === today.getFullYear() &&
+      prevMonth.getMonth() === today.getMonth() &&
+      prevMonth.getDate() === today.getDate()
     ) {
       todayMark = inc;
     }
     if (!selectionMark && selectedDate
-      && prevMonth.getUTCFullYear() === selectedDate.getUTCFullYear()
-      && prevMonth.getUTCMonth() === selectedDate.getUTCMonth()
-      && prevMonth.getUTCDate() === selectedDate.getUTCDate()
+      && prevMonth.getFullYear() === selectedDate.getFullYear()
+      && prevMonth.getMonth() === selectedDate.getMonth()
+      && prevMonth.getDate() === selectedDate.getDate()
     ) {
       selectionMark = inc;
     }
@@ -151,7 +151,8 @@ const utils = {
 }
 
 export function UTCDate() {
-  return new Date(Date.UTC.apply(Date, arguments));
+  // return new Date(Date.UTC.apply(Date, arguments));
+  return new Date(...arguments);
 }
 
 /**
@@ -164,7 +165,7 @@ export function UTCDate() {
  */
 export function parseDate(date, format, i18n, type) {
   if (date instanceof Date) {
-    const dateUTC = new Date(date.valueOf() - date.getTimezoneOffset() * 60000);
+    const dateUTC = new Date(date.valueOf() + date.getTimezoneOffset() * 60000);
     dateUTC.setMilliseconds(0);
     return dateUTC;
   }
@@ -182,62 +183,62 @@ export function parseDate(date, format, i18n, type) {
   var parts = date && date.toString().match(formatHelper.nonpunctuation) || [],
     date = new Date(0, 0, 0, 0, 0, 0, 0),
     parsed = {},
-    setters_order = ['hh', 'h', 'ii', 'i', 'ss', 's', 'yyyy', 'yy', 'M', 'MM', 'm', 'mm', 'D', 'DD', 'd', 'dd', 'H', 'HH', 'p', 'P', 'z', 'Z'],
+    setters_order = ['hh', 'h', 'ii', 'i', 'ss', 's', 'yyyy', 'yy', 'Y', 'M', 'MM', 'm', 'mm', 'D', 'DD', 'd', 'dd', 'H', 'HH', 'p', 'P'],
     setters_map = {
       hh:   function (d, v) {
-        return d.setUTCHours(v);
+        return d.setHours(v);
       },
       h:    function (d, v) {
-        return d.setUTCHours(v);
+        return d.setHours(v);
       },
       HH:   function (d, v) {
-        return d.setUTCHours(v === 12 ? 0 : v);
+        return d.setHours(v === 12 ? 0 : v);
       },
       H:    function (d, v) {
-        return d.setUTCHours(v === 12 ? 0 : v);
+        return d.setHours(v === 12 ? 0 : v);
       },
       ii:   function (d, v) {
-        return d.setUTCMinutes(v);
+        return d.setMinutes(v);
       },
       i:    function (d, v) {
-        return d.setUTCMinutes(v);
+        return d.setMinutes(v);
       },
       ss:   function (d, v) {
-        return d.setUTCSeconds(v);
+        return d.setSeconds(v);
       },
       s:    function (d, v) {
-        return d.setUTCSeconds(v);
+        return d.setSeconds(v);
       },
       yyyy: function (d, v) {
-        return d.setUTCFullYear(v);
+        return d.setFullYear(v);
       },
       yy:   function (d, v) {
-        return d.setUTCFullYear(2000 + v);
+        return d.setFullYear(2000 + v);
       },
       m:    function (d, v) {
         v -= 1;
         while (v < 0) v += 12;
         v %= 12;
-        d.setUTCMonth(v);
-        while (d.getUTCMonth() !== v)
-          if (isNaN(d.getUTCMonth()))
+        d.setMonth(v);
+        while (d.getMonth() !== v)
+          if (isNaN(d.getMonth()))
             return d;
           else
-            d.setUTCDate(d.getUTCDate() - 1);
+            d.setDate(d.getDate() - 1);
         return d;
       },
       d:    function (d, v) {
-        return d.setUTCDate(v);
+        return d.setDate(v);
       },
       p:    function (d, v) {
-        return d.setUTCHours(v === 1 ? d.getUTCHours() + 12 : d.getUTCHours());
+        return d.setHours(v === 1 ? d.getHours() + 12 : d.getHours());
       }
     },
     val, part;
   setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
   setters_map['dd'] = setters_map['d'];
   setters_map['P'] = setters_map['p'];
-  date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getUTCHours(), date.getUTCMinutes(), date.getSeconds());
+  // date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getUTCHours(), date.getUTCMinutes(), date.getSeconds());
   if (parts.length === format.parts.length) {
     for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
       val = parseInt(parts[i], 10);
@@ -276,21 +277,21 @@ export function formatDate(date, format, i18n, type) {
     val = {
       t:    date.getTime(),
       // year
-      yy:   date.getUTCFullYear().toString().substring(2),
-      yyyy: date.getUTCFullYear(),
+      yy:   date.getFullYear().toString().substring(2),
+      yyyy: date.getFullYear(),
       // month
-      m:    date.getUTCMonth() + 1,
-      M:    i18n.monthsShort[date.getUTCMonth()],
-      MM:   i18n.months[date.getUTCMonth()],
+      m:    date.getMonth() + 1,
+      M:    i18n.monthsShort[date.getMonth()],
+      MM:   i18n.months[date.getMonth()],
       // day
-      d:    date.getUTCDate(),
-      D:    i18n.daysShort[date.getUTCDay()],
-      DD:   i18n.days[date.getUTCDay()],
-      p:    (i18n.meridiem.length === 2 ? i18n.meridiem[date.getUTCHours() < 12 ? 0 : 1] : ''),
+      d:    date.getDate(),
+      D:    i18n.daysShort[date.getDay()],
+      DD:   i18n.days[date.getDay()],
+      p:    (i18n.meridiem.length === 2 ? i18n.meridiem[date.getHours() < 12 ? 0 : 1] : ''),
       // hour
-      h:    date.getUTCHours(),
+      h:    date.getHours(),
       // minute
-      i:    date.getUTCMinutes(),
+      i:    date.getMinutes(),
       // second
       s:    date.getUTCSeconds(),
       // timezone
@@ -305,7 +306,6 @@ export function formatDate(date, format, i18n, type) {
     }
     val.HH = (val.H < 10 ? '0' : '') + val.H;
     val.P = val.p.toUpperCase();
-    val.Z = val.z;
     val.hh = (val.h < 10 ? '0' : '') + val.h;
     val.ii = (val.i < 10 ? '0' : '') + val.i;
     val.ss = (val.s < 10 ? '0' : '') + val.s;
@@ -315,28 +315,28 @@ export function formatDate(date, format, i18n, type) {
     // php format
     val = {
       // year
-      y: date.getUTCFullYear().toString().substring(2),
-      Y: date.getUTCFullYear(),
+      y: date.getFullYear().toString().substring(2),
+      Y: date.getFullYear(),
       // month
-      F: i18n.months[date.getUTCMonth()],
-      M: i18n.monthsShort[date.getUTCMonth()],
-      n: date.getUTCMonth() + 1,
-      t: utils.getDaysInMonth(date.getUTCFullYear(), date.getUTCMonth()),
+      F: i18n.months[date.getMonth()],
+      M: i18n.monthsShort[date.getMonth()],
+      n: date.getMonth() + 1,
+      t: utils.getDaysInMonth(date.getFullYear(), date.getMonth()),
       // day
-      j: date.getUTCDate(),
-      l: i18n.days[date.getUTCDay()],
-      D: i18n.daysShort[date.getUTCDay()],
-      w: date.getUTCDay(), // 0 -> 6
-      N: (date.getUTCDay() === 0 ? 7 : date.getUTCDay()),       // 1 -> 7
-      S: (date.getUTCDate() % 10 <= i18n.suffix.length ? i18n.suffix[date.getUTCDate() % 10 - 1] : ''),
+      j: date.getDate(),
+      l: i18n.days[date.getDay()],
+      D: i18n.daysShort[date.getDay()],
+      w: date.getDay(), // 0 -> 6
+      N: (date.getDay() === 0 ? 7 : date.getDay()),       // 1 -> 7
+      S: (date.getDate() % 10 <= i18n.suffix.length ? i18n.suffix[date.getDate() % 10 - 1] : ''),
       // hour
-      a: (i18n.meridiem.length === 2 ? i18n.meridiem[date.getUTCHours() < 12 ? 0 : 1] : ''),
-      g: (date.getUTCHours() % 12 === 0 ? 12 : date.getUTCHours() % 12),
-      G: date.getUTCHours(),
+      a: (i18n.meridiem.length === 2 ? i18n.meridiem[date.getHours() < 12 ? 0 : 1] : ''),
+      g: (date.getHours() % 12 === 0 ? 12 : date.getHours() % 12),
+      G: date.getHours(),
       // minute
-      i: date.getUTCMinutes(),
+      i: date.getMinutes(),
       // second
-      s: date.getUTCSeconds()
+      s: date.getSeconds()
     };
     val.m = (val.n < 10 ? '0' : '') + val.n;
     val.d = (val.j < 10 ? '0' : '') + val.j;
@@ -365,7 +365,7 @@ export function formatDate(date, format, i18n, type) {
 const formatHelper = {
   validParts: function(/** @type {string} */ type) {
     if (type === 'standard') {
-      return /t|hh?|HH?|p|P|z|Z|ii?|ss?|dd?|DD?|mm?|MM?|yy(?:yy)?/g;
+      return /t|hh?|HH?|p|P|z|ii?|ss?|dd?|DD?|mm?|MM?|yy(?:yy)?/g;
     } else if (type === 'php') {
       return /[dDjlNwzFmMnStyYaABgGhHis]/g;
     } else {
@@ -379,7 +379,9 @@ const formatHelper = {
     var separators = format.replace(this.validParts(type), '\0').split('\0'),
     parts = format.match(this.validParts(type));
     if (!separators || !separators.length || !parts || parts.length === 0) {
-      throw new Error('Invalid date format.');
+      // throw new Error('Invalid date format.');
+      console.warn('invalid date format', separators, parts);
+      parts = [];
     }
     return {separators: separators, parts: parts};
   },

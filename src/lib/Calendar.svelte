@@ -16,28 +16,31 @@
       onClick(new Date);
       return;
     }
-    let pos;
+    let pos, diffSelection;
     switch (key) {
       case 'PageDown':
         shiftKey = true;
       case 'ArrowDown':
-        if (shiftKey) return handleShiftNav(activeDate.getUTCFullYear(), activeDate.getMonth() + 1, 1);
-        pos = moveGrid(dataset.selectionMark + 7, currentView);
-        if (pos.y > 5) {
-          const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() + 1, activeDate.getDate());
+        if (shiftKey) return handleShiftNav(activeDate.getFullYear(), activeDate.getMonth() + 1, 1);
+        diffSelection = dataset.selectionMark + 7;
+        if (diffSelection >= dataset.nextFrom) {
+          const tmpDate = new Date(activeDate.getFullYear(), activeDate.getUTCMonth() + 1, 28);
           let tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
-          if (tmpData.grid[0][pos.x].getUTCMonth() < internalDate.getUTCMonth()) {
-            tmpDate.setMonth(tmpDate.getMonth() + 1);
-            tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
-          }
-          pos.y = tmpData.grid[0][pos.x].getUTCDate() === internalDate.getUTCDate()
-            ? 1
-            : 0;
           onChangeMonth(1);
+          pos = tmpData.selectionMark
+            ? {
+              y: Math.floor((tmpData.selectionMark + 7) / 7),
+              x: (tmpData.selectionMark + 7) % 7
+            }
+            : {
+              y: (diffSelection + 7) % 7 < tmpData.prevTo ? 1 : 0,
+              x: (diffSelection + 7) % 7,
+            }
           onClick(tmpData.grid[pos.y][pos.x]);
           return;
         }
-        if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+        pos = moveGrid(dataset.selectionMark + 7, currentView);
+        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
           onChangeMonth(1);
         }
         onClick(dataset.grid[pos.y][pos.x]);
@@ -45,38 +48,43 @@
       case 'PageUp':
         shiftKey = true;
       case 'ArrowUp':
-        if (shiftKey) return handleShiftNav(activeDate.getUTCFullYear(), activeDate.getMonth() - 1, -1);
-        pos = moveGrid(dataset.selectionMark - 7, currentView);
-        if (pos.y === 5) {
-          const tmpDate = new Date(activeDate.getUTCFullYear(), activeDate.getMonth() > 0 ? activeDate.getMonth() : 11, 1);
+        if (shiftKey) return handleShiftNav(activeDate.getFullYear(), activeDate.getMonth() - 1, -1);
+        diffSelection = dataset.selectionMark - 7;
+        if (diffSelection <= dataset.prevTo) {
+          // goto prev month
+          const tmpDate = new Date(activeDate.getFullYear() + (activeDate.getMonth() > 0 ? 0 : - 1), activeDate.getMonth() > 0 ? activeDate.getMonth() -1 : 11, 1);
           const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
-          pos.y = tmpData.grid[5][pos.x].getUTCDate() === internalDate.getUTCDate()
-            ? 4
-            : (tmpData.grid[5][pos.x].getUTCMonth() === internalDate.getUTCMonth()
-              ? 3
-              : 5
-            );
           onChangeMonth(-1);
-          onClick(tmpData.grid[pos.y][pos.x]);
+          pos = tmpData.selectionMark
+            ? {
+              x: Math.floor((tmpData.selectionMark -7)  /  7),
+              y: (tmpData.selectionMark - 7) % 7
+            }
+            : {
+              x: 5,
+              y: diffSelection
+            }
+          onClick(tmpData.grid[pos.x][pos.y]);
           return;
         }
-        if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+        pos = moveGrid(dataset.selectionMark - 7, currentView);
+        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
           onChangeMonth(-1);
         }
         onClick(dataset.grid[pos.y][pos.x]);
         break;
       case 'ArrowLeft':
-        if (shiftKey) return handleShiftNav(activeDate.getUTCFullYear() - 1, activeDate.getMonth(), 1);
+        if (shiftKey) return handleShiftNav(activeDate.getFullYear() - 1, activeDate.getMonth(), 1);
         pos = moveGrid(dataset.selectionMark - 1, currentView);
-        if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
           onChangeMonth(-1);
         }
         onClick(dataset.grid[pos.y][pos.x]);
         break;
       case 'ArrowRight':
-        if (shiftKey) return handleShiftNav(activeDate.getUTCFullYear() + 1, activeDate.getMonth(), 1);
+        if (shiftKey) return handleShiftNav(activeDate.getFullYear() + 1, activeDate.getMonth(), 1);
         pos = moveGrid(dataset.selectionMark + 1, currentView);
-        if (dataset.grid[pos.y][pos.x].getUTCMonth() !== activeDate.getUTCMonth()) {
+        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
           onChangeMonth(1);
         }
         onClick(dataset.grid[pos.y][pos.x]);
@@ -85,8 +93,13 @@
   }
 
   function handleShiftNav(year, month, monthChange) {
-    const tzOffset = activeDate.getTimezoneOffset() >= 0 ? 0 : 1;
-    const tmpDate = new Date(year, month, activeDate.getUTCDate() + tzOffset);
+    let tmpDate;
+    let newDateDay = activeDate.getDate();
+    // required when going back from 31 long month to 30, or 28/29 and to ensure month is changed, not day only
+    do {
+      tmpDate = new Date(year, month, newDateDay);
+      newDateDay--;
+    } while (tmpDate.getMonth() === activeDate.getMonth());
     const tmpData = compute(tmpDate, tmpDate, currentView, i18n, weekStart);
     onChangeMonth(monthChange);
     onClick(tmpData.grid[Math.floor(tmpData.selectionMark / 7)][tmpData.selectionMark % 7]);
@@ -97,7 +110,7 @@
 
   $: {
     if (startDate) {
-      startDate.setUTCDate(startDate.getUTCDate() - 1);
+      startDate.setDate(startDate.getDate() - 1);
     }
   }
 
@@ -151,7 +164,7 @@
       ? 12
       : 1
     )
-    activeDate.setUTCMonth(activeDate.getUTCMonth() + (val*multiplier));
+    activeDate.setMonth(activeDate.getMonth() + (val*multiplier));
     activeDate = activeDate;
     onMonthTransitionTrigger = null;
     transform = 222;
@@ -184,14 +197,14 @@
         activeDate = activeDate;
         break;
       case 1:
-        activeDate.setUTCMonth(i18n.monthsShort.indexOf(value));
+        activeDate.setMonth(i18n.monthsShort.indexOf(value));
         activeDate = activeDate;
         break;
       case 2:
-        const newInternalDate = UTCDate(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate());
+        const newInternalDate = UTCDate(value.getFullYear(), value.getMonth(), value.getDate());
         if (internalDate) {
           newInternalDate.setMinutes(internalDate.getMinutes());
-          newInternalDate.setUTCHours(internalDate.getUTCHours());
+          newInternalDate.setHours(internalDate.getHours());
         }
         internalDate = newInternalDate;
         dispatch('date', internalDate);
@@ -215,9 +228,9 @@
       case 0:
         return `${dataset.grid[0][1]} - ${dataset.grid[2][2]}`
       case 1:
-        return activeDate.getUTCFullYear();
+        return activeDate.getFullYear();
       case 2:
-        return i18n.months[activeDate.getUTCMonth()] + ' ' + activeDate.getUTCFullYear();
+        return i18n.months[activeDate.getMonth()] + ' ' + activeDate.getFullYear();
     }
   }
 
@@ -301,7 +314,7 @@
             class="std-btn  sdt-btn-day"
             class:not-current={!isBetween(i*7+j, currDate) }
             disabled={isDisabledDate(currDate)}
-          >{currDate.getUTCDate()}</button>
+          >{currDate.getDate()}</button>
         </td>
         {/each}
       </tr>
