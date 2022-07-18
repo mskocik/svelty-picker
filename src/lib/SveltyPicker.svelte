@@ -47,31 +47,68 @@
    * @type {Date | null}
    */
   export let endDate = null;
+  /**
+   * @type {bool}
+   */
   export let pickerOnly = false;
-  // configurable globally
+  /** ************************************ 👇 configurable globally */
+  /**
+   * @type {string}
+   */
   export let theme = config.theme;
+  /**
+   * @type {string}
+   */
   export let mode = config.mode;
+  /**
+   * @type {string}
+   */
   export let format = config.format;
+  /**
+   * @type {string}
+   */
   export let formatType = config.formatType;
+  /**
+   * @type {number}
+   */
   export let weekStart = config.weekStart;
-  export let visible = config.visible;
+  /**
+   * @type {string}
+   */
   export let inputClasses = config.inputClasses;
+  /**
+   * @type {string}
+   */
   export let todayBtnClasses = config.todayBtnClasses;
+  /**
+   * @type {string}
+   */
   export let clearBtnClasses = config.clearBtnClasses;
+  /**
+   * @type {bool}
+   */
   export let todayBtn = config.todayBtn;
+  /**
+   * @type {bool}
+   */
   export let clearBtn = config.clearBtn;
+  /**
+   * @type {bool}
+   */
   export let clearToggle = config.clearToggle;
+  /**
+   * @type {bool}
+   */
   export let autoclose = config.autoclose;
+  /**
+   * @type {object}
+   */
   export let i18n = config.i18n;
   // actions
   export let positionFn = usePosition;
   export let validatorAction = null;
   export function setDateValue(val) {
     innerDate = parseDate(val, format, i18n, formatType);
-  }
-
-  if (format === "yyyy-mm-dd" && mode === "time") {
-    format = "hh:ii";
   }
 
   const dispatch = createEventDispatcher();
@@ -90,6 +127,7 @@
   $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
   $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null
   let isFocused = pickerOnly;
+  let pickerVisible = pickerOnly;
   let inputEl = null;
   let inputRect = null;
   let inputAction = validatorAction ? validatorAction.shift() : () => {};
@@ -102,9 +140,9 @@
   let currentMode = resolvedMode === "time" ? "time" : "date";
   $: {
     resolvedMode = mode === "auto"
-      ? format.match(/hh?|ii?/i) && format.match(/y|m|d/i)
+      ? format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
         ? "datetime"
-        : format.match(/hh?|ii?/i)
+        : format.match(/g|hh?|ii?/i)
         ? "time"
         : "date"
       : mode;
@@ -113,7 +151,7 @@
     }
   }
 
-  $: internalVisibility = pickerOnly ? true : visible;
+  $: internalVisibility = pickerOnly ? true : false;
   $: {
     if (value !== prevValue) {
       const parsed = value ? parseDate(value, format, i18n, formatType) : null;
@@ -126,13 +164,18 @@
       currentFormat = format;
       if (mode === "auto") {
         resolvedMode =
-          format.match(/hh?|ii?/i) && format.match(/y|m|d/i)
+          format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
             ? "datetime"
-            : format.match(/hh?|ii?/i)
+            : format.match(/g|hh?|ii?/i)
             ? "time"
             : "date";
       }
     }
+  }
+
+  function resetView() {
+    if (!pickerOnly) pickerVisible = false;
+    if (resolvedMode !== 'time') currentMode = "date";
   }
 
   function onDate(e) {
@@ -154,7 +197,7 @@
       !pickerOnly &&
       !preventClose
     ) {
-      onBlur(false);
+      resetView();
     }
     if (
       setter &&
@@ -201,15 +244,15 @@
     onDate({ detail: null });
   }
 
-  function onFocus() {
-    inputRect = inputEl.getBoundingClientRect();
-    isFocused = true;
-  }
-
   function onKeyDown(e) {
     if (!isFocused) {
       ["Backspace", "Delete"].includes(e.key) && onClear();
       if (e.key !== "Enter") return onFocus();
+    }
+    if (!pickerVisible && e.key !== 'Tab') {
+      pickerVisible = true;
+      e.preventDefault();
+      return;
     }
     switch (e.key) {
       case "PageDown":
@@ -231,8 +274,8 @@
         }
         break;
       case "Escape":
-        if (isFocused && !internalVisibility) {
-          isFocused = false;
+        if (isFocused) {
+          pickerVisible = false;
         }
         break;
       case "Backspace":
@@ -245,7 +288,7 @@
           if (!timeEl.minuteSwitch()) {
             return timeEl.minuteSwitch(true);
           }
-          return onBlur(false);
+          return resetView();
         }
         if (isFocused && resolvedMode === "date") isFocused = false;
         if (innerDate && resolvedMode.includes("time")) {
@@ -253,6 +296,10 @@
         }
         break;
       case "Tab":
+        if (pickerVisible) {
+          pickerVisible = false;
+          e.preventDefault();
+        }
       case "F5":
         break;
       default:
@@ -265,38 +312,41 @@
   }
 
   function onTimeClose() {
-    autoclose && !preventClose && !pickerOnly && onBlur(false);
+    autoclose && !preventClose && resetView();
   }
 
-  function onBlur(e) {
-    isFocused = false;
-    if (resolvedMode.includes("date")) currentMode = "date";
-    e && dispatch("blur");
+  function onInputFocus() {
+    inputRect = inputEl.getBoundingClientRect();
+    isFocused = true;
+    pickerVisible = true;
   }
+
+  function onInputBlur() {
+    isFocused = false;
+    pickerVisible = false;
+    dispatch("blur");
+  }
+
+  // TODO: when we have existing input...
 </script>
 
-<input
-  type={pickerOnly ? "hidden" : "text"}
-  {name}
-  bind:this={inputEl}
-  use:inputAction={inputActionParams}
+<input bind:this={inputEl} type={pickerOnly ? "hidden" : "text"}
+  tabindex="0"
+  {name} {disabled} {required} {value} {placeholder}
   autocomplete="off"
-  {disabled}
-  {placeholder}
   class={inputClasses}
-  {required}
   readonly={isFocused}
-  {value}
-  on:focus={onFocus}
-  on:blur={onBlur}
+  use:inputAction={inputActionParams}
+  on:focus={onInputFocus}
+  on:blur={onInputBlur}
   on:click={() => {
-    !isFocused && onFocus();
+    !pickerVisible && onInputFocus();
   }}
   on:input
   on:change
   on:keydown={onKeyDown}
 />
-{#if visible || isFocused}
+{#if pickerVisible && isFocused }
   <div
     class="std-calendar-wrap is-popup {theme}"
     transition:fade|local={{ duration: 200 }}

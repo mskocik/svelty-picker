@@ -51,7 +51,6 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | mode            | `string`     | `auto`        | restrict picker's mode. Possible values: `auto|date|datetime|time`. By default it try to guess the mode from `format` |
 | format          | `string`     | `yyyy-mm-dd`  | Format of entered date/time. See [format settings](#format-settings) for available options |
 | weekStart       | `number`     | `1`           | number in range `0-6` to select first day of the week. Sunday is `0` |
-| visible         | `bool`       | `false`       | Whether place picker inline after focus. By default picker is floating
 | inputClasses    | `string`     | ``            | input css class string |
 | todayBtnClasses | `string`     | `sdt-action-btn sdt-today-btn` | today button css classes |
 | clearBtnClasses | `string`     | `sdt-action-btn sdt-clear-btn` | clear button css classes |
