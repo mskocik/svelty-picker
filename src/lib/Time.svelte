@@ -59,7 +59,7 @@
     ? `transform: rotateZ(${selectedMinutes * 6}deg)`
     : (showMeridian 
       ? `transform: rotateZ(${selectedHour % 12 * 30}deg);`
-      : `transform: rotateZ(${selectedHour % 12 * 30}deg); ${selectedHour > 12 || !selectedHour ? 'height: calc(25% + 1px)' : ''}`
+      : `transform: rotateZ(${selectedHour % 12 * 30}deg); ${selectedHour >= 12 ? 'height: calc(25% + 1px)' : ''}`
     );
   $: multiplier = isMinuteView ? 5 : 1;
 
@@ -82,8 +82,8 @@
     }
     return pos;
   }
-  $: pos = positions(220, 130, isMinuteView ? '00' : '12', isMinuteView, 0);
-  $: innerHours = positions(140, 130, '00', false, 12);
+  $: pos = positions(isMinuteView ? 260 : 220, 130, '00', false, 0);
+  $: innerHours = positions(isMinuteView ? 220 : 140, 130, isMinuteView ? '00' : '12', isMinuteView, 12);
 
   function view(value, asMeridian) {
     if (asMeridian) {
@@ -218,31 +218,27 @@
     {#if showMeridian}
     <div class="sdt-meridian">
       <button class="sdt-time-btn" class:is-active={selectedHour < 12} on:click={onSwitchMeridian} data-value={selectedHour % 12}>AM</button>
-      <button class="sdt-time-btn" class:is-active={selectedHour >= 12} on:click={onSwitchMeridian} data-value={selectedHour % 12 + 12}>PM</button>
+      <button class="sdt-time-btn" class:is-active={isPM} on:click={onSwitchMeridian} data-value={selectedHour % 12 + 12}>PM</button>
     </div>
     {/if}
   </div>
-  <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}
-    class:is-minute-view={isMinuteView}
-  >
+  <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
     <div class="sdt-middle-dot"></div>
     <div class="sdt-hand-pointer" style={handCss}>
       <div class="sdt-hand-circle"></div>
     </div>
     {#each pos as p, i(p.val)}
-      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" transition:fade|local={{duration: 200}}
-        data-value={p.val}
-        class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
-      >{p.val}</button>
-    {/each}
-    {#if !showMeridian && !isMinuteView}
-      {#each innerHours as p, i}
-      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" transition:fade|local={{duration: 200}}
+      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" class:outer-tick={isMinuteView} transition:fade|local={{duration: 200}}
         data-value={p.val}
         class:is-selected={isSelected(selectedHour, p.val, i)}
       >{p.val}</button>
     {/each}
-    {/if}
+      {#each innerHours as p, i}
+      <button style={`left:${p.x}px; top:${p.y}px;`} class="sdt-tick" class:outer-tick={showMeridian && !isMinuteView} transition:fade|local={{duration: 200}}
+      data-value={p.val}
+      class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
+      >{p.val}</button>
+      {/each}
   </div>
 </div>
 
@@ -256,6 +252,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 4px;
   }
   .sdt-time-figure {
     font-size: 1.5rem;
@@ -269,10 +266,7 @@
     background-color: var(--sdt-clock-bg);
     border-radius: 50%;
     transition: background-color 0.3s;
-  }
-  .sdt-clock.is-minute-view {
-    background-color: var(--sdt-clock-bg-minute, var(--sdt-clock-bg));
-    box-shadow: var(--sdt-clock-bg-shadow);
+    overflow: hidden;
   }
   .sdt-time-btn {
     border: 0;
@@ -280,7 +274,7 @@
     text-align: center;
     border-radius: 4px;
     cursor: pointer;
-    padding: 0.375rem;
+    padding: 0 0.375rem;
     color: var(--sdt-color);
   }
   .sdt-svg {
@@ -296,6 +290,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    padding: 0.375rem;
     opacity: 1 !important;
   }
   .sdt-meridian {
@@ -355,6 +350,10 @@
     line-height: 20px;
     cursor: pointer;
     background-color: transparent;
+    transition: all 0.3s;
+  }
+  .sdt-tick.outer-tick {
+    opacity: 0;
   }
   .sdt-tick.is-selected {
     animation: tick-selection 0s 0.175s ease-out forwards;
