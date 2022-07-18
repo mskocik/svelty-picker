@@ -278,9 +278,10 @@
   }
 
   /**
-   * @param {TimeClickEvent} e
+   * @param {TimeClickEvent|MouseEvent} e
    */
   function onSwitchMeridian(e) {
+    // @ts-ignore
     e.meridianSwitch = true;
     onClick(e);
   }

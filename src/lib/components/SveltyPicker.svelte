@@ -1,5 +1,5 @@
 <script context="module">
-  import settings from "./settings";
+  import settings from "$lib/utils/settings";
   // your script goes here
   export const config = settings;
 </script>
@@ -7,10 +7,10 @@
 <script>
   import { createEventDispatcher, tick } from "svelte";
   import { fade } from "svelte/transition";
-  import Calendar from "$lib/Calendar.svelte";
-  import Time from "$lib/Time.svelte";
-  import { formatDate, parseDate } from "$lib/dateUtils";
-  import { usePosition } from "$lib/utils";
+  import Calendar from "$lib/components/Calendar.svelte";
+  import Time from "$lib/components/Time.svelte";
+  import { formatDate, parseDate } from "$lib/utils/dateUtils";
+  import { usePosition } from "$lib/utils/utils";
 
   // html
 
@@ -85,7 +85,7 @@
   $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
   $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
   // @ts-ignore
-  $: isTodayDisabled = parsedStartDate && parsedStartDate > new Date() || parsedEndDate < new Date();
+  $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
   let isFocused = pickerOnly;
   let pickerVisible = pickerOnly;
   /** @type {HTMLElement|null} */

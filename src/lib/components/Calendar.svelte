@@ -1,8 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from './dateUtils.js';
-  import { scale } from './utils.js'
+  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from '$lib/utils/dateUtils.js';
+  import { scale } from '$lib/utils/utils.js'
 
   /** @type {Date|null} */
   export let date = null;
@@ -14,7 +14,6 @@
   /** @type {i18nType} */
   export let i18n;
   export let enableTimeToggle = false;
-  
   /**
    * @param {string} key
    * @param {boolean} shiftKey

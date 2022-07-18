@@ -1,5 +1,3 @@
-import type { MODE_DECADE, MODE_MONTH, MODE_YEAR } from "./dateUtils"
-
 declare global {
     export type i18nType = {
         days: string[],

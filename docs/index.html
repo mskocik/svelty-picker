@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/svelty-picker/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<style>
+			/*!
+			* "Fork me on GitHub" CSS ribbon v0.2.3 | MIT License
+			* https://github.com/simonwhitaker/github-fork-ribbon-css
+			*/.github-fork-ribbon{width:12.1em;height:12.1em;position:absolute;overflow:hidden;top:0;right:0;z-index:9999;pointer-events:none;font-size:13px;text-decoration:none;text-indent:-999999px}.github-fork-ribbon.fixed{position:fixed}.github-fork-ribbon:active,.github-fork-ribbon:hover{background-color:rgba(0,0,0,0)}.github-fork-ribbon:after,.github-fork-ribbon:before{position:absolute;display:block;width:15.38em;height:1.54em;top:3.23em;right:-3.23em;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);-o-transform:rotate(45deg);transform:rotate(45deg)}.github-fork-ribbon:before{content:"";padding:.38em 0;background-color:#a00;background-image:-webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,0)),to(rgba(0,0,0,.15)));background-image:-webkit-linear-gradient(top,rgba(0,0,0,0),rgba(0,0,0,.15));background-image:-moz-linear-gradient(top,rgba(0,0,0,0),rgba(0,0,0,.15));background-image:-ms-linear-gradient(top,rgba(0,0,0,0),rgba(0,0,0,.15));background-image:-o-linear-gradient(top,rgba(0,0,0,0),rgba(0,0,0,.15));background-image:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.15));-webkit-box-shadow:0 .15em .23em 0 rgba(0,0,0,.5);-moz-box-shadow:0 .15em .23em 0 rgba(0,0,0,.5);box-shadow:0 .15em .23em 0 rgba(0,0,0,.5);pointer-events:auto}.github-fork-ribbon:after{content:attr(data-ribbon);color:#fff;font:700 1em "Helvetica Neue",Helvetica,Arial,sans-serif;line-height:1.54em;text-decoration:none;text-shadow:0 -.08em rgba(0,0,0,.5);text-align:center;text-indent:0;padding:.15em 0;margin:.15em 0;border-width:.08em 0;border-style:dotted;border-color:#fff;border-color:rgba(255,255,255,.7)}.github-fork-ribbon.left-bottom,.github-fork-ribbon.left-top{right:auto;left:0}.github-fork-ribbon.left-bottom,.github-fork-ribbon.right-bottom{top:auto;bottom:0}.github-fork-ribbon.left-bottom:after,.github-fork-ribbon.left-bottom:before,.github-fork-ribbon.left-top:after,.github-fork-ribbon.left-top:before{right:auto;left:-3.23em}.github-fork-ribbon.left-bottom:after,.github-fork-ribbon.left-bottom:before,.github-fork-ribbon.right-bottom:after,.github-fork-ribbon.right-bottom:before{top:auto;bottom:3.23em}.github-fork-ribbon.left-top:after,.github-fork-ribbon.left-top:before,.github-fork-ribbon.right-bottom:after,.github-fork-ribbon.right-bottom:before{-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-ms-transform:rotate(-45deg);-o-transform:rotate(-45deg);transform:rotate(-45deg)}
+			/** bootstrap update */
+			.github-fork-ribbon:before {
+				background-color: #333;
+			}
+			.input-group { flex-wrap: nowrap; }
+		</style>
+		<meta http-equiv="content-security-policy" content="">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/index-a9bc93c9.css">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-e016946a.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-1e0e0ebd.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/layout.svelte-91c1ce5c.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/index.svelte-a9a3ded9.js">
+	</head>
+	<body>
+		<a class="github-fork-ribbon right-top fixed" target="_blank" href="https://github.com/mskocik/svelty-picker" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+		<div>
+
+
+<div class="container mt-4"><div class="row"><div class="col-auto"><ul class="nav nav-pills flex-column"><li class="nav-item"><a class="nav-link active" aria-current="page" href="#home">Readme.md</a></li>
+        <li class="nav-item"><a class="nav-link" href="#home">Examples</a></li></ul>
+      
+      <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker?logo=github&logoColor=g"></a></div>
+    <div class="col"><div class="tab-content" id="myTabContent"><div class="tab-pane fade active show" id="index" role="tabpanel" aria-labelledby="home-tab"><h1>📆 Svelty Picker <a href="https://www.npmjs.org/package/svelty-picker" rel="nofollow"><img src="http://img.shields.io/npm/v/svelty-picker.svg?style=flat" alt="NPM version"></a></h1>
+<p>Simple date &amp; time picker implemented in svelte. </p>
+<p>Features: </p>
+<ul><li>datepicker</li>
+<li>timepicker (with meridian support)</li>
+<li>various formatting options</li>
+<li>keyboard navigation</li>
+<li>includes <code>&lt;input&gt;</code> element</li>
+<li>easily themable</li>
+<li>restriction by start and end date</li>
+<li>validator action for <code>&lt;input&gt;</code> using <code>svelte-use-forms</code> (optional)</li>
+<li>custom element</li></ul>
+<p><img src="https://raw.githubusercontent.com/mskocik/svelty-picker/main/docs/screenshot.png" alt="screenshot"></p>
+<h2>⚙️ Install</h2>
+<pre class="language-undefined"><!-- HTML_TAG_START --><code class="language-undefined">npm install svelty-picker</code><!-- HTML_TAG_END --></pre>
+<h2>👀 Example</h2>
+<pre class="language-svelte"><!-- HTML_TAG_START --><code class="language-svelte"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">import</span> SveltyPicker <span class="token keyword">from</span> <span class="token string">'svelty-picker'</span>
+  
+  <span class="token keyword">let</span> myDate <span class="token operator">=</span> <span class="token string">'2021-11-11'</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>SveltyPicker</span> <span class="token attr-name">inputClasses</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>form-control<span class="token punctuation">"</span></span> <span class="token attr-name">format</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>yyyy-mm-dd hh:ii<span class="token punctuation">"</span></span> <span class="token attr-name"><span class="token namespace">bind:</span>value=</span><span class="token language-javascript"><span class="token punctuation">&#123;</span>myDate<span class="token punctuation">&#125;</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>SveltyPicker</span><span class="token punctuation">></span></span></code><!-- HTML_TAG_END --></pre>
+<p>Try yourself in <a href="https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?version=3.44.1" rel="nofollow">REPL</a>.</p>
+<h2>📓 Options</h2>
+<table><thead><tr><th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th></tr></thead>
+<tbody><tr><td>name</td>
+<td><code>string</code></td>
+<td><code>date</code></td>
+<td>html attribute for underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>disabled</td>
+<td><code>bool</code></td>
+<td><code>false</code></td>
+<td>html attribute for underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>placeholder</td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>html attribute for underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>required</td>
+<td><code>bool</code></td>
+<td><code>false</code></td>
+<td>html attribute for underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>value</td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>string representation of selected value</td></tr>
+<tr><td>initialDate</td>
+<td><code>Date</code></td>
+<td><code>null</code></td>
+<td>initial date object, if you prefer that to <code>value</code></td></tr>
+<tr><td>startDate</td>
+<td>`string</td>
+<td>Date`</td>
+<td><code>null</code></td></tr>
+<tr><td>endDate</td>
+<td>`string</td>
+<td>Date`</td>
+<td><code>null</code></td></tr>
+<tr><td>pickerOnly</td>
+<td><code>bool</code></td>
+<td><code>false</code></td>
+<td>Picker is always visible and input field is then hidden, but still present</td></tr>
+<tr><td>theme</td>
+<td><code>string</code></td>
+<td><code>sdt-calendar-colors</code></td>
+<td>css class defining <a href="#css-variables">css variables</a></td></tr>
+<tr><td>mode</td>
+<td><code>string</code></td>
+<td><code>auto</code></td>
+<td>restrict picker’s mode. Possible values: `auto</td></tr>
+<tr><td>format</td>
+<td><code>string</code></td>
+<td><code>yyyy-mm-dd</code></td>
+<td>Format of entered date/time. See <a href="#format-settings">format settings</a> for available options</td></tr>
+<tr><td>weekStart</td>
+<td><code>number</code></td>
+<td><code>1</code></td>
+<td>number in range <code>0-6</code> to select first day of the week. Sunday is <code>0</code></td></tr>
+<tr><td>inputClasses</td>
+<td><code>string</code></td>
+<td>“</td>
+<td>input css class string</td></tr>
+<tr><td>todayBtnClasses</td>
+<td><code>string</code></td>
+<td><code>sdt-action-btn sdt-today-btn</code></td>
+<td>today button css classes</td></tr>
+<tr><td>clearBtnClasses</td>
+<td><code>string</code></td>
+<td><code>sdt-action-btn sdt-clear-btn</code></td>
+<td>clear button css classes</td></tr>
+<tr><td>todayBtn</td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Show today button</td></tr>
+<tr><td>clearBtn</td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Show clear button</td></tr>
+<tr><td>clearToggle</td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Clear current selection by clicking the same date</td></tr>
+<tr><td>autoclose</td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Hides picker after selection is done. If mode includes <em>time picker</em>, it closes automatically only after minute selection</td></tr>
+<tr><td>i18n</td>
+<td><code>object</code></td>
+<td><code>en</code></td>
+<td>localization object, english is by default</td></tr>
+<tr><td>positionFn</td>
+<td><code>function</code></td>
+<td><em><code>internal</code></em></td>
+<td>function used to position picker. Used as action. Acceps following object: <code>{ inputEl, visible}</code>, where <code>visible</code> is <code>visible</code> parameter &amp; <code>inputEl</code> is underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>validatorAction</td>
+<td><code>array</code></td>
+<td><code>null</code></td>
+<td>Bind validator action for inner <code>&lt;input&gt;</code> element. Designed to be used with <code>svelte-use-form</code>.</td></tr></tbody></table>
+<p>Note: Properties starting by <code>theme</code> to <code>i18n</code> are configurable globally by overriding it in globally available <code>config</code></p>
+<pre class="language-js"><!-- HTML_TAG_START --><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">&#123;</span> config <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">'svelty-picker'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// set new locale </span>
+config<span class="token punctuation">.</span>i18n <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// my localization object</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">// default for all pickers in the app</span>
+config<span class="token punctuation">.</span>todayBtn <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span></code><!-- HTML_TAG_END --></pre>
+<h3>Format settings</h3>
+<p>Date format can be defined under <code>formatType</code> property. It has two options: <code>standard</code> and <code>php</code>, where
+<code>standard</code> is the <em>default</em>.</p>
+<h4><code>standard</code> format settings:</h4>
+<ul><li><code>d</code> : day of the month without leading zeros</li>
+<li><code>dd</code> : day of the month, 2 digits with leading zeros</li>
+<li><code>D</code> : short textual representation of a weekday (i18n.daysShort)</li>
+<li><code>DD</code> : long textual representation of a weekday (i18n.days)</li>
+<li><code>S</code> : English ordinal suffix for the day of the month, (i18n.suffix)</li>
+<li><code>m</code> : numeric representation of month without leading zeros</li>
+<li><code>mm</code> : numeric representation of the month, 2 digits with leading zeros</li>
+<li><code>M</code> : short textual representation of a month, three letters (i18n.monthsShort)</li>
+<li><code>MM</code> : full textual representation of a month, such as January or March (i18n.months)</li>
+<li><code>yy</code> : two digit representation of a year</li>
+<li><code>yyyy</code> : full numeric representation of a year, 4 digits</li>
+<li><code>h</code> : hour without leading zeros - 24-hour format</li>
+<li><code>hh</code> : hour, 2 digits with leading zeros - 24-hour format</li>
+<li><code>H</code> : hour without leading zeros - 12-hour format</li>
+<li><code>HH</code> : hour, 2 digits with leading zeros - 12-hour format</li>
+<li><code>i</code> : minutes, 2 digits with leading zeros</li>
+<li><code>ii</code> : alias for <code>i</code></li>
+<li><code>s</code> : seconds, 2 digits with leading zeros</li>
+<li><code>ss</code> : alias for <code>s</code></li>
+<li><code>p</code> : meridian in lower case (‘am’ or ‘pm’) - according to locale file (i18n.meridiem)</li>
+<li><code>P</code> : meridian in upper case (‘AM’ or ‘PM’) - according to locale file (i18n.meridiem)</li>
+<li><code>t</code> : timestamp in milliseconds (although milliseconds are always 0). For timestamp in seconds use <code>php</code> format</li></ul>
+<h4><code>php</code> format settings:</h4>
+<ul><li><code>d</code> :	Day of the month, 2 digits with leading zeros 	01 to 31</li>
+<li><code>D</code> :	A textual representation of a day, three letters 	Mon through Sun</li>
+<li><code>j</code> :	Day of the month without leading zeros 	1 to 31</li>
+<li><code>l</code> :	A full textual representation of the day of the week 	Sunday through Saturday</li>
+<li><code>N</code> :	ISO 8601 numeric representation of the day of the week 	1 (for Monday) through 7 (for Sunday)</li>
+<li><code>S</code> :	English ordinal suffix for the day of the month, 2 characters 	st, nd, rd or th. Works well with j</li>
+<li><code>F</code> :	A full textual representation of a month, such as January or March 	January through December</li>
+<li><code>m</code> :	Numeric representation of a month, with leading zeros 	01 through 12</li>
+<li><code>M</code> :	A short textual representation of a month, three letters 	Jan through Dec</li>
+<li><code>n</code> :	Numeric representation of a month, without leading zeros 	1 through 12</li>
+<li><code>Y</code> :	A full numeric representation of a year, at least 4 digits, with - for years BCE. 	Examples: -0055, 0787, 1999, 2003</li>
+<li><code>y</code> :	A two digit representation of a year 	Examples: 99 or 03</li>
+<li><code>a</code> :	Lowercase Ante meridiem and Post meridiem 	am or pm</li>
+<li><code>A</code> :	Uppercase Ante meridiem and Post meridiem 	AM or PM</li>
+<li><code>g</code> :	12-hour format of an hour without leading zeros 	1 through 12</li>
+<li><code>G</code> :	24-hour format of an hour without leading zeros 	0 through 23</li>
+<li><code>h</code> :	12-hour format of an hour with leading zeros 	01 through 12</li>
+<li><code>H</code> :	24-hour format of an hour with leading zeros 	00 through 23</li>
+<li><code>i</code> :	Minutes with leading zeros 	00 to 59</li>
+<li><code>s</code> :	Seconds with leading zeros 	00 through 59</li>
+<li><code>U</code> : timestamp in seconds. For timestamp with miliseconds use <code>standard</code> format</li></ul>
+<h3>CSS variables</h3>
+<pre class="language-css"><!-- HTML_TAG_START --><code class="language-css"><span class="token comment">/** defaults */</span>
+<span class="token selector">.sdt-calendar-colors</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">--sdt-primary</span><span class="token punctuation">:</span> #286090<span class="token punctuation">;</span>
+  <span class="token property">--sdt-color</span><span class="token punctuation">:</span> #000<span class="token punctuation">;</span>
+  <span class="token property">--sdt-bg-main</span><span class="token punctuation">:</span> #fff<span class="token punctuation">;</span>
+  <span class="token property">--sdt-bg-today</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--sdt-primary<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--sdt-bg-clear</span><span class="token punctuation">:</span> #dc3545<span class="token punctuation">;</span>
+  <span class="token property">--sdt-today-bg</span><span class="token punctuation">:</span> #1e486d<span class="token punctuation">;</span>
+  <span class="token property">--sdt-clear-color</span><span class="token punctuation">:</span> #dc3545<span class="token punctuation">;</span>
+  <span class="token property">--sdt-btn-bg-hover</span><span class="token punctuation">:</span> #eee<span class="token punctuation">;</span>
+  <span class="token property">--sdt-btn-header-bg-hover</span><span class="token punctuation">:</span> #dfdfdf<span class="token punctuation">;</span>
+  <span class="token property">--sdt-clock-bg</span><span class="token punctuation">:</span> #eeeded<span class="token punctuation">;</span>
+  <span class="token property">--sdt-clock-bg-minute</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>238<span class="token punctuation">,</span> 237<span class="token punctuation">,</span> 237<span class="token punctuation">,</span> 0.25<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--sdt-clock-bg-shadow</span><span class="token punctuation">:</span> 0 0 128px 2px #ddd inset<span class="token punctuation">;</span>
+  <span class="token property">--sdt-shadow</span><span class="token punctuation">:</span> #ccc<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code><!-- HTML_TAG_END --></pre>
+<h2>🗯️ Events</h2>
+<p>Component emits <code>input</code>, <code>change</code> and <code>blur</code> events.</p>
+<ul><li><code>input</code> is dispatched on <code>&lt;input&gt;</code> element therefore you can get current value like from every native event:</li>
+<li><code>change</code> event is using Svelte’s <code>eventDispatcher</code>, therefore triggered event contains <code>detail</code> property</li></ul>
+<pre class="language-js"><!-- HTML_TAG_START --><code class="language-js"><span class="token operator">&lt;</span>script<span class="token operator">></span>
+<span class="token keyword">function</span> <span class="token function">onInput</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">)</span> <span class="token comment">// logs currently selected date or empty string</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">function</span> <span class="token function">onChange</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>detail<span class="token punctuation">)</span> <span class="token comment">// logs currently selected date or null</span>
+<span class="token punctuation">&#125;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span>
+
+<span class="token operator">&lt;</span>SveltyPicker on<span class="token operator">:</span>input<span class="token operator">=</span><span class="token punctuation">&#123;</span>onInput<span class="token punctuation">&#125;</span> on<span class="token operator">:</span>change<span class="token operator">=</span><span class="token punctuation">&#123;</span>onChange<span class="token punctuation">&#125;</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>SveltyPicker<span class="token operator">></span></code><!-- HTML_TAG_END --></pre>
+<h2>🌐 Localization</h2>
+<p>Localization file has following structure.</p>
+<pre class="language-js"><!-- HTML_TAG_START --><code class="language-js"><span class="token keyword">export</span> <span class="token keyword">const</span> en <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">days</span><span class="token operator">:</span>        <span class="token punctuation">[</span><span class="token string">'Sunday'</span><span class="token punctuation">,</span> <span class="token string">'Monday'</span><span class="token punctuation">,</span> <span class="token string">'Tuesday'</span><span class="token punctuation">,</span> <span class="token string">'Wednesday'</span><span class="token punctuation">,</span> <span class="token string">'Thursday'</span><span class="token punctuation">,</span> <span class="token string">'Friday'</span><span class="token punctuation">,</span> <span class="token string">'Saturday'</span><span class="token punctuation">,</span> <span class="token string">'Sunday'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">daysShort</span><span class="token operator">:</span>   <span class="token punctuation">[</span><span class="token string">'Sun'</span><span class="token punctuation">,</span> <span class="token string">'Mon'</span><span class="token punctuation">,</span> <span class="token string">'Tue'</span><span class="token punctuation">,</span> <span class="token string">'Wed'</span><span class="token punctuation">,</span> <span class="token string">'Thu'</span><span class="token punctuation">,</span> <span class="token string">'Fri'</span><span class="token punctuation">,</span> <span class="token string">'Sat'</span><span class="token punctuation">,</span> <span class="token string">'Sun'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">daysMin</span><span class="token operator">:</span>     <span class="token punctuation">[</span><span class="token string">'Su'</span><span class="token punctuation">,</span> <span class="token string">'Mo'</span><span class="token punctuation">,</span> <span class="token string">'Tu'</span><span class="token punctuation">,</span> <span class="token string">'We'</span><span class="token punctuation">,</span> <span class="token string">'Th'</span><span class="token punctuation">,</span> <span class="token string">'Fr'</span><span class="token punctuation">,</span> <span class="token string">'Sa'</span><span class="token punctuation">,</span> <span class="token string">'Su'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">months</span><span class="token operator">:</span>      <span class="token punctuation">[</span><span class="token string">'January'</span><span class="token punctuation">,</span> <span class="token string">'February'</span><span class="token punctuation">,</span> <span class="token string">'March'</span><span class="token punctuation">,</span> <span class="token string">'April'</span><span class="token punctuation">,</span> <span class="token string">'May'</span><span class="token punctuation">,</span> <span class="token string">'June'</span><span class="token punctuation">,</span> <span class="token string">'July'</span><span class="token punctuation">,</span> <span class="token string">'August'</span><span class="token punctuation">,</span> <span class="token string">'September'</span><span class="token punctuation">,</span> <span class="token string">'October'</span><span class="token punctuation">,</span> <span class="token string">'November'</span><span class="token punctuation">,</span> <span class="token string">'December'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">monthsShort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'Jan'</span><span class="token punctuation">,</span> <span class="token string">'Feb'</span><span class="token punctuation">,</span> <span class="token string">'Mar'</span><span class="token punctuation">,</span> <span class="token string">'Apr'</span><span class="token punctuation">,</span> <span class="token string">'May'</span><span class="token punctuation">,</span> <span class="token string">'Jun'</span><span class="token punctuation">,</span> <span class="token string">'Jul'</span><span class="token punctuation">,</span> <span class="token string">'Aug'</span><span class="token punctuation">,</span> <span class="token string">'Sep'</span><span class="token punctuation">,</span> <span class="token string">'Oct'</span><span class="token punctuation">,</span> <span class="token string">'Nov'</span><span class="token punctuation">,</span> <span class="token string">'Dec'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">meridiem</span><span class="token operator">:</span>    <span class="token punctuation">[</span><span class="token string">'am'</span><span class="token punctuation">,</span> <span class="token string">'pm'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">suffix</span><span class="token operator">:</span>      <span class="token punctuation">[</span><span class="token string">'st'</span><span class="token punctuation">,</span> <span class="token string">'nd'</span><span class="token punctuation">,</span> <span class="token string">'rd'</span><span class="token punctuation">,</span> <span class="token string">'th'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">todayBtn</span><span class="token operator">:</span>    <span class="token string">'Today'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">clearBtn</span><span class="token operator">:</span>    <span class="token string">'Clear'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">timeView</span><span class="token operator">:</span>    <span class="token string">'Show time view'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">backToDate</span><span class="token operator">:</span>  <span class="token string">'Back to calendar view'</span>
+<span class="token punctuation">&#125;</span></code><!-- HTML_TAG_END --></pre>
+<p>PRs for extending built-in localization are welcome 🥳</p>
+<h2>🏆 Thanks to:</h2>
+<ul><li><a href="https://github.com/smalot/bootstrap-datetimepicker/blob/master/js/bootstrap-datetimepicker.js" rel="nofollow">Bootstrap datepicker</a> for some internal date and format handling</li></ul>
+<h2>Licence:</h2>
+<p>MIT</p></div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"><div class="container"><h1>🥳 Examples</h1>
+  <small><em>Using bootstrap css for showcase</em></small>
+
+  <h5 class="mt-5">📅 Full example!</h5>
+
+  <p>Selected <code>format</code> determines, if time picker will be available based on time part of given format.
+  </p>
+
+  <form><div class="row"><div class="col-sm-6"><div class="form-group"><span class="form-label">Full date-time picker
+        </span>
+        <input type="text" tabindex="0" name="date"   value="2022-07-18 22:08" placeholder="Pick your date and time" autocomplete="off" class="form-control svelte-1pq5qho" >
+</div></div>
+    <div class="col-sm-4">Change format:
+      <select name="" id="" class="form-select"><optgroup label="Date & time"><option value="yyyy-mm-dd hh:ii">yyyy-mm-dd hh:ii</option><option value="mm/dd/yyyy hh:ii">mm/dd/yyyy hh:ii</option><option value="dd.mm.yyyy hh:ii">dd.mm.yyyy hh:ii</option><option value="dd-M-yy hh:ii">dd-M-yy hh:ii</option></optgroup><optgroup label="Date only"><option value="yyyy-mm-dd">yyyy-mm-dd</option><option value="mm/dd/yyyy">mm/dd/yyyy</option><option value="dd.mm.yyyy">dd.mm.yyyy</option><option value="dd-M-yy">dd-M-yy</option><option value="dd MM yyyy">dd MM yyyy</option></optgroup></select></div></div></form>
+
+  <div class="row"><div class="col-sm-6"><h5 class="mt-5">💡 Limit dates with <code>startDate</code> &amp; <code>endDate</code>.
+      </h5>
+      <div class="form-group">Pick your holiday session:
+        <div class="input-group"><input type="text" tabindex="0" name="date"   placeholder="From" autocomplete="off" class="form-control svelte-1pq5qho" >
+
+          <span class="input-group-text">–</span>
+          <input type="text" tabindex="0" name="date"   placeholder="To" autocomplete="off" class="form-control svelte-1pq5qho" >
+</div></div>
+      <p>Selected date of <b>From</b> serves as <code>startDate</code> for <b>To</b> date picker and vice versa, where <b>To</b>
+        serves as <code>endDate</code> for <b>From</b> date picker.
+      </p>
+
+      <p class="alert alert-info">This example uses <code>Svelty-picker</code> as a <code>custom-element</code>.</p></div>
+    <div class="col-sm-6"><h5 class="mt-5">🕒 Timepicker only. Forced by <code>mode</code> set to <code>time</code>.
+      </h5>
+      <div class="form-group">Time picker only:
+        <input type="text" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-1pq5qho" >
+</div></div></div>
+
+  <h5 class="mt-3">🎨 Easily themable - just override CSS variables
+  </h5>
+  <div class="row mb-4"><div class="col d-flex flex-wrap"><div class="me-4">Default theme
+        
+        <input type="hidden" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-1pq5qho" readonly>
+<div class="std-calendar-wrap is-popup sdt-calendar-colors svelte-1pq5qho"><div class="sdt-thead-nav svelte-1xp8yha"><button class="std-btn std-btn-header sdt-toggle-btn svelte-1xp8yha">July 2022</button>
+  <div class="sdt-nav-btns svelte-1xp8yha">
+    <button class="std-btn std-btn-header icon-btn svelte-1xp8yha"><svg class="sdt-svg svelte-1xp8yha" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg></button>
+    <button class="std-btn std-btn-header icon-btn svelte-1xp8yha"><svg class="sdt-svg svelte-1xp8yha" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg></button></div></div>
+<div class="sdt-calendar svelte-1xp8yha">
+  
+  <table class="sdt-table sdt-table-height svelte-1xp8yha"><tbody><tr class="sdt-cal-td svelte-1xp8yha"><th class="sdt-cal-th svelte-1xp8yha">Mo</th><th class="sdt-cal-th svelte-1xp8yha">Tu</th><th class="sdt-cal-th svelte-1xp8yha">We</th><th class="sdt-cal-th svelte-1xp8yha">Th</th><th class="sdt-cal-th svelte-1xp8yha">Fr</th><th class="sdt-cal-th svelte-1xp8yha">Sa</th><th class="sdt-cal-th svelte-1xp8yha">Su</th></tr>
+      <tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >27</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >28</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >29</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >30</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >1</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >2</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >3</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >4</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >5</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >6</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >7</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >8</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >9</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >10</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >11</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >12</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >13</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >14</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >15</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >16</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >17</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha sdt-today"><button class="std-btn sdt-btn-day svelte-1xp8yha" >18</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >19</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >20</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >21</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >22</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >23</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >24</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >25</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >26</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >27</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >28</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >29</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >30</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >31</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >1</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >2</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >3</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >4</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >5</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >6</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >7</button>
+        </td>
+      </tr></tbody></table>
+</div>
+      <div class="std-btn-row svelte-1pq5qho"><button class="sdt-action-btn sdt-today-btn svelte-1pq5qho" >Today</button>
+          <button class="sdt-action-btn sdt-clear-btn svelte-1pq5qho" disabled>Clear</button></div></div></div>
+      <div>Custom theme
+        <input type="hidden" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-1pq5qho" readonly>
+<div class="std-calendar-wrap is-popup my-colors svelte-1pq5qho"><div class="sdt-thead-nav svelte-1xp8yha"><button class="std-btn std-btn-header sdt-toggle-btn svelte-1xp8yha">July 2022</button>
+  <div class="sdt-nav-btns svelte-1xp8yha">
+    <button class="std-btn std-btn-header icon-btn svelte-1xp8yha"><svg class="sdt-svg svelte-1xp8yha" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg></button>
+    <button class="std-btn std-btn-header icon-btn svelte-1xp8yha"><svg class="sdt-svg svelte-1xp8yha" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg></button></div></div>
+<div class="sdt-calendar svelte-1xp8yha">
+  
+  <table class="sdt-table sdt-table-height svelte-1xp8yha"><tbody><tr class="sdt-cal-td svelte-1xp8yha"><th class="sdt-cal-th svelte-1xp8yha">Mo</th><th class="sdt-cal-th svelte-1xp8yha">Tu</th><th class="sdt-cal-th svelte-1xp8yha">We</th><th class="sdt-cal-th svelte-1xp8yha">Th</th><th class="sdt-cal-th svelte-1xp8yha">Fr</th><th class="sdt-cal-th svelte-1xp8yha">Sa</th><th class="sdt-cal-th svelte-1xp8yha">Su</th></tr>
+      <tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >27</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >28</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >29</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >30</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >1</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >2</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >3</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >4</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >5</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >6</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >7</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >8</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >9</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >10</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >11</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >12</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >13</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >14</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >15</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >16</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >17</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha sdt-today"><button class="std-btn sdt-btn-day svelte-1xp8yha" >18</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >19</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >20</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >21</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >22</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >23</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >24</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >25</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >26</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >27</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >28</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >29</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >30</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha" >31</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >1</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >2</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >3</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >4</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >5</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >6</button>
+        </td><td class="sdt-cal-td svelte-1xp8yha"><button class="std-btn sdt-btn-day svelte-1xp8yha not-current" >7</button>
+        </td>
+      </tr></tbody></table>
+</div>
+      <div class="std-btn-row svelte-1pq5qho"><button class="sdt-action-btn sdt-today-btn svelte-1pq5qho" >Today</button>
+          <button class="sdt-action-btn sdt-clear-btn svelte-1pq5qho" disabled>Clear</button></div></div>
+        <label><input type="checkbox"> Remove all theming
+        </label></div></div></div>
+  <div class="row"><div class="col-4">Datepicker as custom element!
+      <el-picker input-classes="form-control"></el-picker></div></div>
+
+  <h5 class="mt-5">💬 Event listening:
+  </h5>
+
+  <div class="row mb-4"><div class="col-sm-6"><div class="form-group"><span class="form-label">Full date-time picker
+        </span>
+        <input type="text" tabindex="0" name="date"   value="2022-07-18" placeholder="Pick your date and time" autocomplete="off" class="form-control svelte-1pq5qho" >
+</div></div>
+    <div class="col-sm-6">Event log:
+      <textarea placeholder="Event log" id="" cols="30" rows="4" class="form-control"></textarea></div></div>
+  <p>Check more details at <a href="https://github.com/mskocik/svelty-picker" target="_blank">GitHub repository</a>.</p>
+</div></div></div></div></div></div>
+
+
+		<script type="module" data-sveltekit-hydrate="2cz6y3">
+		import { start } from "/svelty-picker/_app/immutable/start-e016946a.js";
+		start({
+			target: document.querySelector('[data-sveltekit-hydrate="2cz6y3"]').parentNode,
+			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
+			session: {},
+			route: true,
+			spa: false,
+			trailing_slash: "never",
+			hydrate: {
+				status: 200,
+				error: null,
+				nodes: [0, 2],
+				params: {},
+				routeId: ""
+			}
+		});
+	</script></div>
+	</body>
+</html>
