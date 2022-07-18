@@ -2,9 +2,10 @@
   // @ts-nocheck
   import { onMount } from 'svelte';
   import SveltyPicker from '$lib/components/SveltyPicker.svelte';
-  import { registerElement } from '$lib/index.js';
+  // import { registerElement } from '$lib/index.js';
   // import settings from '$lib/settings';
   // import  from '$lib/custom-element.js';
+  
 
   let nowString = '2022-07-16T00:00:00Z';
   // let now = null;
@@ -22,7 +23,11 @@
   $: customTheme = themeRemoved ? '' : 'my-colors';
 
   onMount(() => {
-    registerElement('el-picker');
+    import('./../lib/index').then(resp => {
+      console.log('🥳 success');
+      resp.registerElement && resp.registerElement('el-picker');
+    }).catch(e => console.log('error', e));
+    // registerElement && registerElement('el-picker');
   });
 
   let log = '';
@@ -129,8 +134,8 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-4">
-      Datepicker as custom element!
+    <div class="col-6">
+      <h3>Datepicker as custom element!</h3>
       <el-picker input-classes="form-control"></el-picker>
     </div>
   </div>
