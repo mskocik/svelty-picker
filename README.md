@@ -76,24 +76,28 @@ config.todayBtn = false;
 ```
 ### Format settings
 
-- `p` : meridian in lower case ('am' or 'pm') - according to locale file
-- `P` : meridian in upper case ('AM' or 'PM') - according to locale file
-- `s` : seconds without leading zeros
-- `ss` : seconds, 2 digits with leading zeros
-- `i` : minutes without leading zeros
-- `ii` : minutes, 2 digits with leading zeros
+- `d` : day of the month without leading zeros
+- `dd` : day of the month, 2 digits with leading zeros
+- `D` : short textual representation of a weekday (i18n.daysShort)
+- `DD` : long textual representation of a weekday (i18n.days)
+- `S` : English ordinal suffix for the day of the month, (i18n.suffix)
+- `m` : numeric representation of month without leading zeros
+- `mm` : numeric representation of the month, 2 digits with leading zeros
+- `M` : short textual representation of a month, three letters (i18n.monthsShort)
+- `MM` : full textual representation of a month, such as January or March (i18n.months)
+- `yy` : two digit representation of a year
+- `yyyy` : full numeric representation of a year, 4 digits
 - `h` : hour without leading zeros - 24-hour format
 - `hh` : hour, 2 digits with leading zeros - 24-hour format
 - `H` : hour without leading zeros - 12-hour format
 - `HH` : hour, 2 digits with leading zeros - 12-hour format
-- `d` : day of the month without leading zeros
-- `dd` : day of the month, 2 digits with leading zeros
-- `m` : numeric representation of month without leading zeros
-- `mm` : numeric representation of the month, 2 digits with leading zeros
-- `M` : short textual representation of a month, three letters
-- `MM` : full textual representation of a month, such as January or March
-- `yy` : two digit representation of a year
-- `yyyy` : full numeric representation of a year, 4 digits
+- `i` : minutes, 2 digits with leading zeros
+- `ii` : alias for `i`
+- `s` : seconds, 2 digits with leading zeros
+- `ss` : alias for `s`
+- `p` : meridian in lower case ('am' or 'pm') - according to locale file (i18n.meridiem)
+- `P` : meridian in upper case ('AM' or 'PM') - according to locale file (i18n.meridiem)
+- `t` : timestamp (miliseconds are always 0)
 
 ### CSS variables
 

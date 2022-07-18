@@ -180,65 +180,46 @@ export function parseDate(date, format, i18n, type) {
   } else {
     format = formatHelper.parseFormat(format, type);
   }
-  var parts = date && date.toString().match(formatHelper.nonpunctuation) || [],
-    date = new Date(0, 0, 0, 0, 0, 0, 0),
-    parsed = {},
-    setters_order = ['hh', 'h', 'ii', 'i', 'ss', 's', 'yyyy', 'yy', 'Y', 'M', 'MM', 'm', 'mm', 'D', 'DD', 'd', 'dd', 'H', 'HH', 'p', 'P'],
-    setters_map = {
-      hh:   function (d, v) {
-        return d.setHours(v);
-      },
-      h:    function (d, v) {
-        return d.setHours(v);
-      },
-      HH:   function (d, v) {
-        return d.setHours(v === 12 ? 0 : v);
-      },
-      H:    function (d, v) {
-        return d.setHours(v === 12 ? 0 : v);
-      },
-      ii:   function (d, v) {
-        return d.setMinutes(v);
-      },
-      i:    function (d, v) {
-        return d.setMinutes(v);
-      },
-      ss:   function (d, v) {
-        return d.setSeconds(v);
-      },
-      s:    function (d, v) {
-        return d.setSeconds(v);
-      },
-      yyyy: function (d, v) {
-        return d.setFullYear(v);
-      },
-      yy:   function (d, v) {
-        return d.setFullYear(2000 + v);
-      },
-      m:    function (d, v) {
-        v -= 1;
-        while (v < 0) v += 12;
-        v %= 12;
-        d.setMonth(v);
-        while (d.getMonth() !== v)
-          if (isNaN(d.getMonth()))
-            return d;
-          else
-            d.setDate(d.getDate() - 1);
-        return d;
-      },
-      d:    function (d, v) {
-        return d.setDate(v);
-      },
-      p:    function (d, v) {
-        return d.setHours(v === 1 ? d.getHours() + 12 : d.getHours());
-      }
+  const parts = date && date.toString().match(formatHelper.nonpunctuation) || [];
+  date = new Date();  // reset date
+  date.setHours(0,0,0,0);
+  const parsed = {};
+  const setters_order = ['hh', 'h', 'HH', 'H', 'ii', 'i', 'ss', 's','d', 'dd', 'D','DD', 'S', 'm', 'mm', 'M', 'MM', 'yyyy', 'yy', 'p', 'P', 't'];
+  const setters_map = {
+    hh: (d, v) => d.setHours(v),
+    h: (d, v) => d.setHours(v),
+    HH: (d, v) =>  d.setHours(v === 12 ? 0 : v),
+    H: (d, v) => d.setHours(v === 12 ? 0 : v),
+    i: (d, v) => d.setMinutes(v),
+    s: (d, v) => d.setSeconds(v),
+    yyyy: (d, v) => d.setFullYear(v),
+    yy: (d, v) => d.setFullYear((v < 50 ? 2000 : 1900)  + v),
+    m: (d, v) => {
+      v -= 1;
+      while (v < 0) v += 12;
+      v %= 12;
+      d.setMonth(v);
+      while (d.getMonth() !== v)
+        if (isNaN(d.getMonth()))
+          return d;
+        else
+          d.setDate(d.getDate() - 1);
+      return d;
     },
-    val, part;
-  setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
-  setters_map['dd'] = setters_map['d'];
-  setters_map['P'] = setters_map['p'];
-  // date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getUTCHours(), date.getUTCMinutes(), date.getSeconds());
+    d: (d, v) => d.setDate(v),
+    p: (d, v) => d.setHours(v === 1 ? d.getHours() + 12 : d.getHours()),
+    t: (d, v) => d.setTime(v)
+  };
+  setters_map.mm = setters_map.M = setters_map.MM = setters_map.m;
+  setters_map.ii = setters_map.i;
+  setters_map.ss = setters_map.s;
+  setters_map.dd = setters_map.D = setters_map.DD = setters_map.d;
+  setters_map.P = setters_map.p;
+  let val, part;
+  if (parts.length !== format.parts.length && format.parts.includes('S')) { // specific suffix parsing
+    const splitSuffix = parts[format.parts.indexOf('S') - 1].match(/(\d+)([a-zA-Z]+)/).slice(1,3);
+    parts.splice(format.parts.indexOf('S') - 1, 1, ...splitSuffix);
+  }
   if (parts.length === format.parts.length) {
     for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
       val = parseInt(parts[i], 10);
@@ -262,7 +243,7 @@ export function parseDate(date, format, i18n, type) {
     for (var i = 0, s; i < setters_order.length; i++) {
       s = setters_order[i];
       if (s in parsed && !isNaN(parsed[s]))
-        setters_map[s](date, parsed[s])
+        setters_map[`${s}`] && setters_map[`${s}`](date, parsed[s])
     }
   }
   return date;
@@ -274,6 +255,7 @@ export function formatDate(date, format, i18n, type) {
   }
   var val;
   if (type === 'standard') {
+    const dateVal = date.getDate();
     val = {
       t:    date.getTime(),
       // year
@@ -284,18 +266,17 @@ export function formatDate(date, format, i18n, type) {
       M:    i18n.monthsShort[date.getMonth()],
       MM:   i18n.months[date.getMonth()],
       // day
-      d:    date.getDate(),
+      d:    dateVal,
       D:    i18n.daysShort[date.getDay()],
       DD:   i18n.days[date.getDay()],
+      S:    (dateVal % 10 && dateVal % 10 <= i18n.suffix.length ? i18n.suffix[dateVal % 10 - 1] : i18n.suffix[i18n.suffix.length -1 ]),
       p:    (i18n.meridiem.length === 2 ? i18n.meridiem[date.getHours() < 12 ? 0 : 1] : ''),
       // hour
       h:    date.getHours(),
       // minute
       i:    date.getMinutes(),
       // second
-      s:    date.getUTCSeconds(),
-      // timezone
-      z:    date.toLocaleDateString(undefined, {day:'2-digit',timeZoneName: 'long' }).substring(4)
+      s:    date.getUTCSeconds()
     };
 
     if (i18n.meridiem.length === 2) {
@@ -311,40 +292,40 @@ export function formatDate(date, format, i18n, type) {
     val.ss = (val.s < 10 ? '0' : '') + val.s;
     val.dd = (val.d < 10 ? '0' : '') + val.d;
     val.mm = (val.m < 10 ? '0' : '') + val.m;
-  } else if (type === 'php') {
-    // php format
-    val = {
-      // year
-      y: date.getFullYear().toString().substring(2),
-      Y: date.getFullYear(),
-      // month
-      F: i18n.months[date.getMonth()],
-      M: i18n.monthsShort[date.getMonth()],
-      n: date.getMonth() + 1,
-      t: utils.getDaysInMonth(date.getFullYear(), date.getMonth()),
-      // day
-      j: date.getDate(),
-      l: i18n.days[date.getDay()],
-      D: i18n.daysShort[date.getDay()],
-      w: date.getDay(), // 0 -> 6
-      N: (date.getDay() === 0 ? 7 : date.getDay()),       // 1 -> 7
-      S: (date.getDate() % 10 <= i18n.suffix.length ? i18n.suffix[date.getDate() % 10 - 1] : ''),
-      // hour
-      a: (i18n.meridiem.length === 2 ? i18n.meridiem[date.getHours() < 12 ? 0 : 1] : ''),
-      g: (date.getHours() % 12 === 0 ? 12 : date.getHours() % 12),
-      G: date.getHours(),
-      // minute
-      i: date.getMinutes(),
-      // second
-      s: date.getSeconds()
-    };
-    val.m = (val.n < 10 ? '0' : '') + val.n;
-    val.d = (val.j < 10 ? '0' : '') + val.j;
-    val.A = val.a.toString().toUpperCase();
-    val.h = (val.g < 10 ? '0' : '') + val.g;
-    val.H = (val.G < 10 ? '0' : '') + val.G;
-    val.i = (val.i < 10 ? '0' : '') + val.i;
-    val.s = (val.s < 10 ? '0' : '') + val.s;
+  // } else if (type === 'php') {
+  //   // php format
+  //   val = {
+  //     // year
+  //     y: date.getFullYear().toString().substring(2),
+  //     Y: date.getFullYear(),
+  //     // month
+  //     F: i18n.months[date.getMonth()],
+  //     M: i18n.monthsShort[date.getMonth()],
+  //     n: date.getMonth() + 1,
+  //     t: utils.getDaysInMonth(date.getFullYear(), date.getMonth()),
+  //     // day
+  //     j: date.getDate(),
+  //     l: i18n.days[date.getDay()],
+  //     D: i18n.daysShort[date.getDay()],
+  //     w: date.getDay(), // 0 -> 6
+  //     N: (date.getDay() === 0 ? 7 : date.getDay()),       // 1 -> 7
+  //     S: (date.getDate() % 10 <= i18n.suffix.length ? i18n.suffix[date.getDate() % 10 - 1] : ''),
+  //     // hour
+  //     a: (i18n.meridiem.length === 2 ? i18n.meridiem[date.getHours() < 12 ? 0 : 1] : ''),
+  //     g: (date.getHours() % 12 === 0 ? 12 : date.getHours() % 12),
+  //     G: date.getHours(),
+  //     // minute
+  //     i: date.getMinutes(),
+  //     // second
+  //     s: date.getSeconds()
+  //   };
+  //   val.m = (val.n < 10 ? '0' : '') + val.n;
+  //   val.d = (val.j < 10 ? '0' : '') + val.j;
+  //   val.A = val.a.toString().toUpperCase();
+  //   val.h = (val.g < 10 ? '0' : '') + val.g;
+  //   val.H = (val.G < 10 ? '0' : '') + val.G;
+  //   val.i = (val.i < 10 ? '0' : '') + val.i;
+  //   val.s = (val.s < 10 ? '0' : '') + val.s;
   } else {
     throw new Error('Invalid format type.');
   }
@@ -365,7 +346,7 @@ export function formatDate(date, format, i18n, type) {
 const formatHelper = {
   validParts: function(/** @type {string} */ type) {
     if (type === 'standard') {
-      return /t|hh?|HH?|p|P|z|ii?|ss?|dd?|DD?|mm?|MM?|yy(?:yy)?/g;
+      return /t|hh?|HH?|p|P|z|ii?|ss?|dd?|DD?|S|mm?|MM?|yy(?:yy)?/g;
     } else if (type === 'php') {
       return /[dDjlNwzFmMnStyYaABgGhHis]/g;
     } else {
