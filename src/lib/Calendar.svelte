@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, UTCDate } from './dateUtils.js';
+  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from './dateUtils.js';
   import { scale } from './utils.js'
 
   export let date = null;
@@ -101,18 +101,18 @@
       newDateDay--;
     } while (tmpDate.getMonth() === activeDate.getMonth());
     const tmpData = compute(tmpDate, tmpDate, currentView, i18n, weekStart);
+    const pickedDate = tmpData.grid[Math.floor(tmpData.selectionMark / 7)][tmpData.selectionMark % 7];
+    if ((endDate && isGreater(pickedDate, endDate)) || (startDate && isLower(pickedDate, startDate, false))) return;
     onChangeMonth(monthChange);
-    onClick(tmpData.grid[Math.floor(tmpData.selectionMark / 7)][tmpData.selectionMark % 7]);
+    onClick(pickedDate);
   }
 
   let internalDate = date;
   let activeDate = date ? new Date(date.valueOf()) : new Date();
 
-  $: {
-    if (startDate) {
-      startDate.setDate(startDate.getDate() - 1);
-    }
-  }
+  $: computedStartDate = startDate
+    ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0,0,0,0)
+    : null;
 
   const dispatch = createEventDispatcher();
 
@@ -151,7 +151,7 @@
   }
 
   function isDisabledDate(date) {
-    if (startDate && startDate > date) return true;
+    if (startDate && computedStartDate > date) return true;
     if (endDate && endDate <= date) return true;
     return false;
   }
@@ -201,7 +201,9 @@
         activeDate = activeDate;
         break;
       case 2:
-        const newInternalDate = UTCDate(value.getFullYear(), value.getMonth(), value.getDate());
+        if (startDate && !isGreater(value, startDate)) return;
+        if (endDate && !isLower(value, endDate)) return;
+        const newInternalDate = new Date(value.getFullYear(), value.getMonth(), value.getDate());
         if (internalDate) {
           newInternalDate.setMinutes(internalDate.getMinutes());
           newInternalDate.setHours(internalDate.getHours());
@@ -266,6 +268,7 @@
             class="std-btn"
             class:not-current={!isBetween(i*4+j)}
             on:click|preventDefault={() => { onClick(year)}}
+            disabled={isDisabledDate(new Date(year, activeDate.getMonth(), activeDate.getDate()))}
           >{year}</button>
         </td>
         {/each}
@@ -287,6 +290,7 @@
           <button class="std-btn"
             class:not-current={!isBetween(i*4+j)}
             on:click|preventDefault={() => { onClick(month)}}
+            disabled={isDisabledDate(new Date(activeDate.getFullYear(), i18n.monthsShort.indexOf(month), activeDate.getDate()))}
           >{month}</button>
         </td>
         {/each}

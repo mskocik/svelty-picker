@@ -72,7 +72,7 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
       dM = d.getDate(),
       h = d.getHours(),
       today = new Date();
-  let prevMonth = UTCDate(y, m-1, 28, 0, 0, 0, 0),
+  let prevMonth = new Date(y, m-1, 28, 0, 0, 0, 0),
       day = utils.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
   prevMonth.setDate(day);
   prevMonth.setDate(day - (prevMonth.getDay() - weekStart + 7) % 7);
@@ -142,17 +142,24 @@ export function moveGrid(newPos, view) {
 }
 
 const utils = {
-  isLeapYear:       function (year) {
+  isLeapYear: function (year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0))
   },
-  getDaysInMonth:   function (year, month) {
+  getDaysInMonth: function (year, month) {
     return [31, (utils.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
   },
 }
+export function isLower(a, b) {
+  if (!(a instanceof Date)) return false;
+  return a.getFullYear() < b.getFullYear()
+    || (a.getMonth() < b.getMonth() || a.getDate() <= b.getDate());
+}
 
-export function UTCDate() {
-  // return new Date(Date.UTC.apply(Date, arguments));
-  return new Date(...arguments);
+export function isGreater(a, b) {
+  if (!(a instanceof Date)) return false;
+  return a.getFullYear() > b.getFullYear()
+    || (a.getMonth() > b.getMonth() || a.getDate() >= b.getDate());
+  
 }
 
 /**
@@ -165,9 +172,10 @@ export function UTCDate() {
  */
 export function parseDate(date, format, i18n, type) {
   if (date instanceof Date) {
-    const dateUTC = new Date(date.valueOf() + date.getTimezoneOffset() * 60000);
-    dateUTC.setMilliseconds(0);
-    return dateUTC;
+    return date;
+    // const dateUTC = new Date(date.valueOf() + date.getTimezoneOffset() * 60000);
+    // dateUTC.setMilliseconds(0);
+    // return dateUTC;
   }
   const commonFormats = type === 'php'
     ? { date: 'Y-m-d', datetime: 'Y-m-d H:i', datetime_s: 'Y-m-d H:i:s' }

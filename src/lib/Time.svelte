@@ -1,9 +1,10 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, tick } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { UTCDate } from './dateUtils';
 
   export let date = null;
+  export let startDate = null;
+  export let endDate = null;
   export let showMeridian = false;
   export let hasDateComponent = false;
   export let i18n;
@@ -38,12 +39,37 @@
   let isMinuteView = false;
   let handleMoveMove = false;
   let enableViewToggle = false;
-  let innerDate = date || UTCDate(0,0,0,0,0,0);
+  let innerDate = date || new Date();
   if (!date) {
     date = innerDate;
   }
   let canSelect = true;
   const dispatch = createEventDispatcher();
+
+  $: {
+    let forceTimeUpdate = false;
+    if (startDate && startDate.toDateString() === innerDate.toDateString()) {
+      if (isDisabled(innerDate.getHours())) {
+        innerDate.setHours(startDate.getHours());
+        forceTimeUpdate = true;
+      }
+      if (isDisabled(innerDate.getMinutes(), true)) {
+        innerDate.setMinutes(startDate.getMinutes());
+        forceTimeUpdate = true;
+      }
+    }
+    if (endDate && endDate.toDateString() === innerDate.toDateString()) {
+      if (isDisabled(innerDate.getHours())) {
+        innerDate.setHours(endDate.getHours());
+        forceTimeUpdate = true;
+      } 
+      if (isDisabled(innerDate.getMinutes(), true)) {
+        innerDate.setMinutes(endDate.getMinutes());
+        forceTimeUpdate = true;
+      }
+    }
+    forceTimeUpdate && tick().then(() => dispatch('time', innerDate));
+  }
 
   $: {
     if (date !== innerDate) {
@@ -62,6 +88,7 @@
       : `transform: rotateZ(${selectedHour % 12 * 30}deg); ${selectedHour >= 12 ? 'height: calc(25% + 1px)' : ''}`
     );
   $: multiplier = isMinuteView ? 5 : 1;
+  $: sameDateRestriction = startDate && endDate && ['getFullYear', 'getMonth', 'getDate'].every(p => endDate[p]() === startDate[p]())
 
 
   function positions(size, offset, valueForZero, minuteView, hourAdded) {
@@ -113,6 +140,37 @@
           : val === selected;
       }
     }
+  }
+
+  function isDisabled(val, isManualMinuteCheck) {
+    if (sameDateRestriction) {
+      if (isMinuteView || isManualMinuteCheck) {
+        return (startDate.getHours() === innerDate.getHours() && startDate.getMinutes() > parseInt(val))
+          || (endDate.getHours() === innerDate.getHours() && endDate.getMinutes() < parseInt(val));
+      }
+      return startDate.getHours() > parseInt(val) || endDate.getHours() < parseInt(val);
+    }
+    if (startDate
+      && startDate.getDate()     === innerDate.getDate()
+      && startDate.getMonth()    === innerDate.getMonth()
+      && startDate.getFullYear() === innerDate.getFullYear()
+    ) {
+      if (isMinuteView || isManualMinuteCheck) {
+        return startDate.getHours() === innerDate.getHours() && startDate.getMinutes() > parseInt(val);
+      }
+      return startDate.getHours() > parseInt(val);
+    } 
+    if (endDate
+      && endDate.getDate()     === innerDate.getDate()
+      && endDate.getMonth()    === innerDate.getMonth()
+      && endDate.getFullYear() === innerDate.getFullYear()
+    ) {
+      if (isMinuteView || isManualMinuteCheck) {
+        return endDate.getHours() === innerDate.getHours() && endDate.getMinutes() < parseInt(val);
+      }
+      return endDate.getHours() < parseInt(val);
+    }
+    return false;
   }
 
   function onClick(e) {
@@ -200,6 +258,7 @@
 </script>
 
 <div class="sdt-timer" in:fade={{duration: 200}}>
+  <!-- navbar -->
   <div class="sdt-time-head">
     {#if hasDateComponent}
     <button class="sdt-time-btn sdt-back-btn" title={i18n.backToDate} on:click={onModeSwitch}>
@@ -222,6 +281,7 @@
     </div>
     {/if}
   </div>
+  <!-- clock -->  
   <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
     <div class="sdt-middle-dot"></div>
     <div class="sdt-hand-pointer" style={handCss}>
@@ -230,12 +290,14 @@
     {#each pos as p, i(p.val)}
       <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" class:outer-tick={isMinuteView} transition:fade|local={{duration: 200}}
         data-value={p.val}
+        disabled={(startDate || endDate) && isDisabled(p.val)}
         class:is-selected={isSelected(selectedHour, p.val, i)}
       >{p.val}</button>
     {/each}
       {#each innerHours as p, i}
       <button style={`left:${p.x}px; top:${p.y}px;`} class="sdt-tick" class:outer-tick={showMeridian && !isMinuteView} transition:fade|local={{duration: 200}}
       data-value={p.val}
+      disabled={(startDate || endDate) && isDisabled(p.val)}
       class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
       >{p.val}</button>
       {/each}
@@ -351,6 +413,9 @@
     cursor: pointer;
     background-color: transparent;
     transition: all 0.3s;
+  }
+  .sdt-tick[disabled] {
+    cursor: not-allowed;
   }
   .sdt-tick.outer-tick {
     opacity: 0;

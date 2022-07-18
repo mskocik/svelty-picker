@@ -9,7 +9,7 @@
   import { fade } from "svelte/transition";
   import Calendar from "$lib/Calendar.svelte";
   import Time from "$lib/Time.svelte";
-  import { formatDate, parseDate, UTCDate } from "$lib/dateUtils";
+  import { formatDate, parseDate } from "$lib/dateUtils";
   import { usePosition } from "$lib/utils";
 
   // html
@@ -42,7 +42,7 @@
   /**
    * @type {Date | null}
    */
-  let startDate = null;
+  export let startDate = null;
   /**
    * @type {Date | null}
    */
@@ -87,6 +87,8 @@
   if (innerDate && initialDate) {
     value = formatDate(innerDate, format, i18n, formatType);
   }
+  $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
+  $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null
   let isFocused = pickerOnly;
   let inputEl = null;
   let inputRect = null;
@@ -177,14 +179,14 @@
 
   function onToday() {
     const today = new Date();
-    if (startDate && parseDate(startDate, format, i18n, formatType) < today)
-      return;
+    if (parsedStartDate > today) return;
+
     const todayHours = innerDate ? innerDate.getHours() : today.getHours();
     const todayMinutes = innerDate
       ? innerDate.getMinutes()
       : today.getMinutes();
     onDate({
-      detail: UTCDate(
+      detail: new Date(
         today.getFullYear(),
         today.getMonth(),
         today.getDate(),
@@ -304,10 +306,8 @@
     {#if currentMode === "date"}
       <Calendar
         date={innerDate}
-        startDate={startDate
-          ? parseDate(startDate, format, i18n, formatType)
-          : null}
-        endDate={endDate ? parseDate(endDate, format, i18n, formatType) : null}
+        startDate={parsedStartDate}
+        endDate={parsedEndDate}
         enableTimeToggle={resolvedMode?.includes("time")}
         bind:this={calendarEl}
         {i18n}
@@ -321,8 +321,7 @@
             <button
               on:click={onToday}
               class={todayBtnClasses}
-              disabled={startDate >
-                formatDate(new Date(), format, i18n, formatType)}
+              disabled={parsedStartDate > new Date() || parsedEndDate < new Date()}
               >{i18n.todayBtn}</button
             >
           {/if}
@@ -338,6 +337,8 @@
     {:else}
       <Time
         date={innerDate}
+        startDate={parsedStartDate}
+        endDate={parsedEndDate}
         hasDateComponent={resolvedMode !== "time"}
         bind:this={timeEl}
         showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P')}
@@ -396,7 +397,8 @@
     border: 1px solid var(--sdt-today-bg);
   }
   .sdt-today-btn[disabled] {
-    opacity: 0.75;
+    opacity: 0.5;
+    cursor: not-allowed;
   }
   .sdt-today-btn:focus,
   .sdt-today-btn:active,
