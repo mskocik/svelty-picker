@@ -340,7 +340,7 @@
         date={innerDate}
         hasDateComponent={resolvedMode !== "time"}
         bind:this={timeEl}
-        showMeridian={format.match("p|P")}
+        showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P')}
         {i18n}
         on:time={onDate}
         on:switch={onModeSwitch}

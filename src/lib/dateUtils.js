@@ -169,14 +169,17 @@ export function parseDate(date, format, i18n, type) {
     dateUTC.setMilliseconds(0);
     return dateUTC;
   }
+  const commonFormats = type === 'php'
+    ? { date: 'Y-m-d', datetime: 'Y-m-d H:i', datetime_s: 'Y-m-d H:i:s' }
+    : { date: 'yyyy-mm-dd', datetime: 'yyyy-mm-dd hh:ii', datetime_s: 'yyyy-mm-dd hh:ii:ss' };
   if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(date)) {
-    format = formatHelper.parseFormat('yyyy-mm-dd', type);
+    format = formatHelper.parseFormat(commonFormats.date, type);
   } else 
   if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}$/.test(date)) {
-    format = formatHelper.parseFormat('yyyy-mm-dd hh:ii', type);
+    format = formatHelper.parseFormat(commonFormats.datetime, type);
   } else 
   if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}\:\d{1,2}[Z]{0,1}$/.test(date)) {
-    format = formatHelper.parseFormat('yyyy-mm-dd hh:ii:ss', type);
+    format = formatHelper.parseFormat(commonFormats.datetime_s, type);
   } else {
     format = formatHelper.parseFormat(format, type);
   }
@@ -184,39 +187,9 @@ export function parseDate(date, format, i18n, type) {
   date = new Date();  // reset date
   date.setHours(0,0,0,0);
   const parsed = {};
-  const setters_order = ['hh', 'h', 'HH', 'H', 'ii', 'i', 'ss', 's','d', 'dd', 'D','DD', 'S', 'm', 'mm', 'M', 'MM', 'yyyy', 'yy', 'p', 'P', 't'];
-  const setters_map = {
-    hh: (d, v) => d.setHours(v),
-    h: (d, v) => d.setHours(v),
-    HH: (d, v) =>  d.setHours(v === 12 ? 0 : v),
-    H: (d, v) => d.setHours(v === 12 ? 0 : v),
-    i: (d, v) => d.setMinutes(v),
-    s: (d, v) => d.setSeconds(v),
-    yyyy: (d, v) => d.setFullYear(v),
-    yy: (d, v) => d.setFullYear((v < 50 ? 2000 : 1900)  + v),
-    m: (d, v) => {
-      v -= 1;
-      while (v < 0) v += 12;
-      v %= 12;
-      d.setMonth(v);
-      while (d.getMonth() !== v)
-        if (isNaN(d.getMonth()))
-          return d;
-        else
-          d.setDate(d.getDate() - 1);
-      return d;
-    },
-    d: (d, v) => d.setDate(v),
-    p: (d, v) => d.setHours(v === 1 ? d.getHours() + 12 : d.getHours()),
-    t: (d, v) => d.setTime(v)
-  };
-  setters_map.mm = setters_map.M = setters_map.MM = setters_map.m;
-  setters_map.ii = setters_map.i;
-  setters_map.ss = setters_map.s;
-  setters_map.dd = setters_map.D = setters_map.DD = setters_map.d;
-  setters_map.P = setters_map.p;
+  const { setters_order, setters_map } = formatHelper.setters(type);
   let val, part;
-  if (parts.length !== format.parts.length && format.parts.includes('S')) { // specific suffix parsing
+  if (parts.length !== format.parts.length && format.parts.includes('S')) { // specific suffix parsing from string like '14th'
     const splitSuffix = parts[format.parts.indexOf('S') - 1].match(/(\d+)([a-zA-Z]+)/).slice(1,3);
     parts.splice(format.parts.indexOf('S') - 1, 1, ...splitSuffix);
   }
@@ -225,17 +198,39 @@ export function parseDate(date, format, i18n, type) {
       val = parseInt(parts[i], 10);
       part = format.parts[i];
       if (isNaN(val)) {
-        switch (part) {
-          case 'MM':
-            val = i18n.months.indexOf(parts[i]) + 1;
+        if (type === 'standard') {
+          switch (part) {
+            case 'MM':
+              val = i18n.months.indexOf(parts[i]) + 1;
+              break;
+            case 'M':
+              val= i18n.monthsShort.indexOf(parts[i]) + 1;
+              break;
+            case 'p':
+            case 'P':
+              val = i18n.meridiem.indexOf(parts[i].toLowerCase());
             break;
-          case 'M':
-            val= i18n.monthsShort.indexOf(parts[i]) + 1;
+          }
+        } else {
+          // php
+          switch (part) {
+            case 'D':
+              val = i18n.daysShort.indexOf(parts[i]) + 1;
+              break;
+            case 'l':
+              val = i18n.days.indexOf(parts[i]) + 1;
+              break;
+            case 'F':
+              val = i18n.months.indexOf(parts[i]) + 1;
+              break;
+            case 'M':
+              val= i18n.monthsShort.indexOf(parts[i]) + 1;
+              break;
+            case 'a':
+            case 'A':
+              val = i18n.meridiem.indexOf(parts[i].toLowerCase());
             break;
-          case 'p':
-          case 'P':
-            val = i18n.meridiem.indexOf(parts[i].toLowerCase());
-            break;
+          }
         }
       }
       parsed[part] = val;
@@ -253,9 +248,9 @@ export function formatDate(date, format, i18n, type) {
   if (date === null) {
     return '';
   }
-  var val;
+  const dateVal = date.getDate();
+  let val;
   if (type === 'standard') {
-    const dateVal = date.getDate();
     val = {
       t:    date.getTime(),
       // year
@@ -292,40 +287,41 @@ export function formatDate(date, format, i18n, type) {
     val.ss = (val.s < 10 ? '0' : '') + val.s;
     val.dd = (val.d < 10 ? '0' : '') + val.d;
     val.mm = (val.m < 10 ? '0' : '') + val.m;
-  // } else if (type === 'php') {
-  //   // php format
-  //   val = {
-  //     // year
-  //     y: date.getFullYear().toString().substring(2),
-  //     Y: date.getFullYear(),
-  //     // month
-  //     F: i18n.months[date.getMonth()],
-  //     M: i18n.monthsShort[date.getMonth()],
-  //     n: date.getMonth() + 1,
-  //     t: utils.getDaysInMonth(date.getFullYear(), date.getMonth()),
-  //     // day
-  //     j: date.getDate(),
-  //     l: i18n.days[date.getDay()],
-  //     D: i18n.daysShort[date.getDay()],
-  //     w: date.getDay(), // 0 -> 6
-  //     N: (date.getDay() === 0 ? 7 : date.getDay()),       // 1 -> 7
-  //     S: (date.getDate() % 10 <= i18n.suffix.length ? i18n.suffix[date.getDate() % 10 - 1] : ''),
-  //     // hour
-  //     a: (i18n.meridiem.length === 2 ? i18n.meridiem[date.getHours() < 12 ? 0 : 1] : ''),
-  //     g: (date.getHours() % 12 === 0 ? 12 : date.getHours() % 12),
-  //     G: date.getHours(),
-  //     // minute
-  //     i: date.getMinutes(),
-  //     // second
-  //     s: date.getSeconds()
-  //   };
-  //   val.m = (val.n < 10 ? '0' : '') + val.n;
-  //   val.d = (val.j < 10 ? '0' : '') + val.j;
-  //   val.A = val.a.toString().toUpperCase();
-  //   val.h = (val.g < 10 ? '0' : '') + val.g;
-  //   val.H = (val.G < 10 ? '0' : '') + val.G;
-  //   val.i = (val.i < 10 ? '0' : '') + val.i;
-  //   val.s = (val.s < 10 ? '0' : '') + val.s;
+  } else if (type === 'php') {
+    // php format
+    val = {
+      // year
+      y: date.getFullYear().toString().substring(2),
+      Y: date.getFullYear(),
+      // month
+      F: i18n.months[date.getMonth()],
+      M: i18n.monthsShort[date.getMonth()],
+      n: date.getMonth() + 1,
+      t: utils.getDaysInMonth(date.getFullYear(), date.getMonth()),
+      // day
+      j: date.getDate(),
+      l: i18n.days[date.getDay()],
+      D: i18n.daysShort[date.getDay()],
+      w: date.getDay(), // 0 -> 6
+      N: (date.getDay() === 0 ? 7 : date.getDay()),       // 1 -> 7
+      S:    (dateVal % 10 && dateVal % 10 <= i18n.suffix.length ? i18n.suffix[dateVal % 10 - 1] : i18n.suffix[i18n.suffix.length -1 ]),
+      // hour
+      a: (i18n.meridiem.length === 2 ? i18n.meridiem[date.getHours() < 12 ? 0 : 1] : ''),
+      g: (date.getHours() % 12 === 0 ? 12 : date.getHours() % 12),
+      G: date.getHours(),
+      // minute
+      i: date.getMinutes(),
+      // second
+      s: date.getSeconds(),
+      U: Math.floor(date.getTime() / 1000)
+    };
+    val.m = (val.n < 10 ? '0' : '') + val.n;
+    val.d = (val.j < 10 ? '0' : '') + val.j;
+    val.A = val.a.toString().toUpperCase();
+    val.h = (val.g < 10 ? '0' : '') + val.g;
+    val.H = (val.G < 10 ? '0' : '') + val.G;
+    val.i = (val.i < 10 ? '0' : '') + val.i;
+    val.s = (val.s < 10 ? '0' : '') + val.s;
   } else {
     throw new Error('Invalid format type.');
   }
@@ -348,7 +344,7 @@ const formatHelper = {
     if (type === 'standard') {
       return /t|hh?|HH?|p|P|z|ii?|ss?|dd?|DD?|S|mm?|MM?|yy(?:yy)?/g;
     } else if (type === 'php') {
-      return /[dDjlNwzFmMnStyYaABgGhHis]/g;
+      return /[dDjlNwzFmMnStyYaABgGhHisU]/g;
     } else {
       throw new Error('Invalid format type.');
     }
@@ -366,4 +362,73 @@ const formatHelper = {
     }
     return {separators: separators, parts: parts};
   },
+
+  setters: function(type) {
+    let setters_order, setters_map;
+    if (type === 'standard') {
+      setters_order = ['hh', 'h', 'HH', 'H', 'ii', 'i', 'ss', 's','d', 'dd', 'D','DD', 'S', 'm', 'mm', 'M', 'MM', 'yyyy', 'yy', 'p', 'P', 't'];
+      setters_map = {
+        hh: (d, v) => d.setHours(v),
+        h: (d, v) => d.setHours(v),
+        HH: (d, v) =>  d.setHours(v === 12 ? 0 : v),
+        H: (d, v) => d.setHours(v === 12 ? 0 : v),
+        i: (d, v) => d.setMinutes(v),
+        s: (d, v) => d.setSeconds(v),
+        yyyy: (d, v) => d.setFullYear(v),
+        yy: (d, v) => d.setFullYear((v < 50 ? 2000 : 1900)  + v),
+        m: (d, v) => {
+          v -= 1;
+          while (v < 0) v += 12;
+          v %= 12;
+          d.setMonth(v);
+          while (d.getMonth() !== v)
+            if (isNaN(d.getMonth()))
+              return d;
+            else
+              d.setDate(d.getDate() - 1);
+          return d;
+        },
+        d: (d, v) => d.setDate(v),
+        p: (d, v) => d.setHours(v === 1 ? d.getHours() + 12 : d.getHours()),
+        t: (d, v) => d.setTime(v)
+      };
+      setters_map.mm = setters_map.M = setters_map.MM = setters_map.m;
+      setters_map.ii = setters_map.i;
+      setters_map.ss = setters_map.s;
+      setters_map.dd = setters_map.D = setters_map.DD = setters_map.d;
+      setters_map.P = setters_map.p;
+    } else {
+      // php
+      setters_order = ['H','G','h','g','i','s','d','D','j','l','N','S','m','M','F','n','Y','yy','p','P','U'];
+      setters_map = {
+        H: (d, v) => d.setHours(v),
+        G: (d, v) => d.setHours(v),
+        h: (d, v) =>  d.setHours(v === 12 ? 0 : v),
+        g: (d, v) => d.setHours(v === 12 ? 0 : v),
+        i: (d, v) => d.setMinutes(v),
+        s: (d, v) => d.setSeconds(v),
+        Y: (d, v) => d.setFullYear(v),
+        yy: (d, v) => d.setFullYear((v < 50 ? 2000 : 1900)  + v),
+        m: (d, v) => {
+          v -= 1;
+          while (v < 0) v += 12;
+          v %= 12;
+          d.setMonth(v);
+          while (d.getMonth() !== v)
+            if (isNaN(d.getMonth()))
+              return d;
+            else
+              d.setDate(d.getDate() - 1);
+          return d;
+        },
+        d: (d, v) => d.setDate(v),
+        a: (d, v) => d.setHours(v === 1 ? d.getHours() + 12 : d.getHours()),
+        U: (d, v) => d.setTime(v * 1000)
+      };
+      setters_map.F = setters_map.M = setters_map.m;
+      setters_map.D = setters_map.j = setters_map.l = setters_map.N = setters_map.d;
+      setters_map.A = setters_map.a;
+    }
+    return { setters_order, setters_map };
+  }
 }
