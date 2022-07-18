@@ -1,17 +1,27 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, tick } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { UTCDate } from './dateUtils';
 
+  /** @type {Date|null} */
   export let date = null;
+  /** @type {Date|null} */
+  export let startDate = null;
+  /** @type {Date|null} */
+  export let endDate = null;
   export let showMeridian = false;
   export let hasDateComponent = false;
+  /** @type {i18nType}*/
   export let i18n;
+  /**
+   * @param {boolean|null} val
+   */
   export function minuteSwitch(val) {
-    if (val === undefined) return isMinuteView;
+    if (val === null) return isMinuteView;
     isMinuteView = val;
   }
-
+  /**
+   * @param {number} val
+   */
   export function makeTick(val) {
     if (isMinuteView) {
       val = val * 5 + selectedMinutes;
@@ -33,12 +43,13 @@
       }
     });
   }
-
+  /** @type {HTMLElement} */
   let clockEl;
   let isMinuteView = false;
   let handleMoveMove = false;
   let enableViewToggle = false;
-  let innerDate = date || UTCDate(0,0,0,0,0,0);
+  /** @type {Date} */
+  let innerDate = date || new Date();
   if (!date) {
     date = innerDate;
   }
@@ -46,24 +57,58 @@
   const dispatch = createEventDispatcher();
 
   $: {
-    if (date !== innerDate) {
+    let forceTimeUpdate = false;
+    if (startDate && startDate.toDateString() === innerDate.toDateString()) {
+      if (isDisabled(innerDate.getHours())) {
+        innerDate.setHours(startDate.getHours());
+        forceTimeUpdate = true;
+      }
+      if (isDisabled(innerDate.getMinutes(), true)) {
+        innerDate.setMinutes(startDate.getMinutes());
+        forceTimeUpdate = true;
+      }
+    }
+    if (endDate && endDate.toDateString() === innerDate.toDateString()) {
+      if (isDisabled(innerDate.getHours())) {
+        innerDate.setHours(endDate.getHours());
+        forceTimeUpdate = true;
+      }
+      if (isDisabled(innerDate.getMinutes(), true)) {
+        innerDate.setMinutes(endDate.getMinutes());
+        forceTimeUpdate = true;
+      }
+    }
+    forceTimeUpdate && tick().then(() => dispatch('time', innerDate));
+  }
+
+  $: {
+    if (date !== innerDate && date) {
       innerDate = date;
     }
   }
-  $: selectedHour = innerDate ? innerDate.getUTCHours() : 0;
+  $: selectedHour = innerDate ? innerDate.getHours() : 0;
   $: isPM = showMeridian
     ? selectedHour >= 12
     : false;
-  $: selectedMinutes = innerDate ? innerDate.getUTCMinutes() : 0;
+  $: selectedMinutes = innerDate ? innerDate.getMinutes() : 0;
   $: handCss = isMinuteView 
     ? `transform: rotateZ(${selectedMinutes * 6}deg)`
     : (showMeridian 
       ? `transform: rotateZ(${selectedHour % 12 * 30}deg);`
-      : `transform: rotateZ(${selectedHour % 12 * 30}deg); ${selectedHour > 12 || !selectedHour ? 'height: calc(25% + 1px)' : ''}`
+      : `transform: rotateZ(${selectedHour % 12 * 30}deg); ${selectedHour >= 12 ? 'height: calc(25% + 1px)' : ''}`
     );
   $: multiplier = isMinuteView ? 5 : 1;
+  // @ts-ignore
+  $: sameDateRestriction = startDate && endDate && ['getFullYear', 'getMonth', 'getDate'].every(p => endDate[p]() === startDate[p]())
 
 
+  /**
+   * @param {number} size
+   * @param {number} offset
+   * @param {string|number} valueForZero
+   * @param {boolean} minuteView
+   * @param {number} hourAdded
+   */
   function positions(size, offset, valueForZero, minuteView, hourAdded) {
     const r = size / 2;
     offset = offset || r;
@@ -82,9 +127,14 @@
     }
     return pos;
   }
-  $: pos = positions(220, 130, isMinuteView ? '00' : '12', isMinuteView, 0);
-  $: innerHours = positions(140, 130, '00', false, 12);
+  $: pos = positions(isMinuteView ? 260 : 220, 130, '00', false, 0);
+  $: innerHours = positions(isMinuteView ? 220 : 140, 130, isMinuteView ? '00' : '12', isMinuteView, 12);
 
+  /**
+   * 
+   * @param {number} value
+   * @param {boolean} asMeridian
+   */
   function view(value, asMeridian) {
     if (asMeridian) {
       if (isPM && value === 12) return 12;
@@ -97,6 +147,11 @@
       : value;
   }
 
+  /**
+   * @param {number} selected
+   * @param {string|number} val
+   * @param {number} i
+   */
   function isSelected(selected, val, i) {
     if (isMinuteView) {
       return val === selected || (i === 0 && i === selected)
@@ -109,18 +164,59 @@
         return (i ? multiplier * i + 12 : 0)  === selected;
       } else {
         return val === '00' || val === '12'
-          ? ((selected === 12 && val == 12) || (val === '00' && selected === 0))
+          ? ((selected === 12 && parseInt(val) == 12) || (val === '00' && selected === 0))
           : val === selected;
       }
     }
   }
 
+  /**
+   * @param {string|number} val
+   * @param {boolean|undefined} isManualMinuteCheck
+   */
+  function isDisabled(val, isManualMinuteCheck = false) {
+    if (typeof val === 'string') val = parseInt(val);
+    if (startDate && endDate && sameDateRestriction) {
+      if (isMinuteView || isManualMinuteCheck) {
+        return (startDate.getHours() === innerDate.getHours() && startDate.getMinutes() > val)
+          || (endDate.getHours() === innerDate.getHours() && endDate.getMinutes() < val);
+      }
+      return startDate.getHours() > val || endDate.getHours() < val;
+    }
+    if (startDate
+      && startDate.getDate()     === innerDate.getDate()
+      && startDate.getMonth()    === innerDate.getMonth()
+      && startDate.getFullYear() === innerDate.getFullYear()
+    ) {
+      if (isMinuteView || isManualMinuteCheck) {
+        return startDate.getHours() === innerDate.getHours() && startDate.getMinutes() > val;
+      }
+      return startDate.getHours() > val;
+    } 
+    if (endDate
+      && endDate.getDate()     === innerDate.getDate()
+      && endDate.getMonth()    === innerDate.getMonth()
+      && endDate.getFullYear() === innerDate.getFullYear()
+    ) {
+      if (isMinuteView || isManualMinuteCheck) {
+        return endDate.getHours() === innerDate.getHours() && endDate.getMinutes() < val;
+      }
+      return endDate.getHours() < val;
+    }
+    return false;
+  }
+
+  /**
+   * @param {any} e
+   */
   function onClick(e) {
-    if (!canSelect) return;
+    if (!canSelect || !e.target) return;
     if ((e.type === 'mousemove' && !handleMoveMove) || (!isMinuteView && e.target.tagName !== 'BUTTON')) return;
+    let a = 0;
+    let b = 0;
     if (e.target.tagName === 'BUTTON') {
       let val = parseInt(e.target.dataset.value);
-      const setter = e.meridianSwitch || !isMinuteView ? 'setUTCHours' : 'setUTCMinutes';
+      const setter = e.meridianSwitch || !isMinuteView ? 'setHours' : 'setMinutes';
       innerDate[setter](val);
     } else if (isMinuteView) {
       // compute it out of x,y 
@@ -129,7 +225,6 @@
       const clientY = e.clientY - rect.top;
       const cntX = 130, cntY = 130;
       let quadrant = null;
-      let a, b;
       if (clientX > cntX) {
         quadrant = clientY > cntY ? 2 : 1
       } else {
@@ -155,7 +250,7 @@
       }
       const c = Math.sqrt(a*a + b*b);
       const beta = 90 - (Math.asin(a/c) * (180 / Math.PI));
-      let degree;
+      let degree = 0;
       switch (quadrant) {
         case 1:
           degree = 90 - beta;
@@ -182,11 +277,18 @@
     setTimeout(() => { enableViewToggle = false; canSelect = true }, 200);
   }
 
+  /**
+   * @param {TimeClickEvent|MouseEvent} e
+   */
   function onSwitchMeridian(e) {
+    // @ts-ignore
     e.meridianSwitch = true;
-    onClick(e)
+    onClick(e);
   }
 
+  /**
+   * @param {MouseEvent} e;
+   */
   function onToggleMove(e) {
     handleMoveMove = e.type === 'mousedown';
   }
@@ -200,6 +302,7 @@
 </script>
 
 <div class="sdt-timer" in:fade={{duration: 200}}>
+  <!-- navbar -->
   <div class="sdt-time-head">
     {#if hasDateComponent}
     <button class="sdt-time-btn sdt-back-btn" title={i18n.backToDate} on:click={onModeSwitch}>
@@ -218,31 +321,30 @@
     {#if showMeridian}
     <div class="sdt-meridian">
       <button class="sdt-time-btn" class:is-active={selectedHour < 12} on:click={onSwitchMeridian} data-value={selectedHour % 12}>AM</button>
-      <button class="sdt-time-btn" class:is-active={selectedHour >= 12} on:click={onSwitchMeridian} data-value={selectedHour % 12 + 12}>PM</button>
+      <button class="sdt-time-btn" class:is-active={isPM} on:click={onSwitchMeridian} data-value={selectedHour % 12 + 12}>PM</button>
     </div>
     {/if}
   </div>
-  <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}
-    class:is-minute-view={isMinuteView}
-  >
+  <!-- clock -->  
+  <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
     <div class="sdt-middle-dot"></div>
     <div class="sdt-hand-pointer" style={handCss}>
       <div class="sdt-hand-circle"></div>
     </div>
     {#each pos as p, i(p.val)}
-      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" transition:fade|local={{duration: 200}}
+      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" class:outer-tick={isMinuteView} transition:fade|local={{duration: 200}}
         data-value={p.val}
-        class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
-      >{p.val}</button>
-    {/each}
-    {#if !showMeridian && !isMinuteView}
-      {#each innerHours as p, i}
-      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" transition:fade|local={{duration: 200}}
-        data-value={p.val}
+        disabled={(startDate || endDate) && isDisabled(p.val, false)}
         class:is-selected={isSelected(selectedHour, p.val, i)}
       >{p.val}</button>
     {/each}
-    {/if}
+      {#each innerHours as p, i}
+      <button style={`left:${p.x}px; top:${p.y}px;`} class="sdt-tick" class:outer-tick={showMeridian && !isMinuteView} transition:fade|local={{duration: 200}}
+      data-value={p.val}
+      disabled={(startDate || endDate) && isDisabled(p.val, false)}
+      class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
+      >{p.val}</button>
+      {/each}
   </div>
 </div>
 
@@ -256,6 +358,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 4px;
   }
   .sdt-time-figure {
     font-size: 1.5rem;
@@ -269,10 +372,7 @@
     background-color: var(--sdt-clock-bg);
     border-radius: 50%;
     transition: background-color 0.3s;
-  }
-  .sdt-clock.is-minute-view {
-    background-color: var(--sdt-clock-bg-minute, var(--sdt-clock-bg));
-    box-shadow: var(--sdt-clock-bg-shadow);
+    overflow: hidden;
   }
   .sdt-time-btn {
     border: 0;
@@ -280,7 +380,7 @@
     text-align: center;
     border-radius: 4px;
     cursor: pointer;
-    padding: 0.375rem;
+    padding: 0 0.375rem;
     color: var(--sdt-color);
   }
   .sdt-svg {
@@ -296,6 +396,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    padding: 0.375rem;
     opacity: 1 !important;
   }
   .sdt-meridian {
@@ -355,6 +456,13 @@
     line-height: 20px;
     cursor: pointer;
     background-color: transparent;
+    transition: all 0.3s;
+  }
+  .sdt-tick[disabled] {
+    cursor: not-allowed;
+  }
+  .sdt-tick.outer-tick {
+    opacity: 0;
   }
   .sdt-tick.is-selected {
     animation: tick-selection 0s 0.175s ease-out forwards;

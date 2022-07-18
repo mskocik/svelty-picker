@@ -31,11 +31,13 @@ export function usePosition(el, { inputEl, visible, inputRect }) {
 }
 
 export function scale(node, { delay = 0, duration = 400, easing = cubicOut, start = 0, end = 1, opacity = 0 } = {}) {
+  /* #region  */
   const style = getComputedStyle(node);
   const target_opacity = +style.opacity;
   const transform = style.transform === 'none' ? '' : style.transform;
   const sd = 1 - start;
   const od = target_opacity * (1 - opacity);
+  /* #endregion */
   return {
       delay,
       duration,

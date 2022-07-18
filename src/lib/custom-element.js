@@ -1,4 +1,5 @@
-import SveltyPicker, { config } from "./src/SveltyPicker.svelte";
+// @ts-nocheck
+import SveltyPicker, { config } from "./components/SveltyPicker.svelte";
 
 const OPTION_LIST = [
   'value', 'name', 'placeholder', 'start-date', 'end-date', 'disabled', 'input-classes',

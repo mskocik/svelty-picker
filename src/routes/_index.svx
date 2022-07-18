@@ -1,0 +1,74 @@
+<script>
+  import SveltyPicker from '$lib/components/SveltyPicker.svelte';
+
+  let value = null;
+  let initialDate = new Date();
+  // props
+  $: mode = presetSelection.split('-')[0];
+  $: formatType = presetSelection.split('-')[1];
+  $: format = `${mode.includes('date') ? (formatType === 'php' ? 'Y-m-d' : 'yyyy-mm-dd') : ''}`
+              + `${mode.includes('time') ? ' ' : ''}`
+              + `${mode.includes('time') ? (formatType === 'php' ? 'H:i' : 'hh:ii')  : ''}`;
+  $: placeholder = `Date in format ${format}`;
+  let weekStart = 1;
+  let visible = true;
+  let inputClasses="form-control";
+  let autoclose = true;
+  let clearToggle = !true;
+  // let presetSelection = 'date-standard';
+  let presetSelection = 'datetime-php';
+
+</script>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col">
+      <fieldset>
+        <label>
+          <input type="radio" bind:group={presetSelection} name="preset" value="date-standard">
+          Date
+        </label>
+        <label>
+          <input type="radio" bind:group={presetSelection} name="preset" value="datetime-standard">
+          Datetime
+        </label>
+        <label>
+          <input type="radio" bind:group={presetSelection} name="preset" value="time-standard">
+          Time
+        </label>
+        <label>
+          <input type="radio" bind:group={presetSelection} name="preset" value="date-php">
+          Date (PHP)
+        </label>
+        <label>
+          <input type="radio" bind:group={presetSelection} name="preset" value="datetime-php">
+          Datetime (PHP)
+        </label>
+        <label>
+          <input type="radio" bind:group={presetSelection} name="preset" value="time-php">
+          Time (PHP)
+        </label>
+      </fieldset>
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" bind:value={format}>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <pre>{value}</pre>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <SveltyPicker
+      bind:value {initialDate}
+      startDate="2022-05-10 05:20"
+      endDate="2022-07-25 20:30"
+      {placeholder} {mode} {format} {formatType} {weekStart} {inputClasses} {autoclose} {clearToggle}
+      ></SveltyPicker>
+    </div>
+  </div>
+</div>
+
+<input type="text" class="form-control">
