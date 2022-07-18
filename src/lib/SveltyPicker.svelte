@@ -14,99 +14,57 @@
 
   // html
 
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let name = "date";
-  /**
-   * @type {bool}
-   */
+  /** @type {boolean} */
   export let disabled = false;
-  /**
-   * @type {string|null|undefined}
-   */
+  /** @type {string|null|undefined} */
   export let placeholder = null;
-  /**
-   * @type {bool}
-   */
+  /** @type {boolean} */
   export let required = false;
   // dates
-  /**
-   * @type {string|null}
-   */
+  /** @type {string|null} */
   export let value = null;
-  /**
-   * @type {Date|null}
-   */
+  /** @type {Date|null} */
   export let initialDate = null;
-  /**
-   * @type {Date | null}
-   */
+  /** @type {Date | null} */
   export let startDate = null;
-  /**
-   * @type {Date | null}
-   */
+  /** @type {Date | null} */
   export let endDate = null;
-  /**
-   * @type {bool}
-   */
+  /** @type {boolean} */
   export let pickerOnly = false;
   /** ************************************ 👇 configurable globally */
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let theme = config.theme;
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let mode = config.mode;
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let format = config.format;
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let formatType = config.formatType;
-  /**
-   * @type {number}
-   */
+  /** @type {number} */
   export let weekStart = config.weekStart;
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let inputClasses = config.inputClasses;
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let todayBtnClasses = config.todayBtnClasses;
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let clearBtnClasses = config.clearBtnClasses;
-  /**
-   * @type {bool}
-   */
+  /** @type {boolean} */
   export let todayBtn = config.todayBtn;
-  /**
-   * @type {bool}
-   */
+  /** @type {boolean} */
   export let clearBtn = config.clearBtn;
-  /**
-   * @type {bool}
-   */
+  /** @type {boolean} */
   export let clearToggle = config.clearToggle;
-  /**
-   * @type {bool}
-   */
+  /** @type {boolean} */
   export let autoclose = config.autoclose;
-  /**
-   * @type {object}
-   */
+  /** @type {i18nType} */
   export let i18n = config.i18n;
   // actions
   export let positionFn = usePosition;
+  /** @type {Array<any>|null} */
   export let validatorAction = null;
+  /** @param {string} val */
   export function setDateValue(val) {
     innerDate = parseDate(val, format, i18n, formatType);
   }
@@ -116,7 +74,7 @@
   let prevValue = value;
   let currentFormat = format;
   let innerDate = initialDate && initialDate instanceof Date
-      ? parseDate(initialDate)
+      ? initialDate
       : (value 
         ? parseDate(value, format, i18n, formatType)
         : null
@@ -125,18 +83,28 @@
     value = formatDate(innerDate, format, i18n, formatType);
   }
   $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
-  $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null
+  $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
+  // @ts-ignore
+  $: isTodayDisabled = parsedStartDate && parsedStartDate > new Date() || parsedEndDate < new Date();
   let isFocused = pickerOnly;
   let pickerVisible = pickerOnly;
+  /** @type {HTMLElement|null} */
   let inputEl = null;
+  /** @type {DOMRect|null} */
   let inputRect = null;
+  /** @type {function|function} */
   let inputAction = validatorAction ? validatorAction.shift() : () => {};
+  /** @type {any} */
   let inputActionParams = validatorAction || [];
-  let calendarEl = null;
+  /** @type {Calendar} */
+  let calendarEl;
+  /** @type {Time} */
   let timeEl;
   let preventClose = false;
+  /** @type {NodeJS.Timeout|number|null} */
   let preventCloseTimer = null;
-  let resolvedMode = null;
+  /** @type {string} */
+  let resolvedMode = '';
   let currentMode = resolvedMode === "time" ? "time" : "date";
   $: {
     resolvedMode = mode === "auto"
@@ -178,6 +146,9 @@
     if (resolvedMode !== 'time') currentMode = "date";
   }
 
+  /** 
+   * @param {CustomEvent} e
+   */
   function onDate(e) {
     let setter = e.detail || null;
     if (e.detail && innerDate) {
@@ -215,20 +186,20 @@
       preventClose = false;
     }
     tick().then(() => {
-      inputEl.dispatchEvent(new Event("input"));
+      inputEl && inputEl.dispatchEvent(new Event("input"));
       dispatch("change", value);
     });
   }
 
   function onToday() {
     const today = new Date();
-    if (parsedStartDate > today) return;
+    if (parsedStartDate && parsedStartDate > today) return;
 
     const todayHours = innerDate ? innerDate.getHours() : today.getHours();
     const todayMinutes = innerDate
       ? innerDate.getMinutes()
       : today.getMinutes();
-    onDate({
+    onDate(new CustomEvent('ontoday', {
       detail: new Date(
         today.getFullYear(),
         today.getMonth(),
@@ -236,18 +207,21 @@
         todayHours,
         todayMinutes,
         0
-      ),
-    });
+      )
+    }));
   }
 
   function onClear() {
-    onDate({ detail: null });
+    onDate(new CustomEvent('clear', { detail: null }));
   }
 
+  /** 
+   * @param {KeyboardEvent} e
+   */
   function onKeyDown(e) {
-    if (!isFocused) {
+    if (!pickerVisible) {
       ["Backspace", "Delete"].includes(e.key) && onClear();
-      if (e.key !== "Enter") return onFocus();
+      if (e.key !== "Enter") return onInputFocus();
     }
     if (!pickerVisible && e.key !== 'Tab') {
       pickerVisible = true;
@@ -285,7 +259,7 @@
       case "Enter":
         isFocused && e.preventDefault();
         if (currentMode === "time") {
-          if (!timeEl.minuteSwitch()) {
+          if (!timeEl.minuteSwitch(null)) {
             return timeEl.minuteSwitch(true);
           }
           return resetView();
@@ -307,6 +281,9 @@
     }
   }
 
+  /**
+   * @param {CustomEvent} e
+   */
   function onModeSwitch(e) {
     currentMode = e.detail;
   }
@@ -316,7 +293,7 @@
   }
 
   function onInputFocus() {
-    inputRect = inputEl.getBoundingClientRect();
+    inputRect = inputEl && inputEl.getBoundingClientRect();
     isFocused = true;
     pickerVisible = true;
   }
@@ -371,7 +348,7 @@
             <button
               on:click={onToday}
               class={todayBtnClasses}
-              disabled={parsedStartDate > new Date() || parsedEndDate < new Date()}
+              disabled={isTodayDisabled}
               >{i18n.todayBtn}</button
             >
           {/if}
@@ -391,7 +368,7 @@
         endDate={parsedEndDate}
         hasDateComponent={resolvedMode !== "time"}
         bind:this={timeEl}
-        showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P')}
+        showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P') !== null}
         {i18n}
         on:time={onDate}
         on:switch={onModeSwitch}

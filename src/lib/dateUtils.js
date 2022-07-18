@@ -1,7 +1,18 @@
+// @ts-nocheck
+
 export const MODE_DECADE = 0;
 export const MODE_YEAR = 1;
 export const MODE_MONTH = 2;
 
+/**
+ * 
+ * @param {Date} currentDate 
+ * @param {Date|null} selectedDate 
+ * @param {number} view 
+ * @param {i18nType} locale 
+ * @param {number} weekStart 
+ * @returns {datasetType}
+ */
 export function compute(currentDate, selectedDate, view, locale, weekStart) {
   // years 4 x 3
   if (view === MODE_DECADE) {
@@ -27,7 +38,7 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     }
 
     return {
-      grid, todayMark, nextFrom, prevTo, selectionMark
+      years: grid, todayMark, nextFrom, prevTo, selectionMark
     }
   }
 
@@ -61,7 +72,7 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
       selectionMark = selectedDate.getMonth() + ((selectedDate.getFullYear() - initYear || 0) * 12);
     }
     return {
-      grid, todayMark, nextFrom, prevTo, selectionMark
+      months: grid, todayMark, nextFrom, prevTo, selectionMark
     }
   } 
 
@@ -120,42 +131,42 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
       dayRow = [];
     }
   }
-  return { grid, todayMark, prevTo, nextFrom, selectionMark };
+  return {
+    grid, todayMark, prevTo, nextFrom, selectionMark
+  };
 }
 
 /**
  * 
  * @param {number} newPos 
  * @param {number} view 
- * @returns 
+ * @returns {GridPosition}
  */
 export function moveGrid(newPos, view) {
-  if (view === MODE_MONTH) {
-    if (newPos < 0) {
-      newPos = 42 + newPos;
-    }
-    return {
-      x: newPos % 7,
-      y: Math.floor(newPos / 7)
-    }
+  if (newPos < 0) {
+    newPos = 42 + newPos;
+  }
+  return {
+    x: newPos % 7,
+    y: Math.floor(newPos / 7)
   }
 }
 
 const utils = {
-  isLeapYear: function (year) {
+  isLeapYear: function (/** @type {number} */ year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0))
   },
-  getDaysInMonth: function (year, month) {
+  getDaysInMonth: function (/** @type {number} */year, /** @type {number} */month) {
     return [31, (utils.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
   },
 }
-export function isLower(a, b) {
+export function isLower(/** @type {Date|string} */ a, /** @type {Date} */b) {
   if (!(a instanceof Date)) return false;
   return a.getFullYear() < b.getFullYear()
     || (a.getMonth() < b.getMonth() || a.getDate() <= b.getDate());
 }
 
-export function isGreater(a, b) {
+export function isGreater(/** @type {Date|string} */a, /** @type {Date} */b) {
   if (!(a instanceof Date)) return false;
   return a.getFullYear() > b.getFullYear()
     || (a.getMonth() > b.getMonth() || a.getDate() >= b.getDate());
@@ -166,7 +177,7 @@ export function isGreater(a, b) {
  * 
  * @param {Date|string} date 
  * @param {string} format 
- * @param {object} i18n 
+ * @param {i18nType} i18n 
  * @param {string} type 
  * @returns 
  */
@@ -180,16 +191,18 @@ export function parseDate(date, format, i18n, type) {
   const commonFormats = type === 'php'
     ? { date: 'Y-m-d', datetime: 'Y-m-d H:i', datetime_s: 'Y-m-d H:i:s' }
     : { date: 'yyyy-mm-dd', datetime: 'yyyy-mm-dd hh:ii', datetime_s: 'yyyy-mm-dd hh:ii:ss' };
+  /** @var {{ separators: string[], parts: string[]}} */
+  let parsedFormat;
   if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(date)) {
-    format = formatHelper.parseFormat(commonFormats.date, type);
+    parsedFormat = formatHelper.parseFormat(commonFormats.date, type);
   } else 
   if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}$/.test(date)) {
-    format = formatHelper.parseFormat(commonFormats.datetime, type);
+    parsedFormat = formatHelper.parseFormat(commonFormats.datetime, type);
   } else 
   if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}\:\d{1,2}[Z]{0,1}$/.test(date)) {
-    format = formatHelper.parseFormat(commonFormats.datetime_s, type);
+    parsedFormat = formatHelper.parseFormat(commonFormats.datetime_s, type);
   } else {
-    format = formatHelper.parseFormat(format, type);
+    parsedFormat = formatHelper.parseFormat(format, type);
   }
   const parts = date && date.toString().match(formatHelper.nonpunctuation) || [];
   date = new Date();  // reset date
@@ -197,14 +210,14 @@ export function parseDate(date, format, i18n, type) {
   const parsed = {};
   const { setters_order, setters_map } = formatHelper.setters(type);
   let val, part;
-  if (parts.length !== format.parts.length && format.parts.includes('S')) { // specific suffix parsing from string like '14th'
-    const splitSuffix = parts[format.parts.indexOf('S') - 1].match(/(\d+)([a-zA-Z]+)/).slice(1,3);
-    parts.splice(format.parts.indexOf('S') - 1, 1, ...splitSuffix);
+  if (parts.length !== parsedFormat.parts.length && parsedFormat.parts.includes('S')) { // specific suffix parsing from string like '14th'
+    const splitSuffix = parts[parsedFormat.parts.indexOf('S') - 1].match(/(\d+)([a-zA-Z]+)/).slice(1,3);
+    parts.splice(parsedFormat.parts.indexOf('S') - 1, 1, ...splitSuffix);
   }
-  if (parts.length === format.parts.length) {
-    for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
+  if (parts.length === parsedFormat.parts.length) {
+    for (var i = 0, cnt = parsedFormat.parts.length; i < cnt; i++) {
       val = parseInt(parts[i], 10);
-      part = format.parts[i];
+      part = parsedFormat.parts[i];
       if (isNaN(val)) {
         if (type === 'standard') {
           switch (part) {
@@ -252,6 +265,13 @@ export function parseDate(date, format, i18n, type) {
   return date;
 }
 
+/**
+ * @param {Date} date 
+ * @param {string} format 
+ * @param {i18nType} i18n 
+ * @param {string} type 
+ * @returns {string}
+ */
 export function formatDate(date, format, i18n, type) {
   if (date === null) {
     return '';
@@ -358,6 +378,12 @@ const formatHelper = {
     }
   },
   nonpunctuation: /[^ -\/:-@\[-`{-~\t\n\rTZ]+/g,
+  /**
+   * 
+   * @param {string} format 
+   * @param {string} type 
+   * @returns {{ separators: string[], parts: string[]} }
+   */
   parseFormat: function (/** @type {string} */ format, /** @type {string} */ type) {
       // IE treats \0 as a string end in inputs (truncating the value),
       // so it's a bad format delimiter, anyway
@@ -370,20 +396,32 @@ const formatHelper = {
     }
     return {separators: separators, parts: parts};
   },
-
+  /**
+   * @param {string} type 
+   * @returns {{setters_map: object, setters_order: Array<string>}}
+   */
   setters: function(type) {
     let setters_order, setters_map;
     if (type === 'standard') {
       setters_order = ['hh', 'h', 'HH', 'H', 'ii', 'i', 'ss', 's','d', 'dd', 'D','DD', 'S', 'm', 'mm', 'M', 'MM', 'yyyy', 'yy', 'p', 'P', 't'];
       setters_map = {
+        /** @param {Date} d, @param {number} v */
         hh: (d, v) => d.setHours(v),
+        /** @param {Date} d, @param {number} v */
         h: (d, v) => d.setHours(v),
+        /** @param {Date} d, @param {number} v */
         HH: (d, v) =>  d.setHours(v === 12 ? 0 : v),
+        /** @param {Date} d, @param {number} v */
         H: (d, v) => d.setHours(v === 12 ? 0 : v),
+        /** @param {Date} d, @param {number} v */
         i: (d, v) => d.setMinutes(v),
+        /** @param {Date} d, @param {number} v */
         s: (d, v) => d.setSeconds(v),
+        /** @param {Date} d, @param {number} v */
         yyyy: (d, v) => d.setFullYear(v),
+        /** @param {Date} d, @param {number} v */
         yy: (d, v) => d.setFullYear((v < 50 ? 2000 : 1900)  + v),
+        /** @param {Date} d, @param {number} v */
         m: (d, v) => {
           v -= 1;
           while (v < 0) v += 12;
@@ -396,9 +434,21 @@ const formatHelper = {
               d.setDate(d.getDate() - 1);
           return d;
         },
+        /** @param {Date} d, @param {number} v */
         d: (d, v) => d.setDate(v),
+        /** @param {Date} d, @param {number} v */
         p: (d, v) => d.setHours(v === 1 ? d.getHours() + 12 : d.getHours()),
-        t: (d, v) => d.setTime(v)
+        /** @param {Date} d, @param {number} v */
+        t: (d, v) => d.setTime(v),
+        mm: ()=>{},
+        M: ()=>{},
+        MM: ()=>{},
+        ii: ()=>{},
+        ss: ()=>{},
+        dd: ()=>{},
+        D: ()=>{},
+        DD: ()=>{},
+        P: ()=>{}
       };
       setters_map.mm = setters_map.M = setters_map.MM = setters_map.m;
       setters_map.ii = setters_map.i;

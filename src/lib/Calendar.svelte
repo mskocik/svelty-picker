@@ -4,18 +4,27 @@
   import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from './dateUtils.js';
   import { scale } from './utils.js'
 
+  /** @type {Date|null} */
   export let date = null;
+  /** @type {Date|null} */
   export let startDate = null;
+  /** @type {Date|null} */
   export let endDate = null;
   export let weekStart = 1;
+  /** @type {i18nType} */
   export let i18n;
   export let enableTimeToggle = false;
   
+  /**
+   * @param {string} key
+   * @param {boolean} shiftKey
+   */
   export function handleGridNav(key, shiftKey) {
     if (!internalDate) {
-      onClick(new Date);
+      onClick({day: new Date});
       return;
     }
+    /** @type {GridPosition} pos */
     let pos, diffSelection;
     switch (key) {
       case 'PageDown':
@@ -27,7 +36,7 @@
           const tmpDate = new Date(activeDate.getFullYear(), activeDate.getUTCMonth() + 1, 28);
           let tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
           onChangeMonth(1);
-          pos = tmpData.selectionMark
+          pos = tmpData.selectionMark !== null
             ? {
               y: Math.floor((tmpData.selectionMark + 7) / 7),
               x: (tmpData.selectionMark + 7) % 7
@@ -55,7 +64,7 @@
           const tmpDate = new Date(activeDate.getFullYear() + (activeDate.getMonth() > 0 ? 0 : - 1), activeDate.getMonth() > 0 ? activeDate.getMonth() -1 : 11, 1);
           const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
           onChangeMonth(-1);
-          pos = tmpData.selectionMark
+          pos = tmpData.selectionMark !== null
             ? {
               x: Math.floor((tmpData.selectionMark -7)  /  7),
               y: (tmpData.selectionMark - 7) % 7
@@ -92,6 +101,11 @@
     }
   }
 
+  /**
+   * @param {number} year
+   * @param {number} month
+   * @param {number} monthChange
+   */
   function handleShiftNav(year, month, monthChange) {
     let tmpDate;
     let newDateDay = activeDate.getDate();
@@ -102,7 +116,7 @@
     } while (tmpDate.getMonth() === activeDate.getMonth());
     const tmpData = compute(tmpDate, tmpDate, currentView, i18n, weekStart);
     const pickedDate = tmpData.grid[Math.floor(tmpData.selectionMark / 7)][tmpData.selectionMark % 7];
-    if ((endDate && isGreater(pickedDate, endDate)) || (startDate && isLower(pickedDate, startDate, false))) return;
+    if ((endDate && isGreater(pickedDate, endDate)) || (startDate && isLower(pickedDate, startDate))) return;
     onChangeMonth(monthChange);
     onClick(pickedDate);
   }
@@ -124,6 +138,7 @@
   $: end = viewDelta < 1 ? 1 : 1.5;
   const TRANSFORM_CONST = 222;
   let transform = TRANSFORM_CONST;  // month +/- constant
+  /** @type {Function|null} */
   let onMonthTransitionTrigger = null;
 
   $: swapTransition = viewDelta === -2
@@ -146,17 +161,17 @@
     ? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 7 + weekStart)
     : i18n.daysMin.slice(weekStart, 7 + weekStart)
 
-  function isBetween(num) {
+  function isBetween(/** @type {number} */num) {
     return dataset.prevTo <= num && num < dataset.nextFrom;
   }
 
-  function isDisabledDate(date) {
-    if (startDate && computedStartDate > date) return true;
+  function isDisabledDate(/** @type {Date} */ date) {
+    if (computedStartDate && computedStartDate > date) return true;
     if (endDate && endDate <= date) return true;
     return false;
   }
 
-  function onChangeMonth(val) {
+  function onChangeMonth(/** @type {number} */ val) {
 
     const multiplier = currentView === MODE_DECADE
       ? 120
@@ -170,7 +185,7 @@
     transform = 222;
   }
 
-  function onTransformChangeMonth(val) {
+  function onTransformChangeMonth(/** @type {number} */ val) {
     if (currentView !== MODE_YEAR) {
       return onChangeMonth(val);
     }
@@ -188,12 +203,13 @@
   }
 
 
+  // @ts-ignore
   function onClick(value) {
     viewDelta = 1;
     viewChanged = true;
     switch (currentView) {
       case 0:
-        activeDate.setYear(value);
+        activeDate.setFullYear(value);
         activeDate = activeDate;
         break;
       case 1:
@@ -228,7 +244,7 @@
   function showCaption() {
     switch (currentView) {
       case 0:
-        return `${dataset.grid[0][1]} - ${dataset.grid[2][2]}`
+        return `${dataset.years[0][1]} - ${dataset.years[2][2]}`
       case 1:
         return activeDate.getFullYear();
       case 2:
@@ -236,7 +252,7 @@
     }
   }
 
-  $: tableCaption = showCaption(currentView, activeDate);
+  $: tableCaption = showCaption();
 
 </script>
 
@@ -259,8 +275,8 @@
 <div class="sdt-calendar" class:is-grid={viewChanged}>
   {#if currentView === MODE_DECADE}
   <table class="sdt-table" style="max-height: 221px; height: 221px">
-    <tbody in:swapTransition={{duration, start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1}} on:outroend={onTransitionOut}>
-      {#each dataset.grid as row, i}
+    <tbody in:swapTransition={{duration: duration, start: start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1}} on:outroend={onTransitionOut}>
+      {#each dataset.years as row, i}
       <tr>
         {#each row as year, j(j)}
         <td class:is-selected={i*4+j === dataset.selectionMark}>
@@ -283,7 +299,7 @@
       class:animate-transition={onMonthTransitionTrigger ? true : false}
       on:transitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
     >
-      {#each dataset.grid as row, i}
+      {#each dataset.months as row, i}
       <tr>
         {#each row as month, j(j)}
         <td class:is-selected={i*4+j === dataset.selectionMark}>
@@ -316,7 +332,7 @@
         >
           <button on:click|preventDefault={() => {onClick(currDate)}}
             class="std-btn  sdt-btn-day"
-            class:not-current={!isBetween(i*7+j, currDate) }
+            class:not-current={!isBetween(i*7+j) }
             disabled={isDisabledDate(currDate)}
           >{currDate.getDate()}</button>
         </td>
