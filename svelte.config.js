@@ -1,6 +1,7 @@
+import adapter from "@sveltejs/adapter-static";
+import preprocess from "svelte-preprocess";
 import { mdsvex } from "mdsvex";
 import mdsvexConfig from "./mdsvex.config.js";
-import adapter from "@sveltejs/adapter-static";
 
 const dev = process.env.NODE_ENV === "development";
 
@@ -22,10 +23,15 @@ const config = {
     },
     package: {
       emitTypes: false,
-    },
+    }
   },
 
-  preprocess: [mdsvex(mdsvexConfig)],
+  preprocess: [
+    mdsvex(mdsvexConfig),
+    preprocess({
+      postcss: true,
+    }),
+  ],
 };
 
 export default config;

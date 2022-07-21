@@ -1,7 +1,5 @@
 <script>
-  import Readme from './_README.md';
-
-  let readmeActive = true;
+  import Example from './_examples.svelte';
 </script>
 
 <div class="container mt-4">
@@ -9,10 +7,10 @@
     <div class="col-auto">
       <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-          <a class="nav-link" class:active={readmeActive} aria-current="page" href="#home" >Readme.md</a>
+          <a class="nav-link" aria-current="page" href="/svelty-picker/">Readme.md</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" class:active={!readmeActive}  href="/svelty-picker/examples">Examples</a>
+          <span class="nav-link active">Examples</span>
         </li>
       </ul>
       
@@ -22,8 +20,8 @@
     </div>
     <div class="col">
       <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade" class:active={readmeActive} class:show={readmeActive} id="index" role="tabpanel" aria-labelledby="home-tab">
-          <Readme></Readme>
+        <div class="tab-pane fade active show"  id="index" role="tabpanel" aria-labelledby="home-tab">
+          <Example></Example>
         </div>
       </div>
     </div>

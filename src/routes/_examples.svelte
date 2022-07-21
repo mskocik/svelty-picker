@@ -122,7 +122,7 @@
       <div class="me-4">
         Default theme
         <!-- only (always visible) -->
-        <SveltyPicker inputClasses="form-control" mode="datetime" pickerOnly></SveltyPicker>
+        <SveltyPicker inputClasses="form-control" mode="date" pickerOnly></SveltyPicker>
       </div>
       <div>
         Custom theme
