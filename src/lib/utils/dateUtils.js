@@ -297,9 +297,9 @@ export function formatDate(date, format, i18n, type) {
       // hour
       h:    date.getHours(),
       // minute
-      i:    date.getMinutes(),
+      ii:    (date.getMinutes() < 10 ? '0' : '') + date.getMinutes(),
       // second
-      s:    date.getUTCSeconds()
+      ss:    (date.getUTCSeconds() < 10 ? '0' : '') + date.getUTCSeconds()
     };
 
     if (i18n.meridiem.length === 2) {
@@ -311,8 +311,8 @@ export function formatDate(date, format, i18n, type) {
     val.HH = (val.H < 10 ? '0' : '') + val.H;
     val.P = val.p.toUpperCase();
     val.hh = (val.h < 10 ? '0' : '') + val.h;
-    val.ii = (val.i < 10 ? '0' : '') + val.i;
-    val.ss = (val.s < 10 ? '0' : '') + val.s;
+    val.i = val.ii;
+    val.s = val.ss;
     val.dd = (val.d < 10 ? '0' : '') + val.d;
     val.mm = (val.m < 10 ? '0' : '') + val.m;
   } else if (type === 'php') {
@@ -437,7 +437,7 @@ const formatHelper = {
         /** @param {Date} d, @param {number} v */
         d: (d, v) => d.setDate(v),
         /** @param {Date} d, @param {number} v */
-        p: (d, v) => d.setHours(v === 1 ? d.getHours() + 12 : d.getHours()),
+        p: (d, v) => d.setHours(v === 1 && d.getHours() < 12 ? d.getHours() + 12 : d.getHours()),
         /** @param {Date} d, @param {number} v */
         t: (d, v) => d.setTime(v),
         mm: ()=>{},
