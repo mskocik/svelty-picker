@@ -34,7 +34,6 @@
       val = selectedHour + val;
     }
     onClick({
-      meridianSwitch: !isMinuteView,
       target: {
         tagName: 'BUTTON',
         dataset: {
@@ -52,6 +51,7 @@
   let innerDate = date || new Date();
   if (!date) {
     date = innerDate;
+    date.setHours(0,0,0,0);
   }
   let canSelect = true;
   const dispatch = createEventDispatcher();
@@ -91,12 +91,15 @@
     ? selectedHour >= 12
     : false;
   $: selectedMinutes = innerDate ? innerDate.getMinutes() : 0;
-  $: handCss = isMinuteView 
-    ? `transform: rotateZ(${selectedMinutes * 6}deg)`
-    : (showMeridian 
-      ? `transform: rotateZ(${selectedHour % 12 * 30}deg);`
-      : `transform: rotateZ(${selectedHour % 12 * 30}deg); ${selectedHour >= 12 ? 'height: calc(25% + 1px)' : ''}`
-    );
+  let handCss = '';
+  $: {
+    let nextDegree = isMinuteView
+      ? selectedMinutes * 6
+      : selectedHour % 12 * 30;
+    handCss = isMinuteView || showMeridian || selectedHour < 12
+      ? `transform: rotateZ(${nextDegree}deg);`
+      : `transform: rotateZ(${nextDegree}deg); height: calc(25% + 1px)`
+  }
   $: multiplier = isMinuteView ? 5 : 1;
   // @ts-ignore
   $: sameDateRestriction = startDate && endDate && ['getFullYear', 'getMonth', 'getDate'].every(p => endDate[p]() === startDate[p]())
@@ -216,7 +219,11 @@
     let b = 0;
     if (e.target.tagName === 'BUTTON') {
       let val = parseInt(e.target.dataset.value);
-      const setter = e.meridianSwitch || !isMinuteView ? 'setHours' : 'setMinutes';
+      const setter = !isMinuteView ? 'setHours' : 'setMinutes';
+      if (!isMinuteView && isPM) {
+        val += 12;
+      }
+
       innerDate[setter](val);
     } else if (isMinuteView) {
       // compute it out of x,y 
@@ -271,19 +278,21 @@
     innerDate = innerDate;
     canSelect = false;
     dispatch('time', innerDate);
-    if (!e.meridianSwitch && !handleMoveMove && isMinuteView) setTimeout(() => { dispatch('close') }, 300);
-    if (!e.meridianSwitch && !isMinuteView) isMinuteView = true;
+    if (!handleMoveMove && isMinuteView) setTimeout(() => { dispatch('close') }, 300);
+    if (!isMinuteView) isMinuteView = true;
     enableViewToggle = true;
     setTimeout(() => { enableViewToggle = false; canSelect = true }, 200);
   }
 
   /**
-   * @param {TimeClickEvent|MouseEvent} e
+   * @param {MouseEvent} e
    */
   function onSwitchMeridian(e) {
     // @ts-ignore
-    e.meridianSwitch = true;
-    onClick(e);
+    const val = parseInt(e.target.dataset.value);
+    innerDate.setHours(val);
+    innerDate = innerDate;
+    dispatch('time', innerDate);
   }
 
   /**
@@ -320,8 +329,7 @@
     >{view(selectedMinutes, false)}</button>
     {#if showMeridian}
     <div class="sdt-meridian">
-      <button class="sdt-time-btn" class:is-active={selectedHour < 12} on:click={onSwitchMeridian} data-value={selectedHour % 12}>AM</button>
-      <button class="sdt-time-btn" class:is-active={isPM} on:click={onSwitchMeridian} data-value={selectedHour % 12 + 12}>PM</button>
+      <button type="button" class="sdt-time-btn sdt-time-figure is-active" on:click={onSwitchMeridian} data-value={isPM ? selectedHour % 12 : selectedHour + 12}>{isPM ? 'PM' : 'AM'}</button>
     </div>
     {/if}
   </div>
@@ -401,16 +409,12 @@
   }
   .sdt-meridian {
     position: absolute;
-    top: 0.25rem;
-    right: 0.25rem;
+    top: 0;
+    right: 40px;
     display: flex;
-    flex-flow: column;
-    font-size: 90%;
   }
   .sdt-meridian .sdt-time-btn {
-    padding: 0.15rem 0.5rem;
-  }
-  .sdt-meridian .sdt-time-btn.is-active {
+    width: 56px;
     font-weight: bold;
   }
   .sdt-middle-dot {
@@ -432,7 +436,6 @@
     background-color: var(--sdt-primary);
     transform-origin: center bottom 0;
     transition: transform 0.3s ease, height 0.15s ease;
-    
   }
   .sdt-hand-circle {
     left: -15px;

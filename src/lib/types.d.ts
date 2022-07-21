@@ -24,17 +24,6 @@ declare global {
         nextFrom: number
     }
 
-    interface TimeClickEvent extends MouseEvent {
-        type: string,
-        target: {
-            tagName: string,
-            dataset: {
-                value: string
-            }
-        },
-        meridianSwitch?: boolean
-    }
-
     export type GridPosition = {
         x: number,
         y: number
