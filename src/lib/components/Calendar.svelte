@@ -251,7 +251,7 @@
     }
   }
 
-  $: tableCaption = showCaption();
+  $: tableCaption = activeDate && showCaption();
 
 </script>
 
