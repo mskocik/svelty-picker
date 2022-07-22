@@ -20,7 +20,7 @@
    */
   export function handleGridNav(key, shiftKey) {
     if (!internalDate) {
-      onClick({day: new Date});
+      onClick(new Date);
       return;
     }
     /** @type {GridPosition} pos */
