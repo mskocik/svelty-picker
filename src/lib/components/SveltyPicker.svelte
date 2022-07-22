@@ -5,7 +5,7 @@
 </script>
 
 <script>
-  import { createEventDispatcher, tick } from "svelte";
+  import { createEventDispatcher, onMount, tick } from "svelte";
   import { fade } from "svelte/transition";
   import Calendar from "$lib/components/Calendar.svelte";
   import Time from "$lib/components/Time.svelte";
@@ -13,7 +13,7 @@
   import { usePosition } from "$lib/utils/utils";
 
   // html
-
+  export let inputId = '';
   /** @type {string} */
   export let name = "date";
   /** @type {boolean} */
@@ -22,7 +22,8 @@
   export let placeholder = null;
   /** @type {boolean} */
   export let required = false;
-  // dates
+  /** @type {HTMLInputElement} */
+  export let inputElement;
   /** @type {string|null} */
   export let value = null;
   /** @type {Date|null} */
@@ -88,8 +89,7 @@
   $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
   let isFocused = pickerOnly;
   let pickerVisible = pickerOnly;
-  /** @type {HTMLElement|null} */
-  let inputEl = null;
+  let inputEl = inputElement;
   /** @type {DOMRect|null} */
   let inputRect = null;
   /** @type {function|function} */
@@ -118,7 +118,9 @@
       currentMode = resolvedMode;
     }
   }
-
+  $: {  // custom-element ONLY
+    if (inputElement) inputElement.readOnly = isFocused;
+  }
   $: internalVisibility = pickerOnly ? true : false;
   $: {
     if (value !== prevValue) {
@@ -186,6 +188,7 @@
       preventClose = false;
     }
     tick().then(() => {
+      if (inputElement) inputElement.value = value || '';
       inputEl && inputEl.dispatchEvent(new Event("input"));
       dispatch("change", value);
     });
@@ -221,10 +224,10 @@
   function onKeyDown(e) {
     if (!pickerVisible) {
       ["Backspace", "Delete"].includes(e.key) && onClear();
-      if (e.key !== "Enter") return onInputFocus();
+      if (e.key === 'Enter') onInputFocus();
     }
     if (!pickerVisible && e.key !== 'Tab') {
-      pickerVisible = true;
+      pickerVisible = e.key !== 'Shift';
       e.preventDefault();
       return;
     }
@@ -264,7 +267,7 @@
           }
           return resetView();
         }
-        if (isFocused && resolvedMode === "date") isFocused = false;
+        if (isFocused && resolvedMode === "date") pickerVisible = false;
         if (innerDate && resolvedMode.includes("time")) {
           currentMode = "time";
         }
@@ -301,13 +304,23 @@
   function onInputBlur() {
     isFocused = false;
     pickerVisible = false;
-    dispatch("blur");
+    !inputElement && dispatch("blur");
   }
 
-  // TODO: when we have existing input...
+  /**
+   * initialization for custom element
+  */
+  inputElement && onMount(() => {
+    inputElement.onfocus = onInputFocus;
+    inputElement.onblur = onInputBlur;
+    inputElement.onclick = () => !pickerVisible && onInputFocus();
+    inputElement.onkeydown = onKeyDown;
+  });
 </script>
 
+{#if !inputElement}
 <input bind:this={inputEl} type={pickerOnly ? "hidden" : "text"}
+  id={inputId}
   tabindex="0"
   {name} {disabled} {required} {value} {placeholder}
   autocomplete="off"
@@ -323,6 +336,7 @@
   on:change
   on:keydown={onKeyDown}
 />
+{/if}
 {#if pickerVisible && isFocused }
   <div
     class="std-calendar-wrap is-popup {theme}"

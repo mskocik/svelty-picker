@@ -30,13 +30,14 @@ function formatProp(name) {
   return name;
 }
 
-class PickerElement extends HTMLElement {
+class PickerElement extends HTMLInputElement {
   constructor() {
     super();
     this.picker = null;
 
     const simpleProps = [
-      'value', 'name', 'placeholder', 'mode', 'format'
+      // 'value',
+      'name', 'placeholder', 'mode', 'format'
     ].reduce((res, name) => {
       res[name] = {
         get() {
@@ -130,19 +131,23 @@ class PickerElement extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (this.picker && oldValue !== newValue) {
       this.picker.$set({ [formatProp(name)]: formatValue(name, newValue) });
+      if (name === 'value') this.value = newValue;
     }
   } 
 
   connectedCallback() {
     if (this.picker) return;
-    let props = {};
+    let props = {
+      inputElement: this,
+      value: this.value
+    };
     for (const attr of OPTION_LIST) {
       if (this.hasAttribute(attr)) {
         props[formatProp(attr)] = formatValue(attr, this.getAttribute(attr));
       }
     }
     this.picker = new SveltyPicker({
-      target: this,
+      target: this.parentElement,
       props: props
     });
     this.picker.$on('input', e => {
@@ -171,7 +176,7 @@ class PickerElement extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.picker && this.picker.destroy();
+    this.picker && this.picker.$destroy();
   }
 }
 
@@ -181,5 +186,5 @@ class PickerElement extends HTMLElement {
  * @param {string} name name of custom element
  */
 export function registerElement(name) {
-  window.customElements.define(name, PickerElement);
+  window.customElements.define(name, PickerElement, { extends: 'input' });
 }
