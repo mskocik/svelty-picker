@@ -1,7 +1,8 @@
 import adapter from "@sveltejs/adapter-static";
-import preprocess from "svelte-preprocess";
+// import preprocess from "svelte-preprocess";
 import { mdsvex } from "mdsvex";
 import mdsvexConfig from "./mdsvex.config.js";
+import { windi } from "svelte-windicss-preprocess";
 
 const dev = process.env.NODE_ENV === "development";
 
@@ -28,9 +29,10 @@ const config = {
 
   preprocess: [
     mdsvex(mdsvexConfig),
-    preprocess({
-      postcss: true,
-    }),
+    windi({})
+    // preprocess({
+    //   postcss: true,
+    // }),
   ],
 };
 

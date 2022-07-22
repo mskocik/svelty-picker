@@ -52,6 +52,7 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | mode            | `string`     | `auto`        | restrict picker's mode. Possible values: `auto|date|datetime|time`. By default it try to guess the mode from `format` |
 | format          | `string`     | `yyyy-mm-dd`  | Format of entered date/time. See [format settings](#format-settings) for available options |
 | weekStart       | `number`     | `1`           | number in range `0-6` to select first day of the week. Sunday is `0` |
+| inputId         | `string`     | ``            | id attribute for input element
 | inputClasses    | `string`     | ``            | input css class string |
 | todayBtnClasses | `string`     | `sdt-action-btn sdt-today-btn` | today button css classes |
 | clearBtnClasses | `string`     | `sdt-action-btn sdt-clear-btn` | clear button css classes |
@@ -81,53 +82,56 @@ Date format can be defined under `formatType` property. It has two options: `sta
 `standard` is the _default_.
 
 #### `standard` format settings:
-
-- `d` : day of the month without leading zeros
-- `dd` : day of the month, 2 digits with leading zeros
-- `D` : short textual representation of a weekday (i18n.daysShort)
-- `DD` : long textual representation of a weekday (i18n.days)
-- `S` : English ordinal suffix for the day of the month, (i18n.suffix)
-- `m` : numeric representation of month without leading zeros
-- `mm` : numeric representation of the month, 2 digits with leading zeros
-- `M` : short textual representation of a month, three letters (i18n.monthsShort)
-- `MM` : full textual representation of a month, such as January or March (i18n.months)
-- `yy` : two digit representation of a year
-- `yyyy` : full numeric representation of a year, 4 digits
-- `h` : hour without leading zeros - 24-hour format
-- `hh` : hour, 2 digits with leading zeros - 24-hour format
-- `H` : hour without leading zeros - 12-hour format
-- `HH` : hour, 2 digits with leading zeros - 12-hour format
-- `i` : minutes, 2 digits with leading zeros
-- `ii` : alias for `i`
-- `s` : seconds, 2 digits with leading zeros
-- `ss` : alias for `s`
-- `p` : meridian in lower case ('am' or 'pm') - according to locale file (i18n.meridiem)
-- `P` : meridian in upper case ('AM' or 'PM') - according to locale file (i18n.meridiem)
-- `t` : timestamp in milliseconds (although milliseconds are always 0). For timestamp in seconds use `php` format
+| Format | Description                                                                      |
+|--------|----------------------------------------------------------------------------------|--------------------------------------
+| `d`    | day of the month without leading zeros                                           | 1 to 31
+| `dd`   | day of the month, 2 digits with leading zeros                                    | 01 to 31
+| `D`    | short textual representation of a weekday (i18n.daysShort)                       | Mon through Sun
+| `DD`   | long textual representation of a weekday (i18n.days)                             | Sunday through Saturday
+| `S`    | English ordinal suffix for the day of the month, (i18n.suffix)                   | st, nd, rd or th. Works well with `d` 
+| `m`    | numeric representation of month without leading zeros                            | 1 to 12
+| `mm`   | numeric representation of the month, 2 digits with leading zeros                 | 01 to 12
+| `M`    | short textual representation of a month, three letters (i18n.monthsShort)        | Jan through Dec
+| `MM`   | full textual representation of a month, such as January or March (i18n.months)   | January through December
+| `yy`   | two digit representation of a year                                               | 99 or 03
+| `yyyy` | full numeric representation of a year, 4 digits                                  | 1999, 2003
+| `h`    | hour without leading zeros - 24-hour format                                      | 0 - 23
+| `hh`   | hour, 2 digits with leading zeros - 24-hour format                               | 00 - 23
+| `H`    | hour without leading zeros - 12-hour format                                      | 1 - 12
+| `HH`   | hour, 2 digits with leading zeros - 12-hour format                               | 01 - 12
+| `i`    | minutes, 2 digits with leading zeros                                             | 00 - 59
+| `ii`   | alias for `i`                                                                    | 00 - 59
+| `s`    | seconds, 2 digits with leading zeros                                             | 00
+| `ss`   | alias for `s`                                                                    | 00
+| `p`    | meridian in lower case ('am' or 'pm') - according to locale file (i18n.meridiem) | am or pm
+| `P`    | meridian in upper case ('AM' or 'PM') - according to locale file (i18n.meridiem) | AM or PM
+| `t`    | timestamp in milliseconds (although milliseconds are always 0). For timestamp in seconds use `php` format |
 
 #### `php` format settings:
 
-- `d` :	Day of the month, 2 digits with leading zeros 	01 to 31
-- `D` :	A textual representation of a day, three letters 	Mon through Sun
-- `j` :	Day of the month without leading zeros 	1 to 31
-- `l` :	A full textual representation of the day of the week 	Sunday through Saturday
-- `N` :	ISO 8601 numeric representation of the day of the week 	1 (for Monday) through 7 (for Sunday)
-- `S` :	English ordinal suffix for the day of the month, 2 characters 	st, nd, rd or th. Works well with j
-- `F` :	A full textual representation of a month, such as January or March 	January through December
-- `m` :	Numeric representation of a month, with leading zeros 	01 through 12
-- `M` :	A short textual representation of a month, three letters 	Jan through Dec
-- `n` :	Numeric representation of a month, without leading zeros 	1 through 12
-- `Y` :	A full numeric representation of a year, at least 4 digits, with - for years BCE. 	Examples: -0055, 0787, 1999, 2003
-- `y` :	A two digit representation of a year 	Examples: 99 or 03
-- `a` :	Lowercase Ante meridiem and Post meridiem 	am or pm
-- `A` :	Uppercase Ante meridiem and Post meridiem 	AM or PM
-- `g` :	12-hour format of an hour without leading zeros 	1 through 12
-- `G` :	24-hour format of an hour without leading zeros 	0 through 23
-- `h` :	12-hour format of an hour with leading zeros 	01 through 12
-- `H` :	24-hour format of an hour with leading zeros 	00 through 23
-- `i` :	Minutes with leading zeros 	00 to 59
-- `s` :	Seconds with leading zeros 	00 through 59
-- `U` : timestamp in seconds. For timestamp with miliseconds use `standard` format
+| Char | Description                                                         | Example
+|------|---------------------------------------------------------------------|--------------------------------------
+| `d`  |	Day of the month, 2 digits with leading zeros 	                   | 01 to 31
+| `D`  |	A textual representation of a day, three letters 	                 | Mon through Sun
+| `j`  |	Day of the month without leading zeros 	                           | 1 to 31
+| `l`  |	A full textual representation of the day of the week 	             | Sunday through Saturday
+| `N`  |	ISO 8601 numeric representation of the day of the week 	           | 1 (for Monday) through 7 (for Sunday)
+| `S`  |	English ordinal suffix for the day of the month, 2 characters 	   | st, nd, rd or th. Works well with `j`
+| `F`  |	A full textual representation of a month, such as January or March | January through December
+| `m`  |	Numeric representation of a month, with leading zeros 	           | 01 through 12
+| `M`  |	A short textual representation of a month, three letters 	         | Jan through Dec
+| `n`  |	Numeric representation of a month, without leading zeros 	         | 1 through 12
+| `Y`  |	A full numeric representation of a year, at least 4 digits         | 0787, 1999, 2003
+| `y`  |	A two digit representation of a year                               | 99 or 03
+| `a`  |	Lowercase Ante meridiem and Post meridiem 	                       | am or pm
+| `A`  |	Uppercase Ante meridiem and Post meridiem 	                       | AM or PM
+| `g`  |	12-hour format of an hour without leading zeros 	                 | 1 through 12
+| `G`  |	24-hour format of an hour without leading zeros 	                 | 0 through 23
+| `h`  |	12-hour format of an hour with leading zeros 	                     | 01 through 12
+| `H`  |	24-hour format of an hour with leading zeros 	                     | 00 through 23
+| `i`  |	Minutes with leading zeros 	                                       | 00 to 59
+| `s`  |	Seconds with leading zeros 	                                       | 00
+| `U`  | timestamp in seconds. For timestamp with miliseconds use `standard` format |
 
 ### CSS variables
 

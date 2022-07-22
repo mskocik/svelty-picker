@@ -1,0 +1,23 @@
+```
+<SveltyPicker theme="my-colors"></SveltyPicker>
+
+<style>
+  :global(.my-colors) {
+      --sdt-primary: #998825;
+      --sdt-color: #eee;
+      --sdt-color-selected: #eee;
+      --sdt-bg-main: #333;
+      --sdt-bg-today: var(--sdt-primary);
+      --sdt-bg-clear: #dc3545;
+      --sdt-today-bg: rgb(160, 145, 57);
+      --sdt-today-color: var(--sdt-color-selected);
+      --sdt-clear-color: #dc3545;
+      --sdt-btn-bg-hover: rgb(126, 35, 78);
+      --sdt-btn-header-bg-hover: rgb(107, 18, 60);
+      --sdt-clock-bg: #eeeded;
+      --sdt-clock-bg-minute: #eeeded;
+      --sdt-clock-bg-shadow: 0 0 128px 2px #74661834 inset;
+      --sdt-shadow: #ccc;
+  }
+</style>
+```
