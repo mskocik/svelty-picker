@@ -306,7 +306,7 @@
       on:transitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
     >
       {#each dataset.years as row, i}
-      <tr>
+      <tr class="sdt-cal-td">
         {#each row as year, j(j)}
         <td class:is-selected={i*4+j === dataset.selectionMark}>
           <button
@@ -329,7 +329,7 @@
       on:transitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
     >
       {#each dataset.months as row, i}
-      <tr>
+      <tr class="sdt-cal-td">
         {#each row as month, j(j)}
         <td class:is-selected={i*4+j === dataset.selectionMark}>
           <button class="std-btn"
@@ -379,7 +379,7 @@
     padding: 0;
     font-size: 90%;
     text-align: center;
-    background-color: var(--sdt-bg-main);;
+    background-color: var(--sdt-bg-main);
   }
   .sdt-cal-th {
     height: 24px;

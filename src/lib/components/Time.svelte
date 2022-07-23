@@ -33,6 +33,7 @@
     } else {
       val = selectedHour + val;
     }
+    enableViewToggle = false;
     onClick({
       target: {
         tagName: 'BUTTON',
@@ -41,12 +42,13 @@
         }
       }
     });
+    enableViewToggle = true;
   }
   /** @type {HTMLElement} */
   let clockEl;
   let isMinuteView = false;
   let handleMoveMove = false;
-  let enableViewToggle = false;
+  let enableViewToggle = true;
   /** @type {Date} */
   let innerDate = date || new Date();
   if (!date) {
@@ -279,7 +281,7 @@
     canSelect = false;
     dispatch('time', innerDate);
     if (!handleMoveMove && isMinuteView) setTimeout(() => { dispatch('close') }, 300);
-    if (!isMinuteView) isMinuteView = true;
+    if (enableViewToggle && !isMinuteView) isMinuteView = true;
     enableViewToggle = true;
     setTimeout(() => { enableViewToggle = false; canSelect = true }, 200);
   }

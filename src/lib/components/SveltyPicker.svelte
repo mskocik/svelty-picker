@@ -28,7 +28,7 @@
   export let value = null;
   /** @type {Date|null} */
   export let initialDate = null;
-  /** @type {Date | null} */
+  /** @type {Date | string | null} */
   export let startDate = null;
   /** @type {Date | null} */
   export let endDate = null;
@@ -88,7 +88,8 @@
   // @ts-ignore
   $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
   let isFocused = pickerOnly;
-  let pickerVisible = pickerOnly;
+  $: pickerVisible = pickerOnly;
+  $: fadeFn = pickerOnly ? () => {} : fade;
   let inputEl = inputElement;
   /** @type {DOMRect|null} */
   let inputRect = null;
@@ -340,7 +341,7 @@
 {#if pickerVisible && isFocused }
   <div
     class="std-calendar-wrap is-popup {theme}"
-    transition:fade|local={{ duration: 200 }}
+    transition:fadeFn|local={{ duration: 200 }}
     use:positionFn={{ inputEl, visible: internalVisibility, inputRect }}
     on:mousedown|preventDefault
   >
