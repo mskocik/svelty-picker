@@ -38,7 +38,7 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 ## 📓 Options
 
 | Property        | Type         | Default       | Description |
-|-----------------|--------------|---------------| ------------------|
+|-----------------|--------------|---------------|-------------------|
 | name            | `string`     | `date`        | html attribute for underlying `<input>` element  |
 | disabled        | `bool`       | `false`       | html attribute for underlying `<input>` element  |
 | placeholder     | `string`     | `null`        | html attribute for underlying `<input>` element  |
@@ -82,7 +82,8 @@ Date format can be defined under `formatType` property. It has two options: `sta
 `standard` is the _default_.
 
 #### `standard` format settings:
-| Format | Description                                                                      |
+
+| Format | Description                                                                      | Example                                
 |--------|----------------------------------------------------------------------------------|--------------------------------------
 | `d`    | day of the month without leading zeros                                           | 1 to 31
 | `dd`   | day of the month, 2 digits with leading zeros                                    | 01 to 31
@@ -105,11 +106,11 @@ Date format can be defined under `formatType` property. It has two options: `sta
 | `ss`   | alias for `s`                                                                    | 00
 | `p`    | meridian in lower case ('am' or 'pm') - according to locale file (i18n.meridiem) | am or pm
 | `P`    | meridian in upper case ('AM' or 'PM') - according to locale file (i18n.meridiem) | AM or PM
-| `t`    | timestamp in milliseconds (although milliseconds are always 0). For timestamp in seconds use `php` format |
+| `t`    | timestamp in milliseconds (although milliseconds are always 0). For timestamp in seconds use `php` format | |
 
 #### `php` format settings:
 
-| Char | Description                                                         | Example
+| Format | Description                                                         | Example
 |------|---------------------------------------------------------------------|--------------------------------------
 | `d`  |	Day of the month, 2 digits with leading zeros 	                   | 01 to 31
 | `D`  |	A textual representation of a day, three letters 	                 | Mon through Sun
