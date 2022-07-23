@@ -1,6 +1,6 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "immutable/start-c562367a.js",
+    "file": "immutable/start-b528e9b5.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
@@ -56,7 +56,7 @@
     ]
   },
   "src/routes/custom-element.svelte": {
-    "file": "immutable/pages/custom-element.svelte-69ea5e4e.js",
+    "file": "immutable/pages/custom-element.svelte-a0f6cc30.js",
     "src": "src/routes/custom-element.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
@@ -72,14 +72,14 @@
     ]
   },
   "src/routes/formatting.svelte": {
-    "file": "immutable/pages/formatting.svelte-84f54c53.js",
+    "file": "immutable/pages/formatting.svelte-07ad7b3a.js",
     "src": "src/routes/formatting.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-bba13a04.js",
       "_formatting_php-3c906c50.js",
-      "_SveltyPicker-f3a80465.js"
+      "_SveltyPicker-15fcdb01.js"
     ],
     "css": [
       "immutable/assets/formatting-a0b286e4.css"
@@ -95,13 +95,13 @@
     ]
   },
   "src/routes/index.svx": {
-    "file": "immutable/pages/index.svx-a4a1023a.js",
+    "file": "immutable/pages/index.svx-f19385ff.js",
     "src": "src/routes/index.svx",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-bba13a04.js",
-      "_SveltyPicker-f3a80465.js"
+      "_SveltyPicker-15fcdb01.js"
     ],
     "css": [
       "immutable/assets/index-e7757a58.css"
@@ -121,13 +121,13 @@
     ]
   },
   "src/routes/playground@empty.svelte": {
-    "file": "immutable/pages/playground@empty.svelte-ef244e83.js",
+    "file": "immutable/pages/playground@empty.svelte-95d882ed.js",
     "src": "src/routes/playground@empty.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-bba13a04.js",
-      "_SveltyPicker-f3a80465.js",
+      "_SveltyPicker-15fcdb01.js",
       "_options-e355255b.js",
       "_formatting_php-3c906c50.js"
     ],
@@ -136,13 +136,13 @@
     ]
   },
   "src/routes/styling.svelte": {
-    "file": "immutable/pages/styling.svelte-9f359f0c.js",
+    "file": "immutable/pages/styling.svelte-a896d183.js",
     "src": "src/routes/styling.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-bba13a04.js",
-      "_SveltyPicker-f3a80465.js"
+      "_SveltyPicker-15fcdb01.js"
     ],
     "css": [
       "immutable/assets/styling-9a44068d.css"
@@ -166,13 +166,13 @@
       "_index-bba13a04.js"
     ]
   },
-  "_SveltyPicker-f3a80465.js": {
-    "file": "immutable/chunks/SveltyPicker-f3a80465.js",
+  "_SveltyPicker-15fcdb01.js": {
+    "file": "immutable/chunks/SveltyPicker-15fcdb01.js",
     "imports": [
       "_index-bba13a04.js"
     ],
     "css": [
-      "immutable/assets/SveltyPicker-eefb95f0.css"
+      "immutable/assets/SveltyPicker-31152ba0.css"
     ]
   },
   "_options-e355255b.js": {
@@ -182,11 +182,11 @@
     ]
   },
   "src/lib/index.js": {
-    "file": "immutable/chunks/index-7de3b327.js",
+    "file": "immutable/chunks/index-840fc8fa.js",
     "src": "src/lib/index.js",
     "isDynamicEntry": true,
     "imports": [
-      "_SveltyPicker-f3a80465.js",
+      "_SveltyPicker-15fcdb01.js",
       "_index-bba13a04.js"
     ]
   },
@@ -202,25 +202,25 @@
     "file": "immutable/assets/custom-element-d57795d7.css",
     "src": "src/routes\\custom-element.css"
   },
+  "src/routes\\formatting.css": {
+    "file": "immutable/assets/formatting-a0b286e4.css",
+    "src": "src/routes\\formatting.css"
+  },
   "src/routes\\styling.css": {
     "file": "immutable/assets/styling-9a44068d.css",
     "src": "src/routes\\styling.css"
   },
-  "src/routes\\formatting.css": {
-    "file": "immutable/assets/formatting-a0b286e4.css",
-    "src": "src/routes\\formatting.css"
+  "src/routes\\index.css": {
+    "file": "immutable/assets/index-e7757a58.css",
+    "src": "src/routes\\index.css"
   },
   "src/routes\\playground@empty.css": {
     "file": "immutable/assets/playground@empty-73292507.css",
     "src": "src/routes\\playground@empty.css"
   },
   "SveltyPicker.css": {
-    "file": "immutable/assets/SveltyPicker-eefb95f0.css",
+    "file": "immutable/assets/SveltyPicker-31152ba0.css",
     "src": "SveltyPicker.css"
-  },
-  "src/routes\\index.css": {
-    "file": "immutable/assets/index-e7757a58.css",
-    "src": "src/routes\\index.css"
   },
   "src/routes\\__layout-empty.css": {
     "file": "immutable/assets/__layout-empty-d4bc191b.css",
