@@ -466,7 +466,7 @@
     background-color: var(--sdt-bg-main);
   }
   .sdt-tbody-lg .std-btn {
-    height: 72px;
+    height: 74px;
   }
   .sdt-thead-nav {
     display: flex;
