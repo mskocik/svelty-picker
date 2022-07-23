@@ -1,4 +1,4 @@
-```
+```svelte
 <SveltyPicker theme="my-colors"></SveltyPicker>
 
 <style>

@@ -10,14 +10,14 @@
 </p>
 
 <div class="flex">
+  <div class="w-auto mr-3">
+    Custom theme
+    <SveltyPicker theme="my-colors" inputClasses="form-control" mode="datetime" pickerOnly></SveltyPicker>
+  </div>
   <div class="w-auto">
     Default theme
     <!-- only (always visible) -->
     <SveltyPicker inputClasses="form-control" mode="date" pickerOnly></SveltyPicker>
-  </div>
-  <div class="w-auto mx-3">
-    Custom theme
-    <SveltyPicker theme="my-colors" inputClasses="form-control" mode="datetime" pickerOnly></SveltyPicker>
   </div>
 </div>
 

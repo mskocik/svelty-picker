@@ -1,4 +1,4 @@
-| Format | Description                                                                      |
+| Format | Description                                                                      | Example
 |--------|----------------------------------------------------------------------------------|--------------------------------------
 | `d`    | day of the month without leading zeros                                           | 1 to 31
 | `dd`   | day of the month, 2 digits with leading zeros                                    | 01 to 31

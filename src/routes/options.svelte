@@ -4,4 +4,6 @@
 
 <h2 class="header">Options</h2>
 
-<OptionsMD></OptionsMD>
+<div class="table tablex">
+  <OptionsMD></OptionsMD>
+</div>

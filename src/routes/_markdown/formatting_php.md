@@ -1,4 +1,4 @@
-| Char | Description                                                         | Example
+| Format | Description                                                         | Example
 |------|---------------------------------------------------------------------|--------------------------------------
 | `d`  |	Day of the month, 2 digits with leading zeros 	                   | 01 to 31
 | `D`  |	A textual representation of a day, three letters 	                 | Mon through Sun

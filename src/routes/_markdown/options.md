@@ -6,8 +6,8 @@
 | required        | `bool`       | `false`       | html attribute for underlying `<input>` element  |
 | value           | `string`     | `null`        | string representation of selected value |
 | initialDate     | `Date`       | `null`        | initial date object, if you prefer that to `value` |
-| startDate       | `string|Date`| `null`        | limit minimal selectable date |
-| endDate         | `string|Date`| `null`        | limit maximal selectable date |
+| startDate       | `string`\|`Date`| `null`        | limit minimal selectable date |
+| endDate         | `string`\|`Date`| `null`        | limit maximal selectable date |
 | pickerOnly      | `bool`       | `false`       | Picker is always visible and input field is then hidden, but still present |
 | theme           | `string`     | `sdt-calendar-colors` | css class defining [css variables](#css-variables) |
 | mode            | `string`     | `auto`        | restrict picker's mode. Possible values: `auto|date|datetime|time`. By default it try to guess the mode from `format` |

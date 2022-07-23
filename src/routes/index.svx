@@ -60,7 +60,7 @@
 
   <h3 class="header font-bold">Minimal example</h3>
 
-```svelte
+```js
 <script>
   import SveltyPicker from 'svelty-picker'
   

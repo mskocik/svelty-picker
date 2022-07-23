@@ -4,13 +4,16 @@
   // @ts-nocheck
   import { writable } from 'svelte/store'
 
+  import appCodeCss from './../app-code.css';
+
   const pages = {
     '' : 'Getting Started',
     options: 'Options',
     formatting: 'Formatting',
     styling: 'Styling',
     'custom-element': 'Custom Element',
-    // repl: 'Playground'
+    'i18n': 'Languages',
+    playground: 'Playground'
   };
 
   /**
@@ -104,7 +107,7 @@
       <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker?logo=github&amp;logoColor=g"></a>
     </div>
   </aside>
-	<main class="lg:px-6 md:px-8 lg:pt-6 w-full">
+	<main class="lg:px-6 md:px-8 lg:pt-6 w-4/5">
     <slot />
 	</main>
 </div>
@@ -112,7 +115,7 @@
 </div>
 
 <style windi:preflights:global windi:safelist:global>
-  :global(.code) {
+  :global(code, .code) {
     @apply bg-gray-100 p-1 rounded-sm;
   }
 
