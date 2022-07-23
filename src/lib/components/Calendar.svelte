@@ -136,6 +136,7 @@
   $: start = viewDelta < 1 ? 1.5 : 0.5;
   $: end = viewDelta < 1 ? 1 : 1.5;
   const TRANSFORM_CONST = 222;
+  const TRANSFORM_DECADE_UNEVEN = 148;  // in decade view, transform constants values are changing
   let transform = TRANSFORM_CONST;  // month +/- constant
   /** @type {Function|null} */
   let onMonthTransitionTrigger = null;
@@ -181,17 +182,31 @@
     activeDate.setMonth(activeDate.getMonth() + (val*multiplier));
     activeDate = activeDate;
     onMonthTransitionTrigger = null;
-    transform = 222;
+    transform = currentView === MODE_DECADE
+      ? activeDate.getFullYear() % 20 >= 10 ? TRANSFORM_CONST : TRANSFORM_DECADE_UNEVEN
+      : TRANSFORM_CONST;
   }
 
   function onTransformChangeMonth(/** @type {number} */ val) {
-    if (currentView !== MODE_YEAR) {
+    if (currentView === MODE_MONTH) {
       return onChangeMonth(val);
     }
     onMonthTransitionTrigger = () => {
       onChangeMonth(val)
     };
     
+    if (currentView === MODE_DECADE) {
+      transform = transform === TRANSFORM_DECADE_UNEVEN
+        ? (val === -1
+          ? transform - TRANSFORM_CONST
+          : TRANSFORM_CONST + TRANSFORM_DECADE_UNEVEN
+        )
+        : (val === -1
+          ? transform - TRANSFORM_CONST // 0 / -74
+          : transform + TRANSFORM_DECADE_UNEVEN // TRANSFORM_CONST + TRANSFORM_CONST
+        )
+      return;
+    }
     transform = val === -1 ? transform - TRANSFORM_CONST : transform + TRANSFORM_CONST;
   }
 
@@ -199,6 +214,10 @@
     viewDelta = -1
     viewChanged = true;
     currentView && currentView--;
+    if (currentView === MODE_DECADE) {
+      const isLongerMove = (Math.floor(activeDate.getFullYear() / 10) * 10) % 20 === 0;
+      transform = isLongerMove ? TRANSFORM_DECADE_UNEVEN : TRANSFORM_CONST;
+    }
   }
 
 
@@ -228,6 +247,7 @@
         break;
     }
     currentView < MODE_MONTH && currentView++;
+    transform = TRANSFORM_CONST;  // reset transform
   }
 
   
@@ -240,18 +260,24 @@
     dispatch('switch', 'time');
   }
 
-  function showCaption() {
+  /**
+   * @param {number} currentView
+   * @param {Date} activeDate
+   */
+  function showCaption(currentView, activeDate) {
     switch (currentView) {
-      case 0:
-        return `${dataset.years[0][1]} - ${dataset.years[2][2]}`
-      case 1:
+      case MODE_DECADE:
+        const from = [Math.floor(dataset.prevTo / 4), dataset.prevTo % 4] // y,x
+        const to = [Math.floor(dataset.nextFrom / 4), (dataset.nextFrom % 4)] // y,x
+        return `${dataset.years[from.shift()][from.shift()]} - ${dataset.years[to.shift()][to.shift()] - 1}`
+      case MODE_YEAR:
         return activeDate.getFullYear();
-      case 2:
+      case MODE_MONTH:
         return i18n.months[activeDate.getMonth()] + ' ' + activeDate.getFullYear();
     }
   }
 
-  $: tableCaption = activeDate && showCaption();
+  $: tableCaption = showCaption(currentView, activeDate);
 
 </script>
 
@@ -274,7 +300,11 @@
 <div class="sdt-calendar" class:is-grid={viewChanged}>
   {#if currentView === MODE_DECADE}
   <table class="sdt-table" style="max-height: 221px; height: 221px">
-    <tbody in:swapTransition={{duration: duration, start: start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1}} on:outroend={onTransitionOut}>
+    <tbody in:swapTransition={{duration: duration, start: start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1}} on:outroend={onTransitionOut}
+      style={`transform: translateY(-${transform}px); color: red`}
+      class:animate-transition={onMonthTransitionTrigger ? true : false}
+      on:transitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
+    >
       {#each dataset.years as row, i}
       <tr>
         {#each row as year, j(j)}
@@ -374,7 +404,7 @@
   }
   .animate-transition {
     will-change: transform;
-    transition: transform 0.3s ease
+    transition: transform .3s ease;
   }
   .not-current {
     opacity: 0.3;

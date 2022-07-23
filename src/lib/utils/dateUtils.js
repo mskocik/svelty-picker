@@ -16,13 +16,18 @@ export const MODE_MONTH = 2;
 export function compute(currentDate, selectedDate, view, locale, weekStart) {
   // years 4 x 3
   if (view === MODE_DECADE) {
-    const nextFrom = 11;
-    const prevTo = 1;
+    let prevTo = 10;  // base is year 2000
+    let nextFrom = 20;
     const todayMark = -1;
     const grid = [];
     let yearRow = [];
-    let currYear = currentDate.getFullYear() - (currentDate.getFullYear() % 10) - 1;
-    for (let i = 0; i < 12; i++) {
+    let currYear = currentDate.getFullYear() - (currentDate.getFullYear() % 10); 
+    currYear -= (currYear % 20 ? 12 : 10);
+    if (currYear % 10) {  // if start is 10
+      prevTo = 12;
+      nextFrom = 22;
+    }
+    for (let i = 0; i < 32; i++) {
       yearRow.push(currYear + i);
       if (yearRow.length === 4) {
         grid.push(yearRow);
@@ -36,7 +41,6 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     if (selectedDate.getFullYear() >= currYear) {
       selectionMark = selectedDate.getFullYear() % currYear;
     }
-
     return {
       years: grid, todayMark, nextFrom, prevTo, selectionMark
     }
