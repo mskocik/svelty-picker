@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/svelty-picker/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style>
+			button[disabled] {
+				opacity: 0.5 !important;
+			}
+		</style>
+		<meta http-equiv="content-security-policy" content="">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-empty-d4bc191b.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/playground@empty-73292507.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-eefb95f0.css">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-c562367a.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-bba13a04.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-e9a06c32.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout-empty.svelte-33ceea67.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/playground@empty.svelte-ef244e83.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-f3a80465.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/options-e355255b.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/formatting_php-3c906c50.js">
+	</head>
+	<body>
+		<div><div class="flex justify-between border-b-1 border-grey-500 px-4 py-2 svelte-vhjlw6"><button>← Back</button>
+  <span class="inline-flex items-end svelte-vhjlw6"><a href="/svelty-picker/"><h1 class="text-xl hover:underline hover:underline-gray-300 svelte-vhjlw6">📅 Svelty Picker</h1>
+    </a>: Playgroung
+  </span>
+  <span></span></div>
+<div class="flex m-4 svelte-vhjlw6"><div class="w-1/2 mr-1 svelte-vhjlw6"><div class="font-bold text-2 svelte-vhjlw6">Your component</div>
+    <input type="text" id="" tabindex="0" name="date"   value="2022-07-23 18:03" placeholder="You can play with settings" autocomplete="off" class="picker-style svelte-pg9n00" >
+
+
+    <div class="my-5 svelte-vhjlw6">Your selection: <code></code></div>
+
+    <table><thead><tr><th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th></tr></thead>
+<tbody><tr><td>name</td>
+<td><code>string</code></td>
+<td><code>date</code></td>
+<td>html attribute for underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>disabled</td>
+<td><code>bool</code></td>
+<td><code>false</code></td>
+<td>html attribute for underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>placeholder</td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>html attribute for underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>required</td>
+<td><code>bool</code></td>
+<td><code>false</code></td>
+<td>html attribute for underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>value</td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>string representation of selected value</td></tr>
+<tr><td>initialDate</td>
+<td><code>Date</code></td>
+<td><code>null</code></td>
+<td>initial date object, if you prefer that to <code>value</code></td></tr>
+<tr><td>startDate</td>
+<td><code>string</code>|<code>Date</code></td>
+<td><code>null</code></td>
+<td>limit minimal selectable date</td></tr>
+<tr><td>endDate</td>
+<td><code>string</code>|<code>Date</code></td>
+<td><code>null</code></td>
+<td>limit maximal selectable date</td></tr>
+<tr><td>pickerOnly</td>
+<td><code>bool</code></td>
+<td><code>false</code></td>
+<td>Picker is always visible and input field is then hidden, but still present</td></tr>
+<tr><td>theme</td>
+<td><code>string</code></td>
+<td><code>sdt-calendar-colors</code></td>
+<td>css class defining <a href="#css-variables">css variables</a></td></tr>
+<tr><td>mode</td>
+<td><code>string</code></td>
+<td><code>auto</code></td>
+<td>restrict picker’s mode. Possible values: `auto</td></tr>
+<tr><td>format</td>
+<td><code>string</code></td>
+<td><code>yyyy-mm-dd</code></td>
+<td>Format of entered date/time. See <a href="#format-settings">format settings</a> for available options</td></tr>
+<tr><td>weekStart</td>
+<td><code>number</code></td>
+<td><code>1</code></td>
+<td>number in range <code>0-6</code> to select first day of the week. Sunday is <code>0</code></td></tr>
+<tr><td>inputId</td>
+<td><code>string</code></td>
+<td>“</td>
+<td>id attribute for input element</td></tr>
+<tr><td>inputClasses</td>
+<td><code>string</code></td>
+<td>“</td>
+<td>input css class string</td></tr>
+<tr><td>todayBtnClasses</td>
+<td><code>string</code></td>
+<td><code>sdt-action-btn sdt-today-btn</code></td>
+<td>today button css classes</td></tr>
+<tr><td>clearBtnClasses</td>
+<td><code>string</code></td>
+<td><code>sdt-action-btn sdt-clear-btn</code></td>
+<td>clear button css classes</td></tr>
+<tr><td>todayBtn</td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Show today button</td></tr>
+<tr><td>clearBtn</td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Show clear button</td></tr>
+<tr><td>clearToggle</td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Allows to clear selected date when clicking on the same date when in <code>mode=&#39;date&#39;</code> or <code>mode=&#39;auto&#39;</code> resolving to <code>&#39;date&#39;</code></td></tr>
+<tr><td>autoclose</td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Hides picker after selection is done. If mode includes <em>time picker</em>, it closes automatically only after minute selection</td></tr>
+<tr><td>i18n</td>
+<td><code>object</code></td>
+<td><code>en</code></td>
+<td>localization object, english is by default</td></tr>
+<tr><td>positionFn</td>
+<td><code>function</code></td>
+<td><em><code>internal</code></em></td>
+<td>function used to position picker. Used as action. Acceps following object: <code>{ inputEl, visible}</code>, where <code>visible</code> is <code>visible</code> parameter &amp; <code>inputEl</code> is underlying <code>&lt;input&gt;</code> element</td></tr>
+<tr><td>validatorAction</td>
+<td><code>array</code></td>
+<td><code>null</code></td>
+<td>Bind validator action for inner <code>&lt;input&gt;</code> element. Designed to be used with <code>svelte-use-form</code>.</td></tr></tbody>
+</table></div>
+  <div class="w-full lg:w-1/2 ml-1 settings svelte-vhjlw6"><h3 class="font-bold text-lg svelte-vhjlw6">Available settings</h3>
+
+    <div class="flex svelte-vhjlw6"><div class="w-1/2 svelte-vhjlw6"><div><label for="startDate">Start Date (limit from)</label><br>
+          <input type="text" id="startDate" tabindex="0" name="date"   autocomplete="off" class="picker svelte-pg9n00" >
+</div>
+        <div><label for="endDate">End Date (limit to)</label><br>
+          <input type="text" id="endDate" tabindex="0" name="date"   autocomplete="off" class="picker svelte-pg9n00" >
+</div>
+        <div><label for="week">Week start</label><br>
+          <input type="number" id="week" min="0" max="6" class="svelte-vhjlw6" value="1"></div></div>
+      <div class="w-1/2 svelte-vhjlw6"><div class="line svelte-vhjlw6"><label class="svelte-vhjlw6"><input type="checkbox" name="" id=""> Disabled</label></div>
+        
+        <div class="line svelte-vhjlw6"><label class="svelte-vhjlw6"><input type="checkbox" name="" id=""> Picker Only</label></div>
+        
+        <div class="line svelte-vhjlw6"><label class="svelte-vhjlw6"><input type="checkbox" name="" id="" checked> Today button</label></div>
+        
+        <div class="line svelte-vhjlw6"><label class="svelte-vhjlw6"><input type="checkbox" name="" id="" checked> Clear Button</label></div>
+        
+        <div class="line svelte-vhjlw6"><label class="svelte-vhjlw6"><input type="checkbox" name="" id="" checked> Clear Toggle</label></div>
+        
+        <div class="line svelte-vhjlw6"><label class="svelte-vhjlw6"><input type="checkbox" name="" id="" checked> Autoclose</label></div></div></div>
+    
+    <hr>
+    <h3 class="font-bold text-lg mt-2 svelte-vhjlw6">Mode &amp; formats: </h3>
+    Mode:
+    <div class="line svelte-vhjlw6"><label class="svelte-vhjlw6"><input type="radio" value="auto" disabled> Auto (default) </label>
+      <label class="svelte-vhjlw6"><input type="radio" value="date" id=""> Date</label>
+      <label class="svelte-vhjlw6"><input type="radio" value="datetime" id=""> Datetime</label>
+      <label class="svelte-vhjlw6"><input type="radio" value="time" id=""> Time</label></div>
+
+    <p class="my-2 svelte-vhjlw6">Mode is by default resolved by provided format or <code>yyyy-mm-dd</code> if not specified.</p>
+    
+    <div class="flex items-center mb-2 svelte-vhjlw6"><span>Format type:</span>
+      <div class="line svelte-vhjlw6"><label class="svelte-vhjlw6"><input type="radio" value="standard" id="" checked> Standard</label>
+        <label class="svelte-vhjlw6"><input type="radio" value="php" id=""> PHP</label></div>
+
+    <span>Format:</span>
+    <div class="ml-2 svelte-vhjlw6"><select name="" id="" class="form-select svelte-vhjlw6"><optgroup label="Date & time"><option value="yyyy-mm-dd hh:ii">yyyy-mm-dd hh:ii</option><option value="mm/dd/yyyy hh:ii">mm/dd/yyyy hh:ii</option><option value="dd.mm.yyyy hh:ii">dd.mm.yyyy hh:ii</option><option value="dd-M-yy hh:ii">dd-M-yy hh:ii</option></optgroup><optgroup label="Date only"><option value="yyyy-mm-dd">yyyy-mm-dd</option><option value="mm/dd/yyyy">mm/dd/yyyy</option><option value="dd.mm.yyyy">dd.mm.yyyy</option><option value="dd-M-yy">dd-M-yy</option><option value="dd MM yyyy">dd MM yyyy</option></optgroup><optgroup label="Date only"><option value="hh:ii">hh:ii</option><option value="H:i P">H:i P</option></optgroup></select></div></div>
+    <table><thead><tr><th>Format</th>
+<th>Description</th>
+<th>Example</th></tr></thead>
+<tbody><tr><td><code>d</code></td>
+<td>day of the month without leading zeros</td>
+<td>1 to 31</td></tr>
+<tr><td><code>dd</code></td>
+<td>day of the month, 2 digits with leading zeros</td>
+<td>01 to 31</td></tr>
+<tr><td><code>D</code></td>
+<td>short textual representation of a weekday (i18n.daysShort)</td>
+<td>Mon through Sun</td></tr>
+<tr><td><code>DD</code></td>
+<td>long textual representation of a weekday (i18n.days)</td>
+<td>Sunday through Saturday</td></tr>
+<tr><td><code>S</code></td>
+<td>English ordinal suffix for the day of the month, (i18n.suffix)</td>
+<td>st, nd, rd or th. Works well with <code>d</code></td></tr>
+<tr><td><code>m</code></td>
+<td>numeric representation of month without leading zeros</td>
+<td>1 to 12</td></tr>
+<tr><td><code>mm</code></td>
+<td>numeric representation of the month, 2 digits with leading zeros</td>
+<td>01 to 12</td></tr>
+<tr><td><code>M</code></td>
+<td>short textual representation of a month, three letters (i18n.monthsShort)</td>
+<td>Jan through Dec</td></tr>
+<tr><td><code>MM</code></td>
+<td>full textual representation of a month, such as January or March (i18n.months)</td>
+<td>January through December</td></tr>
+<tr><td><code>yy</code></td>
+<td>two digit representation of a year</td>
+<td>99 or 03</td></tr>
+<tr><td><code>yyyy</code></td>
+<td>full numeric representation of a year, 4 digits</td>
+<td>1999, 2003</td></tr>
+<tr><td><code>h</code></td>
+<td>hour without leading zeros - 24-hour format</td>
+<td>0 - 23</td></tr>
+<tr><td><code>hh</code></td>
+<td>hour, 2 digits with leading zeros - 24-hour format</td>
+<td>00 - 23</td></tr>
+<tr><td><code>H</code></td>
+<td>hour without leading zeros - 12-hour format</td>
+<td>1 - 12</td></tr>
+<tr><td><code>HH</code></td>
+<td>hour, 2 digits with leading zeros - 12-hour format</td>
+<td>01 - 12</td></tr>
+<tr><td><code>i</code></td>
+<td>minutes, 2 digits with leading zeros</td>
+<td>00 - 59</td></tr>
+<tr><td><code>ii</code></td>
+<td>alias for <code>i</code></td>
+<td>00 - 59</td></tr>
+<tr><td><code>s</code></td>
+<td>seconds, 2 digits with leading zeros</td>
+<td>00</td></tr>
+<tr><td><code>ss</code></td>
+<td>alias for <code>s</code></td>
+<td>00</td></tr>
+<tr><td><code>p</code></td>
+<td>meridian in lower case (‘am’ or ‘pm’) - according to locale file (i18n.meridiem)</td>
+<td>am or pm</td></tr>
+<tr><td><code>P</code></td>
+<td>meridian in upper case (‘AM’ or ‘PM’) - according to locale file (i18n.meridiem)</td>
+<td>AM or PM</td></tr>
+<tr><td><code>t</code></td>
+<td>timestamp in milliseconds (although milliseconds are always 0).</td>
+<td></td></tr></tbody></table>
+<p>💡 For timestamp in seconds use <code>php</code> format</p></div>
+</div>
+
+
+		<script type="module" data-sveltekit-hydrate="1s80eh">
+		import { start } from "/svelty-picker/_app/immutable/start-c562367a.js";
+		start({
+			target: document.querySelector('[data-sveltekit-hydrate="1s80eh"]').parentNode,
+			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
+			session: {},
+			route: true,
+			spa: false,
+			trailing_slash: "never",
+			hydrate: {
+				status: 200,
+				error: null,
+				nodes: [2, 8],
+				params: {},
+				routeId: "playground@empty"
+			}
+		});
+	</script></div>
+	</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/svelty-picker/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style>
+			button[disabled] {
+				opacity: 0.5 !important;
+			}
+		</style>
+		<meta http-equiv="content-security-policy" content="">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-afe45925.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/styling-9a44068d.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-eefb95f0.css">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-c562367a.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-bba13a04.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-e9a06c32.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-912b16f6.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/styling.svelte-9f359f0c.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-f3a80465.js">
+	</head>
+	<body>
+		<div><div class="bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-phqgz1"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between svelte-phqgz1"><div class="flex items-center text-4xl font-semibold svelte-phqgz1"><button class="inline-flex items-center flex-col mr-3 md:hidden svelte-phqgz1"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svelte-phqgz1"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <span class="text-xs font-bold svelte-phqgz1">Menu</span></button>
+    <a href="/svelty-picker/"><h1 class="text-5">📅 Svelty Picker</h1></a></div>
+  <div class="flex items-center text-2x svelte-phqgz1"><a class="mx-4 svelte-phqgz1" href="https://github.com/mskocik/svelty-picker" target="_blank"><svg width="1.2em" height="1.2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32" data-v-8ff9b2e6=""><path fill="currentColor" fill-rule="evenodd" d="M16 2a14 14 0 0 0-4.43 27.28c.7.13 1-.3 1-.67v-2.38c-3.89.84-4.71-1.88-4.71-1.88a3.71 3.71 0 0 0-1.62-2.05c-1.27-.86.1-.85.1-.85a2.94 2.94 0 0 1 2.14 1.45a3 3 0 0 0 4.08 1.16a2.93 2.93 0 0 1 .88-1.87c-3.1-.36-6.37-1.56-6.37-6.92a5.4 5.4 0 0 1 1.44-3.76a5 5 0 0 1 .14-3.7s1.17-.38 3.85 1.43a13.3 13.3 0 0 1 7 0c2.67-1.81 3.84-1.43 3.84-1.43a5 5 0 0 1 .14 3.7a5.4 5.4 0 0 1 1.44 3.76c0 5.38-3.27 6.56-6.39 6.91a3.33 3.33 0 0 1 .95 2.59v3.84c0 .46.25.81 1 .67A14 14 0 0 0 16 2Z"></path></svg></a></div></div>
+
+
+<div class="container !max-w-screen-xl px-3 mx-auto pt-$header-height flex svelte-phqgz1"><aside class="sidebar z-50 lg:z-0 w-1/5 svelte-phqgz1 hidden"><div class="h-full svelte-phqgz1"><nav><ul class="py-4 lg:pt-3 svelte-phqgz1"><li><h5 class="transition duration-100 font-bold py-2 parent-active svelte-phqgz1">Documentation</h5>
+            <ul class="mb-2 border-l-1 border-gray-300 border-solid svelte-phqgz1"><li><a href="/svelty-picker/" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Getting Started</a>
+              </li><li><a href="/svelty-picker/options" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Options</a>
+              </li><li><a href="/svelty-picker/formatting" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Formatting</a>
+              </li><li><a href="/svelty-picker/styling" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1 text-blue-700 font-bold">Styling</a>
+              </li><li><a href="/svelty-picker/custom-element" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Custom Element</a>
+              </li><li><a href="/svelty-picker/i18n" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Languages</a>
+              </li><li><a href="/svelty-picker/playground" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Playground</a>
+              </li></ul></li></ul></nav>
+      <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker?logo=github&logoColor=g"></a></div></aside>
+	<main class="lg:px-6 md:px-8 lg:pt-6 w-4/5 svelte-phqgz1"><h2 class="header">Styling options</h2>
+
+<p class="my-4 svelte-1ys15vu">The <code class="code">theme</code> property defined root class, where all CSS variables related to components are defined.
+</p>
+
+<div class="flex svelte-1ys15vu"><div class="w-auto mr-3 svelte-1ys15vu">Custom theme
+    <input type="hidden" id="" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-pg9n00" readonly>
+<div class="std-calendar-wrap is-popup my-colors svelte-pg9n00"><div class="sdt-thead-nav svelte-bnmqg0"><button class="std-btn std-btn-header sdt-toggle-btn svelte-bnmqg0">July 2022</button>
+  <div class="sdt-nav-btns svelte-bnmqg0">
+    <button class="std-btn std-btn-header icon-btn svelte-bnmqg0"><svg class="sdt-svg svelte-bnmqg0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg></button>
+    <button class="std-btn std-btn-header icon-btn svelte-bnmqg0"><svg class="sdt-svg svelte-bnmqg0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg></button></div></div>
+<div class="sdt-calendar svelte-bnmqg0">
+  
+  <table class="sdt-table sdt-table-height svelte-bnmqg0"><tbody><tr class="sdt-cal-td svelte-bnmqg0"><th class="sdt-cal-th svelte-bnmqg0">Mo</th><th class="sdt-cal-th svelte-bnmqg0">Tu</th><th class="sdt-cal-th svelte-bnmqg0">We</th><th class="sdt-cal-th svelte-bnmqg0">Th</th><th class="sdt-cal-th svelte-bnmqg0">Fr</th><th class="sdt-cal-th svelte-bnmqg0">Sa</th><th class="sdt-cal-th svelte-bnmqg0">Su</th></tr>
+      <tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >27</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >28</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >29</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >30</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >1</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >2</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >3</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >4</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >5</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >6</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >7</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >8</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >9</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >10</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >11</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >12</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >13</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >14</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >15</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >16</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >17</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >18</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >19</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >20</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >21</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >22</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0 sdt-today"><button class="std-btn sdt-btn-day svelte-bnmqg0" >23</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >24</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >25</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >26</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >27</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >28</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >29</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >30</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >31</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >1</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >2</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >3</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >4</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >5</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >6</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >7</button>
+        </td>
+      </tr></tbody></table>
+</div>
+      <div class="std-btn-row svelte-pg9n00"><button class="sdt-action-btn sdt-today-btn svelte-pg9n00" >Today</button>
+          <button class="sdt-action-btn sdt-clear-btn svelte-pg9n00" disabled>Clear</button></div></div></div>
+  <div class="w-auto svelte-1ys15vu">Default theme
+    
+    <input type="hidden" id="" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-pg9n00" readonly>
+<div class="std-calendar-wrap is-popup sdt-calendar-colors svelte-pg9n00"><div class="sdt-thead-nav svelte-bnmqg0"><button class="std-btn std-btn-header sdt-toggle-btn svelte-bnmqg0">July 2022</button>
+  <div class="sdt-nav-btns svelte-bnmqg0">
+    <button class="std-btn std-btn-header icon-btn svelte-bnmqg0"><svg class="sdt-svg svelte-bnmqg0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg></button>
+    <button class="std-btn std-btn-header icon-btn svelte-bnmqg0"><svg class="sdt-svg svelte-bnmqg0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg></button></div></div>
+<div class="sdt-calendar svelte-bnmqg0">
+  
+  <table class="sdt-table sdt-table-height svelte-bnmqg0"><tbody><tr class="sdt-cal-td svelte-bnmqg0"><th class="sdt-cal-th svelte-bnmqg0">Mo</th><th class="sdt-cal-th svelte-bnmqg0">Tu</th><th class="sdt-cal-th svelte-bnmqg0">We</th><th class="sdt-cal-th svelte-bnmqg0">Th</th><th class="sdt-cal-th svelte-bnmqg0">Fr</th><th class="sdt-cal-th svelte-bnmqg0">Sa</th><th class="sdt-cal-th svelte-bnmqg0">Su</th></tr>
+      <tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >27</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >28</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >29</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >30</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >1</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >2</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >3</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >4</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >5</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >6</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >7</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >8</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >9</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >10</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >11</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >12</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >13</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >14</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >15</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >16</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >17</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >18</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >19</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >20</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >21</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >22</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0 sdt-today"><button class="std-btn sdt-btn-day svelte-bnmqg0" >23</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >24</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >25</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >26</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >27</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >28</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >29</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >30</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0" >31</button>
+        </td>
+      </tr><tr><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >1</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >2</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >3</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >4</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >5</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >6</button>
+        </td><td class="sdt-cal-td svelte-bnmqg0"><button class="std-btn sdt-btn-day svelte-bnmqg0 not-current" >7</button>
+        </td>
+      </tr></tbody></table>
+</div>
+      <div class="std-btn-row svelte-pg9n00"><button class="sdt-action-btn sdt-today-btn svelte-pg9n00" >Today</button>
+          <button class="sdt-action-btn sdt-clear-btn svelte-pg9n00" disabled>Clear</button></div></div></div></div>
+
+<div class="mt-4 svelte-1ys15vu"><b class="font-bold svelte-1ys15vu">Source of example from above</b>
+
+  <pre class="language-svelte"><!-- HTML_TAG_START --><code class="language-svelte"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>SveltyPicker</span> <span class="token attr-name">theme</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>my-colors<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>SveltyPicker</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">:global(.my-colors)</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">--sdt-primary</span><span class="token punctuation">:</span> #998825<span class="token punctuation">;</span>
+      <span class="token property">--sdt-color</span><span class="token punctuation">:</span> #eee<span class="token punctuation">;</span>
+      <span class="token property">--sdt-color-selected</span><span class="token punctuation">:</span> #eee<span class="token punctuation">;</span>
+      <span class="token property">--sdt-bg-main</span><span class="token punctuation">:</span> #333<span class="token punctuation">;</span>
+      <span class="token property">--sdt-bg-today</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--sdt-primary<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token property">--sdt-bg-clear</span><span class="token punctuation">:</span> #dc3545<span class="token punctuation">;</span>
+      <span class="token property">--sdt-today-bg</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>160<span class="token punctuation">,</span> 145<span class="token punctuation">,</span> 57<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token property">--sdt-today-color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--sdt-color-selected<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token property">--sdt-clear-color</span><span class="token punctuation">:</span> #dc3545<span class="token punctuation">;</span>
+      <span class="token property">--sdt-btn-bg-hover</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>126<span class="token punctuation">,</span> 35<span class="token punctuation">,</span> 78<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token property">--sdt-btn-header-bg-hover</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>107<span class="token punctuation">,</span> 18<span class="token punctuation">,</span> 60<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token property">--sdt-clock-bg</span><span class="token punctuation">:</span> #eeeded<span class="token punctuation">;</span>
+      <span class="token property">--sdt-clock-bg-minute</span><span class="token punctuation">:</span> #eeeded<span class="token punctuation">;</span>
+      <span class="token property">--sdt-clock-bg-shadow</span><span class="token punctuation">:</span> 0 0 128px 2px #74661834 inset<span class="token punctuation">;</span>
+      <span class="token property">--sdt-shadow</span><span class="token punctuation">:</span> #ccc<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span></code><!-- HTML_TAG_END --></pre>
+</div></main></div>
+
+</div>
+
+
+		<script type="module" data-sveltekit-hydrate="orr9bi">
+		import { start } from "/svelty-picker/_app/immutable/start-c562367a.js";
+		start({
+			target: document.querySelector('[data-sveltekit-hydrate="orr9bi"]').parentNode,
+			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
+			session: {},
+			route: true,
+			spa: false,
+			trailing_slash: "never",
+			hydrate: {
+				status: 200,
+				error: null,
+				nodes: [0, 9],
+				params: {},
+				routeId: "styling"
+			}
+		});
+	</script></div>
+	</body>
+</html>

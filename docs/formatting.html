@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/svelty-picker/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style>
+			button[disabled] {
+				opacity: 0.5 !important;
+			}
+		</style>
+		<meta http-equiv="content-security-policy" content="">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-afe45925.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/formatting-a0b286e4.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-eefb95f0.css">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-c562367a.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-bba13a04.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-e9a06c32.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-912b16f6.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/formatting.svelte-84f54c53.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/formatting_php-3c906c50.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-f3a80465.js">
+	</head>
+	<body>
+		<div><div class="bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-phqgz1"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between svelte-phqgz1"><div class="flex items-center text-4xl font-semibold svelte-phqgz1"><button class="inline-flex items-center flex-col mr-3 md:hidden svelte-phqgz1"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svelte-phqgz1"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <span class="text-xs font-bold svelte-phqgz1">Menu</span></button>
+    <a href="/svelty-picker/"><h1 class="text-5">📅 Svelty Picker</h1></a></div>
+  <div class="flex items-center text-2x svelte-phqgz1"><a class="mx-4 svelte-phqgz1" href="https://github.com/mskocik/svelty-picker" target="_blank"><svg width="1.2em" height="1.2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32" data-v-8ff9b2e6=""><path fill="currentColor" fill-rule="evenodd" d="M16 2a14 14 0 0 0-4.43 27.28c.7.13 1-.3 1-.67v-2.38c-3.89.84-4.71-1.88-4.71-1.88a3.71 3.71 0 0 0-1.62-2.05c-1.27-.86.1-.85.1-.85a2.94 2.94 0 0 1 2.14 1.45a3 3 0 0 0 4.08 1.16a2.93 2.93 0 0 1 .88-1.87c-3.1-.36-6.37-1.56-6.37-6.92a5.4 5.4 0 0 1 1.44-3.76a5 5 0 0 1 .14-3.7s1.17-.38 3.85 1.43a13.3 13.3 0 0 1 7 0c2.67-1.81 3.84-1.43 3.84-1.43a5 5 0 0 1 .14 3.7a5.4 5.4 0 0 1 1.44 3.76c0 5.38-3.27 6.56-6.39 6.91a3.33 3.33 0 0 1 .95 2.59v3.84c0 .46.25.81 1 .67A14 14 0 0 0 16 2Z"></path></svg></a></div></div>
+
+
+<div class="container !max-w-screen-xl px-3 mx-auto pt-$header-height flex svelte-phqgz1"><aside class="sidebar z-50 lg:z-0 w-1/5 svelte-phqgz1 hidden"><div class="h-full svelte-phqgz1"><nav><ul class="py-4 lg:pt-3 svelte-phqgz1"><li><h5 class="transition duration-100 font-bold py-2 parent-active svelte-phqgz1">Documentation</h5>
+            <ul class="mb-2 border-l-1 border-gray-300 border-solid svelte-phqgz1"><li><a href="/svelty-picker/" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Getting Started</a>
+              </li><li><a href="/svelty-picker/options" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Options</a>
+              </li><li><a href="/svelty-picker/formatting" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1 text-blue-700 font-bold">Formatting</a>
+              </li><li><a href="/svelty-picker/styling" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Styling</a>
+              </li><li><a href="/svelty-picker/custom-element" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Custom Element</a>
+              </li><li><a href="/svelty-picker/i18n" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Languages</a>
+              </li><li><a href="/svelty-picker/playground" class="px-3 block my-1 hover:text-blue-500 text-blue-700 svelte-phqgz1">Playground</a>
+              </li></ul></li></ul></nav>
+      <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker?logo=github&logoColor=g"></a></div></aside>
+	<main class="lg:px-6 md:px-8 lg:pt-6 w-4/5 svelte-phqgz1"><h2 class="header">Format settings</h2>
+<p class="my-3 svelte-1wmxh6">Date format can be defined under <code class="code">formatType</code> property. It has two options: <code class="code">standard</code>
+  and <code class="code">php</code> where <code class="code">standard</code> is the <b class="font-bold svelte-1wmxh6">default</b>.
+</p>
+
+<p class="my-3 font-bold svelte-1wmxh6">If <code class="code">mode</code> is not specified explicitely, time picker is available only when time formatting is present.
+</p>
+
+<div class="bg-orange-200 p-5 rounded-lg w-full svelte-1wmxh6"><h3 class="header mt-0 svelte-1wmxh6">Playground</h3>
+  <div class="flex svelte-1wmxh6"><div class="w-1/2 svelte-1wmxh6"><input type="text" id="" tabindex="0" name="date"   placeholder="Pick some date and define your own format" autocomplete="off" class="picker-style svelte-pg9n00" >
+</div>
+    <div class="w-auto mx-2 svelte-1wmxh6"><input type="text" class="picker-style" value="yyyy-mm-dd"></div>
+    <div class="w-auto flex items-center svelte-1wmxh6"><label><input type="radio" value="standard" checked> Standard </label>
+      <label class="ml-4 svelte-1wmxh6"><input type="radio" value="php"> PHP</label></div></div></div>
+
+<h3 class="header">Standard</h3>
+
+<table><thead><tr><th>Format</th>
+<th>Description</th>
+<th>Example</th></tr></thead>
+<tbody><tr><td><code>d</code></td>
+<td>day of the month without leading zeros</td>
+<td>1 to 31</td></tr>
+<tr><td><code>dd</code></td>
+<td>day of the month, 2 digits with leading zeros</td>
+<td>01 to 31</td></tr>
+<tr><td><code>D</code></td>
+<td>short textual representation of a weekday (i18n.daysShort)</td>
+<td>Mon through Sun</td></tr>
+<tr><td><code>DD</code></td>
+<td>long textual representation of a weekday (i18n.days)</td>
+<td>Sunday through Saturday</td></tr>
+<tr><td><code>S</code></td>
+<td>English ordinal suffix for the day of the month, (i18n.suffix)</td>
+<td>st, nd, rd or th. Works well with <code>d</code></td></tr>
+<tr><td><code>m</code></td>
+<td>numeric representation of month without leading zeros</td>
+<td>1 to 12</td></tr>
+<tr><td><code>mm</code></td>
+<td>numeric representation of the month, 2 digits with leading zeros</td>
+<td>01 to 12</td></tr>
+<tr><td><code>M</code></td>
+<td>short textual representation of a month, three letters (i18n.monthsShort)</td>
+<td>Jan through Dec</td></tr>
+<tr><td><code>MM</code></td>
+<td>full textual representation of a month, such as January or March (i18n.months)</td>
+<td>January through December</td></tr>
+<tr><td><code>yy</code></td>
+<td>two digit representation of a year</td>
+<td>99 or 03</td></tr>
+<tr><td><code>yyyy</code></td>
+<td>full numeric representation of a year, 4 digits</td>
+<td>1999, 2003</td></tr>
+<tr><td><code>h</code></td>
+<td>hour without leading zeros - 24-hour format</td>
+<td>0 - 23</td></tr>
+<tr><td><code>hh</code></td>
+<td>hour, 2 digits with leading zeros - 24-hour format</td>
+<td>00 - 23</td></tr>
+<tr><td><code>H</code></td>
+<td>hour without leading zeros - 12-hour format</td>
+<td>1 - 12</td></tr>
+<tr><td><code>HH</code></td>
+<td>hour, 2 digits with leading zeros - 12-hour format</td>
+<td>01 - 12</td></tr>
+<tr><td><code>i</code></td>
+<td>minutes, 2 digits with leading zeros</td>
+<td>00 - 59</td></tr>
+<tr><td><code>ii</code></td>
+<td>alias for <code>i</code></td>
+<td>00 - 59</td></tr>
+<tr><td><code>s</code></td>
+<td>seconds, 2 digits with leading zeros</td>
+<td>00</td></tr>
+<tr><td><code>ss</code></td>
+<td>alias for <code>s</code></td>
+<td>00</td></tr>
+<tr><td><code>p</code></td>
+<td>meridian in lower case (‘am’ or ‘pm’) - according to locale file (i18n.meridiem)</td>
+<td>am or pm</td></tr>
+<tr><td><code>P</code></td>
+<td>meridian in upper case (‘AM’ or ‘PM’) - according to locale file (i18n.meridiem)</td>
+<td>AM or PM</td></tr>
+<tr><td><code>t</code></td>
+<td>timestamp in milliseconds (although milliseconds are always 0).</td>
+<td></td></tr></tbody></table>
+<p>💡 For timestamp in seconds use <code>php</code> format</p>
+
+<h3 class="header">PHP</h3>
+
+<table><thead><tr><th>Format</th>
+<th>Description</th>
+<th>Example</th></tr></thead>
+<tbody><tr><td><code>d</code></td>
+<td>Day of the month, 2 digits with leading zeros</td>
+<td>01 to 31</td></tr>
+<tr><td><code>D</code></td>
+<td>A textual representation of a day, three letters</td>
+<td>Mon through Sun</td></tr>
+<tr><td><code>j</code></td>
+<td>Day of the month without leading zeros</td>
+<td>1 to 31</td></tr>
+<tr><td><code>l</code></td>
+<td>A full textual representation of the day of the week</td>
+<td>Sunday through Saturday</td></tr>
+<tr><td><code>N</code></td>
+<td>ISO 8601 numeric representation of the day of the week</td>
+<td>1 (for Monday) through 7 (for Sunday)</td></tr>
+<tr><td><code>S</code></td>
+<td>English ordinal suffix for the day of the month, 2 characters</td>
+<td>st, nd, rd or th. Works well with <code>j</code></td></tr>
+<tr><td><code>F</code></td>
+<td>A full textual representation of a month, such as January or March</td>
+<td>January through December</td></tr>
+<tr><td><code>m</code></td>
+<td>Numeric representation of a month, with leading zeros</td>
+<td>01 through 12</td></tr>
+<tr><td><code>M</code></td>
+<td>A short textual representation of a month, three letters</td>
+<td>Jan through Dec</td></tr>
+<tr><td><code>n</code></td>
+<td>Numeric representation of a month, without leading zeros</td>
+<td>1 through 12</td></tr>
+<tr><td><code>Y</code></td>
+<td>A full numeric representation of a year, at least 4 digits</td>
+<td>0787, 1999, 2003</td></tr>
+<tr><td><code>y</code></td>
+<td>A two digit representation of a year</td>
+<td>99 or 03</td></tr>
+<tr><td><code>a</code></td>
+<td>Lowercase Ante meridiem and Post meridiem</td>
+<td>am or pm</td></tr>
+<tr><td><code>A</code></td>
+<td>Uppercase Ante meridiem and Post meridiem</td>
+<td>AM or PM</td></tr>
+<tr><td><code>g</code></td>
+<td>12-hour format of an hour without leading zeros</td>
+<td>1 through 12</td></tr>
+<tr><td><code>G</code></td>
+<td>24-hour format of an hour without leading zeros</td>
+<td>0 through 23</td></tr>
+<tr><td><code>h</code></td>
+<td>12-hour format of an hour with leading zeros</td>
+<td>01 through 12</td></tr>
+<tr><td><code>H</code></td>
+<td>24-hour format of an hour with leading zeros</td>
+<td>00 through 23</td></tr>
+<tr><td><code>i</code></td>
+<td>Minutes with leading zeros</td>
+<td>00 to 59</td></tr>
+<tr><td><code>s</code></td>
+<td>Seconds with leading zeros</td>
+<td>00</td></tr>
+<tr><td><code>U</code></td>
+<td>timestamp in seconds. For timestamp with miliseconds use <code>standard</code> format</td>
+<td></td></tr></tbody></table>
+<p>💡 For timestamp with miliseconds use <code>standard</code> format</p></main></div>
+
+</div>
+
+
+		<script type="module" data-sveltekit-hydrate="1gs4lkn">
+		import { start } from "/svelty-picker/_app/immutable/start-c562367a.js";
+		start({
+			target: document.querySelector('[data-sveltekit-hydrate="1gs4lkn"]').parentNode,
+			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
+			session: {},
+			route: true,
+			spa: false,
+			trailing_slash: "never",
+			hydrate: {
+				status: 200,
+				error: null,
+				nodes: [0, 4],
+				params: {},
+				routeId: "formatting"
+			}
+		});
+	</script></div>
+	</body>
+</html>
