@@ -70,6 +70,6 @@
 <SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value={myDate}></SveltyPicker>
 ```
 
-<p class="my-4">Try yourself in <a href="https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?version=3.44.1" rel="nofollow" class="underline font-bold hover:underline-transparent text-blue-700">REPL</a>.</p>
+<p class="my-4">Try yourself in <a href="https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?version=3.44.1" rel="nofollow" class="">REPL</a>.</p>
 
 </div>

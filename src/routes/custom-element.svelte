@@ -17,7 +17,7 @@ supports all options that can be passed as string (So all except initialDate).
 </p>
 
 Picker initialized as custom element:
-<input type="text" name="my-date" is="el-picker" format="dS MM" class="border-2 rounded-md border-gray-300 p-1" placeholder="Pick your birthdate">
+<input type="text" name="my-date" is="el-picker" format="dS MM" class="border-1 rounded-md border-gray-300 p-1" placeholder="Pick your birthdate">
 
 <CustomElement></CustomElement>
 
@@ -37,9 +37,9 @@ Picker initialized as custom element:
   .group {
     display: inline-flex;
     align-items: center;
-    @apply border-2 rounded-md border-gray-300;
+    @apply border-1 rounded-md border-gray-300;
     .delimiter {
-      @apply border-gray-300 border-l-2 border-r-2 px-2 py-2;
+      @apply border-gray-300 border-l-1 border-r-1 px-2 py-2;
     }
     input {
       @apply px-2 py-1;

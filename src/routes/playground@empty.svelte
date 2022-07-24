@@ -1,6 +1,7 @@
 <script>
   // @ts-nocheck
   import SveltyPicker from "$lib/components/SveltyPicker.svelte";
+  import {en, de} from "$lib/utils/i18n";
   
   import OptionsMD from './_markdown/options.md';
   import Format from './_markdown/formatting.md';
@@ -18,13 +19,14 @@
   let pickerOnly = false;
   let weekStart = 1;
   let value = '';
-  let format = 'yyyy-mm-dd hh:ii';
+  let format = '';
   let formatType = 'standard';
   let mode = 'auto';
   let todayBtn = true;
   let clearBtn = true;
   let clearToggle = true;
   let autoclose = true;
+  let i18n = en;
 
   $: {
     format = formatType === 'php'
@@ -43,17 +45,17 @@
   </span>
   <span></span>
 </div>
-<div class="flex m-4">
-  <div class="w-1/2 mr-1">
+<div class="flex flex-col lg:flex-row m-4">
+  <div class="w-full lg:w-1/2 mr-1">
     <div class="font-bold text-2">Your component</div>
     {#if !pickerOnly}
     <SveltyPicker inputClasses="picker-style" bind:value
-      {disabled} {placeholder} {initialDate} {startDate} {endDate}
+      {disabled} {placeholder} {initialDate} {startDate} {endDate}  {i18n}
       {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {clearToggle} {autoclose}
     ></SveltyPicker>
     {:else}
     <SveltyPicker inputClasses="picker-style" bind:value
-      {disabled} {placeholder} {initialDate} {startDate} {endDate} pickerOnly
+      {disabled} {placeholder} {initialDate} {startDate} {endDate} pickerOnly {i18n}
       {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {clearToggle} {autoclose}
     ></SveltyPicker>
     {/if}
@@ -62,13 +64,16 @@
       Your selection: <code>{value}</code>
     </div>
 
-    <OptionsMD></OptionsMD>
+    <details class="my-5">
+      <summary class="font-semibold">Expand options table</summary>
+      <OptionsMD></OptionsMD>
+    </details>
   </div>
   <div class="w-full lg:w-1/2 ml-1 settings">
-    <h3 class="font-bold text-lg">Available settings</h3>
+    <h3 class="font-bold text-lg">Available options</h3>
 
-    <div class="flex">
-      <div class="w-1/2">
+    <div class="flex flex-wrap">
+      <div class="w-full lg:w-1/2">
         <div>
           <label for="startDate">Start Date (limit from)</label><br>
           <SveltyPicker inputId="startDate" bind:value={startDate} format={format} formatType={formatType} inputClasses="picker"></SveltyPicker>
@@ -81,10 +86,15 @@
           <label for="week">Week start</label><br>
           <input type="number" id="week" min="0" max="6" bind:value={weekStart}>
         </div>
+        <div class="my-2">
+          Language<br>
+          <label><input type="radio" bind:group={i18n} value={en}> <span>🇬🇧</span></label>
+          <label class="ml-2"><input type="radio" bind:group={i18n} value={de}> <span>🇩🇪</span></label>
+        </div>
       </div>
-      <div class="w-1/2">
+      <div class="w-full lg:w-1/2">
         <div class="line">
-          <label><input type="checkbox" name="" id="" bind:checked={disabled}> Disabled</label>
+          <label><input type="checkbox" name="" id="" bind:checked={disabled} disabled={pickerOnly}> Disabled</label>
         </div>
         
         <div class="line">
@@ -104,7 +114,7 @@
         </div>
         
         <div class="line">
-          <label><input type="checkbox" name="" id="" bind:checked={autoclose}> Autoclose</label>
+          <label><input type="checkbox" name="" id="" bind:checked={autoclose} disabled={pickerOnly}> Autoclose</label>
         </div>
       </div>
     </div>
@@ -121,15 +131,16 @@
 
     <p class="my-2">Mode is by default resolved by provided format or <code>yyyy-mm-dd</code> if not specified.</p>
     
-    <div class="flex items-center mb-2">
+    <div class="flex flex-wrap items-center mb-2">
       <span>Format type:</span>
       <div class="line">
         <label><input type="radio" value="standard" id="" bind:group={formatType}> Standard</label>
         <label><input type="radio" value="php" id="" bind:group={formatType}> PHP</label>
       </div>
 
-    <span>Format:</span>
-    <div class="ml-2">
+    <div class="whitespace-nowrap">
+
+      <span>Format:</span>
       {#if formatType === 'standard'}
       <select name="" id="" class="form-select" bind:value={format}>
         <optgroup label="Date & time">
@@ -151,7 +162,7 @@
         </optgroup>
       </select>
       {:else}
-      <select name="" id="" class="form-select mb-2" bind:value={format}>
+      <select name="" id="" class="form-select" bind:value={format}>
         <optgroup label="Date & time">
           <option value="Y-m-d H:i">Y-m-d H:i</option>
           <option value="m/d/Y H:i">m/d/Y H:i</option>
@@ -173,11 +184,15 @@
       {/if}
     </div>
   </div>
-    {#if formatType === 'standard'}
+
+    <details>
+      <summary class="font-semibold">Expand format settings ({formatType})</summary>
+      {#if formatType === 'standard'}
       <Format></Format> 
       {:else}
       <FormatPhp></FormatPhp>
-    {/if}
+      {/if}
+    </details>
   </div>
 </div>
 

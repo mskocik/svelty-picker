@@ -1,3 +1,12 @@
+<script>
+  import SveltyPicker from '$lib/components/SveltyPicker.svelte';
+  import { en, de } from '$lib/utils/i18n.js';
+
+  let picked = 'en';
+
+  $: i18n = picked === 'en' ? en : de;
+</script>
+
 ## 🌐 Localization
 
 Localization file has following structure.
@@ -18,3 +27,11 @@ export const en = {
 }
 ```
 PRs for extending built-in localization are welcome 🥳
+
+<div class="my-5">
+  <SveltyPicker pickerOnly inputClasses="my-5" {i18n}></SveltyPicker>
+  <div class="my-2">
+    <label><input type="radio" bind:group={picked} value="en"> <span>🇬🇧</span></label>
+    <label class="ml-2"><input type="radio" bind:group={picked} value="de"> <span>🇩🇪</span></label>
+  </div>
+</div>

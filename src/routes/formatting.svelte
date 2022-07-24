@@ -24,11 +24,11 @@
 
 <div class="bg-orange-200 p-5 rounded-lg w-full">
   <h3 class="header mt-0">Playground</h3>
-  <div class="flex">
-    <div class="w-1/2">
+  <div class="flex flex-wrap">
+    <div class="w-full lg:w-1/2">
       <SveltyPicker placeholder="Pick some date and define your own format" inputClasses="picker-style" {format} {formatType}></SveltyPicker>
     </div>
-    <div class="w-auto mx-2">
+    <div class="w-auto mr-2 lg:mx-2">
       <input type="text" class="picker-style" bind:value={format}>
     </div>
     <div class="w-auto flex items-center">
@@ -38,12 +38,10 @@
   </div>
 </div>
 
+<h3 class="header">Formatting options ({formatType})</h3>
 {#if formatType !== 'php'}
-<h3 class="header">Standard</h3>
-
 <Formatting></Formatting>
+{:else}
+<FormattingPhp></FormattingPhp>
 {/if}
 
-<h3 class="header">PHP</h3>
-
-<FormattingPhp></FormattingPhp>
