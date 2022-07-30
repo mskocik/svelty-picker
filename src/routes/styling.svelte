@@ -41,9 +41,7 @@
       --sdt-clear-color: #dc3545;
       --sdt-btn-bg-hover: rgb(126, 35, 78);
       --sdt-btn-header-bg-hover: rgb(107, 18, 60);
-      --sdt-clock-bg: #eeeded;
-      --sdt-clock-bg-minute: #eeeded;
-      --sdt-clock-bg-shadow: 0 0 128px 2px #74661834 inset;
-      --sdt-shadow: #ccc;
+      --sdt-clock-bg: #7b7b7b;
+      --sdt-shadow: #222;
   }
 </style>

@@ -22,7 +22,7 @@
   If <code class="code">mode</code> is not specified explicitely, time picker is available only when time formatting is present.
 </p>
 
-<div class="bg-orange-200 p-5 rounded-lg w-full">
+<div class="bg-orange-200 dark:bg-blue-400 p-5 rounded-lg w-full">
   <h3 class="header mt-0">Playground</h3>
   <div class="flex flex-wrap">
     <div class="w-full lg:w-1/2">

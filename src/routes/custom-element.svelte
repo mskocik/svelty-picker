@@ -42,7 +42,7 @@ Picker initialized as custom element:
       @apply border-gray-300 border-l-1 border-r-1 px-2 py-2;
     }
     input {
-      @apply px-2 py-1;
+      @apply px-2 py-2;
       &:focus {
         outline: none;
       }

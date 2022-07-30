@@ -18,6 +18,18 @@ export default {
           fontSize: '20px',
           marginBottom: '16px'
         },
+        '.dark h2': {
+          color: '#2c6a9f',
+          fontWeight: 'bold',
+          fontSize: '24px',
+          marginBottom: '16px'
+        },
+        '.dark h3': {
+          color: '#2c6a9f',
+          fontWeight: 'bold',
+          fontSize: '20px',
+          marginBottom: '16px'
+        },
         'a:not(.nav)': {
           color: '#286090',
           textDecoration: 'underline',
@@ -25,15 +37,20 @@ export default {
             color: '#3b82f6',
             textDecoration: 'none'
           }
+        },
+        '.dark a:not(.nav)': {
+          color: '#2c6a9f'
         }
       });
       addComponents({
         '.nav': {
-          color: '#111',
           textDecoration: 'none',
           '&.active': {
             color: '#286090',
             fontWeight: '500'
+          },
+          '.dark &.active': {
+            color: '#2c6a9f'
           }
         },
         '.table': {

@@ -9,43 +9,50 @@
 				opacity: 0.5 !important;
 			}
 		</style>
+		<script>
+			const theme = localStorage.getItem('theme');
+			theme && theme === 'dark' && document.documentElement.classList.add('dark');
+		</script>
 		<meta http-equiv="content-security-policy" content="">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-ff958972.css">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/styling-9a44068d.css">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-31152ba0.css">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-b6f0b241.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-bba13a04.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-e9a06c32.js">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-a33af8d1.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/app-2600bf82.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/styling-c302dc39.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-3d325ee0.css">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-46c04b49.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-a934bd3c.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-ec689f03.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-b74d7d74.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/styling.svelte-d688a276.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-bdfd65a5.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-21abd80f.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/styling.svelte-f24eea02.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-c77615c4.js">
 	</head>
 	<body>
-		<div><div class="bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-82n3q3"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between svelte-82n3q3"><div class="flex items-center text-4xl font-semibold svelte-82n3q3"><button class="inline-flex items-center flex-col mr-3 lg:hidden svelte-82n3q3"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svelte-82n3q3"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      <span class="text-xs font-bold svelte-82n3q3">Menu</span></button>
-    <a href="/svelty-picker/" class="decoration-transparent text-3xl lg:text-3 svelte-82n3q3">📅 Svelty Picker</a></div>
-  <div class="flex items-center text-2x svelte-82n3q3"><a class="mx-4 svelte-82n3q3" href="https://github.com/mskocik/svelty-picker" target="_blank"><svg width="36px" height="36px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32" data-v-8ff9b2e6=""><path fill="currentColor" fill-rule="evenodd" d="M16 2a14 14 0 0 0-4.43 27.28c.7.13 1-.3 1-.67v-2.38c-3.89.84-4.71-1.88-4.71-1.88a3.71 3.71 0 0 0-1.62-2.05c-1.27-.86.1-.85.1-.85a2.94 2.94 0 0 1 2.14 1.45a3 3 0 0 0 4.08 1.16a2.93 2.93 0 0 1 .88-1.87c-3.1-.36-6.37-1.56-6.37-6.92a5.4 5.4 0 0 1 1.44-3.76a5 5 0 0 1 .14-3.7s1.17-.38 3.85 1.43a13.3 13.3 0 0 1 7 0c2.67-1.81 3.84-1.43 3.84-1.43a5 5 0 0 1 .14 3.7a5.4 5.4 0 0 1 1.44 3.76c0 5.38-3.27 6.56-6.39 6.91a3.33 3.33 0 0 1 .95 2.59v3.84c0 .46.25.81 1 .67A14 14 0 0 0 16 2Z"></path></svg></a></div></div>
+		<div class="svelte-wrap bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-wrap"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between"><div class="flex items-center text-4xl font-semibold"><button class="inline-flex items-center flex-col mr-3 lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <span class="text-xs font-bold">Menu</span></button>
+    <a href="/svelty-picker/" class="decoration-transparent text-3xl lg:text-3" style="text-decoration: none">📅 Svelty Picker</a></div>
+  <div class="flex items-center text-2x"><a class="mx-4" href="https://github.com/mskocik/svelty-picker" target="_blank"><svg width="36px" height="36px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32" data-v-8ff9b2e6=""><path fill="currentColor" fill-rule="evenodd" d="M16 2a14 14 0 0 0-4.43 27.28c.7.13 1-.3 1-.67v-2.38c-3.89.84-4.71-1.88-4.71-1.88a3.71 3.71 0 0 0-1.62-2.05c-1.27-.86.1-.85.1-.85a2.94 2.94 0 0 1 2.14 1.45a3 3 0 0 0 4.08 1.16a2.93 2.93 0 0 1 .88-1.87c-3.1-.36-6.37-1.56-6.37-6.92a5.4 5.4 0 0 1 1.44-3.76a5 5 0 0 1 .14-3.7s1.17-.38 3.85 1.43a13.3 13.3 0 0 1 7 0c2.67-1.81 3.84-1.43 3.84-1.43a5 5 0 0 1 .14 3.7a5.4 5.4 0 0 1 1.44 3.76c0 5.38-3.27 6.56-6.39 6.91a3.33 3.33 0 0 1 .95 2.59v3.84c0 .46.25.81 1 .67A14 14 0 0 0 16 2Z"></path></svg></a>
+    <button class="inline-flex text-xl p-2" aria-label="Switch theme"><svg width="1.2em" height="1.2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" class="hidden dark:block"><path fill="currentColor" d="M20.742 13.045a8.088 8.088 0 0 1-2.077.271c-2.135 0-4.14-.83-5.646-2.336a8.025 8.025 0 0 1-2.064-7.723A1 1 0 0 0 9.73 2.034a10.014 10.014 0 0 0-4.489 2.582c-3.898 3.898-3.898 10.243 0 14.143a9.937 9.937 0 0 0 7.072 2.93a9.93 9.93 0 0 0 7.07-2.929a10.007 10.007 0 0 0 2.583-4.491a1.001 1.001 0 0 0-1.224-1.224zm-2.772 4.301a7.947 7.947 0 0 1-5.656 2.343a7.953 7.953 0 0 1-5.658-2.344c-3.118-3.119-3.118-8.195 0-11.314a7.923 7.923 0 0 1 2.06-1.483a10.027 10.027 0 0 0 2.89 7.848a9.972 9.972 0 0 0 7.848 2.891a8.036 8.036 0 0 1-1.484 2.059z"></path></svg>
+      <svg width="1.2em" height="1.2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 512 512" class="dark:hidden"><path d="M256 387c-8.5 0-15.4 6.9-15.4 15.4v46.2c0 8.5 6.9 15.4 15.4 15.4s15.4-6.9 15.4-15.4v-46.2c0-8.5-6.9-15.4-15.4-15.4z" fill="currentColor"></path><path d="M256 48c-8.5 0-15.4 6.9-15.4 15.4v46.2c0 8.5 6.9 15.4 15.4 15.4s15.4-6.9 15.4-15.4V63.4c0-8.5-6.9-15.4-15.4-15.4z" fill="currentColor"></path><path d="M125 256c0-8.5-6.9-15.4-15.4-15.4H63.4c-8.5 0-15.4 6.9-15.4 15.4s6.9 15.4 15.4 15.4h46.2c8.5 0 15.4-6.9 15.4-15.4z" fill="currentColor"></path><path d="M448.6 240.6h-46.2c-8.5 0-15.4 6.9-15.4 15.4s6.9 15.4 15.4 15.4h46.2c8.5 0 15.4-6.9 15.4-15.4s-6.9-15.4-15.4-15.4z" fill="currentColor"></path><path d="M152.5 344.1c-4.1 0-8 1.6-10.9 4.5l-32.7 32.7c-2.9 2.9-4.5 6.8-4.5 10.9s1.6 8 4.5 10.9c2.9 2.9 6.8 4.5 10.9 4.5 4.1 0 8-1.6 10.9-4.5l32.7-32.7c6-6 6-15.8 0-21.8-2.9-2.9-6.8-4.5-10.9-4.5z" fill="currentColor"></path><path d="M359.5 167.9c4.1 0 8-1.6 10.9-4.5l32.7-32.7c2.9-2.9 4.5-6.8 4.5-10.9s-1.6-8-4.5-10.9c-2.9-2.9-6.8-4.5-10.9-4.5-4.1 0-8 1.6-10.9 4.5l-32.7 32.7c-2.9 2.9-4.5 6.8-4.5 10.9s1.6 8 4.5 10.9c2.9 2.9 6.8 4.5 10.9 4.5z" fill="currentColor"></path><path d="M130.7 108.9c-2.9-2.9-6.8-4.5-10.9-4.5-4.1 0-8 1.6-10.9 4.5-2.9 2.9-4.5 6.8-4.5 10.9 0 4.1 1.6 8 4.5 10.9l32.7 32.7c2.9 2.9 6.8 4.5 10.9 4.5 4.1 0 8-1.6 10.9-4.5 2.9-2.9 4.5-6.8 4.5-10.9s-1.6-8-4.5-10.9l-32.7-32.7z" fill="currentColor"></path><path d="M370.4 348.6c-2.9-2.9-6.8-4.5-10.9-4.5-4.1 0-8 1.6-10.9 4.5-6 6-6 15.8 0 21.8l32.7 32.7c2.9 2.9 6.8 4.5 10.9 4.5 4.1 0 8-1.6 10.9-4.5 2.9-2.9 4.5-6.8 4.5-10.9s-1.6-8-4.5-10.9l-32.7-32.7z" fill="currentColor"></path><path d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96z" fill="currentColor"></path></svg></button></div></div>
 
 
-<div class="container !max-w-screen-xl px-3 mx-auto pt-$header-height flex flex-col lg:flex-row svelte-82n3q3"><aside class="sidebar z-50 lg:z-0 w-full lg:w-1/5 svelte-82n3q3 hidden"><div class="h-full svelte-82n3q3"><nav><ul class="py-4 lg:pt-3 svelte-82n3q3"><li><h5 class="transition duration-100 font-bold py-2 parent-active svelte-82n3q3">Documentation</h5>
-            <ul class="mb-2 border-l-1 border-gray-300 border-solid svelte-82n3q3"><li><a href="/svelty-picker/" class="nav px-4 my-2 decoration-none svelte-82n3q3">Getting Started</a>
-              </li><li><a href="/svelty-picker/options" class="nav px-4 my-2 decoration-none svelte-82n3q3">Options</a>
-              </li><li><a href="/svelty-picker/formatting" class="nav px-4 my-2 decoration-none svelte-82n3q3">Formatting</a>
-              </li><li><a href="/svelty-picker/styling" class="nav px-4 my-2 decoration-none svelte-82n3q3 active">Styling</a>
-              </li><li><a href="/svelty-picker/custom-element" class="nav px-4 my-2 decoration-none svelte-82n3q3">Custom Element</a>
-              </li><li><a href="/svelty-picker/i18n" class="nav px-4 my-2 decoration-none svelte-82n3q3">Languages</a>
-              </li><li><a href="/svelty-picker/playground" class="nav px-4 my-2 decoration-none svelte-82n3q3">Playground</a>
+<div class="container !max-w-screen-xl px-3 mx-auto pt-$header-height flex flex-col lg:flex-row"><aside class="sidebar z-50 lg:z-0 w-full lg:w-1/5 lg:block hidden"><div class="h-full"><nav><ul class="py-4 lg:pt-3"><li><h5 class="transition duration-100 font-bold py-2 parent-active">Documentation</h5>
+            <ul class="mb-2 border-l-1 border-gray-300 border-solid"><li><a href="/svelty-picker/" class="nav px-4 my-2 decoration-none">Getting Started</a>
+              </li><li><a href="/svelty-picker/options" class="nav px-4 my-2 decoration-none">Options</a>
+              </li><li><a href="/svelty-picker/formatting" class="nav px-4 my-2 decoration-none">Formatting</a>
+              </li><li><a href="/svelty-picker/styling" class="nav px-4 my-2 decoration-none active">Styling</a>
+              </li><li><a href="/svelty-picker/custom-element" class="nav px-4 my-2 decoration-none">Custom Element</a>
+              </li><li><a href="/svelty-picker/i18n" class="nav px-4 my-2 decoration-none">Languages</a>
+              </li><li><a href="/svelty-picker/playground" class="nav px-4 my-2 decoration-none">Playground</a>
               </li></ul></li></ul></nav>
       <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker?logo=github&logoColor=g"></a></div></aside>
-	<main class="lg:px-6 lg:pt-6 w-full lg:w-4/5 svelte-82n3q3"><h2 class="header">Styling options</h2>
+	<main class="lg:px-6 lg:pt-6 w-full lg:w-4/5"><h2 class="header">Styling options</h2>
 
-<p class="my-4 svelte-1ys15vu">The <code class="code">theme</code> property defined root class, where all CSS variables related to components are defined.
+<p class="my-4 svelte-1z0uz5v">The <code class="code">theme</code> property defined root class, where all CSS variables related to components are defined.
 </p>
 
-<div class="flex svelte-1ys15vu"><div class="w-auto mr-3 svelte-1ys15vu">Custom theme
-    <input type="hidden" id="" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-pg9n00" readonly>
-<div class="std-calendar-wrap is-popup my-colors svelte-pg9n00"><div class="sdt-thead-nav svelte-12apus2"><button class="std-btn std-btn-header sdt-toggle-btn svelte-12apus2">July 2022</button>
+<div class="flex svelte-1z0uz5v"><div class="w-auto mr-3 svelte-1z0uz5v">Custom theme
+    <input type="hidden" id="" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-wfqn2l" readonly>
+<div class="std-calendar-wrap is-popup my-colors svelte-wfqn2l"><div class="sdt-thead-nav svelte-12apus2"><button class="std-btn std-btn-header sdt-toggle-btn svelte-12apus2">July 2022</button>
   <div class="sdt-nav-btns svelte-12apus2">
     <button class="std-btn std-btn-header icon-btn svelte-12apus2"><svg class="sdt-svg svelte-12apus2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg></button>
     <button class="std-btn std-btn-header icon-btn svelte-12apus2"><svg class="sdt-svg svelte-12apus2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg></button></div></div>
@@ -82,14 +89,14 @@
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >21</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >22</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >23</button>
-        </td><td class="sdt-cal-td svelte-12apus2 sdt-today"><button class="std-btn sdt-btn-day svelte-12apus2" >24</button>
+        </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >24</button>
         </td>
       </tr><tr><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >25</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >26</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >27</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >28</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >29</button>
-        </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >30</button>
+        </td><td class="sdt-cal-td svelte-12apus2 sdt-today"><button class="std-btn sdt-btn-day svelte-12apus2" >30</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >31</button>
         </td>
       </tr><tr><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2 not-current" >1</button>
@@ -102,12 +109,12 @@
         </td>
       </tr></tbody></table>
 </div>
-      <div class="std-btn-row svelte-pg9n00"><button class="sdt-action-btn sdt-today-btn svelte-pg9n00" >Today</button>
-          <button class="sdt-action-btn sdt-clear-btn svelte-pg9n00" disabled>Clear</button></div></div></div>
-  <div class="w-auto svelte-1ys15vu">Default theme
+      <div class="std-btn-row svelte-wfqn2l"><button class="sdt-action-btn sdt-today-btn svelte-wfqn2l" >Today</button>
+          <button class="sdt-action-btn sdt-clear-btn svelte-wfqn2l" disabled>Clear</button></div></div></div>
+  <div class="w-auto svelte-1z0uz5v">Default theme
     
-    <input type="hidden" id="" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-pg9n00" readonly>
-<div class="std-calendar-wrap is-popup sdt-calendar-colors svelte-pg9n00"><div class="sdt-thead-nav svelte-12apus2"><button class="std-btn std-btn-header sdt-toggle-btn svelte-12apus2">July 2022</button>
+    <input type="hidden" id="" tabindex="0" name="date"   autocomplete="off" class="form-control svelte-wfqn2l" readonly>
+<div class="std-calendar-wrap is-popup sdt-calendar-colors svelte-wfqn2l"><div class="sdt-thead-nav svelte-12apus2"><button class="std-btn std-btn-header sdt-toggle-btn svelte-12apus2">July 2022</button>
   <div class="sdt-nav-btns svelte-12apus2">
     <button class="std-btn std-btn-header icon-btn svelte-12apus2"><svg class="sdt-svg svelte-12apus2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg></button>
     <button class="std-btn std-btn-header icon-btn svelte-12apus2"><svg class="sdt-svg svelte-12apus2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg></button></div></div>
@@ -144,14 +151,14 @@
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >21</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >22</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >23</button>
-        </td><td class="sdt-cal-td svelte-12apus2 sdt-today"><button class="std-btn sdt-btn-day svelte-12apus2" >24</button>
+        </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >24</button>
         </td>
       </tr><tr><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >25</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >26</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >27</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >28</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >29</button>
-        </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >30</button>
+        </td><td class="sdt-cal-td svelte-12apus2 sdt-today"><button class="std-btn sdt-btn-day svelte-12apus2" >30</button>
         </td><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2" >31</button>
         </td>
       </tr><tr><td class="sdt-cal-td svelte-12apus2"><button class="std-btn sdt-btn-day svelte-12apus2 not-current" >1</button>
@@ -164,10 +171,10 @@
         </td>
       </tr></tbody></table>
 </div>
-      <div class="std-btn-row svelte-pg9n00"><button class="sdt-action-btn sdt-today-btn svelte-pg9n00" >Today</button>
-          <button class="sdt-action-btn sdt-clear-btn svelte-pg9n00" disabled>Clear</button></div></div></div></div>
+      <div class="std-btn-row svelte-wfqn2l"><button class="sdt-action-btn sdt-today-btn svelte-wfqn2l" >Today</button>
+          <button class="sdt-action-btn sdt-clear-btn svelte-wfqn2l" disabled>Clear</button></div></div></div></div>
 
-<div class="mt-4 svelte-1ys15vu"><b class="font-bold svelte-1ys15vu">Source of example from above</b>
+<div class="mt-4 svelte-1z0uz5v"><b class="font-bold svelte-1z0uz5v">Source of example from above</b>
 
   <pre class="language-svelte"><!-- HTML_TAG_START --><code class="language-svelte"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>SveltyPicker</span> <span class="token attr-name">theme</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>my-colors<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>SveltyPicker</span><span class="token punctuation">></span></span>
 
@@ -184,20 +191,19 @@
       <span class="token property">--sdt-clear-color</span><span class="token punctuation">:</span> #dc3545<span class="token punctuation">;</span>
       <span class="token property">--sdt-btn-bg-hover</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>126<span class="token punctuation">,</span> 35<span class="token punctuation">,</span> 78<span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token property">--sdt-btn-header-bg-hover</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>107<span class="token punctuation">,</span> 18<span class="token punctuation">,</span> 60<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token property">--sdt-clock-bg</span><span class="token punctuation">:</span> #eeeded<span class="token punctuation">;</span>
-      <span class="token property">--sdt-clock-bg-minute</span><span class="token punctuation">:</span> #eeeded<span class="token punctuation">;</span>
-      <span class="token property">--sdt-clock-bg-shadow</span><span class="token punctuation">:</span> 0 0 128px 2px #74661834 inset<span class="token punctuation">;</span>
+      <span class="token property">--sdt-clock-bg</span><span class="token punctuation">:</span> #7b7b7b<span class="token punctuation">;</span>
       <span class="token property">--sdt-shadow</span><span class="token punctuation">:</span> #ccc<span class="token punctuation">;</span>
   <span class="token punctuation">&#125;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span></code><!-- HTML_TAG_END --></pre>
-</div></main></div></div>
-<div class="py-5 svelte-82n3q3"> </div>
+</div></main></div>
+<div class="py-5"> </div>
+</div>
 
 
-		<script type="module" data-sveltekit-hydrate="d0c9jo">
-		import { start } from "/svelty-picker/_app/immutable/start-b6f0b241.js";
+		<script type="module" data-sveltekit-hydrate="1i8urnw">
+		import { start } from "/svelty-picker/_app/immutable/start-46c04b49.js";
 		start({
-			target: document.querySelector('[data-sveltekit-hydrate="d0c9jo"]').parentNode,
+			target: document.querySelector('[data-sveltekit-hydrate="1i8urnw"]').parentNode,
 			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
 			session: {},
 			route: true,
@@ -211,6 +217,6 @@
 				routeId: "styling"
 			}
 		});
-	</script></div>
+	</script>
 	</body>
 </html>

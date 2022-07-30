@@ -9,9 +9,13 @@
 				opacity: 0.5 !important;
 			}
 		</style>
+		<script>
+			const theme = localStorage.getItem('theme');
+			theme && theme === 'dark' && document.documentElement.classList.add('dark');
+		</script>
 		%sveltekit.head%
 	</head>
 	<body>
-		<div>%sveltekit.body%</div>
+		%sveltekit.body%
 	</body>
 </html>
