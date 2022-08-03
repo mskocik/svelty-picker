@@ -166,8 +166,20 @@
   }
 
   function isDisabledDate(/** @type {Date} */ date) {
-    if (computedStartDate && computedStartDate > date) return true;
-    if (endDate && endDate <= date) return true;
+    switch (currentView) {
+      case MODE_MONTH:
+        if (computedStartDate && computedStartDate > date) return true;
+        if (endDate && endDate <= date) return true;
+        break;
+      case MODE_YEAR:
+        if (computedStartDate && computedStartDate.getFullYear() === date.getFullYear() && computedStartDate.getMonth() > date.getMonth()) return true;
+        if (endDate && endDate.getFullYear() === date.getFullYear() && endDate.getMonth() < date.getMonth()) return true;
+        break;
+      case MODE_DECADE:
+        if (computedStartDate && computedStartDate.getFullYear() > date.getFullYear()) return true;
+        if (endDate && endDate.getFullYear() < date.getFullYear()) return true;
+        break;
+    }
     return false;
   }
 
@@ -429,7 +441,8 @@
   }
   .std-btn[disabled] {
     cursor: not-allowed;
-    opacity: 0.35;
+    opacity: 0.5;
+    color: var(--sdt-disabled-date, #b22222);
   }
   .std-btn-header {
     width: auto;
