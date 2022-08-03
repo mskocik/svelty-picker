@@ -1,0 +1,67 @@
+<script>
+  import { onMount } from 'svelte';
+  import CustomElement from './_markdown/custom-element.md';
+
+  onMount(() => {
+    import('./../lib/index').then(resp => {
+      console.log('🥳 registering SveltyPicker as <el-picker> element');
+      resp.registerElement && resp.registerElement('el-picker');
+    }).catch(e => console.log('error', e));
+  })
+</script>
+
+<h2 class="header">Custom Element</h2>
+
+<p class="my-4">Custom element is defined as extension to native <code class="code">input</code> tag. Custom element
+supports all options that can be passed as string (So all except initialDate). The input itself should always be placed
+inside relative positioned container.
+</p>
+
+<div class="my-4 p-2 bg-red-300 dark:bg-red-500">
+  Please not that for cross-browser support (Safari), this <a href="https://github.com/ungap/custom-elements#readme" target="_blank">ungap/custom-element</a> polyfill is required.
+</div>
+
+Picker initialized as custom element:
+<div class="relative">
+  <input type="text" name="my-date" is="el-picker" format="dS MM" class="border-1 rounded-md border-gray-300 p-1" placeholder="Pick your birthdate">
+</div>
+
+<CustomElement></CustomElement>
+
+<p class="my-4">
+  Custom element supports 2 custom <code class="code">from</code> and <code class="code">to</code> properties, which should
+  specify <b class="font-bold">id</b> of different datetime picker for limiting <code class="code">startDate</code> or <code class="code">endDate</code>.
+  Check source how it is defined.
+</p>
+
+<div class="group">
+  <input type="text" id="picker-from" to="picker-to" name="my-date[from]" format="yyyy-mm-dd" is="el-picker" placeholder="From">
+  <div class="delimiter">&mdash;</div>
+  <input type="text" id="picker-to" from="picker-from" name="my-date[to]" format="yyyy-mm-dd" is="el-picker" placeholder="To">
+</div>
+
+```svelte
+<div class="group">
+  <input type="text" is="el-picker" id="picker-from" to="picker-to" name="my-date[from]" format="yyyy-mm-dd"placeholder="From">
+  <div class="delimiter">&mdash;</div>
+  <input type="text" is="el-picker" id="picker-to" from="picker-from" name="my-date[to]" format="yyyy-mm-dd"placeholder="To">
+</div>
+```
+
+<style windi:global>
+  .group {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    @apply border-1 rounded-md border-gray-300;
+    .delimiter {
+      @apply border-gray-300 border-l-1 border-r-1 px-2 py-2;
+    }
+    input {
+      @apply px-2 py-2;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+</style>

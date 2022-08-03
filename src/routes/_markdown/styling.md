@@ -16,6 +16,7 @@
       --sdt-btn-header-bg-hover: rgb(107, 18, 60);
       --sdt-clock-bg: #7b7b7b;
       --sdt-shadow: #ccc;
+      --sdt-disabled-date: #b22222;
   }
 </style>
 ```

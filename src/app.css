@@ -63,10 +63,7 @@ table tr:nth-child(2n) {
   text-align: center;
 }
 button[disabled] {
-  opacity: 0.5 !important;
-}
-button[disabled] {
-  opacity: 0.5 !important;
+  opacity: 0.5;
 }
 code[class*="language-"],
 pre[class*="language-"] {
@@ -245,6 +242,11 @@ h3.header {
 }
 .picker-style {
   @apply border-1 rounded-md border-gray-300 p-1 w-full;
+}
+.dark .picker-style,
+.dark input,
+.dark select {
+  color: black;
 }
 body .svelte-wrap {
   min-height: 100vh;

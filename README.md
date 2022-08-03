@@ -152,6 +152,7 @@ Date format can be defined under `formatType` property. It has two options: `sta
   --sdt-clock-bg-minute: rgb(238, 237, 237, 0.25);
   --sdt-clock-bg-shadow: 0 0 128px 2px #ddd inset;
   --sdt-shadow: #ccc;
+  --sdt-disabled-date: #b22222;
 }
 ```
 
