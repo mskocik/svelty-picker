@@ -22,7 +22,7 @@
   export let placeholder = null;
   /** @type {boolean} */
   export let required = false;
-  /** @type {HTMLInputElement} */
+  /** @type {HTMLInputElement|null} */
   export let inputElement;
   /** @type {string|null} */
   export let value = null;
@@ -311,11 +311,13 @@
   /**
    * initialization for custom element
   */
-  inputElement && onMount(() => {
-    inputElement.onfocus = onInputFocus;
-    inputElement.onblur = onInputBlur;
-    inputElement.onclick = () => !pickerVisible && onInputFocus();
-    inputElement.onkeydown = onKeyDown;
+  onMount(() => {
+    if (inputElement) {
+      inputElement.onfocus = onInputFocus;
+      inputElement.onblur = onInputBlur;
+      inputElement.onclick = () => !pickerVisible && onInputFocus();
+      inputElement.onkeydown = onKeyDown;
+    }
   });
 </script>
 
@@ -406,6 +408,7 @@
     --sdt-btn-header-bg-hover: #dfdfdf;
     --sdt-clock-bg: #eeeded;
     --sdt-shadow: #ccc;
+    --sdt-disabled-date: #b22222;
   }
   .std-calendar-wrap {
     width: 280px;
