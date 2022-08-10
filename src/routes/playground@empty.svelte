@@ -1,7 +1,7 @@
 <script>
   // @ts-nocheck
   import SveltyPicker from "$lib/components/SveltyPicker.svelte";
-  import {en, de} from "$lib/utils/i18n";
+  import {en, de} from "$lib/i18n";
   
   import OptionsMD from './_markdown/options.md';
   import Format from './_markdown/formatting.md';

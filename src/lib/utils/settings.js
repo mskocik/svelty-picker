@@ -1,4 +1,4 @@
-import { en } from './i18n.js';
+import { en } from '../i18n/index.js';
 
 export default {
   theme: 'sdt-calendar-colors',

@@ -3,7 +3,7 @@
   import CustomElement from './_markdown/custom-element.md';
 
   onMount(() => {
-    import('./../lib/index').then(resp => {
+    import('./../lib/custom-element').then(resp => {
       console.log('🥳 registering SveltyPicker as <el-picker> element');
       resp.registerElement && resp.registerElement('el-picker');
     }).catch(e => console.log('error', e));
@@ -59,6 +59,7 @@ Picker initialized as custom element:
     }
     input {
       @apply px-2 py-2;
+      width: 130px;
       &:focus {
         outline: none;
       }

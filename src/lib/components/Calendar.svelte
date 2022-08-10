@@ -1,8 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from '$lib/utils/dateUtils.js';
-  import { scale } from '$lib/utils/utils.js'
+  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from '../utils/dateUtils.js';
+  import { scale } from '../utils/utils.js'
 
   /** @type {Date|null} */
   export let date = null;
@@ -387,134 +387,133 @@
 
 
 <style>
-  .sdt-cal-td {
-    padding: 0;
-    font-size: 90%;
-    text-align: center;
-    background-color: var(--sdt-bg-main);
-  }
-  .sdt-cal-th {
-    height: 24px;
-  }
-  .sdt-calendar {
-    height: 221px;
-    overflow: hidden;
-  }
-  .sdt-calendar.is-grid {
-    display: grid;
-  }
-  .sdt-calendar.is-grid .sdt-table {
-		grid-column: 1/2;
-		grid-row: 1/2
-  }
-  .sdt-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .sdt-table-height {
-    height: 222px;
-  }
-  .animate-transition {
-    will-change: transform;
-    transition: transform .3s ease;
-  }
-  .not-current {
-    opacity: 0.3;
-  }
-  .not-current:hover {
-    opacity: 0.55;
-  }
-  .std-btn {
-    margin: 0;
-    border: 0;
-    background: transparent;
-    text-align: center;
-    width: 100%;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 0.3rem;
-    box-sizing: border-box;
-    color: var(--sdt-color);
-  }
-  .sdt-btn-day {
-    max-height: 32px;
-  }
-  .std-btn[disabled] {
-    cursor: not-allowed;
-    opacity: 0.5;
-    color: var(--sdt-disabled-date, #b22222);
-  }
-  .std-btn-header {
-    width: auto;
-    font-weight: bold;
-    padding: 0.375rem 0.5rem;
-  }
-  .std-btn-header.icon-btn:first-of-type {
-    padding-left: 0.375rem;
-    padding-right: 0.375rem;
-  }
-  .std-btn-header.icon-btn {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-  }
-  .std-btn:hover {
-    background-color: var(--sdt-btn-bg-hover);
-  }
-  .is-selected .std-btn {
-    background-color: var(--sdt-primary);
-    color: var(--sdt-color-selected, var(--sdt-bg-main));
-    opacity: 0.9;
-  }
-  .std-btn-header:hover {
-    background-color: var(--sdt-btn-header-bg-hover);
-    /* color: black; */
-  }
-  .sdt-time-icon {
-    margin-right: -4px;
-  }
-  .sdt-time-icon svg {
-    margin: 4px 0;
-  }
-  .sdt-tbody-lg {
-    background-color: var(--sdt-bg-main);
-  }
-  .sdt-tbody-lg .std-btn {
-    height: 74px;
-  }
-  .sdt-thead-nav {
-    display: flex;
-    margin-bottom: 0.25rem;
-  }
-  .sdt-nav-btns {
-    white-space: nowrap;
-  }
-  .sdt-toggle-btn {
-    width: 100%;
-    text-align: left;
-  }
-  .sdt-today:before {
-    box-sizing: border-box;
-    position: absolute;
-    content: '';
-    margin-left: 4px;
-    margin-top: 4px;
-    border-left: 4px solid var(--sdt-shadow);
-    border-top: 4px solid var(--sdt-shadow);
-    border-bottom: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-radius: 2px;
-    height: 4px;
-    z-index: 2;
-  }
-  .sdt-svg {
-    fill: var(--sdt-color);
-  }
-  .sdt-today:hover:before {
-    border-left-color: var(--sdt-primary);
-    border-top-color: var(--sdt-primary);
-  }
-  .is-selected.sdt-today:before {
-    border-left-color: #eee;
-    border-top-color: #eee;
-  }
+.sdt-cal-td {
+  padding: 0;
+  font-size: 90%;
+  text-align: center;
+  background-color: var(--sdt-bg-main);
+}
+.sdt-cal-th {
+  height: 24px;
+}
+.sdt-calendar {
+  height: 221px;
+  overflow: hidden;
+}
+.sdt-calendar.is-grid {
+  display: grid;
+}
+.sdt-calendar.is-grid .sdt-table {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+.sdt-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.sdt-table-height {
+  height: 222px;
+}
+.animate-transition {
+  will-change: transform;
+  transition: transform .3s ease;
+}
+.not-current {
+  opacity: 0.3;
+}
+.not-current:hover {
+  opacity: 0.55;
+}
+.std-btn {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  width: 100%;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0.3rem;
+  box-sizing: border-box;
+  color: var(--sdt-color);
+}
+.sdt-btn-day {
+  max-height: 32px;
+}
+.std-btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+  color: var(--sdt-disabled-date, #b22222);
+}
+.std-btn-header {
+  width: auto;
+  font-weight: bold;
+  padding: 0.375rem 0.5rem;
+}
+.std-btn-header.icon-btn:first-of-type {
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+}
+.std-btn-header.icon-btn {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+.std-btn:hover {
+  background-color: var(--sdt-btn-bg-hover);
+}
+.is-selected .std-btn {
+  background-color: var(--sdt-primary);
+  color: var(--sdt-color-selected, var(--sdt-bg-main));
+  opacity: 0.9;
+}
+.std-btn-header:hover {
+  background-color: var(--sdt-btn-header-bg-hover);
+}
+.sdt-time-icon {
+  margin-right: -4px;
+}
+.sdt-time-icon svg {
+  margin: 4px 0;
+}
+.sdt-tbody-lg {
+  background-color: var(--sdt-bg-main);
+}
+.sdt-tbody-lg .std-btn {
+  height: 74px;
+}
+.sdt-thead-nav {
+  display: flex;
+  margin-bottom: 0.25rem;
+}
+.sdt-nav-btns {
+  white-space: nowrap;
+}
+.sdt-toggle-btn {
+  width: 100%;
+  text-align: left;
+}
+.sdt-today:before {
+  box-sizing: border-box;
+  position: absolute;
+  content: '';
+  margin-left: 4px;
+  margin-top: 4px;
+  border-left: 4px solid var(--sdt-shadow);
+  border-top: 4px solid var(--sdt-shadow);
+  border-bottom: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-radius: 2px;
+  height: 4px;
+  z-index: 2;
+}
+.sdt-svg {
+  fill: var(--sdt-color);
+}
+.sdt-today:hover:before {
+  border-left-color: var(--sdt-primary);
+  border-top-color: var(--sdt-primary);
+}
+.is-selected.sdt-today:before {
+  border-left-color: #eee;
+  border-top-color: #eee;
+}
 </style>

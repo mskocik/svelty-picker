@@ -1,5 +1,5 @@
 <script context="module">
-  import settings from "$lib/utils/settings";
+  import settings from "../utils/settings";
   // your script goes here
   export const config = settings;
 </script>
@@ -7,10 +7,10 @@
 <script>
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { fade } from "svelte/transition";
-  import Calendar from "$lib/components/Calendar.svelte";
-  import Time from "$lib/components/Time.svelte";
-  import { formatDate, parseDate } from "$lib/utils/dateUtils";
-  import { usePosition } from "$lib/utils/utils";
+  import Calendar from "./Calendar.svelte";
+  import Time from "./Time.svelte";
+  import { formatDate, parseDate } from "../utils/dateUtils";
+  import { usePosition } from "../utils/utils";
 
   // html
   export let inputId = '';

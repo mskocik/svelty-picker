@@ -23,7 +23,10 @@ const config = {
       base: dev ? "" : "/svelty-picker",
     },
     package: {
-      emitTypes: false,
+      emitTypes: true,
+      exports: (filepath) => {
+        return ['index.js', 'custom-element.js'].some(allowedExport => filepath.includes(allowedExport));
+      }
     }
   },
 

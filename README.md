@@ -179,9 +179,42 @@ function onChange(event) {
 
 ## 🌐 Localization
 
+By default date picker uses english locale. And at the moment there are only `en` and `de` localizations available
+(PRs for additional locales are more than welcome).
+
+So if you want to change it to german (or other locale in the future), use this:
+
+```svelte
+<script>
+  import SveltyPicker from 'svelty-picker.svelte';
+  import { de } from 'svelty-picker/i18n';
+</script>
+
+<SveltyPicker i18n={de}></SveltyPicker>
+```
+### Global locale setting
+
+You can also change locale globally through setting `i18n` property in global config like below. So all pickers created 
+*AFTER* this setting has been changed, will be in the new locale.
+
+```svelte
+<script>
+  import SveltyPicker, { config } from 'svelty-picker';
+  import { de } from 'svelty-picker/i18n';
+
+  // all pickers in the app will have german locale set
+  config.i18n = de;
+</script>
+
+<SveltyPicker></SveltyPicker>
+```
+
+### Adding additional locales
+
 Localization file has following structure.
 
 ```js
+// default i18n structure
 export const en = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -196,7 +229,6 @@ export const en = {
   backToDate:  'Back to calendar view'
 }
 ```
-PRs for extending built-in localization are welcome 🥳
 
 ## 🏆 Thanks to:
 

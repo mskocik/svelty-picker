@@ -1,7 +1,8 @@
 <script>
-  import SveltyPicker from '$lib/components/SveltyPicker.svelte';
-  import { en, de } from '$lib/utils/i18n.js';
-
+  import SveltyPicker, { config } from '$lib/index';
+  import { en, de } from '$lib/i18n';
+  
+  // all pickers in the app will have german locale set
   let picked = 'en';
 
   $: i18n = picked === 'en' ? en : de;
@@ -9,9 +10,52 @@
 
 ## 🌐 Localization
 
+By default date picker uses english locale. And at the moment there are only `en` and `de` localizations available
+(PRs for additional locales are more than welcome).
+
+So if you want to change it to german (or other locale in the future), use this:
+
+```svelte
+<script>
+  import SveltyPicker from 'svelty-picker.svelte';
+  import { de } from 'svelty-picker/i18n';
+</script>
+
+<SveltyPicker i18n={de}></SveltyPicker>
+```
+
+<div class="my-5 flex">
+  <SveltyPicker pickerOnly inputClasses="my-5" {i18n}></SveltyPicker>
+  <div class="m-2">
+    <label><input type="radio" bind:group={picked} value="en"> <span>🇬🇧</span></label><br>
+    <label><input type="radio" bind:group={picked} value="de"> <span>🇩🇪</span></label>
+  </div>
+</div>
+
+
+### Global locale setting
+
+You can also change locale globally through setting `i18n` property in global config like below. So all pickers created 
+*AFTER* this setting has been changed, will be in the new locale.
+
+```svelte
+<script>
+  import SveltyPicker, { config } from 'svelty-picker';
+  import { de } from 'svelty-picker/i18n';
+
+  // all pickers in the app will have german locale set
+  config.i18n = de;
+</script>
+
+<SveltyPicker></SveltyPicker>
+```
+
+### Adding additional locales
+
 Localization file has following structure.
 
 ```js
+// default i18n structure
 export const en = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -26,12 +70,3 @@ export const en = {
   backToDate:  'Back to calendar view'
 }
 ```
-PRs for extending built-in localization are welcome 🥳
-
-<div class="my-5">
-  <SveltyPicker pickerOnly inputClasses="my-5" {i18n}></SveltyPicker>
-  <div class="my-2">
-    <label><input type="radio" bind:group={picked} value="en"> <span>🇬🇧</span></label>
-    <label class="ml-2"><input type="radio" bind:group={picked} value="de"> <span>🇩🇪</span></label>
-  </div>
-</div>

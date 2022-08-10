@@ -30,7 +30,7 @@
       <h4 class="text-xl text-center">Date</h4>
       <SveltyPicker mode="date" pickerOnly initialDate={new Date()}></SveltyPicker>
     </div>
-    <div class="m-6">OR</div>
+    <div class="m-6">AND</div>
     <div>
       <h4 class="text-xl text-center">Time</h4>
       <SveltyPicker mode="time" pickerOnly format="hh:ii" value={initialTime} on:focus={cancelTimer}></SveltyPicker>

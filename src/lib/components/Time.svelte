@@ -313,7 +313,7 @@
 </script>
 
 <div class="sdt-timer" in:fade={{duration: 200}}>
-  <!-- navbar -->
+  
   <div class="sdt-time-head">
     {#if hasDateComponent}
     <button class="sdt-time-btn sdt-back-btn" title={i18n.backToDate} on:click={onModeSwitch}>
@@ -335,7 +335,7 @@
     </div>
     {/if}
   </div>
-  <!-- clock -->  
+    
   <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
     <div class="sdt-middle-dot"></div>
     <div class="sdt-hand-pointer" style={handCss}>
@@ -359,127 +359,127 @@
 </div>
 
 <style>
-  .sdt-timer {
-    position: relative;
-    width: 272px;
-  }
-  .sdt-time-head {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 4px;
-  }
-  .sdt-time-figure {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  .sdt-clock {
-    margin: auto;
-    position: relative;
-    width: 260px;
-    height: 260px;
-    background-color: var(--sdt-clock-bg);
-    border-radius: 50%;
-    transition: background-color 0.3s;
-    overflow: hidden;
-  }
-  .sdt-time-btn {
-    border: 0;
-    background: transparent;
-    text-align: center;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 0 0.375rem;
-    color: var(--sdt-color);
-  }
-  .sdt-svg {
-    fill: var(--sdt-color);
-  }
-  .sdt-time-btn:not(.is-active) {
-    opacity: 0.5;
-  }
-  .sdt-time-btn:hover {
-    background-color: var(--sdt-btn-header-bg-hover);
-  }
-  .sdt-back-btn {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0.375rem;
-    opacity: 1 !important;
-  }
-  .sdt-meridian {
-    position: absolute;
-    top: 0;
-    right: 40px;
-    display: flex;
-  }
-  .sdt-meridian .sdt-time-btn {
-    width: 56px;
-    font-weight: bold;
-  }
-  .sdt-middle-dot {
-    left: 50%;
-    top: 50%;
-    width: 6px;
-    height: 6px;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    background-color: var(--sdt-primary);
-    border-radius: 50%;
-  }
-  .sdt-hand-pointer {
-    width: 2px;
-    height: calc(40% + 1px);
-    bottom: 50%;
-    left: calc(50% - 1px);
-    position: absolute;
-    background-color: var(--sdt-primary);
-    transform-origin: center bottom 0;
-    transition: transform 0.3s ease, height 0.15s ease;
-  }
-  .sdt-hand-circle {
-    left: -15px;
-    top: -21px;
-    position: relative;
-    width: 4px;
-    height: 4px;
+.sdt-timer {
+  position: relative;
+  width: 272px;
+}
+.sdt-time-head {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.sdt-time-figure {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.sdt-clock {
+  margin: auto;
+  position: relative;
+  width: 260px;
+  height: 260px;
+  background-color: var(--sdt-clock-bg);
+  border-radius: 50%;
+  transition: background-color 0.3s;
+  overflow: hidden;
+}
+.sdt-time-btn {
+  border: 0;
+  background: transparent;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0 0.375rem;
+  color: var(--sdt-color);
+}
+.sdt-svg {
+  fill: var(--sdt-color);
+}
+.sdt-time-btn:not(.is-active) {
+  opacity: 0.5;
+}
+.sdt-time-btn:hover {
+  background-color: var(--sdt-btn-header-bg-hover);
+}
+.sdt-back-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.375rem;
+  opacity: 1 !important;
+}
+.sdt-meridian {
+  position: absolute;
+  top: 0;
+  right: 40px;
+  display: flex;
+}
+.sdt-meridian .sdt-time-btn {
+  width: 56px;
+  font-weight: bold;
+}
+.sdt-middle-dot {
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-color: var(--sdt-primary);
+  border-radius: 50%;
+}
+.sdt-hand-pointer {
+  width: 2px;
+  height: calc(40% + 1px);
+  bottom: 50%;
+  left: calc(50% - 1px);
+  position: absolute;
+  background-color: var(--sdt-primary);
+  transform-origin: center bottom 0;
+  transition: transform 0.3s ease, height 0.15s ease;
+}
+.sdt-hand-circle {
+  left: -15px;
+  top: -21px;
+  position: relative;
+  width: 4px;
+  height: 4px;
+  background-color: transparent;
+  border: 14px solid var(--sdt-primary);
+  border-radius: 50%;
+  box-sizing: content-box;
+}
+.sdt-tick {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-width: 0;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  border-radius: 50%;
+  line-height: 20px;
+  cursor: pointer;
+  background-color: transparent;
+  transition: all 0.3s;
+}
+.sdt-tick[disabled] {
+  cursor: not-allowed;
+}
+.sdt-tick.outer-tick {
+  opacity: 0;
+}
+.sdt-tick.is-selected {
+  animation: tick-selection 0s 0.175s ease-out forwards;
+}
+@keyframes tick-selection {
+  0% {
+    color: initial;
     background-color: transparent;
-    border: 14px solid var(--sdt-primary);
-    border-radius: 50%;
-    box-sizing: content-box;
   }
-  .sdt-tick {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    border-width: 0;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    border-radius: 50%;
-    line-height: 20px;
-    cursor: pointer;
-    background-color: transparent;
-    transition: all 0.3s;
+  100% {
+    background-color: var(--sdt-primary);
+    color: var(--sdt-color-selected, var(--sdt-bg-main));
   }
-  .sdt-tick[disabled] {
-    cursor: not-allowed;
-  }
-  .sdt-tick.outer-tick {
-    opacity: 0;
-  }
-  .sdt-tick.is-selected {
-    animation: tick-selection 0s 0.175s ease-out forwards;
-  }
-  @keyframes tick-selection {
-    0% {
-      color: initial;
-      background-color: transparent;
-    }
-    100% {
-      background-color: var(--sdt-primary);
-      color: var(--sdt-color-selected, var(--sdt-bg-main));
-    }
-  }
+}
 </style>
