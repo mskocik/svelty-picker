@@ -14,17 +14,17 @@
 			theme && theme === 'dark' && document.documentElement.classList.add('dark');
 		</script>
 		<meta http-equiv="content-security-policy" content="">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-a33af8d1.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-d7053034.css">
 	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/app-cffe2166.css">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/i18n-7e7a7479.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/i18n-a35f913c.css">
 	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-a3464f28.css">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-d1aa99d3.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-57926805.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-a934bd3c.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-ec689f03.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-3c14b3d3.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/i18n.svx-3d53b2df.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-49c8ac2e.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/i18n.svx-a3b02e64.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-041137a8.js">
 	</head>
 	<body>
 		<div class="svelte-wrap bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-wrap"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between"><div class="flex items-center text-4xl font-semibold"><button class="inline-flex items-center flex-col mr-3 lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -46,22 +46,16 @@
               </li></ul></li></ul></nav>
       <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker?logo=github&logoColor=g"></a></div></aside>
 	<main class="lg:px-6 lg:pt-6 w-full lg:w-4/5"><h2>🌐 Localization</h2>
-<p>Localization file has following structure.</p>
-<pre class="language-js"><!-- HTML_TAG_START --><code class="language-js"><span class="token keyword">export</span> <span class="token keyword">const</span> en <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token literal-property property">days</span><span class="token operator">:</span>        <span class="token punctuation">[</span><span class="token string">'Sunday'</span><span class="token punctuation">,</span> <span class="token string">'Monday'</span><span class="token punctuation">,</span> <span class="token string">'Tuesday'</span><span class="token punctuation">,</span> <span class="token string">'Wednesday'</span><span class="token punctuation">,</span> <span class="token string">'Thursday'</span><span class="token punctuation">,</span> <span class="token string">'Friday'</span><span class="token punctuation">,</span> <span class="token string">'Saturday'</span><span class="token punctuation">,</span> <span class="token string">'Sunday'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">daysShort</span><span class="token operator">:</span>   <span class="token punctuation">[</span><span class="token string">'Sun'</span><span class="token punctuation">,</span> <span class="token string">'Mon'</span><span class="token punctuation">,</span> <span class="token string">'Tue'</span><span class="token punctuation">,</span> <span class="token string">'Wed'</span><span class="token punctuation">,</span> <span class="token string">'Thu'</span><span class="token punctuation">,</span> <span class="token string">'Fri'</span><span class="token punctuation">,</span> <span class="token string">'Sat'</span><span class="token punctuation">,</span> <span class="token string">'Sun'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">daysMin</span><span class="token operator">:</span>     <span class="token punctuation">[</span><span class="token string">'Su'</span><span class="token punctuation">,</span> <span class="token string">'Mo'</span><span class="token punctuation">,</span> <span class="token string">'Tu'</span><span class="token punctuation">,</span> <span class="token string">'We'</span><span class="token punctuation">,</span> <span class="token string">'Th'</span><span class="token punctuation">,</span> <span class="token string">'Fr'</span><span class="token punctuation">,</span> <span class="token string">'Sa'</span><span class="token punctuation">,</span> <span class="token string">'Su'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">months</span><span class="token operator">:</span>      <span class="token punctuation">[</span><span class="token string">'January'</span><span class="token punctuation">,</span> <span class="token string">'February'</span><span class="token punctuation">,</span> <span class="token string">'March'</span><span class="token punctuation">,</span> <span class="token string">'April'</span><span class="token punctuation">,</span> <span class="token string">'May'</span><span class="token punctuation">,</span> <span class="token string">'June'</span><span class="token punctuation">,</span> <span class="token string">'July'</span><span class="token punctuation">,</span> <span class="token string">'August'</span><span class="token punctuation">,</span> <span class="token string">'September'</span><span class="token punctuation">,</span> <span class="token string">'October'</span><span class="token punctuation">,</span> <span class="token string">'November'</span><span class="token punctuation">,</span> <span class="token string">'December'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">monthsShort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'Jan'</span><span class="token punctuation">,</span> <span class="token string">'Feb'</span><span class="token punctuation">,</span> <span class="token string">'Mar'</span><span class="token punctuation">,</span> <span class="token string">'Apr'</span><span class="token punctuation">,</span> <span class="token string">'May'</span><span class="token punctuation">,</span> <span class="token string">'Jun'</span><span class="token punctuation">,</span> <span class="token string">'Jul'</span><span class="token punctuation">,</span> <span class="token string">'Aug'</span><span class="token punctuation">,</span> <span class="token string">'Sep'</span><span class="token punctuation">,</span> <span class="token string">'Oct'</span><span class="token punctuation">,</span> <span class="token string">'Nov'</span><span class="token punctuation">,</span> <span class="token string">'Dec'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">meridiem</span><span class="token operator">:</span>    <span class="token punctuation">[</span><span class="token string">'am'</span><span class="token punctuation">,</span> <span class="token string">'pm'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">suffix</span><span class="token operator">:</span>      <span class="token punctuation">[</span><span class="token string">'st'</span><span class="token punctuation">,</span> <span class="token string">'nd'</span><span class="token punctuation">,</span> <span class="token string">'rd'</span><span class="token punctuation">,</span> <span class="token string">'th'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">todayBtn</span><span class="token operator">:</span>    <span class="token string">'Today'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">clearBtn</span><span class="token operator">:</span>    <span class="token string">'Clear'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">timeView</span><span class="token operator">:</span>    <span class="token string">'Show time view'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">backToDate</span><span class="token operator">:</span>  <span class="token string">'Back to calendar view'</span>
-<span class="token punctuation">&#125;</span></code><!-- HTML_TAG_END --></pre>
-<p>PRs for extending built-in localization are welcome 🥳</p>
-<div class="my-5 svelte-n6l50g"><input type="hidden" id="" tabindex="0" name="date"   autocomplete="off" class="my-5 svelte-1t6pprq" readonly>
+<p>By default date picker uses english locale. And at the moment there are only <code>en</code> and <code>de</code> localizations available
+(PRs for additional locales are more than welcome).</p>
+<p>So if you want to change it to german (or other locale in the future), use this:</p>
+<pre class="language-svelte"><!-- HTML_TAG_START --><code class="language-svelte"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">import</span> SveltyPicker <span class="token keyword">from</span> <span class="token string">'svelty-picker.svelte'</span><span class="token punctuation">;</span>
+  <span class="token keyword">import</span> <span class="token punctuation">&#123;</span> de <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">'svelty-picker/i18n'</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>SveltyPicker</span> <span class="token attr-name">i18n=</span><span class="token language-javascript"><span class="token punctuation">&#123;</span>de<span class="token punctuation">&#125;</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>SveltyPicker</span><span class="token punctuation">></span></span></code><!-- HTML_TAG_END --></pre>
+<div class="my-5 flex svelte-1lihdu1"><input type="hidden" id="" tabindex="0" name="date"   autocomplete="off" class="my-5 svelte-1t6pprq" readonly>
 <div class="std-calendar-wrap is-popup sdt-calendar-colors svelte-1t6pprq"><div class="sdt-thead-nav svelte-6hyah7"><button class="std-btn std-btn-header sdt-toggle-btn svelte-6hyah7">August 2022</button>
   <div class="sdt-nav-btns svelte-6hyah7">
     <button class="std-btn std-btn-header icon-btn svelte-6hyah7"><svg class="sdt-svg svelte-6hyah7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg></button>
@@ -79,7 +73,7 @@
         </td>
       </tr><tr><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >1</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >2</button>
-        </td><td class="sdt-cal-td svelte-6hyah7 sdt-today"><button class="std-btn sdt-btn-day svelte-6hyah7" >3</button>
+        </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >3</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >4</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >5</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >6</button>
@@ -87,7 +81,7 @@
         </td>
       </tr><tr><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >8</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >9</button>
-        </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >10</button>
+        </td><td class="sdt-cal-td svelte-6hyah7 sdt-today"><button class="std-btn sdt-btn-day svelte-6hyah7" >10</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >11</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >12</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >13</button>
@@ -121,17 +115,44 @@
 </div>
       <div class="std-btn-row svelte-1t6pprq"><button class="sdt-action-btn sdt-today-btn svelte-1t6pprq" >Today</button>
           <button class="sdt-action-btn sdt-clear-btn svelte-1t6pprq" disabled>Clear</button></div></div>
-  <div class="my-2 svelte-n6l50g"><label><input type="radio" value="en" checked> <span>🇬🇧</span></label>
-    <label class="ml-2 svelte-n6l50g"><input type="radio" value="de"> <span>🇩🇪</span></label></div>
-</div></main></div>
+  <div class="m-2 svelte-1lihdu1"><label><input type="radio" value="en" checked> <span>🇬🇧</span></label><br>
+    <label><input type="radio" value="de"> <span>🇩🇪</span></label></div></div>
+<h3>Global locale setting</h3>
+<p>You can also change locale globally through setting <code>i18n</code> property in global config like below. So all pickers created
+<em>AFTER</em> this setting has been changed, will be in the new locale.</p>
+<pre class="language-svelte"><!-- HTML_TAG_START --><code class="language-svelte"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">import</span> SveltyPicker<span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> config <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">'svelty-picker'</span><span class="token punctuation">;</span>
+  <span class="token keyword">import</span> <span class="token punctuation">&#123;</span> de <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">'svelty-picker/i18n'</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// all pickers in the app will have german locale set</span>
+  config<span class="token punctuation">.</span>i18n <span class="token operator">=</span> de<span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>SveltyPicker</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>SveltyPicker</span><span class="token punctuation">></span></span></code><!-- HTML_TAG_END --></pre>
+<h3>Adding additional locales</h3>
+<p>Localization file has following structure.</p>
+<pre class="language-js"><!-- HTML_TAG_START --><code class="language-js"><span class="token comment">// default i18n structure</span>
+<span class="token keyword">export</span> <span class="token keyword">const</span> en <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">days</span><span class="token operator">:</span>        <span class="token punctuation">[</span><span class="token string">'Sunday'</span><span class="token punctuation">,</span> <span class="token string">'Monday'</span><span class="token punctuation">,</span> <span class="token string">'Tuesday'</span><span class="token punctuation">,</span> <span class="token string">'Wednesday'</span><span class="token punctuation">,</span> <span class="token string">'Thursday'</span><span class="token punctuation">,</span> <span class="token string">'Friday'</span><span class="token punctuation">,</span> <span class="token string">'Saturday'</span><span class="token punctuation">,</span> <span class="token string">'Sunday'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">daysShort</span><span class="token operator">:</span>   <span class="token punctuation">[</span><span class="token string">'Sun'</span><span class="token punctuation">,</span> <span class="token string">'Mon'</span><span class="token punctuation">,</span> <span class="token string">'Tue'</span><span class="token punctuation">,</span> <span class="token string">'Wed'</span><span class="token punctuation">,</span> <span class="token string">'Thu'</span><span class="token punctuation">,</span> <span class="token string">'Fri'</span><span class="token punctuation">,</span> <span class="token string">'Sat'</span><span class="token punctuation">,</span> <span class="token string">'Sun'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">daysMin</span><span class="token operator">:</span>     <span class="token punctuation">[</span><span class="token string">'Su'</span><span class="token punctuation">,</span> <span class="token string">'Mo'</span><span class="token punctuation">,</span> <span class="token string">'Tu'</span><span class="token punctuation">,</span> <span class="token string">'We'</span><span class="token punctuation">,</span> <span class="token string">'Th'</span><span class="token punctuation">,</span> <span class="token string">'Fr'</span><span class="token punctuation">,</span> <span class="token string">'Sa'</span><span class="token punctuation">,</span> <span class="token string">'Su'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">months</span><span class="token operator">:</span>      <span class="token punctuation">[</span><span class="token string">'January'</span><span class="token punctuation">,</span> <span class="token string">'February'</span><span class="token punctuation">,</span> <span class="token string">'March'</span><span class="token punctuation">,</span> <span class="token string">'April'</span><span class="token punctuation">,</span> <span class="token string">'May'</span><span class="token punctuation">,</span> <span class="token string">'June'</span><span class="token punctuation">,</span> <span class="token string">'July'</span><span class="token punctuation">,</span> <span class="token string">'August'</span><span class="token punctuation">,</span> <span class="token string">'September'</span><span class="token punctuation">,</span> <span class="token string">'October'</span><span class="token punctuation">,</span> <span class="token string">'November'</span><span class="token punctuation">,</span> <span class="token string">'December'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">monthsShort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'Jan'</span><span class="token punctuation">,</span> <span class="token string">'Feb'</span><span class="token punctuation">,</span> <span class="token string">'Mar'</span><span class="token punctuation">,</span> <span class="token string">'Apr'</span><span class="token punctuation">,</span> <span class="token string">'May'</span><span class="token punctuation">,</span> <span class="token string">'Jun'</span><span class="token punctuation">,</span> <span class="token string">'Jul'</span><span class="token punctuation">,</span> <span class="token string">'Aug'</span><span class="token punctuation">,</span> <span class="token string">'Sep'</span><span class="token punctuation">,</span> <span class="token string">'Oct'</span><span class="token punctuation">,</span> <span class="token string">'Nov'</span><span class="token punctuation">,</span> <span class="token string">'Dec'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">meridiem</span><span class="token operator">:</span>    <span class="token punctuation">[</span><span class="token string">'am'</span><span class="token punctuation">,</span> <span class="token string">'pm'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">suffix</span><span class="token operator">:</span>      <span class="token punctuation">[</span><span class="token string">'st'</span><span class="token punctuation">,</span> <span class="token string">'nd'</span><span class="token punctuation">,</span> <span class="token string">'rd'</span><span class="token punctuation">,</span> <span class="token string">'th'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">todayBtn</span><span class="token operator">:</span>    <span class="token string">'Today'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">clearBtn</span><span class="token operator">:</span>    <span class="token string">'Clear'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">timeView</span><span class="token operator">:</span>    <span class="token string">'Show time view'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">backToDate</span><span class="token operator">:</span>  <span class="token string">'Back to calendar view'</span>
+<span class="token punctuation">&#125;</span></code><!-- HTML_TAG_END --></pre></main></div>
 <div class="py-5"> </div>
 </div>
 
 
-		<script type="module" data-sveltekit-hydrate="1ik8bip">
-		import { start } from "/svelty-picker/_app/immutable/start-d1aa99d3.js";
+		<script type="module" data-sveltekit-hydrate="1gnl276">
+		import { start } from "/svelty-picker/_app/immutable/start-57926805.js";
 		start({
-			target: document.querySelector('[data-sveltekit-hydrate="1ik8bip"]').parentNode,
+			target: document.querySelector('[data-sveltekit-hydrate="1gnl276"]').parentNode,
 			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
 			session: {},
 			route: true,

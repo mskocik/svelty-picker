@@ -1,7 +1,7 @@
 {
   "name": "svelty-picker",
   "description": "Sweet date/time picker written in svelte",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
