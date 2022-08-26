@@ -5,6 +5,7 @@ export default {
   mode: 'auto',
   format: 'yyyy-mm-dd',
   formatType: 'standard',
+  minuteIncrement: 1,
   weekStart: 1,
   inputClasses: '',
   todayBtnClasses: 'sdt-action-btn sdt-today-btn',
