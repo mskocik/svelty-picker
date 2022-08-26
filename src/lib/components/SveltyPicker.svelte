@@ -44,6 +44,8 @@
   /** @type {string} */
   export let formatType = config.formatType;
   /** @type {number} */
+  export let minuteIncrement = config.minuteIncrement;
+  /** @type {number} */
   export let weekStart = config.weekStart;
   /** @type {string} */
   export let inputClasses = config.inputClasses;
@@ -387,6 +389,7 @@
         bind:this={timeEl}
         showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P') !== null}
         {i18n}
+        {minuteIncrement}
         on:time={onDate}
         on:switch={onModeSwitch}
         on:close={onTimeClose}

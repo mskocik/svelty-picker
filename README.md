@@ -51,6 +51,7 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | theme           | `string`     | `sdt-calendar-colors` | css class defining [css variables](#css-variables) |
 | mode            | `string`     | `auto`        | restrict picker's mode. Possible values: `auto|date|datetime|time`. By default it try to guess the mode from `format` |
 | format          | `string`     | `yyyy-mm-dd`  | Format of entered date/time. See [format settings](#format-settings) for available options |
+| minuteIncrement | `number`     | `1`           | number in range `1-60` to set the increment of minutes choosable                                                                                                                     |
 | weekStart       | `number`     | `1`           | number in range `0-6` to select first day of the week. Sunday is `0` |
 | inputId         | `string`     | ``            | id attribute for input element
 | inputClasses    | `string`     | ``            | input css class string |
