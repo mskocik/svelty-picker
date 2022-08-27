@@ -4,7 +4,7 @@ import { mdsvex } from "mdsvex";
 import mdsvexConfig from "./mdsvex.config.js";
 import { windi } from "svelte-windicss-preprocess";
 
-const dev = process.env.NODE_ENV === "development";
+// const dev = process.env.NODE_ENV === "development";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -19,9 +19,9 @@ const config = {
     prerender: {
       default: true,
     },
-    paths: {
-      base: dev ? "" : "/svelty-picker",
-    },
+    // paths: {
+    //   base: dev ? "" : "/svelty-picker",
+    // },
     package: {
       emitTypes: true,
       exports: (filepath) => {

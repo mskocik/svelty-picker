@@ -74,7 +74,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18" /></svg>
       <span class="text-xs font-bold">Menu</span>
     </button>
-    <a href="/svelty-picker/" class="decoration-transparent text-3xl lg:text-3" style="text-decoration: none">📅 Svelty Picker</a>
+    <a href="/" class="decoration-transparent text-3xl lg:text-3" style="text-decoration: none">📅 Svelty Picker</a>
   </div>
   <div class="flex items-center text-2x">
     <a class="mx-4" href="https://github.com/mskocik/svelty-picker" target="_blank">
@@ -98,7 +98,7 @@
             <ul class="mb-2 border-l-1 border-gray-300 border-solid">
               {#each Object.keys(pages) as item, i}
               <li>
-                <a href={`/svelty-picker/${item}`} class="nav px-4 my-2 decoration-none" class:active={$page.routeId === item}>
+                <a href={item} class="nav px-4 my-2 decoration-none" class:active={$page.routeId === item}>
                   {pages[item]}
                 </a>
               </li>

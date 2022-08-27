@@ -7,7 +7,7 @@
     <div class="col-auto">
       <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/svelty-picker/">Readme.md</a>
+          <a class="nav-link" aria-current="page" href="/">Readme.md</a>
         </li>
         <li class="nav-item">
           <span class="nav-link active">Examples</span>

@@ -39,7 +39,7 @@
 <div class="flex justify-between border-b-1 border-grey-500 px-4 py-2">
   <button on:click={onBack}>&larr; Back</button>
   <span class="inline-flex items-end">
-    <a href="/svelty-picker/">
+    <a href="/">
       <h1 class="text-xl hover:(underline underline-gray-300)">📅 Svelty Picker</h1>
     </a>: Playgroung
   </span>
