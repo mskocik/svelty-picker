@@ -1,5 +1,7 @@
 <script>
   // @ts-nocheck
+  import { base } from '$app/paths';
+
   import SveltyPicker from "$lib/components/SveltyPicker.svelte";
   import {en, de} from "$lib/i18n";
   
@@ -39,7 +41,7 @@
 <div class="flex justify-between border-b-1 border-grey-500 px-4 py-2">
   <button on:click={onBack}>&larr; Back</button>
   <span class="inline-flex items-end">
-    <a href="/">
+    <a href="{base}/">
       <h1 class="text-xl hover:(underline underline-gray-300)">📅 Svelty Picker</h1>
     </a>: Playgroung
   </span>

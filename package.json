@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "staging": "vite build --mode staging",
     "package": "svelte-kit package",
     "preview": "vite preview",
     "prepare": "svelte-kit sync",
