@@ -68,6 +68,12 @@
 
 </script>
 
+{#if $page.routeId === 'playground'}
+<div class="svelte-wrap bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-wrap">
+  <slot></slot>
+  </div>
+{:else}
+
 <div class="svelte-wrap bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-wrap">
 
 <div class="container !max-w-screen-xl p-3 flex mx-auto justify-between">
@@ -118,6 +124,7 @@
 </div>
 <div class="py-5">&nbsp;</div>
 </div>
+{/if}
 
 <style windi:preflights:global windi:safelist:global windi:global global>
   .picker-style {
