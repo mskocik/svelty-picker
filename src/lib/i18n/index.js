@@ -26,3 +26,18 @@ export const de = {
   timeView:    'Zeitansicht anzeigen',
   backToDate:  'Zurück zur Kalenderansicht'
 }
+
+// Indonesian translation
+export const id = {
+  days:        ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+  daysShort:   ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+  daysMin:     ['Mn', 'Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb', 'Mn'],
+  months:      ['januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['st', 'nd', 'rd', 'th'],
+  todayBtn:    'Hari Ini',
+  clearBtn:    'Hapus',
+  timeView:    'Tampilkan tampilan waktu',
+  backToDate:  'Kembali ke tampilan kalender'
+}
