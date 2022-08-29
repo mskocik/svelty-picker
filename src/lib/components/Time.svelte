@@ -8,6 +8,7 @@
   export let startDate = null;
   /** @type {Date|null} */
   export let endDate = null;
+  export let minuteIncrement = 1;
   export let showMeridian = false;
   export let hasDateComponent = false;
   /** @type {i18nType}*/
@@ -219,7 +220,7 @@
     if ((e.type === 'mousemove' && !handleMoveMove) || (!isMinuteView && e.target.tagName !== 'BUTTON')) return;
     let a = 0;
     let b = 0;
-    if (e.target.tagName === 'BUTTON') {
+    if (e.target.tagName === 'BUTTON' && (!isMinuteView || minuteIncrement === 1)) {
       let val = parseInt(e.target.dataset.value);
       const setter = !isMinuteView ? 'setHours' : 'setMinutes';
       if (!isMinuteView && isPM) {
@@ -274,7 +275,9 @@
           degree = beta + 270;
           break;
       }
-      degree = Math.floor(degree / 6)
+
+      degree = Math.round((degree / 6) / minuteIncrement) * minuteIncrement;
+
       innerDate.setMinutes(degree);
     }
     innerDate = innerDate;

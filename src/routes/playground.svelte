@@ -19,6 +19,7 @@
   let startDate = null;
   let endDate = null;
   let pickerOnly = false;
+  let minuteIncrement = 1;
   let weekStart = 1;
   let value = '';
   let format = '';
@@ -53,12 +54,12 @@
     {#if !pickerOnly}
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate}  {i18n}
-      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {clearToggle} {autoclose}
+      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {clearToggle} {autoclose} {minuteIncrement}
     ></SveltyPicker>
     {:else}
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate} pickerOnly {i18n}
-      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {clearToggle} {autoclose}
+      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {clearToggle} {autoclose} {minuteIncrement}
     ></SveltyPicker>
     {/if}
 
@@ -83,6 +84,10 @@
         <div>
           <label for="endDate">End Date (limit to)</label><br>
           <SveltyPicker inputId="endDate"  bind:value={endDate} format={format} formatType={formatType} inputClasses="picker"></SveltyPicker>
+        </div>
+        <div>
+          <label for="minuteIncrement">Minute Increment</label><br>
+          <input type="number" id="minuteIncrement" min="1" max="60" bind:value={minuteIncrement}>
         </div>
         <div>
           <label for="week">Week start</label><br>
