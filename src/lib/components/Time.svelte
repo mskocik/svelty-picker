@@ -216,12 +216,11 @@
    * @param {any} e
    */
   function onClick(e) {
-    console.log('on click', minuteIncrement)
     if (!canSelect || !e.target) return;
     if ((e.type === 'mousemove' && !handleMoveMove) || (!isMinuteView && e.target.tagName !== 'BUTTON')) return;
     let a = 0;
     let b = 0;
-    if (e.target.tagName === 'BUTTON' && minuteIncrement === 1) {
+    if (e.target.tagName === 'BUTTON' && (!isMinuteView || minuteIncrement === 1)) {
       let val = parseInt(e.target.dataset.value);
       const setter = !isMinuteView ? 'setHours' : 'setMinutes';
       if (!isMinuteView && isPM) {
