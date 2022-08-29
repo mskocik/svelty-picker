@@ -14,18 +14,17 @@
 			theme && theme === 'dark' && document.documentElement.classList.add('dark');
 		</script>
 		<meta http-equiv="content-security-policy" content="">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-a33af8d1.css">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/app-cffe2166.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-7d625f0a.css">
 	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/i18n-a35f913c.css">
 	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-a3464f28.css">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-04afe20e.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-a934bd3c.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-ec689f03.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-7bcbf391.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-28983a80.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-0a3ccbdb.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/paths-1c47712a.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-0b468920.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/i18n.svx-b80aeaa5.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-db79ffb1.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-5e391803.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/i18n.svx-800082ec.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-b91faabc.js">
 	</head>
 	<body>
 		<div class="svelte-wrap bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-wrap"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between"><div class="flex items-center text-4xl font-semibold"><button class="inline-flex items-center flex-col mr-3 lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -47,7 +46,7 @@
               </li></ul></li></ul></nav>
       <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker?logo=github&logoColor=g"></a></div></aside>
 	<main class="lg:px-6 lg:pt-6 w-full lg:w-4/5"><h2>🌐 Localization</h2>
-<p>By default date picker uses english locale. And at the moment there are only <code>en</code> and <code>de</code> localizations available
+<p>By default date picker uses english locale. And at the moment there are only <code>en</code> (english), <code>de</code> (german), <code>id</code> (indonesian), <code>cs</code> (czech) and <code>sk</code> (slovak) localizations available
 (PRs for additional locales are more than welcome).</p>
 <p>So if you want to change it to german (or other locale in the future), use this:</p>
 <pre class="language-svelte"><!-- HTML_TAG_START --><code class="language-svelte"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
@@ -101,10 +100,10 @@
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >24</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >25</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >26</button>
-        </td><td class="sdt-cal-td svelte-6hyah7 sdt-today"><button class="std-btn sdt-btn-day svelte-6hyah7" >27</button>
+        </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >27</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >28</button>
         </td>
-      </tr><tr><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >29</button>
+      </tr><tr><td class="sdt-cal-td svelte-6hyah7 sdt-today"><button class="std-btn sdt-btn-day svelte-6hyah7" >29</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >30</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7" >31</button>
         </td><td class="sdt-cal-td svelte-6hyah7"><button class="std-btn sdt-btn-day svelte-6hyah7 not-current" >1</button>
@@ -146,14 +145,13 @@
   <span class="token literal-property property">timeView</span><span class="token operator">:</span>    <span class="token string">'Show time view'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">backToDate</span><span class="token operator">:</span>  <span class="token string">'Back to calendar view'</span>
 <span class="token punctuation">&#125;</span></code><!-- HTML_TAG_END --></pre></main></div>
-<div class="py-5"> </div>
-</div>
+<div class="py-5"> </div></div>
 
 
-		<script type="module" data-sveltekit-hydrate="lbh16q">
-		import { start } from "/svelty-picker/_app/immutable/start-04afe20e.js";
+		<script type="module" data-sveltekit-hydrate="gd3nja">
+		import { start } from "/svelty-picker/_app/immutable/start-7bcbf391.js";
 		start({
-			target: document.querySelector('[data-sveltekit-hydrate="lbh16q"]').parentNode,
+			target: document.querySelector('[data-sveltekit-hydrate="gd3nja"]').parentNode,
 			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
 			session: {},
 			route: true,
@@ -162,7 +160,7 @@
 			hydrate: {
 				status: 200,
 				error: null,
-				nodes: [0, 5],
+				nodes: [0, 4],
 				params: {},
 				routeId: "i18n"
 			}
