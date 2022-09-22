@@ -71,3 +71,18 @@ export const sk = {
   timeView:    'Zobraziť hodiny',
   backToDate:  'Späť na kalendár'
 }
+
+// Japanese translation by aska
+const jp = {
+  days:        ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日'],
+  daysShort:   ['日曜', '月曜', '火曜', '水曜', '木曜', '金曜', '土曜', '日曜'],
+  daysMin:     ['日', '月', '火', '水', '木', '金', '土', '日'],
+  months:      ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['', '', '', ''],
+  todayBtn:    '今日',
+  clearBtn:    'クリア',
+  timeView:    'タイムを表示',
+  backToDate:  'カレンダーに戻る'
+}
