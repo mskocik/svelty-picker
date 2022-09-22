@@ -289,7 +289,7 @@
     }
   }
 
-  $: tableCaption = showCaption(currentView, activeDate);
+  $: tableCaption = i18n && showCaption(currentView, activeDate);
 
 </script>
 

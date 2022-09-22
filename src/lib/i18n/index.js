@@ -1,6 +1,5 @@
 // always keep sorted alphabetically
-
-export const cs = {
+export const cz = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   daysMin:     ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'],
@@ -13,6 +12,8 @@ export const cs = {
   timeView:    'Zobrazit hodiny',
   backToDate:  'Zpátky na kalendář'
 }
+// FUTURE: remove this BC on major version release
+export const cs = cz;
 
 // German translation by emroc GmbH
 export const de = {
@@ -58,6 +59,21 @@ export const id = {
   backToDate:  'Kembali ke tampilan kalender'
 }
 
+// Japanese translation by aska
+export const jp = {
+  days:        ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日'],
+  daysShort:   ['日曜', '月曜', '火曜', '水曜', '木曜', '金曜', '土曜', '日曜'],
+  daysMin:     ['日', '月', '火', '水', '木', '金', '土', '日'],
+  months:      ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['', '', '', ''],
+  todayBtn:    '今日',
+  clearBtn:    'クリア',
+  timeView:    'タイムを表示',
+  backToDate:  'カレンダーに戻る'
+}
+
 export const sk = {
   days:        ['Nedeľa', 'Pondelok', 'Utorok', 'Streda', 'Štvrtok', 'Piatok', 'Sobota', 'Nedeľa'],
   daysShort:   ['Ned', 'Pon', 'Uto', 'Str', 'Štv', 'Pia', 'Sob', 'Ned'],
@@ -72,17 +88,6 @@ export const sk = {
   backToDate:  'Späť na kalendár'
 }
 
-// Japanese translation by aska
-const jp = {
-  days:        ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日'],
-  daysShort:   ['日曜', '月曜', '火曜', '水曜', '木曜', '金曜', '土曜', '日曜'],
-  daysMin:     ['日', '月', '火', '水', '木', '金', '土', '日'],
-  months:      ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-  monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-  meridiem:    ['am', 'pm'],
-  suffix:      ['', '', '', ''],
-  todayBtn:    '今日',
-  clearBtn:    'クリア',
-  timeView:    'タイムを表示',
-  backToDate:  'カレンダーに戻る'
+export default {
+  cz, de, en, id, jp, sk
 }

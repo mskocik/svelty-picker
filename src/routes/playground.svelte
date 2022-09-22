@@ -3,7 +3,7 @@
   import { base } from '$app/paths';
 
   import SveltyPicker from "$lib/components/SveltyPicker.svelte";
-  import {en, de} from "$lib/i18n";
+  import i18ns from "$lib/i18n";
   
   import OptionsMD from './_markdown/options.md';
   import Format from './_markdown/formatting.md';
@@ -29,13 +29,15 @@
   let clearBtn = true;
   let clearToggle = true;
   let autoclose = true;
-  let i18n = en;
+  let i18n = i18ns.en;
 
   $: {
     format = formatType === 'php'
       ? 'Y-m-d H:i'
       :'yyyy-mm-dd hh:ii'
   }
+
+  const getFlag = code => String.fromCodePoint(...[...code.toUpperCase()].map(char => 127397 + char.charCodeAt()))
 
 </script>
 
@@ -44,7 +46,7 @@
   <span class="inline-flex items-end">
     <a href="{base}/">
       <h1 class="text-xl hover:(underline underline-gray-300)">📅 Svelty Picker</h1>
-    </a>: Playgroung
+    </a>: Playground
   </span>
   <span></span>
 </div>
@@ -93,10 +95,11 @@
           <label for="week">Week start</label><br>
           <input type="number" id="week" min="0" max="6" bind:value={weekStart}>
         </div>
-        <div class="my-2">
+        <div class="my-2 language-bar">
           Language<br>
-          <label><input type="radio" bind:group={i18n} value={en}> <span>🇬🇧</span></label>
-          <label class="ml-2"><input type="radio" bind:group={i18n} value={de}> <span>🇩🇪</span></label>
+          {#each Object.keys(i18ns) as locale}
+          <label class="mr-2"><input type="radio" bind:group={i18n} value={i18ns[locale]}> <span>{getFlag(locale)}</span></label>
+          {/each}
         </div>
       </div>
       <div class="w-full lg:w-1/2">
@@ -227,5 +230,8 @@
     :global(.picker) {
       @apply border-1 border-gray-300 px-1 py-1;
     }
+  }
+  .language-bar {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif
   }
 </style>
