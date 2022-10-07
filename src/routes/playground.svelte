@@ -37,7 +37,7 @@
       :'yyyy-mm-dd hh:ii'
   }
 
-  const getFlag = code => String.fromCodePoint(...[...code.toUpperCase()].map(char => 127397 + char.charCodeAt()))
+  const getFlag = code => String.fromCodePoint(...[...(code === 'en' ? 'gb' : code).toUpperCase()].map(char => 127397 + char.charCodeAt()))
 
 </script>
 
@@ -217,7 +217,6 @@
     }
   }
   .settings {
-    input[type=text],
     input[type=number],
     select {
       border: 1px solid #ccc;
