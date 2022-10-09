@@ -149,6 +149,7 @@
   function resetView() {
     if (!pickerOnly) pickerVisible = false;
     if (resolvedMode !== 'time') currentMode = "date";
+    if (autoclose) dispatch('close');
   }
 
   /** 
@@ -167,6 +168,9 @@
         setter = null;
     }
     value = setter ? formatDate(setter, format, i18n, formatType) : null;
+    if (autoclose && setter && resolvedMode === 'date') {
+      dispatch('close');
+    }
     if (
       autoclose &&
       (resolvedMode === "date" || !setter) &&
@@ -296,7 +300,6 @@
 
   function onTimeClose() {
     autoclose && !preventClose && resetView();
-    dispatch('close');
   }
 
   function onInputFocus() {
