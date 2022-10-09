@@ -159,7 +159,7 @@ Date format can be defined under `formatType` property. It has two options: `sta
 
 ## 🗯️ Events
 
-Component emits `input`, `change` and `blur` events.
+Component emits `input`, `change`, `close` and `blur` events.
 
 - `input` is dispatched on `<input>` element therefore you can get current value like from every native event:
 - `change` event is using Svelte's `eventDispatcher`, therefore triggered event contains `detail` property
