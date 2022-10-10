@@ -74,6 +74,7 @@
 
   const dispatch = createEventDispatcher();
   if (value) value = value.replace(/(:\d+):\d+/, "$1") // strip seconds if present in initial value
+  let selectedTimeType = 'hour';
   let prevValue = value;
   let currentFormat = format;
   let innerDate = initialDate && initialDate instanceof Date
@@ -193,7 +194,17 @@
     tick().then(() => {
       if (inputElement) inputElement.value = value || '';
       inputEl && inputEl.dispatchEvent(new Event("input"));
-      dispatch("change", value);
+      let type = e.type;
+      if (type === 'time') {
+        if (selectedTimeType !== 'hour') {
+          type = 'minute';
+          selectedTimeType = 'hour';
+        } else {
+          type = 'hour';
+          selectedTimeType = 'minute';
+        }
+      }
+      dispatch("change", {'type': type, 'value': value});
     });
   }
 
@@ -205,7 +216,7 @@
     const todayMinutes = innerDate
       ? innerDate.getMinutes()
       : today.getMinutes();
-    onDate(new CustomEvent('ontoday', {
+    onDate(new CustomEvent('today', {
       detail: new Date(
         today.getFullYear(),
         today.getMonth(),

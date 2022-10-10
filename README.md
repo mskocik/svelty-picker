@@ -162,7 +162,7 @@ Date format can be defined under `formatType` property. It has two options: `sta
 Component emits `input`, `change` and `blur` events.
 
 - `input` is dispatched on `<input>` element therefore you can get current value like from every native event:
-- `change` event is using Svelte's `eventDispatcher`, therefore triggered event contains `detail` property
+- `change` event is using Svelte's `eventDispatcher`, therefore triggered event contains `detail` property and contains two property `value` value of input and `type` type of event fired:
 
 ```js
 <script>
@@ -171,7 +171,8 @@ function onInput(event) {
 }
 
 function onChange(event) {
-  console.log(event.detail) // logs currently selected date or null
+  console.log(event.detail.value) // logs currently selected date or null
+  console.log(event.detail.type) // logs currently type of event fired 'date', 'hour', 'minute', 'today' or 'clear'
 }
 </script>
 
