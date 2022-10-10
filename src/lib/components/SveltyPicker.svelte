@@ -298,6 +298,7 @@
 
   function onTimeClose() {
     autoclose && !preventClose && resetView();
+    dispatch('time-close');
   }
 
   function onInputFocus() {
