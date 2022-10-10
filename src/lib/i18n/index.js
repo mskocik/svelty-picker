@@ -59,6 +59,21 @@ export const es = {
   backToDate:  'Regresar al calendario'
 }
 
+// Persian (Farsi) translation by sadegh19b
+export const fa = {
+  days:        ['یکشنبه', 'دوشنبه', 'سه‌شنبه‌', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه', 'یکشنبه'],
+  daysShort:   ['یکش', 'دوش', 'سه‌ش', 'چهار', 'پنج', 'جمع', 'شنب', 'یکش'],
+  daysMin:     ['یک', 'دو', 'سه', 'چا', 'پن', 'جم', 'شن', 'یک'],
+  months:      ['ژانویه', 'فوریه', 'مارس', 'آپریل', 'می', 'ژوئن', 'جولای', 'آگوست', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'],
+  monthsShort: ['ژان', 'فور', 'مار', 'آپر', 'می', 'ژو', 'جول', 'آگو', 'سپت', 'اکت', 'نوا', 'دسا'],
+  meridiem:    ['ق.ض', 'ب.ض'],
+  suffix:      ['st', 'nd', 'rd', 'th'],
+  todayBtn:    'امروز',
+  clearBtn:    'پاک‌کردن',
+  timeView:    'نمایش بخش زمان',
+  backToDate:  'بازگشت به بخش تقویم'
+}
+
 // Indonesian translation
 export const id = {
   days:        ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
