@@ -180,7 +180,7 @@ function onChange(event) {
 
 ## 🌐 Localization
 
-By default date picker uses english locale. And at the moment there is only few (`cs`, `de`, `en`, `fa`, `id`, `sk`) locales available 
+By default date picker uses english locale. And at the moment there is only few locales available 
 (PRs for additional locales are more than welcome).
 
 So if you want to change it to german (or other locale in the future), use this:

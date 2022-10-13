@@ -1,6 +1,6 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "immutable/start-1458ced7.js",
+    "file": "immutable/start-1c19c653.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
@@ -187,17 +187,21 @@
       "_index-28983a80.js"
     ]
   },
-  "src/routes\\index.css": {
-    "file": "immutable/assets/index-cf6e7209.css",
-    "src": "src/routes\\index.css"
+  "src/routes\\custom-element.css": {
+    "file": "immutable/assets/custom-element-a4f85524.css",
+    "src": "src/routes\\custom-element.css"
   },
   "src/routes\\i18n.css": {
     "file": "immutable/assets/i18n-a35f913c.css",
     "src": "src/routes\\i18n.css"
   },
-  "src/routes\\custom-element.css": {
-    "file": "immutable/assets/custom-element-a4f85524.css",
-    "src": "src/routes\\custom-element.css"
+  "src/routes\\options.css": {
+    "file": "immutable/assets/options-77f863f6.css",
+    "src": "src/routes\\options.css"
+  },
+  "src/routes\\index.css": {
+    "file": "immutable/assets/index-cf6e7209.css",
+    "src": "src/routes\\index.css"
   },
   "src/routes\\formatting.css": {
     "file": "immutable/assets/formatting-72699d86.css",
@@ -210,10 +214,6 @@
   "src/routes\\playground.css": {
     "file": "immutable/assets/playground-930a99c5.css",
     "src": "src/routes\\playground.css"
-  },
-  "src/routes\\options.css": {
-    "file": "immutable/assets/options-77f863f6.css",
-    "src": "src/routes\\options.css"
   },
   "SveltyPicker.css": {
     "file": "immutable/assets/SveltyPicker-a3464f28.css",
