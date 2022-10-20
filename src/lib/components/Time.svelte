@@ -278,6 +278,10 @@
 
       degree = Math.round((degree / 6) / minuteIncrement) * minuteIncrement;
 
+      if (degree === 60) {
+        degree = 0;
+      }
+
       innerDate.setMinutes(degree);
     }
     innerDate = innerDate;
