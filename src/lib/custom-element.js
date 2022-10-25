@@ -3,7 +3,7 @@ import SveltyPicker, { config } from "./components/SveltyPicker.svelte";
 
 const OPTION_LIST = [
   'value', 'name', 'placeholder', 'start-date', 'end-date', 'disabled', 'input-classes',
-  'mode', 'format', 'week-start', 'today-btn', 'clear-btn', 'autoclose', 'required'
+  'mode', 'format', 'format-type', 'week-start', 'today-btn', 'clear-btn', 'autoclose', 'required'
 ];
 
 function formatValue(name, value) {
@@ -88,6 +88,15 @@ class PickerElement extends HTMLInputElement {
         set(val) {
           val && this.setAttribute('input-classes', val)
           !val && this.removeAttribute('input-classes');
+        }
+      },
+      'formatType': {
+        get() {
+          return this.getAttribute('format-type');
+        },
+        set(val) {
+          val && ['standard', 'php'].includes(val) && this.setAttribute('format-type', val);
+          !val && this.removeAttribute('format-type');
         }
       }
     }

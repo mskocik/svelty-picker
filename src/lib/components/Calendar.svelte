@@ -289,7 +289,7 @@
     }
   }
 
-  $: tableCaption = showCaption(currentView, activeDate);
+  $: tableCaption = i18n && showCaption(currentView, activeDate);
 
 </script>
 
@@ -320,7 +320,7 @@
       {#each dataset.years as row, i}
       <tr class="sdt-cal-td">
         {#each row as year, j(j)}
-        <td class:is-selected={i*4+j === dataset.selectionMark}>
+        <td class="sdt-cal-td" class:is-selected={i*4+j === dataset.selectionMark}>
           <button
             class="std-btn"
             class:not-current={!isBetween(i*4+j)}
@@ -343,7 +343,7 @@
       {#each dataset.months as row, i}
       <tr class="sdt-cal-td">
         {#each row as month, j(j)}
-        <td class:is-selected={i*4+j === dataset.selectionMark}>
+        <td class="sdt-cal-td" class:is-selected={i*4+j === dataset.selectionMark}>
           <button class="std-btn"
             class:not-current={!isBetween(i*4+j)}
             on:click|preventDefault={() => { onClick(month)}}

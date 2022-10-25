@@ -14,17 +14,16 @@
 			theme && theme === 'dark' && document.documentElement.classList.add('dark');
 		</script>
 		<meta http-equiv="content-security-policy" content="">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-a33af8d1.css">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/app-cffe2166.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-659bdd23.css">
 	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/options-77f863f6.css">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-04afe20e.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-a934bd3c.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-ec689f03.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-1c19c653.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-28983a80.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-0a3ccbdb.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/paths-1c47712a.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-0b468920.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/options.svelte-351d35f0.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/options-e11bd025.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-5e391803.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/options.svelte-9d77f975.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/options-6ad1c8ff.js">
 	</head>
 	<body>
 		<div class="svelte-wrap bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-wrap"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between"><div class="flex items-center text-4xl font-semibold"><button class="inline-flex items-center flex-col mr-3 lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -99,6 +98,10 @@
 <td><code>string</code></td>
 <td><code>yyyy-mm-dd</code></td>
 <td>Format of entered date/time. See <a href="#format-settings">format settings</a> for available options</td></tr>
+<tr><td>minuteIncrement</td>
+<td><code>number</code></td>
+<td><code>1</code></td>
+<td>number in range <code>1-60</code> to set the increment of minutes choosable</td></tr>
 <tr><td>weekStart</td>
 <td><code>number</code></td>
 <td><code>1</code></td>
@@ -149,14 +152,13 @@
 <td>Bind validator action for inner <code>&lt;input&gt;</code> element. Designed to be used with <code>svelte-use-form</code>.</td></tr></tbody>
 </table>
 </div></main></div>
-<div class="py-5"> </div>
-</div>
+<div class="py-5"> </div></div>
 
 
-		<script type="module" data-sveltekit-hydrate="1d6ln2j">
-		import { start } from "/svelty-picker/_app/immutable/start-04afe20e.js";
+		<script type="module" data-sveltekit-hydrate="1ebb3ui">
+		import { start } from "/svelty-picker/_app/immutable/start-1c19c653.js";
 		start({
-			target: document.querySelector('[data-sveltekit-hydrate="1d6ln2j"]').parentNode,
+			target: document.querySelector('[data-sveltekit-hydrate="1ebb3ui"]').parentNode,
 			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
 			session: {},
 			route: true,
@@ -165,7 +167,7 @@
 			hydrate: {
 				status: 200,
 				error: null,
-				nodes: [0, 7],
+				nodes: [0, 6],
 				params: {},
 				routeId: "options"
 			}

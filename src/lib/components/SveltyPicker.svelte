@@ -23,7 +23,7 @@
   /** @type {boolean} */
   export let required = false;
   /** @type {HTMLInputElement|null} */
-  export let inputElement;
+  export let inputElement = null;
   /** @type {string|null} */
   export let value = null;
   /** @type {Date|null} */
