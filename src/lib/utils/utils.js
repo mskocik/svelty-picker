@@ -1,35 +1,33 @@
 // @ts-nocheck
 import { cubicOut } from 'svelte/easing';
 
-export function usePosition(el, { inputEl, visible, inputRect }) {
-  if (!visible) {
-    const calRect = el.getBoundingClientRect();
-    const style = ['position: absolute', 'z-index: 12250'];
-    style.push(inputRect.x + calRect.width > window.innerWidth
-      ? `right: 1rem`
-      : `left: ${inputRect.left}px`
-    );
-    if (calRect.height + calRect.top > (window.innerHeight + window.scrollY)) {
-      style.push(`bottom: 1rem`);
-    } else {
-      style.push(`top: ${inputRect.top + inputRect.height + window.scrollY}px`);
-    }
-    el.style = style.join(';');
-    el.hidden = false;
-    document.body.appendChild(el);
-  }
-  el.hidden = false;
-
-  function destroy() {
-    if (el.parentNode) {
-      el.parentNode.removeChild(el);
-    }
-  }
+export function usePosition(node, { visible }) {
+  const onScrollHandler = () => visible && isOutOfViewport(node);
+  onScrollHandler();
+  document.addEventListener('scroll', onScrollHandler, { passive: true });
 
   return {
-    destroy
+    update(newVal) {
+      visible = newVal;
+    },
+    destroy() {
+      document.removeEventListener('scroll', onScrollHandler, { passive: true });
+    }
   }
 }
+
+/** slightly addapted from mskocik/svelecte */
+function isOutOfViewport(elem) {
+  if (!elem) return false;
+  const parentBounding = elem
+    .parentElement  // wrapper
+    .getBoundingClientRect();
+  const bounding = elem.getBoundingClientRect();
+
+  elem.style.bottom = parentBounding.bottom + bounding.height > (window.innerHeight || document.documentElement.clientHeight)
+    ? elem.previousElementSibling.clientHeight + 'px'
+    : '';
+};
 
 export function scale(node, { delay = 0, duration = 400, easing = cubicOut, start = 0, end = 1, opacity = 0 } = {}) {
   const style = getComputedStyle(node);

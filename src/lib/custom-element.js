@@ -3,7 +3,7 @@ import SveltyPicker, { config } from "./components/SveltyPicker.svelte";
 
 const OPTION_LIST = [
   'value', 'name', 'placeholder', 'start-date', 'end-date', 'disabled', 'input-classes',
-  'mode', 'format', 'format-type', 'week-start', 'today-btn', 'clear-btn', 'autoclose', 'required'
+  'mode', 'format', 'format-type', 'display-format', 'display-format-type', 'week-start', 'today-btn', 'clear-btn', 'autoclose', 'required'
 ];
 
 function formatValue(name, value) {
@@ -30,10 +30,12 @@ function formatProp(name) {
   return name;
 }
 
-class PickerElement extends HTMLInputElement {
+class PickerElement extends HTMLElement {
   constructor() {
     super();
     this.picker = null;
+    this.valueElement = null;
+    this.displayElement = null;
 
     const simpleProps = [
       // 'value',
@@ -98,6 +100,24 @@ class PickerElement extends HTMLInputElement {
           val && ['standard', 'php'].includes(val) && this.setAttribute('format-type', val);
           !val && this.removeAttribute('format-type');
         }
+      },
+      'displayFormat': {
+        get() {
+          return this.getAttribute('display-format');
+        },
+        set(val) {
+          val && this.setAttribute('display-format', val);
+          !val && this.removeAttribute('display-format');
+        }
+      },
+      'displayFormatType': {
+        get() {
+          return this.getAttribute('display-format-type');
+        },
+        set(val) {
+          val && ['standard', 'php'].includes(val) && this.setAttribute('display-format-type', val);
+          !val && this.removeAttribute('display-format-type');
+        }
       }
     }
     const boolProps = ['required', 'disabled', 'today-btn', 'clear-btn','autoclose']
@@ -129,7 +149,7 @@ class PickerElement extends HTMLInputElement {
 
   focus() {
     if (this.disabled) return;
-    const input = this.querySelector('input');
+    const input = this.querySelector('input[type="text"]');
     input && input.focus();
   }
 
@@ -145,18 +165,25 @@ class PickerElement extends HTMLInputElement {
   } 
 
   connectedCallback() {
+    setTimeout(() => this.init());
+  }
+
+  init() {
     if (this.picker) return;
-    let props = {
-      inputElement: this,
-      value: this.value
-    };
+    const props = {};
     for (const attr of OPTION_LIST) {
       if (this.hasAttribute(attr)) {
         props[formatProp(attr)] = formatValue(attr, this.getAttribute(attr));
       }
     }
+    // resolve existing elements
+    this.valueElement = this.querySelector('input[type="hidden"]');
+    this.displayElement = this.querySelector('input[type="text"]');
+    if (this.valueElement) props.ce_valueElement = this.valueElement;
+    if (this.displayElement) props.ce_displayElement = this.displayElement;
+
     this.picker = new SveltyPicker({
-      target: this.parentElement,
+      target: this,
       props: props
     });
     this.picker.$on('input', e => {
@@ -166,22 +193,19 @@ class PickerElement extends HTMLInputElement {
     this.picker.$on('blur', e => {
       this.dispatchEvent(new Event('blur'));
     });
-
     // bind from/to
-    setTimeout(() => {
-      if (this.hasAttribute('from')) {
-        const el = document.getElementById(this.getAttribute('from'));
-        el.oninput = e => {
-          this.picker.$set({ startDate: el.value });
-        }
+    if (this.hasAttribute('from')) {
+      const el = document.getElementById(this.getAttribute('from'));
+      el.oninput = e => {
+        this.picker.$set({ startDate: el.value });
       }
-      if (this.hasAttribute('to')) {
-        const el = document.getElementById(this.getAttribute('to'));
-        el.oninput = e => {
-          this.picker.$set({ endDate: el.value });
-        }
+    }
+    if (this.hasAttribute('to')) {
+      const el = document.getElementById(this.getAttribute('to'));
+      el.oninput = e => {
+        this.picker.$set({ endDate: el.value });
       }
-    });
+    }
   }
 
   disconnectedCallback() {
@@ -195,5 +219,5 @@ class PickerElement extends HTMLInputElement {
  * @param {string} name name of custom element
  */
 export function registerElement(name) {
-  window.customElements.define(name, PickerElement, { extends: 'input' });
+  window.customElements.define(name, PickerElement);
 }

@@ -22,8 +22,6 @@
   export let placeholder = null;
   /** @type {boolean} */
   export let required = false;
-  /** @type {HTMLInputElement|null} */
-  export let inputElement = null;
   /** @type {string|null} */
   export let value = null;
   /** @type {Date|null} */
@@ -43,6 +41,10 @@
   export let format = config.format;
   /** @type {string} */
   export let formatType = config.formatType;
+  /** @type {string} */
+  export let valueFormat = config.valueFormat;
+  /** @type {string} */
+  export let valueFormatType = config.valueFormatType;
   /** @type {number} */
   export let minuteIncrement = config.minuteIncrement;
   /** @type {number} */
@@ -63,36 +65,41 @@
   export let autoclose = config.autoclose;
   /** @type {i18nType} */
   export let i18n = config.i18n;
-  // actions
-  export let positionFn = usePosition;
+  /** ************************************ actions */
   /** @type {Array<any>|null} */
   export let validatorAction = null;
   /** @param {string} val */
   export function setDateValue(val) {
-    innerDate = parseDate(val, format, i18n, formatType);
+    innerDate = parseDate(val, valueFormat, i18n, valueFormatType);
   }
+  /** ************************************ custom-element elements */
+  /** @type {HTMLInputElement|null} */
+  export let ce_valueElement = null;
+  /** @type {HTMLInputElement|null} */
+  export let ce_displayElement = null;
 
   const dispatch = createEventDispatcher();
   if (value) value = value.replace(/(:\d+):\d+/, "$1") // strip seconds if present in initial value
   let prevValue = value;
-  let currentFormat = format;
+  let currentFormat = valueFormat;
   let innerDate = initialDate && initialDate instanceof Date
-      ? initialDate
-      : (value 
-        ? parseDate(value, format, i18n, formatType)
-        : null
-      );
+  ? initialDate
+  : (value 
+  ? parseDate(value, valueFormat, i18n, valueFormatType)
+  : null
+  );
   if (innerDate && initialDate) {
-    value = formatDate(innerDate, format, i18n, formatType);
+    value = formatDate(innerDate, valueFormat, i18n, valueFormatType);
   }
-  $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
-  $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
+  $: displayValue = innerDate ? formatDate(innerDate, format, i18n, formatType) : '';
+  $: parsedStartDate = startDate ? parseDate(startDate, valueFormat, i18n, valueFormatType) : null;
+  $: parsedEndDate = endDate ? new Date(parseDate(endDate, valueFormat, i18n, valueFormatType).setSeconds(1)) : null;
   // @ts-ignore
   $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
   let isFocused = pickerOnly;
   $: pickerVisible = pickerOnly;
   $: fadeFn = pickerOnly ? () => {} : fade;
-  let inputEl = inputElement;
+  let inputEl = ce_displayElement;
   /** @type {DOMRect|null} */
   let inputRect = null;
   /** @type {function|function} */
@@ -111,9 +118,9 @@
   let currentMode = resolvedMode === "time" ? "time" : "date";
   $: {
     resolvedMode = mode === "auto"
-      ? format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
+      ? valueFormat.match(/g|hh?|ii?/i) && valueFormat.match(/y|m|d/i)
         ? "datetime"
-        : format.match(/g|hh?|ii?/i)
+        : valueFormat.match(/g|hh?|ii?/i)
         ? "time"
         : "date"
       : mode;
@@ -122,27 +129,30 @@
     }
   }
   $: {  // custom-element ONLY
-    if (inputElement) inputElement.readOnly = isFocused;
+    if (ce_displayElement) ce_displayElement.readOnly = isFocused;
   }
   $: internalVisibility = pickerOnly ? true : false;
+  $: positionPopup = !pickerOnly ? usePosition : () => {};
   $: {
     if (value !== prevValue) {
-      const parsed = value ? parseDate(value, format, i18n, formatType) : null;
+      const parsed = value ? parseDate(value, valueFormat, i18n, valueFormatType) : null;
       innerDate = parsed;
       prevValue = value;
     }
-    if (currentFormat !== format && innerDate) {
-      value = formatDate(innerDate, format, i18n, formatType);
+    if (currentFormat !== valueFormat && innerDate) {
+      value = formatDate(innerDate, valueFormat, i18n, valueFormatType);
+      displayValue = formatDate(innerDate, format, i18n, formatType);
       prevValue = value;
-      currentFormat = format;
+      currentFormat = valueFormat;
       if (mode === "auto") {
         resolvedMode =
-          format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
+          valueFormat.match(/g|hh?|ii?/i) && valueFormat.match(/y|m|d/i)
             ? "datetime"
-            : format.match(/g|hh?|ii?/i)
+            : valueFormat.match(/g|hh?|ii?/i)
             ? "time"
             : "date";
       }
+      updateCustomElement();
     }
   }
 
@@ -166,7 +176,7 @@
       )
         setter = null;
     }
-    value = setter ? formatDate(setter, format, i18n, formatType) : null;
+    value = setter ? formatDate(setter, valueFormat, i18n, valueFormatType) : null;
     if (
       autoclose &&
       (resolvedMode === "date" || !setter) &&
@@ -191,7 +201,7 @@
       preventClose = false;
     }
     tick().then(() => {
-      if (inputElement) inputElement.value = value || '';
+      updateCustomElement();
       inputEl && inputEl.dispatchEvent(new Event("input"));
       dispatch("change", value);
     });
@@ -307,46 +317,55 @@
   function onInputBlur() {
     isFocused = false;
     pickerVisible = false;
-    !inputElement && dispatch("blur");
+    !ce_displayElement && dispatch("blur");
+  }
+
+  function updateCustomElement() {
+    if (ce_valueElement && ce_displayElement) {
+      ce_valueElement.value = value || '';
+      ce_displayElement.value = displayValue || '';
+    }
   }
 
   /**
    * initialization for custom element
   */
   onMount(() => {
-    if (inputElement) {
-      inputElement.onfocus = onInputFocus;
-      inputElement.onblur = onInputBlur;
-      inputElement.onclick = () => !pickerVisible && onInputFocus();
-      inputElement.onkeydown = onKeyDown;
+    if (ce_displayElement) {
+      ce_displayElement.onfocus = onInputFocus;
+      ce_displayElement.onblur = onInputBlur;
+      ce_displayElement.onclick = () => !pickerVisible && onInputFocus();
+      ce_displayElement.onkeydown = onKeyDown;
     }
   });
 </script>
 
-{#if !inputElement}
-<input bind:this={inputEl} type={pickerOnly ? "hidden" : "text"}
-  id={inputId}
-  tabindex="0"
-  {name} {disabled} {required} {value} {placeholder}
-  autocomplete="off"
-  class={inputClasses}
-  readonly={isFocused}
-  use:inputAction={inputActionParams}
-  on:focus={onInputFocus}
-  on:blur={onInputBlur}
-  on:click={() => {
-    !pickerVisible && onInputFocus();
-  }}
-  on:input
-  on:change
-  on:keydown={onKeyDown}
-/>
+<span class="std-component-wrap">
+{#if !ce_displayElement}
+  <input type="hidden" {name} {value}>
+  <input bind:this={inputEl} type={pickerOnly ? "hidden" : "text"}
+    id={inputId}
+    tabindex="0"
+    name={`${name}_input`} {disabled} {required} value={displayValue} {placeholder}
+    autocomplete="off"
+    class={inputClasses}
+    readonly={isFocused}
+    use:inputAction={inputActionParams}
+    on:focus={onInputFocus}
+    on:blur={onInputBlur}
+    on:click={() => {
+      !pickerVisible && onInputFocus();
+    }}
+    on:input
+    on:change
+    on:keydown={onKeyDown}
+  />
 {/if}
 {#if pickerVisible && isFocused }
   <div
-    class="std-calendar-wrap is-popup {theme}"
+    class="std-calendar-wrap {theme}" class:is-popup={!internalVisibility}
     transition:fadeFn|local={{ duration: 200 }}
-    use:positionFn={{ inputEl, visible: internalVisibility, inputRect }}
+    use:positionPopup={{ visible: pickerVisible && isFocused }}
     on:mousedown|preventDefault
   >
     {#if currentMode === "date"}
@@ -387,7 +406,7 @@
         endDate={parsedEndDate}
         hasDateComponent={resolvedMode !== "time"}
         bind:this={timeEl}
-        showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P') !== null}
+        showMeridian={valueFormat.match(valueFormatType === 'php' ? 'a|A' : 'p|P') !== null}
         {i18n}
         {minuteIncrement}
         on:time={onDate}
@@ -397,6 +416,8 @@
     {/if}
   </div>
 {/if}
+</span>
+
 
 <style>
   .sdt-calendar-colors {
@@ -413,6 +434,10 @@
     --sdt-shadow: #ccc;
     --sdt-disabled-date: #b22222;
   }
+  .std-component-wrap {
+    position: relative;
+    display: inline;
+  }
   .std-calendar-wrap {
     width: 280px;
     background-color: var(--sdt-bg-main);
@@ -422,7 +447,9 @@
     color: var(--sdt-color);
   }
   .std-calendar-wrap.is-popup {
+    position: absolute;
     box-shadow: 0 1px 6px var(--sdt-shadow);
+    z-index: 100;
   }
   .std-btn-row {
     margin-top: 0.5rem;
