@@ -236,7 +236,7 @@
    */
   function onKeyDown(e) {
     if (!pickerVisible) {
-      ["Backspace", "Delete"].includes(e.key) && onClear();
+      ["Backspace", "Delete"].includes(e.key) && !required && onClear();
       if (e.key === 'Enter') onInputFocus();
     }
     if (!pickerVisible && e.key !== 'Tab') {
@@ -270,7 +270,7 @@
         break;
       case "Backspace":
       case "Delete":
-        onClear();
+        !required && onClear();
         break;
       case "Enter":
         isFocused && e.preventDefault();
