@@ -1,6 +1,5 @@
 <script context="module">
   import settings from "../utils/settings";
-  // your script goes here
   export const config = settings;
 </script>
 
@@ -134,10 +133,12 @@
   $: internalVisibility = pickerOnly ? true : false;
   $: positionPopup = !pickerOnly ? usePosition : () => {};
   $: {
+    let valueChanged = false;
     if (value !== prevValue) {
       const parsed = value ? parseDate(value, valueFormat, i18n, valueFormatType) : null;
       innerDate = parsed;
       prevValue = value;
+      valueChanged = true;
     }
     if (currentFormat !== valueFormat && innerDate) {
       value = formatDate(innerDate, valueFormat, i18n, valueFormatType);
@@ -152,8 +153,8 @@
             ? "time"
             : "date";
       }
-      updateCustomElement();
     }
+    tick().then(() => dispatchInputEvent(valueChanged)); // tick for display value update
   }
 
   function resetView() {
@@ -201,9 +202,8 @@
       preventClose = false;
     }
     tick().then(() => {
-      updateCustomElement();
-      inputEl && inputEl.dispatchEvent(new Event("input"));
-      dispatch("change", value);
+      dispatchInputEvent(true);
+      dispatch("change", value);    // change is dispatch really when changed from the outside
     });
   }
 
@@ -320,11 +320,17 @@
     !ce_displayElement && dispatch("blur");
   }
 
-  function updateCustomElement() {
+  /**
+   * @param {boolean} dispatchInputEvent
+   */
+  function dispatchInputEvent(dispatchInputEvent) {
     if (ce_valueElement && ce_displayElement) {
       ce_valueElement.value = value || '';
       ce_displayElement.value = displayValue || '';
+      ce_valueElement.dispatchEvent(new Event('input'));
+      ce_displayElement.dispatchEvent(new Event('input'));
     }
+    dispatchInputEvent && dispatch("input", value);
   }
 
   /**

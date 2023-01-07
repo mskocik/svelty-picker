@@ -1,6 +1,7 @@
 // @ts-nocheck
 import SveltyPicker, { config } from "./components/SveltyPicker.svelte";
 
+
 const OPTION_LIST = [
   'value', 'name', 'placeholder', 'start-date', 'end-date', 'disabled', 'input-classes',
   'mode', 'format', 'format-type', 'display-format', 'display-format-type', 'week-start', 'today-btn', 'clear-btn', 'autoclose', 'required'
@@ -38,7 +39,7 @@ class PickerElement extends HTMLElement {
     this.displayElement = null;
 
     const simpleProps = [
-      // 'value',
+      'value',
       'name', 'placeholder', 'mode', 'format'
     ].reduce((res, name) => {
       res[name] = {
@@ -160,7 +161,6 @@ class PickerElement extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (this.picker && oldValue !== newValue) {
       this.picker.$set({ [formatProp(name)]: formatValue(name, newValue) });
-      if (name === 'value') this.value = newValue;
     }
   } 
 
@@ -187,7 +187,7 @@ class PickerElement extends HTMLElement {
       props: props
     });
     this.picker.$on('input', e => {
-      this.setAttribute('value', e.target.value);
+      this.setAttribute('value', e.detail);
       this.dispatchEvent(new Event('input'));
     });
     this.picker.$on('blur', e => {
