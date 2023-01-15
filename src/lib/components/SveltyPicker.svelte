@@ -203,7 +203,7 @@
     }
     tick().then(() => {
       dispatchInputEvent(true);
-      dispatch("change", value);    // change is dispatch really when changed from the outside
+      dispatch("change", value);    // change is dispatched on user interaction
     });
   }
 
@@ -352,7 +352,7 @@
   <input bind:this={inputEl} type={pickerOnly ? "hidden" : "text"}
     id={inputId}
     tabindex="0"
-    name={`${name}_input`} {disabled} {required} value={displayValue} {placeholder}
+    name={name.endsWith(']') ? name.substring(0, name.length-1) + '_input]' : name + '_input'} {disabled} {required} value={displayValue} {placeholder}
     autocomplete="off"
     class={inputClasses}
     readonly={isFocused}
