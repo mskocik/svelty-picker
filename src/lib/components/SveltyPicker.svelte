@@ -354,6 +354,7 @@
     tabindex="0"
     name={name.endsWith(']') ? name.substring(0, name.length-1) + '_input]' : name + '_input'} {disabled} {required} value={displayValue} {placeholder}
     autocomplete="off"
+    inputmode="none"
     class={inputClasses}
     readonly={isFocused}
     use:inputAction={inputActionParams}
