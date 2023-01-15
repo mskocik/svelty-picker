@@ -326,6 +326,7 @@
 {#if !inputElement}
 <input bind:this={inputEl} type={pickerOnly ? "hidden" : "text"}
   id={inputId}
+  inputmode="none"
   tabindex="0"
   {name} {disabled} {required} {value} {placeholder}
   autocomplete="off"
