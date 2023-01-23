@@ -1,10 +1,12 @@
 {
   "name": "svelty-picker",
   "description": "Sweet date/time picker written in svelte",
-  "version": "3.2.3",
+  "version": "4.0.0-alpha.2",
+  "module": "dist/svelty-picker.js",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "rollup": "rollup -c",
     "staging": "vite build --mode staging",
     "package": "svelte-kit package",
     "preview": "vite preview",
@@ -15,6 +17,8 @@
     "lint": "eslint ."
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-terser": "^0.3.0",
     "@sveltejs/adapter-static": "^1.0.0-next.37",
     "@sveltejs/kit": "next",
     "autoprefixer": "^10.4.7",
@@ -22,6 +26,8 @@
     "eslint-plugin-svelte3": "^4.0.0",
     "mdsvex": "^0.10.6",
     "postcss-load-config": "^4.0.1",
+    "rollup-plugin-css-only": "^4.3.0",
+    "rollup-plugin-svelte": "^7.1.0",
     "svelte": "^3.44.0",
     "svelte-check": "^2.7.1",
     "svelte-preprocess": "^4.10.7",
