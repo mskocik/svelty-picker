@@ -11,6 +11,7 @@
   /** @type {Date|null} */
   export let endDate = null;
   export let weekStart = 1;
+  export let initialView = MODE_MONTH;
   /** @type {i18nType} */
   export let i18n;
   export let enableTimeToggle = false;
@@ -129,7 +130,7 @@
 
   const dispatch = createEventDispatcher();
 
-  let currentView = MODE_MONTH;
+  let currentView = initialView;
   let viewDelta = -2;
   let viewChanged = false;
   let duration = 400;

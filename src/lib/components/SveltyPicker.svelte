@@ -8,7 +8,7 @@
   import { fade } from "svelte/transition";
   import Calendar from "./Calendar.svelte";
   import Time from "./Time.svelte";
-  import { formatDate, parseDate } from "../utils/dateUtils";
+  import { formatDate, MODE_MONTH, parseDate } from "../utils/dateUtils";
   import { usePosition } from "../utils/utils";
 
   // html
@@ -31,6 +31,8 @@
   export let endDate = null;
   /** @type {boolean} */
   export let pickerOnly = false;
+  /** @type {number} */
+  export let startView = MODE_MONTH;
   /** ************************************ 👇 configurable globally */
   /** @type {string} */
   export let theme = config.theme;
@@ -111,7 +113,12 @@
   /** @type {NodeJS.Timeout|number|null} */
   let preventCloseTimer = null;
   /** @type {string} */
-  let resolvedMode = '';
+  let resolvedMode = startView
+    ? (startView === 3
+      ? 'time'
+      : ''
+    )
+    : '';
   let currentMode = resolvedMode === "time" ? "time" : "date";
   $: {
     resolvedMode = mode === "auto"
@@ -156,6 +163,7 @@
   }
 
   function resetView() {
+    startView = MODE_MONTH;
     if (!pickerOnly) pickerVisible = false;
     if (resolvedMode !== 'time') currentMode = "date";
   }
@@ -299,6 +307,7 @@
    * @param {CustomEvent} e
    */
   function onModeSwitch(e) {
+    startView = MODE_MONTH;
     currentMode = e.detail;
   }
 
@@ -379,6 +388,7 @@
         startDate={parsedStartDate}
         endDate={parsedEndDate}
         enableTimeToggle={resolvedMode?.includes("time")}
+        initialView={startView > 2 ? 2 : startView}
         bind:this={calendarEl}
         {i18n}
         {weekStart}
