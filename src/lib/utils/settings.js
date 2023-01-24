@@ -15,6 +15,5 @@ export default {
   todayBtn: true,
   clearBtn: true,
   autoclose: true,
-  clearToggle: true,
   i18n: en
 }

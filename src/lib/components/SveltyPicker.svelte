@@ -59,8 +59,6 @@
   /** @type {boolean} */
   export let clearBtn = config.clearBtn;
   /** @type {boolean} */
-  export let clearToggle = config.clearToggle;
-  /** @type {boolean} */
   export let autoclose = config.autoclose;
   /** @type {i18nType} */
   export let i18n = config.i18n;
@@ -173,7 +171,7 @@
         innerDate.getMonth() === e.detail.getMonth() &&
         innerDate.getDate() === e.detail.getDate() &&
         resolvedMode === "date" &&
-        clearToggle
+        !required
       )
         setter = null;
     }
@@ -390,15 +388,15 @@
       {#if todayBtn || clearBtn}
         <div class="std-btn-row">
           {#if todayBtn}
-            <button
+            <button type="button"
               on:click={onToday}
               class={todayBtnClasses}
               disabled={isTodayDisabled}
               >{i18n.todayBtn}</button
             >
           {/if}
-          {#if clearBtn}
-            <button
+          {#if clearBtn && !required}
+            <button type="button"
               on:click={onClear}
               class={clearBtnClasses}
               disabled={!innerDate}>{i18n.clearBtn}</button
