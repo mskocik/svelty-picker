@@ -188,7 +188,7 @@ class PickerElement extends HTMLElement {
       props: props
     });
     this.picker.$on('input', e => {
-      this.setAttribute('value', e.detail);
+      this.setAttribute('value', e.detail || '');
       this.dispatchEvent(new Event('input'));
     });
     this.picker.$on('blur', e => {
