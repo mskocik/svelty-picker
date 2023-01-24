@@ -1,4 +1,4 @@
-# 📆 Svelty Picker [![NPM version](http://img.shields.io/npm/v/svelty-picker.svg?style=flat)](https://www.npmjs.org/package/svelty-picker)
+# 📆 Svelty Picker [![NPM version](https://img.shields.io/github/package-json/v/mskocik/svelty-picker/main?label=version&logoColor=g)](https://www.npmjs.org/package/svelty-picker)
 
 Simple date & time picker implemented in svelte. 
 
@@ -47,6 +47,7 @@ Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?
 | initialDate     | `Date`       | `null`        | initial date object, if you prefer that to `value` |
 | startDate       | `string|Date`| `null`        | limit minimal selectable date |
 | endDate         | `string|Date`| `null`        | limit maximal selectable date |
+| startView       | `number`     | 2             | Which mode should picker at, `0` - decade, `1` - year, `2` - month (default), `3` - time picker
 | pickerOnly      | `bool`       | `false`       | Picker is always visible and input field is then hidden, but still present |
 | theme           | `string`     | `sdt-calendar-colors` | css class defining [css variables](#css-variables) |
 | mode            | `string`     | `auto`        | restrict picker's mode. Possible values: `auto|date|datetime|time`. By default it try to guess the mode from `format` |
