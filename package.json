@@ -32,7 +32,8 @@
     "svelte-check": "^2.7.1",
     "svelte-preprocess": "^4.10.7",
     "svelte-windicss-preprocess": "^4.2.8",
-    "typescript": "^4.7.4",
+    "svelte2tsx": "^0.6.0",
+    "typescript": "^4.9.4",
     "vite": "^3.0.0",
     "windicss": "^3.5.6"
   },
