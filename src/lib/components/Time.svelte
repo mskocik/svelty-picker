@@ -343,20 +343,21 @@
     {/if}
   </div>
     
-  <div class="sdt-clock" on:click={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <div class="sdt-clock" on:click|preventDefault={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
     <div class="sdt-middle-dot"></div>
     <div class="sdt-hand-pointer" style={handCss}>
       <div class="sdt-hand-circle"></div>
     </div>
     {#each pos as p, i(p.val)}
-      <button style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" class:outer-tick={isMinuteView} transition:fade|local={{duration: 200}}
+      <button type="button" style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" class:outer-tick={isMinuteView} transition:fade|local={{duration: 200}}
         data-value={p.val}
         disabled={(startDate || endDate) && isDisabled(p.val, false)}
         class:is-selected={isSelected(selectedHour, p.val, i)}
       >{p.val}</button>
     {/each}
       {#each innerHours as p, i}
-      <button style={`left:${p.x}px; top:${p.y}px;`} class="sdt-tick" class:outer-tick={showMeridian && !isMinuteView} transition:fade|local={{duration: 200}}
+      <button type="button" style={`left:${p.x}px; top:${p.y}px;`} class="sdt-tick" class:outer-tick={showMeridian && !isMinuteView} transition:fade|local={{duration: 200}}
       data-value={p.val}
       disabled={(startDate || endDate) && isDisabled(p.val, false)}
       class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
