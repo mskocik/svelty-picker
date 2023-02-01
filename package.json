@@ -1,7 +1,7 @@
 {
   "name": "svelty-picker",
   "description": "Sweet date/time picker written in svelte",
-  "version": "4.0.0-alpha.4",
+  "version": "4.0.0-alpha.5",
   "module": "dist/svelty-picker.js",
   "scripts": {
     "dev": "vite dev",
