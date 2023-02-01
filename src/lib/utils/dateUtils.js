@@ -102,7 +102,6 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
   let selectionMark = null;
   let prevTo = 0;
   let nextFrom = 42;
-
   let inc = 0;
   while(prevMonth.valueOf() < nextMonthValue) {
     inc++;
@@ -407,7 +406,7 @@ const formatHelper = {
   setters: function(type) {
     let setters_order, setters_map;
     if (type === 'standard') {
-      setters_order = ['hh', 'h', 'HH', 'H', 'ii', 'i', 'ss', 's','d', 'dd', 'D','DD', 'S', 'm', 'mm', 'M', 'MM', 'yyyy', 'yy', 'p', 'P', 't'];
+      setters_order = ['yyyy', 'yy', 'm', 'mm', 'M', 'MM','d', 'dd', 'D','DD', 'hh', 'h', 'HH', 'H', 'ii', 'i', 'ss', 's', 'S', 'p', 'P', 't'];
       setters_map = {
         /** @param {Date} d, @param {number} v */
         hh: (d, v) => d.setHours(v),
@@ -461,7 +460,7 @@ const formatHelper = {
       setters_map.P = setters_map.p;
     } else {
       // php
-      setters_order = ['H','G','h','g','i','s','d','D','j','l','N','S','m','M','F','n','Y','yy','p','P','U'];
+      setters_order = ['Y','yy','m','M','F','n','d','D','j','l','N','S','H','G','h','g','i','s','p','P','U'];
       setters_map = {
         H: (d, v) => d.setHours(v),
         G: (d, v) => d.setHours(v),
