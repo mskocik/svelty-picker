@@ -1,4 +1,5 @@
 // always keep sorted alphabetically
+// Czech translation
 export const cz = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -12,6 +13,7 @@ export const cz = {
   timeView:    'Zobrazit hodiny',
   backToDate:  'Zpátky na kalendář'
 }
+
 // FUTURE: remove this BC on major version release
 export const cs = cz;
 
@@ -30,6 +32,7 @@ export const de = {
   backToDate:  'Zurück zur Kalenderansicht'
 }
 
+// English translation by 
 export const en = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -74,6 +77,36 @@ export const fa = {
   backToDate:  'بازگشت به بخش تقویم'
 }
 
+// French translation
+export const fr = {
+  days:        ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
+  daysShort:   ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+  daysMin:     ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'],
+  months:      ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+  monthsShort: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+  meridiem:    ['AM', 'PM'],
+  suffix:      ['er', 'ème', 'ème', 'ème'],
+  todayBtn:    'Aujourd\'hui',
+  clearBtn:    'Effacer',
+  timeView:    'Afficher l\'heure',
+  backToDate:  'Retour au calendrier'
+}
+
+// Hungarian translation
+export const hu = {
+  days:        ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'],
+  daysShort:   ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo', 'V'],
+  daysMin:     ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo', 'V'],
+  months:      ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'],
+  monthsShort: ['Jan', 'Feb', 'Már', 'Ápr', 'Máj', 'Jún', 'Júl', 'Aug', 'Szept', 'Okt', 'Nov', 'Dec'],
+  meridiem:    ['de', 'du'],
+  suffix:      ['.', '.', '.', '.'],
+  todayBtn:    'Ma',
+  clearBtn:    'Törlés',
+  timeView:    'Idő nézet',
+  backToDate:  'Vissza a naptárhoz'
+};
+
 // Indonesian translation
 export const id = {
   days:        ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
@@ -104,6 +137,37 @@ export const jp = {
   backToDate:  'カレンダーに戻る'
 }
 
+// Dutch Translation
+export const nl = {
+  days:        ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'],
+  daysShort:   ['Zon', 'Maa', 'Din', 'Woe', 'Don', 'Vri', 'Zat', 'Zon'],
+  daysMin:     ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'],
+  months:      ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'],
+  monthsShort: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+  meridiem:    ['AM', 'PM'],
+  suffix:      ['e', 'e', 'e', 'e'],
+  todayBtn:    'Vandaag',
+  clearBtn:    'Wissen',
+  timeView:    'Tijdweergave',
+  backToDate:  'Terug naar kalender'
+};
+
+// Russian Translation
+export const ru = {
+  days:        ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+  daysShort:   ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+  daysMin:     ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+  months:      ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+  monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['ое', 'ое', 'е', 'е', 'ое', 'ое', 'ое', 'ое', 'ое', 'ое'],
+  todayBtn:    'Сегодня',
+  clearBtn:    'Очистить',
+  timeView:    'Показать время',
+  backToDate:  'Назад к календарю'
+};
+
+// Slovak Translation
 export const sk = {
   days:        ['Nedeľa', 'Pondelok', 'Utorok', 'Streda', 'Štvrtok', 'Piatok', 'Sobota', 'Nedeľa'],
   daysShort:   ['Ned', 'Pon', 'Uto', 'Str', 'Štv', 'Pia', 'Sob', 'Ned'],
@@ -118,6 +182,22 @@ export const sk = {
   backToDate:  'Späť na kalendár'
 }
 
+// Ukrainian Translation
+export const uk = {
+  days:        ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота', 'Неділя'],
+  daysShort:   ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
+  daysMin:     ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
+  months:      ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
+  monthsShort: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['а', 'а', 'е', 'е', 'е', 'ь', 'а', 'а', 'а', 'і'],
+  todayBtn:    'Сьогодні',
+  clearBtn:    'Очистити',
+  timeView:    'Показати час',
+  backToDate:  'Назад до календаря'
+};
+
+// Korean translation
 export const ko = {
   days:        ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
   daysShort:   ['일', '월', '화', '수', '목', '금', '토', '일'],
@@ -132,6 +212,21 @@ export const ko = {
   backToDate:  '달력보기'
 }
 
+// Chinese translation
+export const zh_CN = {
+  days:        ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
+  daysShort:   ['日', '一', '二', '三', '四', '五', '六', '日'],
+  daysMin:     ['日', '一', '二', '三', '四', '五', '六', '日'],
+  months:      ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  meridiem:    ['上午', '下午'],
+  suffix:      ['', '', '', ''],
+  todayBtn:    '今天',
+  clearBtn:    '清除',
+  timeView:    '时间视图',
+  backToDate:  '返回日历'
+};
+
 export default {
-  cz, de, en, es, id, jp, sk, ko
+  cz, de, fr, hu, en, es, id, jp, nl, ru, uk, sk, ko, zh_CN
 }
