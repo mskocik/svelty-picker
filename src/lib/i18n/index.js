@@ -132,6 +132,21 @@ export const ko = {
   backToDate:  '달력보기'
 }
 
+// Brazilian portuguese translation by IgorDalepiane
+export const pt_BR = {
+  days: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
+  daysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+  daysMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa', 'Do'],
+  months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+  meridiem: ['am', 'pm'],
+  suffix: ['º', 'º', 'º', 'º'],
+  todayBtn: 'Hoje',
+  clearBtn: 'Limpar',
+  timeView: 'Mostrar hora',
+  backToDate: 'Voltar para o calendário'
+  }
+
 export default {
-  cz, de, en, es, id, jp, sk, ko
+  cz, de, en, es, id, jp, sk, ko, pt_BR
 }
