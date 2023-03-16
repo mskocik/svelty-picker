@@ -32,7 +32,7 @@ export const de = {
   backToDate:  'Zurück zur Kalenderansicht'
 }
 
-// English translation by 
+// English translation
 export const en = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -77,7 +77,7 @@ export const fa = {
   backToDate:  'بازگشت به بخش تقویم'
 }
 
-// French translation
+// French translation by Tuditi
 export const fr = {
   days:        ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
   daysShort:   ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
@@ -92,7 +92,7 @@ export const fr = {
   backToDate:  'Retour au calendrier'
 }
 
-// Hungarian translation
+// Hungarian translation by Tuditi
 export const hu = {
   days:        ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'],
   daysShort:   ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo', 'V'],
@@ -103,7 +103,7 @@ export const hu = {
   suffix:      ['.', '.', '.', '.'],
   todayBtn:    'Ma',
   clearBtn:    'Törlés',
-  timeView:    'Idő nézet',
+  timeView:    'Óra nézet',
   backToDate:  'Vissza a naptárhoz'
 };
 
@@ -112,7 +112,7 @@ export const id = {
   days:        ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
   daysShort:   ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
   daysMin:     ['Mn', 'Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb', 'Mn'],
-  months:      ['januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+  months:      ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
   monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
   meridiem:    ['am', 'pm'],
   suffix:      ['st', 'nd', 'rd', 'th'],
@@ -137,7 +137,7 @@ export const jp = {
   backToDate:  'カレンダーに戻る'
 }
 
-// Dutch Translation
+// Dutch Translation by Tuditi
 export const nl = {
   days:        ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'],
   daysShort:   ['Zon', 'Maa', 'Din', 'Woe', 'Don', 'Vri', 'Zat', 'Zon'],
@@ -148,23 +148,8 @@ export const nl = {
   suffix:      ['e', 'e', 'e', 'e'],
   todayBtn:    'Vandaag',
   clearBtn:    'Wissen',
-  timeView:    'Tijdweergave',
-  backToDate:  'Terug naar kalender'
-};
-
-// Russian Translation
-export const ru = {
-  days:        ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
-  daysShort:   ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-  daysMin:     ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-  months:      ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-  monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-  meridiem:    ['am', 'pm'],
-  suffix:      ['ое', 'ое', 'е', 'е', 'ое', 'ое', 'ое', 'ое', 'ое', 'ое'],
-  todayBtn:    'Сегодня',
-  clearBtn:    'Очистить',
-  timeView:    'Показать время',
-  backToDate:  'Назад к календарю'
+  timeView:    'Uurweergave',
+  backToDate:  'Terug naar de kalender'
 };
 
 // Slovak Translation
@@ -182,21 +167,6 @@ export const sk = {
   backToDate:  'Späť na kalendár'
 }
 
-// Ukrainian Translation
-export const uk = {
-  days:        ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота', 'Неділя'],
-  daysShort:   ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
-  daysMin:     ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
-  months:      ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
-  monthsShort: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'],
-  meridiem:    ['am', 'pm'],
-  suffix:      ['а', 'а', 'е', 'е', 'е', 'ь', 'а', 'а', 'а', 'і'],
-  todayBtn:    'Сьогодні',
-  clearBtn:    'Очистити',
-  timeView:    'Показати час',
-  backToDate:  'Назад до календаря'
-};
-
 // Korean translation
 export const ko = {
   days:        ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
@@ -212,21 +182,21 @@ export const ko = {
   backToDate:  '달력보기'
 }
 
-// Chinese translation
-export const zh_CN = {
-  days:        ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
-  daysShort:   ['日', '一', '二', '三', '四', '五', '六', '日'],
-  daysMin:     ['日', '一', '二', '三', '四', '五', '六', '日'],
-  months:      ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-  monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-  meridiem:    ['上午', '下午'],
-  suffix:      ['', '', '', ''],
-  todayBtn:    '今天',
-  clearBtn:    '清除',
-  timeView:    '时间视图',
-  backToDate:  '返回日历'
-};
+// Brazilian portuguese translation by IgorDalepiane
+export const pt_BR = {
+  days: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
+  daysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+  daysMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sá', 'Do'],
+  months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+  meridiem: ['am', 'pm'],
+  suffix: ['º', 'º', 'º', 'º'],
+  todayBtn: 'Hoje',
+  clearBtn: 'Limpar',
+  timeView: 'Mostrar hora',
+  backToDate: 'Voltar para o calendário'
+  }
 
 export default {
-  cz, de, fr, hu, en, es, id, jp, nl, ru, uk, sk, ko, zh_CN
+  cz, de, en, es, fr, hu, id, jp, sk, ko, nl, pt_BR
 }
