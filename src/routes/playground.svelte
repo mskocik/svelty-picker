@@ -37,7 +37,10 @@
       :'yyyy-mm-dd hh:ii'
   }
 
-  const getFlag = code => String.fromCodePoint(...[...(code === 'en' ? 'gb' : code).toUpperCase()].map(char => 127397 + char.charCodeAt()))
+  const getFlag = code => {
+    code = code.split('_').pop();
+    return String.fromCodePoint(...[...(code === 'en' ? 'gb' : code).toUpperCase()].map(char => 127397 + char.charCodeAt()))
+  };
 
 </script>
 
@@ -98,7 +101,7 @@
         <div class="my-2 language-bar">
           Language<br>
           {#each Object.keys(i18ns) as locale}
-          <label class="mr-2"><input type="radio" bind:group={i18n} value={i18ns[locale]}> <span>{getFlag(locale)}</span></label>
+          <label class="mr-2 whitespace-nowrap"><input type="radio" bind:group={i18n} value={i18ns[locale]}> <span>{getFlag(locale)}</span></label>
           {/each}
         </div>
       </div>
