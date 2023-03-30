@@ -1,6 +1,6 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "immutable/start-bc913060.js",
+    "file": "immutable/start-a9b55660.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
@@ -32,7 +32,7 @@
       "_index-0382ca5d.js"
     ],
     "css": [
-      "immutable/assets/__layout-4ea5ee7d.css"
+      "immutable/assets/__layout-450b1fb7.css"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
@@ -101,20 +101,20 @@
     ]
   },
   "src/routes/options.svelte": {
-    "file": "immutable/pages/options.svelte-d27e82a6.js",
+    "file": "immutable/pages/options.svelte-eb309cf9.js",
     "src": "src/routes/options.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-bfee2186.js",
-      "_options-733041ee.js"
+      "_options-2a815d98.js"
     ],
     "css": [
       "immutable/assets/options-77f863f6.css"
     ]
   },
   "src/routes/playground.svelte": {
-    "file": "immutable/pages/playground.svelte-c661635f.js",
+    "file": "immutable/pages/playground.svelte-69b9182c.js",
     "src": "src/routes/playground.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
@@ -122,7 +122,7 @@
       "_index-bfee2186.js",
       "_paths-1c47712a.js",
       "_SveltyPicker-7b09d743.js",
-      "_options-733041ee.js",
+      "_options-2a815d98.js",
       "_formatting_php-7c70d85b.js"
     ],
     "css": [
@@ -172,8 +172,8 @@
       "immutable/assets/SveltyPicker-a3464f28.css"
     ]
   },
-  "_options-733041ee.js": {
-    "file": "immutable/chunks/options-733041ee.js",
+  "_options-2a815d98.js": {
+    "file": "immutable/chunks/options-2a815d98.js",
     "imports": [
       "_index-bfee2186.js"
     ]
@@ -187,40 +187,40 @@
       "_index-bfee2186.js"
     ]
   },
-  "src/routes/i18n.css": {
-    "file": "immutable/assets/i18n-a35f913c.css",
-    "src": "src/routes/i18n.css"
-  },
-  "src/routes/custom-element.css": {
-    "file": "immutable/assets/custom-element-a4f85524.css",
-    "src": "src/routes/custom-element.css"
-  },
   "src/routes/options.css": {
     "file": "immutable/assets/options-77f863f6.css",
     "src": "src/routes/options.css"
   },
-  "src/routes/index.css": {
-    "file": "immutable/assets/index-cf6e7209.css",
-    "src": "src/routes/index.css"
+  "src/routes/__layout.css": {
+    "file": "immutable/assets/__layout-450b1fb7.css",
+    "src": "src/routes/__layout.css"
+  },
+  "src/routes/i18n.css": {
+    "file": "immutable/assets/i18n-a35f913c.css",
+    "src": "src/routes/i18n.css"
   },
   "src/routes/formatting.css": {
     "file": "immutable/assets/formatting-72699d86.css",
     "src": "src/routes/formatting.css"
   },
-  "src/routes/styling.css": {
-    "file": "immutable/assets/styling-c302dc39.css",
-    "src": "src/routes/styling.css"
-  },
   "src/routes/playground.css": {
     "file": "immutable/assets/playground-930a99c5.css",
     "src": "src/routes/playground.css"
   },
+  "src/routes/index.css": {
+    "file": "immutable/assets/index-cf6e7209.css",
+    "src": "src/routes/index.css"
+  },
+  "src/routes/styling.css": {
+    "file": "immutable/assets/styling-c302dc39.css",
+    "src": "src/routes/styling.css"
+  },
+  "src/routes/custom-element.css": {
+    "file": "immutable/assets/custom-element-a4f85524.css",
+    "src": "src/routes/custom-element.css"
+  },
   "SveltyPicker.css": {
     "file": "immutable/assets/SveltyPicker-a3464f28.css",
     "src": "SveltyPicker.css"
-  },
-  "src/routes/__layout.css": {
-    "file": "immutable/assets/__layout-4ea5ee7d.css",
-    "src": "src/routes/__layout.css"
   }
 }

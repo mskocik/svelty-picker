@@ -14,18 +14,18 @@
 			theme && theme === 'dark' && document.documentElement.classList.add('dark');
 		</script>
 		<meta http-equiv="content-security-policy" content="">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-4ea5ee7d.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-450b1fb7.css">
 	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/playground-930a99c5.css">
 	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-a3464f28.css">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-bc913060.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-a9b55660.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-bfee2186.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-0382ca5d.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/paths-1c47712a.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-ff4a18fe.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/playground.svelte-c661635f.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/playground.svelte-69b9182c.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-7b09d743.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/options-733041ee.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/options-2a815d98.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/formatting_php-7c70d85b.js">
 	</head>
 	<body>
@@ -35,7 +35,7 @@
   </span>
   <span></span></div>
 <div class="flex flex-col lg:flex-row m-4 svelte-2tatxu"><div class="w-full lg:w-1/2 mr-1 svelte-2tatxu"><div class="font-bold text-2 svelte-2tatxu">Your component</div>
-    <input type="text" id="" inputmode="none" tabindex="0" name="date"   value="2023-03-16 13:30" placeholder="You can play with settings" autocomplete="off" class="picker-style svelte-1t6pprq" >
+    <input type="text" id="" inputmode="none" tabindex="0" name="date"   value="2023-03-30 10:10" placeholder="You can play with settings" autocomplete="off" class="picker-style svelte-1t6pprq" >
 
 
     <div class="my-5 svelte-2tatxu">Your selection: <code></code></div>
@@ -88,7 +88,7 @@
 <tr><td>mode</td>
 <td><code>string</code></td>
 <td><code>auto</code></td>
-<td>restrict picker’s mode. Possible values: `auto</td></tr>
+<td>restrict picker’s mode. Possible values: <code>auto\|date\|datetime\|time</code>. By default it try to guess the mode from <code>format</code></td></tr>
 <tr><td>format</td>
 <td><code>string</code></td>
 <td><code>yyyy-mm-dd</code></td>
@@ -103,11 +103,11 @@
 <td>number in range <code>0-6</code> to select first day of the week. Sunday is <code>0</code></td></tr>
 <tr><td>inputId</td>
 <td><code>string</code></td>
-<td>“</td>
+<td><code>&quot;&quot;</code></td>
 <td>id attribute for input element</td></tr>
 <tr><td>inputClasses</td>
 <td><code>string</code></td>
-<td>“</td>
+<td><code>&quot;&quot;</code></td>
 <td>input css class string</td></tr>
 <tr><td>todayBtnClasses</td>
 <td><code>string</code></td>
@@ -140,7 +140,7 @@
 <tr><td>positionFn</td>
 <td><code>function</code></td>
 <td><em><code>internal</code></em></td>
-<td>function used to position picker. Used as action. Acceps following object: <code>{ inputEl, visible}</code>, where <code>visible</code> is <code>visible</code> parameter &amp; <code>inputEl</code> is underlying <code>&lt;input&gt;</code> element</td></tr>
+<td>function used to position picker. Used as action. Acceps following object: <code>{ inputEl, visible }</code>, where <code>visible</code> is <code>visible</code> parameter &amp; <code>inputEl</code> is underlying <code>&lt;input&gt;</code> element</td></tr>
 <tr><td>validatorAction</td>
 <td><code>array</code></td>
 <td><code>null</code></td>
@@ -263,10 +263,10 @@
 </div></div>
 
 
-		<script type="module" data-sveltekit-hydrate="1gr7xya">
-		import { start } from "/svelty-picker/_app/immutable/start-bc913060.js";
+		<script type="module" data-sveltekit-hydrate="1825myg">
+		import { start } from "/svelty-picker/_app/immutable/start-a9b55660.js";
 		start({
-			target: document.querySelector('[data-sveltekit-hydrate="1gr7xya"]').parentNode,
+			target: document.querySelector('[data-sveltekit-hydrate="1825myg"]').parentNode,
 			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
 			session: {},
 			route: true,
