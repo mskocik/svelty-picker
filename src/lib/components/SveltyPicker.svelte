@@ -30,7 +30,7 @@
   export let initialDate = null;
   /** @type {Date | string | null} */
   export let startDate = null;
-  /** @type {Date | null} */
+  /** @type {Date | string | null} */
   export let endDate = null;
   /** @type {boolean} */
   export let pickerOnly = false;
