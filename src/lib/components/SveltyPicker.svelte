@@ -73,6 +73,9 @@
   export function setDateValue(val) {
     innerDate = parseDate(val, format, i18n, formatType);
   }
+  export function getLastPickerPhase() {
+    return lastPickerPhase;
+  }
 
   const dispatch = createEventDispatcher();
   if (value) value = value.replace(/(:\d+):\d+/, "$1") // strip seconds if present in initial value
@@ -116,6 +119,9 @@
     )
     : '';
   let currentMode = resolvedMode === "time" ? "time" : "date";
+  let isMinuteView = false;
+  /** @type {string | null} */
+  let lastPickerPhase = null;
   $: {
     resolvedMode = mode === "auto"
       ? format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
@@ -152,9 +158,11 @@
       }
     }
   }
+  $: if (!pickerVisible) isMinuteView = false;
 
   function resetView() {
     startView = MODE_MONTH;
+    isMinuteView = false;
     if (!pickerOnly) pickerVisible = false;
     if (resolvedMode !== 'time') currentMode = "date";
   }
@@ -164,6 +172,12 @@
    */
   function onDate(e) {
     let setter = e.detail || null;
+    if (currentMode === "date") {
+      lastPickerPhase = "date";
+    } else {
+      lastPickerPhase = isMinuteView ? "minute" : "hour";
+    }
+
     if (e.detail && innerDate) {
       if (
         innerDate.getFullYear() === e.detail.getFullYear() &&
@@ -301,6 +315,7 @@
   function onModeSwitch(e) {
     startView = MODE_MONTH;
     currentMode = e.detail;
+    isMinuteView = false;
   }
 
   function onTimeClose() {
@@ -317,6 +332,13 @@
     isFocused = false;
     pickerVisible = false;
     !inputElement && dispatch("blur");
+  }
+
+  /**
+   * @param {CustomEvent} e
+   */
+   function onTimeSwitch(e) {
+    isMinuteView = e.detail;
   }
 
   /**
@@ -404,6 +426,7 @@
         on:time={onDate}
         on:switch={onModeSwitch}
         on:close={onTimeClose}
+        on:time-switch={onTimeSwitch}
       />
     {/if}
   </div>

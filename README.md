@@ -78,6 +78,11 @@ config.i18n = {
 // default for all pickers in the app
 config.todayBtn = false;
 ```
+### Read-only properties
+| Property           | Type          | Description       |
+|--------------------|---------------|-------------------|
+| getLastPickerPhase | `function`    | Getter function to get last open picker phase (what part of date was picked last - date, hours, minutes). Takes no arguments, returns `string`, possible values: `date\|hour\|minute`. It is useful to finding out what part of date was changed on last `change` event. |
+
 ### Format settings
 
 Date format can be defined under `formatType` property. It has two options: `standard` and `php`, where
