@@ -195,8 +195,23 @@ export const pt_BR = {
   clearBtn: 'Limpar',
   timeView: 'Mostrar hora',
   backToDate: 'Voltar para o calendário'
-  }
+}
+
+// italian translation by MarkNerdi
+export const it = {
+  days:        ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'],
+  daysShort:   ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'],
+  daysMin:     ['Do', 'Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa', 'Do'],
+  months:      ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+  monthsShort: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['º', 'º', 'º', 'º'],
+  todayBtn:    'Oggi',
+  clearBtn:    'Cancella',
+  timeView:    'Mostra orario',
+  backToDate:  'Torna alla vista calendario'
+}
 
 export default {
-  cz, de, en, es, fr, hu, id, jp, sk, ko, nl, pt_BR
+  cz, de, en, es, fr, hu, id, jp, sk, ko, nl, pt_BR, it
 }
