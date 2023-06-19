@@ -1,4 +1,9 @@
-// always keep sorted alphabetically
+//==============================================================
+/*                                                            *
+ *  always keep sorted alphabetically, when adding new locale *
+ *                                                            */
+//==============================================================
+
 // Czech translation
 export const cz = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
@@ -212,6 +217,7 @@ export const it = {
   backToDate:  'Torna alla vista calendario'
 }
 
+// always keep it sorted alphabetically
 export default {
-  cz, de, en, es, fr, hu, id, jp, sk, ko, nl, pt_BR, it
+  cz, de, en, es, fr, hu, id, it, jp, ko, nl, pt_BR, sk
 }
