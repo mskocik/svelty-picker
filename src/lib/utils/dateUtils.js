@@ -196,6 +196,7 @@ export function parseDate(date, format, i18n, type) {
     : { date: 'yyyy-mm-dd', datetime: 'yyyy-mm-dd hh:ii', datetime_s: 'yyyy-mm-dd hh:ii:ss' };
   /** @var {{ separators: string[], parts: string[]}} */
   let parsedFormat;
+  let useParsedTime = false;
   if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(date)) {
     parsedFormat = formatHelper.parseFormat(commonFormats.date, type);
   } else 
@@ -204,10 +205,18 @@ export function parseDate(date, format, i18n, type) {
   } else 
   if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}\:\d{1,2}[Z]{0,1}$/.test(date)) {
     parsedFormat = formatHelper.parseFormat(commonFormats.datetime_s, type);
+  } else
+  // specific case when parsing time without 'nonPunctuation' ref #102
+  if (/^([01]*\d|2[0-3])([0-5]\d)(?:[ ]([ap][m]|[AP][M]))?$/.test(date)) {
+    useParsedTime = date.match(/^([01]*\d|2[0-3])([0-5]\d)(?:[ ]([ap][m]|[AP][M]))?$/).slice(1).filter(e => e);
+    parsedFormat = formatHelper.parseFormat(format, type);
+
   } else {
     parsedFormat = formatHelper.parseFormat(format, type);
   }
-  const parts = date && date.toString().match(formatHelper.nonpunctuation) || [];
+  const parts = useParsedTime
+    ? useParsedTime
+    : (date && date.toString().match(formatHelper.nonpunctuation) || []);
   date = new Date();  // reset date
   date.setHours(0,0,0,0);
   const parsed = {};
