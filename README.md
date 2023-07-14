@@ -1,4 +1,4 @@
-# 📆 Svelty Picker [![NPM version](https://img.shields.io/github/package-json/v/mskocik/svelty-picker/main?label=version&logoColor=g)](https://www.npmjs.org/package/svelty-picker)
+# 📆 Svelty Picker [![NPM version](https://img.shields.io/npm/v/svelty-picker.svg?style=flat)](https://www.npmjs.org/package/svelty-picker)
 
 Simple date & time picker implemented in svelte. 
 

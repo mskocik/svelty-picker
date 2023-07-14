@@ -116,10 +116,10 @@
         </ul>
       </nav>
       <div>
-        <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/main?label=version&logo=github&amp;logoColor=g"></a>
+        <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/npm/v/svelty-picker.svg?style=flat"></a>
       </div>
       <div class="mt-2">
-        <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/v4.0?label=dev&logo=github"></a>
+        <a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/main?label=next&logo=github"></a>
       </div>
       
     </div>
