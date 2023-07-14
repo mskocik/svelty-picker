@@ -166,7 +166,7 @@
         if (isPM && val == 12 && selected === 12) return true;
         if (!isPM && val == 12 && selected === 0) return true;
         return val === (selected ? selected % 12 : 12);
-      } else if (val > 12) {
+      } else if (+val > 12) {
         return (i ? multiplier * i + 12 : 0)  === selected;
       } else {
         return val === '00' || val === '12'
@@ -220,11 +220,14 @@
     if ((e.type === 'mousemove' && !handleMoveMove) || (!isMinuteView && e.target.tagName !== 'BUTTON')) return;
     let a = 0;
     let b = 0;
-    if (e.target.tagName === 'BUTTON' && (!isMinuteView || minuteIncrement === 1)) {
+    if (e.target.tagName === 'BUTTON') {
       let val = parseInt(e.target.dataset.value);
       const setter = !isMinuteView ? 'setHours' : 'setMinutes';
       if (!isMinuteView && isPM) {
         val += 12;
+      }
+      if (isMinuteView && minuteIncrement !== 1) {
+        val = val > selectedMinutes ? selectedMinutes + minuteIncrement : selectedMinutes - minuteIncrement;
       }
 
       innerDate[setter](val);
@@ -278,7 +281,7 @@
 
       degree = Math.round((degree / 6) / minuteIncrement) * minuteIncrement;
 
-      if (degree === 60) {
+      if (degree >= 60) {
         degree = 0;
       }
 
