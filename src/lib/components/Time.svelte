@@ -56,7 +56,6 @@
     date = innerDate;
     date.setHours(0,0,0,0);
   }
-  let canSelect = true;
   const dispatch = createEventDispatcher();
 
   $: {
@@ -216,8 +215,7 @@
    * @param {any} e
    */
   function onClick(e) {
-    if (!canSelect || !e.target) return;
-    if ((e.type === 'mousemove' && !handleMoveMove) || (!isMinuteView && e.target.tagName !== 'BUTTON')) return;
+    if (!e.target) return;
     let a = 0;
     let b = 0;
     if (e.target.tagName === 'BUTTON') {
@@ -288,12 +286,13 @@
       innerDate.setMinutes(degree);
     }
     innerDate = innerDate;
-    canSelect = false;
-    dispatch('time', innerDate);
-    if (!handleMoveMove && isMinuteView) setTimeout(() => { dispatch('close') }, 300);
-    if (enableViewToggle && !isMinuteView) isMinuteView = true;
-    enableViewToggle = true;
-    setTimeout(() => { enableViewToggle = false; canSelect = true }, 200);
+    
+    // handle only final click, not mouse move
+    if (!handleMoveMove) {
+      dispatch('time', innerDate);
+      isMinuteView && setTimeout(() => { dispatch('close') }, 300);
+      if (!isMinuteView && enableViewToggle) isMinuteView = true;
+    }
   }
 
   /**
