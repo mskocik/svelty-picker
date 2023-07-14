@@ -38,14 +38,14 @@
   export let theme = config.theme;
   /** @type {string} */
   export let mode = config.mode;
-  /** @type {string} */
   export let format = config.format;
   /** @type {string} */
   export let formatType = config.formatType;
+  /** @type {string|null} */
+  export let displayFormat = config.displayFormat;
+  /** @type {string|null} */
+  export let displayFormatType = config.displayFormatType;
   /** @type {string} */
-  export let valueFormat = config.valueFormat;
-  /** @type {string} */
-  export let valueFormatType = config.valueFormatType;
   /** @type {number} */
   export let minuteIncrement = config.minuteIncrement;
   /** @type {number} */
@@ -69,7 +69,7 @@
   export let validatorAction = null;
   /** @param {string} val */
   export function setDateValue(val) {
-    innerDate = parseDate(val, valueFormat, i18n, valueFormatType);
+    innerDate = parseDate(val, format, i18n, formatType);
   }
   export function getLastPickerPhase() {
     return lastPickerPhase;
@@ -83,19 +83,21 @@
   const dispatch = createEventDispatcher();
   if (value) value = value.replace(/(:\d+):\d+/, "$1") // strip seconds if present in initial value
   let prevValue = value;
-  let currentFormat = valueFormat;
+  let currentFormat = format;
   let innerDate = initialDate && initialDate instanceof Date
   ? initialDate
   : (value 
-  ? parseDate(value, valueFormat, i18n, valueFormatType)
+  ? parseDate(value, format, i18n, formatType)
   : null
   );
   if (innerDate && initialDate) {
-    value = formatDate(innerDate, valueFormat, i18n, valueFormatType);
+    value = formatDate(innerDate, format, i18n, formatType);
   }
-  $: displayValue = innerDate ? formatDate(innerDate, format, i18n, formatType) : '';
-  $: parsedStartDate = startDate ? parseDate(startDate, valueFormat, i18n, valueFormatType) : null;
-  $: parsedEndDate = endDate ? new Date(parseDate(endDate, valueFormat, i18n, valueFormatType).setSeconds(1)) : null;
+  $: activeDisplayFormat = displayFormat || format;
+  $: activeDisplayFormatType = displayFormatType || formatType;
+  $: displayValue = innerDate ? formatDate(innerDate, activeDisplayFormat, i18n, activeDisplayFormatType) : '';
+  $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
+  $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
   // @ts-ignore
   $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
   let isFocused = pickerOnly;
@@ -128,9 +130,9 @@
   let lastPickerPhase = null;
   $: {
     resolvedMode = mode === "auto"
-      ? valueFormat.match(/g|hh?|ii?/i) && valueFormat.match(/y|m|d/i)
+      ? format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
         ? "datetime"
-        : valueFormat.match(/g|hh?|ii?/i)
+        : format.match(/g|hh?|ii?/i)
         ? "time"
         : "date"
       : mode;
@@ -146,21 +148,21 @@
   $: {
     let valueChanged = false;
     if (value !== prevValue) {
-      const parsed = value ? parseDate(value, valueFormat, i18n, valueFormatType) : null;
+      const parsed = value ? parseDate(value, format, i18n, formatType) : null;
       innerDate = parsed;
       prevValue = value;
       valueChanged = true;
     }
-    if (currentFormat !== valueFormat && innerDate) {
-      value = formatDate(innerDate, valueFormat, i18n, valueFormatType);
-      displayValue = formatDate(innerDate, format, i18n, formatType);
+    if (currentFormat !== format && innerDate) {
+      value = formatDate(innerDate, format, i18n, formatType);
+      displayValue = formatDate(innerDate, activeDisplayFormat, i18n, activeDisplayFormatType);
       prevValue = value;
-      currentFormat = valueFormat;
+      currentFormat = format;
       if (mode === "auto") {
         resolvedMode =
-          valueFormat.match(/g|hh?|ii?/i) && valueFormat.match(/y|m|d/i)
+          format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
             ? "datetime"
-            : valueFormat.match(/g|hh?|ii?/i)
+            : format.match(/g|hh?|ii?/i)
             ? "time"
             : "date";
       }
@@ -197,7 +199,7 @@
       )
         setter = null;
     }
-    value = setter ? formatDate(setter, valueFormat, i18n, valueFormatType) : null;
+    value = setter ? formatDate(setter, format, i18n, formatType) : null;
     if (
       autoclose &&
       (resolvedMode === "date" || !setter) &&
@@ -443,7 +445,7 @@
         endDate={parsedEndDate}
         hasDateComponent={resolvedMode !== "time"}
         bind:this={timeEl}
-        showMeridian={valueFormat.match(valueFormatType === 'php' ? 'a|A' : 'p|P') !== null}
+        showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P') !== null}
         {i18n}
         {minuteIncrement}
         on:time={onDate}
