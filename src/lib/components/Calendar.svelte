@@ -144,7 +144,7 @@
 
   $: swapTransition = viewDelta === -2
     ? fade
-    : (viewDelta !== null ? scale : () => {});
+    : (viewDelta !== null ? scale : () => ({}));
 
   $: {
     if (date !== internalDate) {
@@ -280,9 +280,9 @@
   function showCaption(currentView, activeDate) {
     switch (currentView) {
       case MODE_DECADE:
-        const from = [Math.floor(dataset.prevTo / 4), dataset.prevTo % 4] // y,x
-        const to = [Math.floor(dataset.nextFrom / 4), (dataset.nextFrom % 4)] // y,x
-        return `${dataset.years[from.shift()][from.shift()]} - ${dataset.years[to.shift()][to.shift()] - 1}`
+        const from = dataset.years[Math.floor(dataset.prevTo / 4)][dataset.prevTo % 4]; // y,x
+        const to = dataset.years[Math.floor(dataset.nextFrom / 4)][(dataset.nextFrom % 4)]; // y,x
+        return `${from} - ${to}`
       case MODE_YEAR:
         return activeDate.getFullYear();
       case MODE_MONTH:

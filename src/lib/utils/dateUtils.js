@@ -282,7 +282,7 @@ export function parseDate(date, format, i18n, type) {
  * @param {string} format 
  * @param {i18nType} i18n 
  * @param {string} type 
- * @returns {string}
+ * @returns {string} date' string representation
  */
 export function formatDate(date, format, i18n, type) {
   if (date === null) {

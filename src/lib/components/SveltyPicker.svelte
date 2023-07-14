@@ -85,10 +85,10 @@
   let prevValue = value;
   let currentFormat = format;
   let innerDate = initialDate && initialDate instanceof Date
-  ? initialDate
-  : (value 
-  ? parseDate(value, format, i18n, formatType)
-  : null
+    ? initialDate
+    : (value 
+    ? parseDate(value, format, i18n, formatType)
+    : null
   );
   if (innerDate && initialDate) {
     value = formatDate(innerDate, format, i18n, formatType);
@@ -98,11 +98,11 @@
   $: displayValue = innerDate ? formatDate(innerDate, activeDisplayFormat, i18n, activeDisplayFormatType) : '';
   $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
   $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
-  // @ts-ignore
+
   $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
   let isFocused = pickerOnly;
-  $: pickerVisible = pickerOnly;
-  $: fadeFn = pickerOnly ? () => {} : fade;
+  $: pickerVisible = pickerOnly;  
+  $: fadeFn = pickerOnly ? () => ({}) : fade;
   let inputEl = ce_displayElement;
   /** @type {DOMRect|null} */
   let inputRect = null;
@@ -230,18 +230,16 @@
   }
 
   function onToday() {
-    const today = new Date();
-    if (parsedStartDate && parsedStartDate > today) return;
-
-    const todayHours = innerDate ? innerDate.getHours() : today.getHours();
+    const now = new Date()
+    const todayHours = innerDate ? innerDate.getHours() : now.getHours();
     const todayMinutes = innerDate
       ? innerDate.getMinutes()
-      : today.getMinutes();
+      : now.getMinutes();
     onDate(new CustomEvent('ontoday', {
       detail: new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate(),
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
         todayHours,
         todayMinutes,
         0
@@ -403,7 +401,7 @@
   <div
     class="std-calendar-wrap {theme}" class:is-popup={!internalVisibility}
     transition:fadeFn|local={{ duration: 200 }}
-    use:positionPopup={{ visible: pickerVisible && isFocused }}
+    use:positionPopup
     on:mousedown|preventDefault
   >
     {#if currentMode === "date"}

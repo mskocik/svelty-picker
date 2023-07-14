@@ -27,7 +27,7 @@
   let mode = 'auto';
   let todayBtn = true;
   let clearBtn = true;
-  let clearToggle = true;
+  let required = false;
   let autoclose = true;
   let i18n = i18ns.en;
 
@@ -59,12 +59,12 @@
     {#if !pickerOnly}
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate}  {i18n}
-      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {clearToggle} {autoclose} {minuteIncrement}
+      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autoclose} {minuteIncrement}
     ></SveltyPicker>
     {:else}
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate} pickerOnly {i18n}
-      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {clearToggle} {autoclose} {minuteIncrement}
+      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autoclose} {minuteIncrement}
     ></SveltyPicker>
     {/if}
 
@@ -123,7 +123,7 @@
         </div>
         
         <div class="line">
-          <label><input type="checkbox" name="" id="" bind:checked={clearToggle}> Clear Toggle</label>
+          <label><input type="checkbox" name="" id="" bind:checked={required}> Required (Clear toggle)</label>
         </div>
         
         <div class="line">
@@ -169,7 +169,7 @@
           <option value="dd-M-yy">dd-M-yy</option>
           <option value="dd MM yyyy">dd MM yyyy</option>
         </optgroup>
-        <optgroup label="Date only">
+        <optgroup label="Time only">
           <option value="hh:ii">hh:ii</option>
           <option value="H:i P">H:i P</option>
         </optgroup>
@@ -189,7 +189,7 @@
           <option value="d-M-y">d-M-y</option>
           <option value="F d, Y">F d, Y</option>
         </optgroup>
-        <optgroup label="Date only">
+        <optgroup label="Time only">
           <option value="H:i">H:i</option>
           <option value="g:i A">g:i A</option>
         </optgroup>
