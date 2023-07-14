@@ -22,9 +22,17 @@ inside relative positioned container.
 </div>
 
 Picker initialized as custom element:
-<div class="relative">
-  <input type="text" name="my-date" is="el-picker" format="dS MM" class="border-1 rounded-md border-gray-300 p-1" placeholder="Pick your birthdate">
-</div>
+<span>
+  <el-picker class="relative" format="dS MM" value="2023-01-23">
+    <input type="hidden" name="my-date">
+    <input type="text" name="my-date_input" class="border-1 rounded-md border-gray-300 p-1" placeholder="Pick your birthdate">
+  </el-picker>
+</span>
+
+#### Pure `el-picker` tag
+<p>
+  <el-picker name="picker" format="dS MM" value="2022-12-23" placeholder="Demo" class="border-1 rounded-md border-gray-300 p-1"></el-picker>
+</p>
 
 <CustomElement></CustomElement>
 
@@ -35,20 +43,25 @@ Picker initialized as custom element:
 </p>
 
 <div class="group">
-  <input type="text" id="picker-from" to="picker-to" name="my-date[from]" format="yyyy-mm-dd" is="el-picker" placeholder="From">
+  <el-picker name="picker1" placeholder="From" to="picker-to"></el-picker>
   <div class="delimiter">&mdash;</div>
-  <input type="text" id="picker-to" from="picker-from" name="my-date[to]" format="yyyy-mm-dd" is="el-picker" placeholder="To">
+  <el-picker name="picker2" placeholder="to" from="picker-from"></el-picker>
 </div>
 
 ```svelte
 <div class="group">
-  <input type="text" is="el-picker" id="picker-from" to="picker-to" name="my-date[from]" format="yyyy-mm-dd"placeholder="From">
+  <el-picker name="picker1" placeholder="From" to="picker-to"></el-picker>
   <div class="delimiter">&mdash;</div>
-  <input type="text" is="el-picker" id="picker-to" from="picker-from" name="my-date[to]" format="yyyy-mm-dd"placeholder="To">
+  <el-picker name="picker2" placeholder="to" from="picker-from"></el-picker>
 </div>
 ```
 
 <style windi:global>
+  :global(el-picker) {
+    position: relative;
+    display: inline;
+    min-width: 191px;
+  }
   .group {
     position: relative;
     display: inline-flex;

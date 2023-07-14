@@ -4,7 +4,9 @@ export default {
   theme: 'sdt-calendar-colors',
   mode: 'auto',
   format: 'yyyy-mm-dd',
+  valueFormat: 'yyyy-mm-dd',
   formatType: 'standard',
+  valueFormatType: 'standard',
   minuteIncrement: 1,
   weekStart: 1,
   inputClasses: '',
@@ -13,6 +15,5 @@ export default {
   todayBtn: true,
   clearBtn: true,
   autoclose: true,
-  clearToggle: true,
   i18n: en
 }
