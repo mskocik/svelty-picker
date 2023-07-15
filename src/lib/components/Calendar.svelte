@@ -4,8 +4,11 @@
   import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from '../utils/dateUtils.js';
   import { scale } from '../utils/utils.js'
 
-  /** @type {Date|null} */
-  export let date = null;
+  // FUTURE: implement order
+  // /** @type {number}*/
+  // export let order;
+  /** @type {Date[]} */
+  export let dates;
   /** @type {Date|null} */
   export let startDate = null;
   /** @type {Date|null} */
@@ -15,6 +18,7 @@
   /** @type {i18nType} */
   export let i18n;
   export let enableTimeToggle = false;
+  export let isRange = false;
   /**
    * @param {string} key
    * @param {boolean} shiftKey
@@ -121,8 +125,12 @@
     onClick(pickedDate);
   }
 
-  let internalDate = date;
-  let activeDate = date ? new Date(date.valueOf()) : new Date();
+  let internalDate = dates[0] || null;
+  let lastSelectedDate = internalDate
+  // let activeDate = date ? new Date(date.valueOf()) : new Date();
+  // let activeDate = internalDate ? new Date(internalDate.valueOf()) : new Date();
+  // TODO: move next month by one
+  let activeDate = dates[0] ? new Date(dates[0].valueOf()) : new Date();
 
   $: computedStartDate = startDate
     ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0,0,0,0)
@@ -146,18 +154,20 @@
     ? fade
     : (viewDelta !== null ? scale : () => ({}));
 
-  $: {
-    if (date !== internalDate) {
-      internalDate = date;
-      if (date) {
-        activeDate = new Date(date.valueOf())
-      };
-      viewDelta = 1;
-      viewChanged = true;
-      currentView = MODE_MONTH;
-    }
-  }
-  $: dataset = compute(activeDate, internalDate, currentView, i18n, weekStart);
+  // 🤔💭???
+  // $: {
+  //   if (lastSelectedDate !== internalDate) {
+  //     internalDate = lastSelectedDate;
+  //     if (lastSelectedDate) {
+  //       activeDate = new Date(lastSelectedDate.valueOf())
+  //     };
+  //     viewDelta = 1;
+  //     viewChanged = true;
+  //     currentView = MODE_MONTH;
+  //   }
+  // }
+  $: times = dates.map(date => date.getTime());
+  $: dataset = compute(activeDate, dates, currentView, i18n, weekStart);
   $: dayLabels = weekStart > -1
     ? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 7 + weekStart)
     : i18n.daysMin.slice(weekStart, 7 + weekStart)
@@ -166,7 +176,11 @@
     return dataset.prevTo <= num && num < dataset.nextFrom;
   }
 
-  function isDisabledDate(/** @type {Date} */ date) {
+  /**
+   * @param {Date} date
+   * @retuns {boolean}
+  */
+  function isDisabledDate(date) {
     switch (currentView) {
       case MODE_MONTH:
         if (computedStartDate && computedStartDate > date) return true;
@@ -268,7 +282,6 @@
     viewChanged = false;
   }
   
-
   function onTimeSwitch() {
     dispatch('switch', 'time');
   }
@@ -290,6 +303,38 @@
     }
   }
 
+  /** @type {number?} */
+  let hoverDate = null;
+
+  /**
+   * @param {Date?} currDate
+   * @returns {function(): void}
+  */
+  function wrapHoverDateToggle(currDate = null) {
+    return function(/** @type MouseEvent */ event) {
+      hoverDate = currDate?.getTime() || null;
+    }
+  }
+
+  /**
+   * @param {number} timestamp 
+  */
+  function isInRange(timestamp) {
+    return times.length === 2 ? timestamp >= times[0] && timestamp < times[1] : false;
+  }
+
+  /**
+   * @param {number} timestamp 
+   * @param {number?} hoverDate 
+  */
+  function isRangeHoverable(timestamp, hoverDate) {
+    return hoverDate && times.length === 1 && (
+      (timestamp < hoverDate && times[0] < timestamp)
+      ||
+      (timestamp > hoverDate && times[0] > timestamp)
+      );
+  }
+
   $: tableCaption = i18n && showCaption(currentView, activeDate);
 
 </script>
@@ -297,7 +342,7 @@
 <div class="sdt-thead-nav">
   <button class="std-btn std-btn-header sdt-toggle-btn" on:click|preventDefault={onSwitchView}>{tableCaption}</button>
   <div class="sdt-nav-btns">
-    {#if enableTimeToggle && internalDate}
+    {#if enableTimeToggle && dates.length}
     <button class="std-btn std-btn-header icon-btn sdt-time-icon" title={i18n.timeView} on:click|preventDefault={onTimeSwitch} >
       <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
     </button>
@@ -321,10 +366,11 @@
       {#each dataset.years as row, i}
       <tr class="sdt-cal-td">
         {#each row as year, j(j)}
-        <td class="sdt-cal-td" class:is-selected={i*4+j === dataset.selectionMark}>
+        {@const idx = i*4+j}
+        <td class="sdt-cal-td" class:is-selected={dataset.selectionMark.includes(idx)}>
           <button
             class="std-btn"
-            class:not-current={!isBetween(i*4+j)}
+            class:not-current={!isBetween(idx)}
             on:click|preventDefault={() => { onClick(year)}}
             disabled={isDisabledDate(new Date(year, activeDate.getMonth(), activeDate.getDate()))}
           >{year}</button>
@@ -344,9 +390,10 @@
       {#each dataset.months as row, i}
       <tr class="sdt-cal-td">
         {#each row as month, j(j)}
-        <td class="sdt-cal-td" class:is-selected={i*4+j === dataset.selectionMark}>
+        {@const idx = i*4+j}
+        <td class="sdt-cal-td" class:is-selected={idx === dataset.selectionMark.first}>
           <button class="std-btn"
-            class:not-current={!isBetween(i*4+j)}
+            class:not-current={!isBetween(idx)}
             on:click|preventDefault={() => { onClick(month)}}
             disabled={isDisabledDate(new Date(activeDate.getFullYear(), i18n.monthsShort.indexOf(month), activeDate.getDate()))}
           >{month}</button>
@@ -365,17 +412,25 @@
         <th class="sdt-cal-th">{header}</th>
       {/each}
       </tr>
-      {#each dataset.grid as row, i }
+      {#each dataset.days as row, i }
       <tr>
         {#each row as currDate, j(j)}
+        {@const idx = i*7+j}
+        {@const dateTime = currDate.getTime()}
         <td class="sdt-cal-td"
-          class:sdt-today={i*7+j === dataset.todayMark}
-          class:is-selected={i*7+j === dataset.selectionMark}
+          class:sdt-today={idx === dataset.todayMark}
+          class:in-range={isInRange(dateTime)}
+          class:is-selected={times.includes(dateTime)}
+          class:in-range-hover={isRange && isRangeHoverable(dateTime, hoverDate)}
         >
-          <button on:click|preventDefault={() => {onClick(currDate)}}
+          <!-- svelte-ignore a11y-mouse-events-have-key-events -->
+          <button on:click={() => {onClick(currDate)}}
+            on:mouseover={wrapHoverDateToggle(currDate)}
+            on:mouseout={wrapHoverDateToggle()}
+            on:blur on:focus
             class="std-btn  sdt-btn-day"
             class:not-current={!isBetween(i*7+j) }
-            disabled={isDisabledDate(currDate)}
+            disabled={(computedStartDate || endDate) && isDisabledDate(currDate)}
           >{currDate.getDate()}</button>
         </td>
         {/each}
@@ -385,7 +440,6 @@
   </table>
   {/if}
 </div>
-
 
 <style>
 .sdt-cal-td {
@@ -461,11 +515,31 @@
 .std-btn:hover {
   background-color: var(--sdt-btn-bg-hover);
 }
-.is-selected .std-btn {
+.is-selected .std-btn,
+.is-selected.in-range .std-btn {
   background-color: var(--sdt-primary);
   color: var(--sdt-color-selected, var(--sdt-bg-main));
   opacity: 0.9;
 }
+.is-selected.in-range .std-btn {
+  border-radius: 4px 0 0 4px
+}
+.in-range .std-btn,
+.in-range-hover .std-btn {
+  background-color: color-mix(in srgb, transparent 75%, var(--sdt-primary));
+  border-radius: 0;
+}
+.in-range:not(.is-selected) .std-btn:hover {
+  background-color: color-mix(in srgb, var(--sdt-btn-bg-hover) 75%, var(--sdt-primary));
+}
+.in-range + .is-selected .std-btn,
+.is-selected + .is-selected .std-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid color-mix(in srgb, white 75%, var(--sdt-primary));
+  margin-left: -1px;
+}
+
 .std-btn-header:hover {
   background-color: var(--sdt-btn-header-bg-hover);
 }
@@ -509,11 +583,13 @@
 .sdt-svg {
   fill: var(--sdt-color);
 }
-.sdt-today:hover:before {
+.sdt-today:hover:before,
+.in-range.sdt-today:before {
   border-left-color: var(--sdt-primary);
   border-top-color: var(--sdt-primary);
 }
-.is-selected.sdt-today:before {
+.is-selected.sdt-today:before
+ {
   border-left-color: #eee;
   border-top-color: #eee;
 }

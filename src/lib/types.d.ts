@@ -1,3 +1,9 @@
+/**
+ * @typedef {object} SelectionMark
+ * @property {function(): number|null} first
+ * @property {function(): number|null} last
+ * @property {function(number): void} add
+ */
 declare global {
     export type i18nType = {
         days: string[],

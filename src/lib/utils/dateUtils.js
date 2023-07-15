@@ -5,16 +5,63 @@ export const MODE_YEAR = 1;
 export const MODE_MONTH = 2;
 
 /**
+ * @typedef {object} RangeSelection
+ * @property {number|null} first
+ * @property {number|null} last
+ * @property {function(number): void} add
+ * @property {function(number): boolean} includes
+ */
+
+/**
+ * @typedef {object} Dataset
+ * @property {any[][]} grid
+ * @property {Date[][]} days
+ * @property {string[][]} months
+ * @property {number[][]} years
+ * @property {RangeSelection} selectionMark
+ * @property {number} todayMark
+ * @property {number} prevTo
+ * @property {numbe} nextFrom
+ */
+
+/**
+ * FUTURE: rewrite to array?
+ * @returns {RangeSelection}
+ */
+const RangeSelection = function() {
+  const list = [];
+  
+  return {
+    first: {
+      get() {
+        return list[0] || null;
+      }
+    },
+    last: {
+      get() {
+        return list.length ? list[list.length-1] : null;
+      }
+    },
+    add(position) {
+      list.push(position);
+    },
+    includes: (num) => list.includes(num)
+  }
+}
+
+/**
  * 
  * @param {Date} currentDate 
- * @param {Date|null} selectedDate 
+ * @param {Date[]} selectedDates 
  * @param {number} view 
  * @param {i18nType} locale 
  * @param {number} weekStart 
- * @returns {datasetType}
+ * @returns {Dataset}
  */
-export function compute(currentDate, selectedDate, view, locale, weekStart) {
-  // years 4 x 3
+export function compute(currentDate, selectedDates, view, locale, weekStart) {
+
+  /** ************************************ MODE_DECADE: */
+  /** ************************************ years 4 x 3 */
   if (view === MODE_DECADE) {
     let prevTo = 10;  // base is year 2000
     let nextFrom = 20;
@@ -34,19 +81,20 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
         yearRow = [];
       }
     }
-    let selectionMark = null;
-    if (!selectedDate) {
-      selectedDate = new Date();
+    let selectionMark = RangeSelection();
+    if (!selectedDates[0]) {
+      selectedDates[0] = new Date();
     }
-    if (selectedDate.getFullYear() >= currYear) {
-      selectionMark = selectedDate.getFullYear() % currYear;
+    if (selectedDates[0].getFullYear() >= currYear) {
+      selectionMark.add(selectedDates[0].getFullYear() % currYear);
     }
     return {
       years: grid, todayMark, nextFrom, prevTo, selectionMark
     }
   }
 
-  // months 4 x 3
+  /** ************************************ MODE_YEAR: */
+  /** ************************************ months 4 x 3 */
   if (view === MODE_YEAR) {
     let grid = [];
     let monthRow = [];
@@ -68,19 +116,20 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
       }
       dateNormalized.setFullYear(dateNormalized.getFullYear() + 1);
     }
-    let selectionMark = null;
-    if (!selectedDate) {
-      selectedDate = new Date();
+    let selectionMark = RangeSelection();
+    if (!selectedDates[0]) {
+      selectedDates[0] = new Date();
     }
-    if (selectedDate.getFullYear() - initYear >= 0 && selectedDate.getFullYear() - initYear <= 2) {
-      selectionMark = selectedDate.getMonth() + ((selectedDate.getFullYear() - initYear || 0) * 12);
+    if (selectedDates[0].getFullYear() - initYear >= 0 && selectedDates[0].getFullYear() - initYear <= 2) {
+      selectionMark.add(selectedDates[0].getMonth() + ((selectedDates[0].getFullYear() - initYear || 0) * 12));
     }
     return {
       months: grid, todayMark, nextFrom, prevTo, selectionMark
     }
   } 
 
-  // days 7x6
+  /** ************************************ MODE_MONTH: */
+  /** ************************************ days 7x6 */
   let d = currentDate || new Date(), // or currently selected date
       y = d.getFullYear(),
       m = d.getMonth(),
@@ -99,7 +148,7 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
   let grid = [];
   let dayRow = [];
   let todayMark = -1;
-  let selectionMark = null;
+  let selectionMark = RangeSelection();
   let prevTo = 0;
   let nextFrom = 42;
   let inc = 0;
@@ -121,12 +170,14 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     ) {
       todayMark = inc;
     }
-    if (!selectionMark && selectedDate
-      && prevMonth.getFullYear() === selectedDate.getFullYear()
-      && prevMonth.getMonth() === selectedDate.getMonth()
-      && prevMonth.getDate() === selectedDate.getDate()
-    ) {
-      selectionMark = inc;
+    if (!selectionMark.length !== selectedDates.length) {
+      selectedDates.map(s => {
+        if (prevMonth.getFullYear() === s.getFullYear()
+        && prevMonth.getMonth() === s.getMonth()
+        && prevMonth.getDate() === s.getDate()
+        ) 
+          selectionMark.add(inc);
+      })
     }
     
     if (dayRow.length === 7) {
@@ -135,7 +186,7 @@ export function compute(currentDate, selectedDate, view, locale, weekStart) {
     }
   }
   return {
-    grid, todayMark, prevTo, nextFrom, selectionMark
+    days: grid, todayMark, prevTo, nextFrom, selectionMark
   };
 }
 

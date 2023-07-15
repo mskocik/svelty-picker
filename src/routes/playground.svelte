@@ -8,6 +8,7 @@
   import OptionsMD from './_markdown/options.md';
   import Format from './_markdown/formatting.md';
   import FormatPhp from './_markdown/formatting_php.md';
+  import { MODE_MONTH } from '$lib/utils/dateUtils';
 
   function onBack() {
     history.go(-1);
@@ -15,26 +16,29 @@
 
   let disabled = false;
   let placeholder = "You can play with settings"
-  let initialDate = new Date();
+  // let initialDate = new Date();
+  let initialDate = null;
   let startDate = null;
   let endDate = null;
-  let pickerOnly = false;
+  let pickerOnly = !false;
   let minuteIncrement = 1;
   let weekStart = 1;
+  let startView = MODE_MONTH;
   let value = '';
   let format = '';
   let formatType = 'standard';
   let mode = 'auto';
-  let todayBtn = true;
-  let clearBtn = true;
+  let isRange = !true;
+  let todayBtn = !true;
+  let clearBtn = !true;
   let required = false;
   let autoclose = true;
   let i18n = i18ns.en;
 
   $: {
     format = formatType === 'php'
-      ? 'Y-m-d H:i'
-      :'yyyy-mm-dd hh:ii'
+      ? 'Y-m-d'
+      :'yyyy-mm-dd'
   }
 
   const getFlag = code => {
@@ -59,12 +63,16 @@
     {#if !pickerOnly}
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate}  {i18n}
-      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autoclose} {minuteIncrement}
+      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autoclose} {minuteIncrement} {startView}
+      {isRange}
+      on:change={e => console.log('new date', e.detail)}
     ></SveltyPicker>
     {:else}
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate} pickerOnly {i18n}
-      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autoclose} {minuteIncrement}
+      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autoclose} {minuteIncrement} {startView}
+      {isRange}
+      on:change={e => console.log('new date', e.detail)}
     ></SveltyPicker>
     {/if}
 
@@ -98,6 +106,11 @@
           <label for="week">Week start</label><br>
           <input type="number" id="week" min="0" max="6" bind:value={weekStart}>
         </div>
+        <div>
+          <label for="week">Start view</label><br>
+          <input type="number" id="week" min="0" max="2" bind:value={startView}>
+          <code>0</code> - decade <code>1</code> - year <code>2</code> - month
+        </div>
         <div class="my-2 language-bar">
           Language<br>
           {#each Object.keys(i18ns) as locale}
@@ -108,6 +121,10 @@
       <div class="w-full lg:w-1/2">
         <div class="line">
           <label><input type="checkbox" name="" id="" bind:checked={disabled} disabled={pickerOnly}> Disabled</label>
+        </div>
+
+        <div class="line">
+          <label><input type="checkbox" name="" id="" bind:checked={isRange}> Range picker</label>
         </div>
         
         <div class="line">
