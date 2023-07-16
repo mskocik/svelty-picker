@@ -32,15 +32,11 @@ const RangeSelection = function() {
   const list = [];
   
   return {
-    first: {
-      get() {
-        return list[0] || null;
-      }
+    get first() {
+      return list[0] || null;
     },
-    last: {
-      get() {
-        return list.length ? list[list.length-1] : null;
-      }
+    get last() {
+      return list.length ? list[list.length-1] : null;
     },
     add(position) {
       list.push(position);
@@ -88,6 +84,7 @@ export function compute(currentDate, selectedDates, view, locale, weekStart) {
     if (selectedDates[0].getFullYear() >= currYear) {
       selectionMark.add(selectedDates[0].getFullYear() % currYear);
     }
+
     return {
       years: grid, todayMark, nextFrom, prevTo, selectionMark
     }
@@ -186,7 +183,7 @@ export function compute(currentDate, selectedDates, view, locale, weekStart) {
     }
   }
   return {
-    days: grid, todayMark, prevTo, nextFrom, selectionMark
+    grid, days: grid, todayMark, prevTo, nextFrom, selectionMark,
   };
 }
 
@@ -217,13 +214,13 @@ const utils = {
 export function isLower(/** @type {Date|string} */ a, /** @type {Date} */b) {
   if (!(a instanceof Date)) return false;
   return a.getFullYear() < b.getFullYear()
-    || (a.getMonth() < b.getMonth() || a.getDate() <= b.getDate());
+    || (a.getMonth() < b.getMonth() || a.getDate() < b.getDate());
 }
 
 export function isGreater(/** @type {Date|string} */a, /** @type {Date} */b) {
   if (!(a instanceof Date)) return false;
   return a.getFullYear() > b.getFullYear()
-    || (a.getMonth() > b.getMonth() || a.getDate() >= b.getDate());
+    || (a.getMonth() > b.getMonth() || a.getDate() > b.getDate());
   
 }
 

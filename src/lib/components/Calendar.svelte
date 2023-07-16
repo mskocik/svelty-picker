@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from '../utils/dateUtils.js';
+  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, isLower, isGreater } from '../utils/dateUtils.js';
   import { scale } from '../utils/utils.js'
 
   // FUTURE: implement order
@@ -24,117 +24,67 @@
    * @param {boolean} shiftKey
    */
   export function handleGridNav(key, shiftKey) {
+    if (currentView !== MODE_MONTH) {
+      currentView = MODE_MONTH;
+      viewDelta = 1;
+      activeDate = new Date(internalDate || new Date());
+      return;
+    }
     if (!internalDate) {
       onClick(new Date);
       return;
     }
-    /** @type {GridPosition} pos */
-    let pos, diffSelection;
+    /** @type {Date} */
+    let dateToSelect = new Date(internalDate);
+
     switch (key) {
       case 'PageDown':
         shiftKey = true;
       case 'ArrowDown':
-        if (shiftKey) return handleShiftNav(activeDate.getFullYear(), activeDate.getMonth() + 1, 1);
-        diffSelection = dataset.selectionMark + 7;
-        if (diffSelection >= dataset.nextFrom) {
-          const tmpDate = new Date(activeDate.getFullYear(), activeDate.getUTCMonth() + 1, 28);
-          let tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
-          onChangeMonth(1);
-          pos = tmpData.selectionMark !== null
-            ? {
-              y: Math.floor((tmpData.selectionMark + 7) / 7),
-              x: (tmpData.selectionMark + 7) % 7
-            }
-            : {
-              y: (diffSelection + 7) % 7 < tmpData.prevTo ? 1 : 0,
-              x: (diffSelection + 7) % 7,
-            }
-          onClick(tmpData.grid[pos.y][pos.x]);
-          return;
+        shiftKey
+          ? dateToSelect.setMonth(internalDate.getMonth() + 1)
+          : dateToSelect.setDate(internalDate.getDate() + 7);
+        // longer to shorter month correction
+        if (shiftKey && dateToSelect.getMonth() === internalDate.getMonth()) {
+          dateToSelect.setDate(0);
         }
-        pos = moveGrid(dataset.selectionMark + 7, currentView);
-        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
-          onChangeMonth(1);
-        }
-        onClick(dataset.grid[pos.y][pos.x]);
+        onClick(dateToSelect, { keyboard: true });
         break;
       case 'PageUp':
         shiftKey = true;
       case 'ArrowUp':
-        if (shiftKey) return handleShiftNav(activeDate.getFullYear(), activeDate.getMonth() - 1, -1);
-        diffSelection = dataset.selectionMark - 7;
-        if (diffSelection <= dataset.prevTo) {
-          // goto prev month
-          const tmpDate = new Date(activeDate.getFullYear() + (activeDate.getMonth() > 0 ? 0 : - 1), activeDate.getMonth() > 0 ? activeDate.getMonth() -1 : 11, 1);
-          const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
-          onChangeMonth(-1);
-          pos = tmpData.selectionMark !== null
-            ? {
-              x: Math.floor((tmpData.selectionMark -7)  /  7),
-              y: (tmpData.selectionMark - 7) % 7
-            }
-            : {
-              x: 5,
-              y: diffSelection
-            }
-          onClick(tmpData.grid[pos.x][pos.y]);
-          return;
+        shiftKey
+          ? dateToSelect.setMonth(internalDate.getMonth() - 1)
+          : dateToSelect.setDate(internalDate.getDate() - 7);
+        // longer to shorter month correction
+        if (shiftKey && dateToSelect.getMonth() === internalDate.getMonth()) {
+          dateToSelect.setDate(0);
         }
-        pos = moveGrid(dataset.selectionMark - 7, currentView);
-        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
-          onChangeMonth(-1);
-        }
-        onClick(dataset.grid[pos.y][pos.x]);
+        onClick(dateToSelect, { keyboard: true });
         break;
       case 'ArrowLeft':
-        if (shiftKey) return handleShiftNav(activeDate.getFullYear() - 1, activeDate.getMonth(), 1);
-        pos = moveGrid(dataset.selectionMark - 1, currentView);
-        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
-          onChangeMonth(-1);
-        }
-        onClick(dataset.grid[pos.y][pos.x]);
+        shiftKey
+          ? dateToSelect.setFullYear(internalDate.getFullYear() - 1)
+          : dateToSelect.setDate(internalDate.getDate() - 1);
+        onClick(dateToSelect, { keyboard: true });
         break;
       case 'ArrowRight':
-        if (shiftKey) return handleShiftNav(activeDate.getFullYear() + 1, activeDate.getMonth(), 1);
-        pos = moveGrid(dataset.selectionMark + 1, currentView);
-        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
-          onChangeMonth(1);
-        }
-        onClick(dataset.grid[pos.y][pos.x]);
+        shiftKey
+          ? dateToSelect.setFullYear(internalDate.getFullYear() + 1)
+          : dateToSelect.setDate(internalDate.getDate() + 1);
+        onClick(dateToSelect, { keyboard: true });
         break;
     }
   }
 
-  /**
-   * @param {number} year
-   * @param {number} month
-   * @param {number} monthChange
-   */
-  function handleShiftNav(year, month, monthChange) {
-    let tmpDate;
-    let newDateDay = activeDate.getDate();
-    // required when going back from 31 long month to 30, or 28/29 and to ensure month is changed, not day only
-    do {
-      tmpDate = new Date(year, month, newDateDay);
-      newDateDay--;
-    } while (tmpDate.getMonth() === activeDate.getMonth());
-    const tmpData = compute(tmpDate, tmpDate, currentView, i18n, weekStart);
-    const pickedDate = tmpData.grid[Math.floor(tmpData.selectionMark / 7)][tmpData.selectionMark % 7];
-    if ((endDate && isGreater(pickedDate, endDate)) || (startDate && isLower(pickedDate, startDate))) return;
-    onChangeMonth(monthChange);
-    onClick(pickedDate);
-  }
-
   let internalDate = dates[0] || null;
-  let lastSelectedDate = internalDate
-  // let activeDate = date ? new Date(date.valueOf()) : new Date();
-  // let activeDate = internalDate ? new Date(internalDate.valueOf()) : new Date();
   // TODO: move next month by one
   let activeDate = dates[0] ? new Date(dates[0].valueOf()) : new Date();
 
   $: computedStartDate = startDate
     ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0,0,0,0)
     : null;
+  $: internalNavDate = [dates[0]];
 
   const dispatch = createEventDispatcher();
 
@@ -154,19 +104,7 @@
     ? fade
     : (viewDelta !== null ? scale : () => ({}));
 
-  // 🤔💭???
-  // $: {
-  //   if (lastSelectedDate !== internalDate) {
-  //     internalDate = lastSelectedDate;
-  //     if (lastSelectedDate) {
-  //       activeDate = new Date(lastSelectedDate.valueOf())
-  //     };
-  //     viewDelta = 1;
-  //     viewChanged = true;
-  //     currentView = MODE_MONTH;
-  //   }
-  // }
-  $: times = dates.map(date => date.getTime());
+  $: times = dates.map(date => { date = new Date(date); date.setHours(0,0); return date.getTime() });
   $: dataset = compute(activeDate, dates, currentView, i18n, weekStart);
   $: dayLabels = weekStart > -1
     ? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 7 + weekStart)
@@ -249,7 +187,7 @@
 
 
   // @ts-ignore
-  function onClick(value) {
+  function onClick(value, { keyboard } = {}) {
     viewDelta = 1;
     viewChanged = true;
     switch (currentView) {
@@ -262,14 +200,27 @@
         activeDate = activeDate;
         break;
       case 2:
-        if (startDate && !isGreater(value, startDate)) return;
-        if (endDate && !isLower(value, endDate)) return;
+        if (startDate && isLower(value, startDate)) return;
+        if (endDate && isGreater(value, endDate)) return;
         const newInternalDate = new Date(value.getFullYear(), value.getMonth(), value.getDate());
         if (internalDate) {
           newInternalDate.setMinutes(internalDate.getMinutes());
           newInternalDate.setHours(internalDate.getHours());
         }
         internalDate = newInternalDate;
+        
+        // on keyboard navigation, always change active view to month with selection
+        if (keyboard) {
+          if (activeDate.getFullYear() !== newInternalDate.getFullYear()
+            || (activeDate.getFullYear() === newInternalDate.getFullYear() 
+              && activeDate.getMonth() !== newInternalDate.getMonth()
+            )
+          ) {
+            activeDate.setFullYear(newInternalDate.getFullYear());
+            activeDate.setMonth(newInternalDate.getMonth());
+            activeDate = activeDate;
+          } 
+        }
         dispatch('date', internalDate);
         break;
     }
