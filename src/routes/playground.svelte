@@ -8,7 +8,7 @@
   import OptionsMD from './_markdown/options.md';
   import Format from './_markdown/formatting.md';
   import FormatPhp from './_markdown/formatting_php.md';
-  import { MODE_MONTH } from '$lib/utils/dateUtils';
+  import { MODE_MONTH } from '$lib/utils/constants';
 
   function onBack() {
     history.go(-1);
@@ -20,7 +20,7 @@
   let initialDate = null;
   let startDate = null;
   let endDate = null;
-  let pickerOnly = !false;
+  let pickerOnly = false;
   let minuteIncrement = 1;
   let weekStart = 1;
   let startView = MODE_MONTH;
@@ -245,9 +245,6 @@
       &:focus {
         border-color: #777;
       }
-    }
-    :global(.picker) {
-      @apply border-1 border-gray-300 px-1 py-1;
     }
   }
   .language-bar {

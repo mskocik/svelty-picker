@@ -7,18 +7,17 @@ import { formatDate, parseDate } from "./dateUtils";
  * @property {Date[]} innerDates
  */
 
-
 /**
  * Init internal props
  * 
  * @param {string|string[]|null} value 
  * @param {Date|Date[]|null} initialDate 
  * @param {string} format
- * @param {i18nType} i18n
+ * @param {import("$lib/i18n").i18nType} i18n
  * @param {string} formatType
  * @returns {ValueInit}
  */
-export function initValues(value, initialDate, format, i18n, formatType) {
+export function initProps(value, initialDate, format, i18n, formatType) {
   /** @type string[] */
   let valueArray = value ? (Array.isArray(value) ? value : value.split(',')) : [];
 
@@ -44,18 +43,4 @@ export function initValues(value, initialDate, format, i18n, formatType) {
     prevValue,
     innerDates,
   }
-}
-
-/**
- * @param {Date[]} innerDates
- * @param {string} format
- * @param {i18nType} i18n
- * @param {string} formatType
- * @returns {string}
- */
-export function toDisplayValue(innerDates, format, i18n, formatType) {
-  return innerDates
-    .map(innerDate => formatDate(innerDate, format, i18n, formatType))
-    .sort()
-    .join(' - ');
 }

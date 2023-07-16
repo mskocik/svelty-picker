@@ -11,7 +11,7 @@
   export let minuteIncrement = 1;
   export let showMeridian = false;
   export let hasDateComponent = false;
-  /** @type {i18nType}*/
+  /** @type {import("$lib/i18n").i18nType}*/
   export let i18n;
   /**
    * @param {boolean|null} val

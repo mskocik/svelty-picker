@@ -1,6 +1,6 @@
 ```svelte
 <script>
-  import { registerElement } from 'svelty-picker';
+  import { registerSveltyPicker } from 'svelty-picker';
 
   registerElement('el-picker');
 </script>

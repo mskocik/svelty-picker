@@ -1,9 +1,11 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, isLower, isGreater } from '../utils/dateUtils.js';
-  import { scale } from '../utils/utils.js'
+  import { compute } from '$lib/utils/grid.js';
+  import { isLower, isGreater } from '../utils/dateUtils.js';
+  import { scale } from '../utils/transitions.js'
 
+  import { MODE_MONTH, MODE_YEAR, MODE_DECADE } from '$lib/utils/constants.js';
   // FUTURE: implement order
   // /** @type {number}*/
   // export let order;
@@ -15,7 +17,7 @@
   export let endDate = null;
   export let weekStart = 1;
   export let initialView = MODE_MONTH;
-  /** @type {i18nType} */
+  /** @type {import("$lib/i18n").i18nType} */
   export let i18n;
   export let enableTimeToggle = false;
   export let isRange = false;
@@ -342,7 +344,7 @@
       <tr class="sdt-cal-td">
         {#each row as month, j(j)}
         {@const idx = i*4+j}
-        <td class="sdt-cal-td" class:is-selected={idx === dataset.selectionMark.first}>
+        <td class="sdt-cal-td" class:is-selected={idx === dataset.selectionMark[0]}>
           <button class="std-btn"
             class:not-current={!isBetween(idx)}
             on:click|preventDefault={() => { onClick(month)}}

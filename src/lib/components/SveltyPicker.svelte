@@ -1,5 +1,5 @@
 <script context="module">
-  import settings from "../utils/settings";
+  import settings from "../settings";
   export const config = settings;
 </script>
 
@@ -8,9 +8,10 @@
   import { fade } from "svelte/transition";
   import Calendar from "./Calendar.svelte";
   import Time from "./Time.svelte";
-  import { formatDate, MODE_MONTH, parseDate } from "../utils/dateUtils";
-  import { usePosition } from "../utils/utils";
-  import { initValues, toDisplayValue } from "$lib/utils/selection";
+  import { formatDate, parseDate } from "$lib/utils/dateUtils";
+  import { usePosition } from "$lib/utils/actions.js";
+  import { initProps } from "$lib/utils/initProps";
+  import { MODE_MONTH } from "$lib/utils/constants";
 
   // html
   export let inputId = '';
@@ -65,17 +66,12 @@
   export let clearBtn = config.clearBtn;
   /** @type {boolean} */
   export let autoclose = config.autoclose;
-  /** @type {i18nType} */
+  /** @type {import("$lib/i18n").i18nType} */
   export let i18n = config.i18n;
   /** ************************************ actions */
   /** @type {Array<any>|null} */
   export let validatorAction = null;
 
-  // TODO: investigate usage of this
-  /** @param {string} val */
-  export function setDateValue(val) {
-    innerDate = parseDate(val, format, i18n, formatType);
-  }
   export function getLastPickerPhase() {
     return lastPickerPhase;
   }
@@ -87,14 +83,17 @@
 
   const dispatch = createEventDispatcher();
 
-  let { valueArray, prevValue, innerDates } = initValues(value, initialDate, format, i18n, formatType);
+  let { valueArray, prevValue, innerDates } = initProps(value, initialDate, format, i18n, formatType);
   
   let currentFormat = format;
   let isFocused = pickerOnly;
   $: pickerVisible = pickerOnly;  
   $: activeDisplayFormat = displayFormat || format;
   $: activeDisplayFormatType = displayFormatType || formatType;
-  $: displayValue = toDisplayValue(innerDates, activeDisplayFormat, i18n, activeDisplayFormatType);
+  $: displayValue = innerDates
+    .map(innerDate => formatDate(innerDate, activeDisplayFormat, i18n, activeDisplayFormatType))
+    .sort()
+    .join(' - ');
   $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
   $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
   $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
@@ -368,8 +367,7 @@
    */
   function dispatchInputEvent(dispatchInputEvent) {
     if (ce_valueElement && ce_displayElement) {
-      // TODO: fix
-      ce_valueElement.value = value || '';
+      ce_valueElement.value = valueArray.join(',') || '';
       ce_displayElement.value = displayValue || '';
       ce_valueElement.dispatchEvent(new Event('input'));
       ce_displayElement.dispatchEvent(new Event('input'));
