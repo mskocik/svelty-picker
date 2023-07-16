@@ -3,7 +3,7 @@
   import CustomElement from './_markdown/custom-element.md';
 
   onMount(() => {
-    import('./../lib/custom-element').then(resp => {
+    import('./../lib/utils/custom-element').then(resp => {
       console.log('🥳 registering SveltyPicker as <el-picker> element');
       resp.registerElement && resp.registerElement('el-picker');
     }).catch(e => console.log('error', e));
