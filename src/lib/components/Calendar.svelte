@@ -22,6 +22,8 @@
   export let isRange = false;
   /** @type {number?} */
   export let hoverDate = null;
+  /** @type {?function(Date): boolean} */
+  export let additionalDisableFn;
   /**
    * @param {string} key
    * @param {boolean} shiftKey
@@ -128,6 +130,7 @@
       case MODE_MONTH:
         if (computedStartDate && computedStartDate > date) return true;
         if (endDate && endDate <= date) return true;
+        if (additionalDisableFn && additionalDisableFn(date, currentView)) return true;
         break;
       case MODE_YEAR:
         if (computedStartDate && computedStartDate.getFullYear() === date.getFullYear() && computedStartDate.getMonth() > date.getMonth()) return true;
@@ -214,6 +217,7 @@
       case 2:
         if (startDate && isLower(value, startDate)) return;
         if (endDate && isGreater(value, endDate)) return;
+        if (additionalDisableFn && additionalDisableFn(value)) return;
         const newInternalDate = new Date(value.getFullYear(), value.getMonth(), value.getDate());
         if (internalDate) {
           newInternalDate.setMinutes(internalDate.getMinutes());
@@ -398,7 +402,7 @@
             on:blur on:focus
             class="std-btn  sdt-btn-day"
             class:not-current={!isBetween(i*7+j) }
-            disabled={(computedStartDate || endDate) && isDisabledDate(currDate)}
+            disabled={(computedStartDate || endDate || additionalDisableFn) && isDisabledDate(currDate)}
           >{currDate.getDate()}</button>
         </td>
         {/each}

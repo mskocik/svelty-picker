@@ -46,6 +46,8 @@
   export let startView = MODE_MONTH;
   /** @type {'auto'|'date'|'datetime'|'time'} */
   export let mode = 'auto';
+  /** @type {?function(Date, number): boolean} */
+  export let disableDatesFn = null;
   /** ************************************ 👇 configurable globally */
   /** @type {string} */
   export let theme = config.theme;
@@ -541,6 +543,7 @@
         enableTimeToggle={resolvedMode?.includes("time")}
         initialView={startView > 2 ? 2 : startView}
         hoverDate={calendarHoverDate}
+        additionalDisableFn={disableDatesFn}
         bind:this={ref_calendar}
         {i18n}
         {weekStart}
