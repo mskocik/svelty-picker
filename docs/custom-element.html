@@ -14,16 +14,15 @@
 			theme && theme === 'dark' && document.documentElement.classList.add('dark');
 		</script>
 		<meta http-equiv="content-security-policy" content="">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-4ea5ee7d.css">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/custom-element-a4f85524.css">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-a3464f28.css">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-af18634e.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-9fb35caf.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-3eef081e.js">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-fae6432a.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/custom-element-b9a2676e.css">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-4c793ac0.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-d746fcb2.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-16bc5b83.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/paths-1c47712a.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-e7067966.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/custom-element.svx-c1a58360.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-d7b4e386.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/custom-element.svx-4af9465b.js">
 	</head>
 	<body>
 		<div class="svelte-wrap bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-wrap"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between"><div class="flex items-center text-4xl font-semibold"><button class="inline-flex items-center flex-col mr-3 lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -43,8 +42,8 @@
               </li><li><a href="/svelty-picker/i18n" class="nav px-4 my-2 decoration-none">Languages</a>
               </li><li><a href="/svelty-picker/playground" class="nav px-4 my-2 decoration-none">Playground</a>
               </li></ul></li></ul></nav>
-      <div><a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/main?label=version&logo=github&logoColor=g"></a></div>
-      <div class="mt-2"><a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/v4.0?label=dev&logo=github"></a></div></div></aside>
+      <div><a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/npm/v/svelty-picker.svg?style=flat"></a></div>
+      <div class="mt-2"><a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/main?label=next&logo=github"></a></div></div></aside>
 	<main class="lg:px-6 lg:pt-6 w-full lg:w-4/5"><h2 class="header">Custom Element</h2>
 <p class="my-4">Custom element is defined as extension to native <code class="code">input</code> tag. Custom element
 supports all options that can be passed as string (So all except initialDate). The input itself should always be placed
@@ -53,9 +52,12 @@ inside relative positioned container.
 <div class="my-4 p-2 bg-red-300 dark:bg-red-500">Please not that for cross-browser support (Safari), this <a href="https://github.com/ungap/custom-elements#readme" target="_blank">ungap/custom-element</a> polyfill is required.
 </div>
 <p>Picker initialized as custom element:</p>
-<div class="relative"><input type="text" name="my-date" is="el-picker" format="dS MM" class="border-1 rounded-md border-gray-300 p-1" placeholder="Pick your birthdate"></div>
+<span><el-picker class="relative" format="dS MM" value="2023-01-23"><input type="hidden" name="my-date">
+    <input type="text" name="my-date_input" class="border-1 rounded-md border-gray-300 p-1" placeholder="Pick your birthdate"></el-picker></span>
+<h4>Pure <code>el-picker</code> tag</h4>
+<p><el-picker name="picker" format="dS MM" value="2022-12-23" placeholder="Demo" class="border-1 rounded-md border-gray-300 p-1"></el-picker></p>
 <pre class="language-svelte"><!-- HTML_TAG_START --><code class="language-svelte"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
-  <span class="token keyword">import</span> <span class="token punctuation">&#123;</span> registerElement <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">'svelty-picker'</span><span class="token punctuation">;</span>
+  <span class="token keyword">import</span> <span class="token punctuation">&#123;</span> registerSveltyPicker <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">'svelty-picker'</span><span class="token punctuation">;</span>
 
   <span class="token function">registerElement</span><span class="token punctuation">(</span><span class="token string">'el-picker'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
@@ -67,21 +69,21 @@ inside relative positioned container.
   specify <b class="font-bold">id</b> of different datetime picker for limiting <code class="code">startDate</code> or <code class="code">endDate</code>.
   Check source how it is defined.
 </p>
-<div class="group svelte-zgg3t3"><input type="text" id="picker-from" to="picker-to" name="my-date[from]" format="yyyy-mm-dd" is="el-picker" placeholder="From" class="svelte-zgg3t3">
-  <div class="delimiter svelte-zgg3t3">—</div>
-  <input type="text" id="picker-to" from="picker-from" name="my-date[to]" format="yyyy-mm-dd" is="el-picker" placeholder="To" class="svelte-zgg3t3"></div>
+<div class="group svelte-d8yjho"><el-picker name="picker1" placeholder="From" to="picker-to"></el-picker>
+  <div class="delimiter svelte-d8yjho">—</div>
+  <el-picker name="picker2" placeholder="to" from="picker-from"></el-picker></div>
 <pre class="language-svelte"><!-- HTML_TAG_START --><code class="language-svelte"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>group<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">is</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>el-picker<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>picker-from<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>picker-to<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>my-date[from]<span class="token punctuation">"</span></span> <span class="token attr-name">format</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>yyyy-mm-dd<span class="token punctuation">"</span></span><span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>From<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-picker</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>picker1<span class="token punctuation">"</span></span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>From<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>picker-to<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-picker</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>delimiter<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token entity named-entity" title="&mdash;">&amp;mdash;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">is</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>el-picker<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>picker-to<span class="token punctuation">"</span></span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>picker-from<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>my-date[to]<span class="token punctuation">"</span></span> <span class="token attr-name">format</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>yyyy-mm-dd<span class="token punctuation">"</span></span><span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>To<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-picker</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>picker2<span class="token punctuation">"</span></span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>to<span class="token punctuation">"</span></span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>picker-from<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-picker</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code><!-- HTML_TAG_END --></pre></main></div>
 <div class="py-5"> </div></div>
 
 
-		<script type="module" data-sveltekit-hydrate="z3yrz8">
-		import { start } from "/svelty-picker/_app/immutable/start-af18634e.js";
+		<script type="module" data-sveltekit-hydrate="1metggd">
+		import { start } from "/svelty-picker/_app/immutable/start-4c793ac0.js";
 		start({
-			target: document.querySelector('[data-sveltekit-hydrate="z3yrz8"]').parentNode,
+			target: document.querySelector('[data-sveltekit-hydrate="1metggd"]').parentNode,
 			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
 			session: {},
 			route: true,

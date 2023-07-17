@@ -14,18 +14,18 @@
 			theme && theme === 'dark' && document.documentElement.classList.add('dark');
 		</script>
 		<meta http-equiv="content-security-policy" content="">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-4ea5ee7d.css">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/__layout-fae6432a.css">
 	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/formatting-72699d86.css">
-	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-a3464f28.css">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-af18634e.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-9fb35caf.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-3eef081e.js">
+	<link rel="stylesheet" href="/svelty-picker/_app/immutable/assets/SveltyPicker-55b6c0ae.css">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/start-4c793ac0.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-d746fcb2.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index-16bc5b83.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/paths-1c47712a.js">
 	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper-b22d3b18.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-e7067966.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/formatting.svelte-f42eb19b.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/formatting_php-18ac8343.js">
-	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-6c1f9e92.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/__layout.svelte-d7b4e386.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/pages/formatting.svelte-27ab659e.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/formatting_php-a95ae1e4.js">
+	<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/SveltyPicker-4c340946.js">
 	</head>
 	<body>
 		<div class="svelte-wrap bg-white text-stroke-dark-900 dark:bg-dark-600 dark:text-light-200 svelte-wrap"><div class="container !max-w-screen-xl p-3 flex mx-auto justify-between"><div class="flex items-center text-4xl font-semibold"><button class="inline-flex items-center flex-col mr-3 lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -45,8 +45,8 @@
               </li><li><a href="/svelty-picker/i18n" class="nav px-4 my-2 decoration-none">Languages</a>
               </li><li><a href="/svelty-picker/playground" class="nav px-4 my-2 decoration-none">Playground</a>
               </li></ul></li></ul></nav>
-      <div><a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/main?label=version&logo=github&logoColor=g"></a></div>
-      <div class="mt-2"><a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/v4.0?label=dev&logo=github"></a></div></div></aside>
+      <div><a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version" src="https://img.shields.io/npm/v/svelty-picker.svg?style=flat"></a></div>
+      <div class="mt-2"><a href="https://github.com/mskocik/svelty-picker"><img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mskocik/svelty-picker/main?label=next&logo=github"></a></div></div></aside>
 	<main class="lg:px-6 lg:pt-6 w-full lg:w-4/5"><h2 class="header">Format settings</h2>
 <p class="my-3 svelte-1pdglga">Date format can be defined under <code class="code">formatType</code> property. It has two options: <code class="code">standard</code>
   and <code class="code">php</code> where <code class="code">standard</code> is the <b class="font-bold svelte-1pdglga">default</b>.
@@ -56,8 +56,10 @@
 </p>
 
 <div class="bg-orange-200 dark:bg-blue-400 p-5 rounded-lg w-full svelte-1pdglga"><h3 class="header mt-0 svelte-1pdglga">Playground</h3>
-  <div class="flex flex-wrap svelte-1pdglga"><div class="w-full lg:w-1/2 svelte-1pdglga"><input type="text" id="" inputmode="none" tabindex="0" name="date"   placeholder="Pick some date and define your own format" autocomplete="off" class="picker-style svelte-1t6pprq" >
-</div>
+  <div class="flex flex-wrap svelte-1pdglga"><div class="w-full lg:w-1/2 svelte-1pdglga"><span class="std-component-wrap svelte-w5sypk"><input type="hidden" name="date">
+  <input type="text" id="" tabindex="0" name="date_input" value="" placeholder="Pick some date and define your own format"   autocomplete="off" inputmode="none" class="picker-style svelte-w5sypk" >
+
+</span></div>
     <div class="w-auto mr-2 lg:mx-2 svelte-1pdglga"><input type="text" class="picker-style" value="yyyy-mm-dd"></div>
     <div class="w-auto flex items-center svelte-1pdglga"><label><input type="radio" value="standard" checked> Standard </label>
       <label class="ml-4 svelte-1pdglga"><input type="radio" value="php"> PHP</label></div></div></div>
@@ -136,10 +138,10 @@
 <div class="py-5"> </div></div>
 
 
-		<script type="module" data-sveltekit-hydrate="1qnr66q">
-		import { start } from "/svelty-picker/_app/immutable/start-af18634e.js";
+		<script type="module" data-sveltekit-hydrate="1ny3sbe">
+		import { start } from "/svelty-picker/_app/immutable/start-4c793ac0.js";
 		start({
-			target: document.querySelector('[data-sveltekit-hydrate="1qnr66q"]').parentNode,
+			target: document.querySelector('[data-sveltekit-hydrate="1ny3sbe"]').parentNode,
 			paths: {"base":"/svelty-picker","assets":"/svelty-picker"},
 			session: {},
 			route: true,
