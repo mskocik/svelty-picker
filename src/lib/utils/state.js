@@ -44,3 +44,20 @@ export function initProps(value, initialDate, format, i18n, formatType) {
     innerDates,
   }
 }
+
+/**
+ * FUTURE: test that this works for PHP format type as well
+ * 
+ * @param {'auto'|'date'|'datetime'|'time'} mode 
+ * @param {string} format 
+ * @returns {'auto'|'date'|'datetime'|'time'}
+ */
+export function computeResolvedMode(mode, format) {
+  return mode === "auto"
+    ? format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
+      ? "datetime"
+      : format.match(/g|hh?|ii?/i)
+      ? "time"
+      : "date"
+    : mode;
+}

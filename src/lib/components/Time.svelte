@@ -13,12 +13,8 @@
   export let hasDateComponent = false;
   /** @type {import("$lib/i18n").i18nType}*/
   export let i18n;
-  /**
-   * @param {boolean|null} val
-   */
-  export function minuteSwitch(val) {
-    if (val === null) return isMinuteView;
-    isMinuteView = val;
+  export function showMinuteView() {
+    isMinuteView = true;
   }
   /**
    * @param {number} val
@@ -36,6 +32,7 @@
     }
     enableViewToggle = false;
     onClick({
+      type: 'keyboard',
       target: {
         tagName: 'BUTTON',
         dataset: {
@@ -289,9 +286,13 @@
     
     // handle only final click, not mouse move
     if (!handleMoveMove) {
-      dispatch('time', innerDate);
-      isMinuteView && setTimeout(() => { dispatch('close') }, 300);
-      if (!isMinuteView && enableViewToggle) isMinuteView = true;
+      dispatch(isMinuteView ? 'minute' : 'hour', {
+        value: innerDate,
+        isKeyboard: e.type === 'keyboard'
+      });
+      if (e.type !== 'keyboard' && !isMinuteView) {
+        isMinuteView = true;
+      }
     }
   }
 
@@ -303,7 +304,10 @@
     const val = parseInt(e.target.dataset.value);
     innerDate.setHours(val);
     innerDate = innerDate;
-    dispatch('time', innerDate);
+    dispatch(isMinuteView ? 'minute' : 'hour', {
+      value: innerDate,
+      isKeyboard: e.type === 'keyboard'
+    });
   }
 
   /**

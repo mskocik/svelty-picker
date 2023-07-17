@@ -33,7 +33,7 @@
       return;
     }
     if (!internalDate) {
-      onClick(new Date);
+      onClick(new Date, { keyboard: true });
       return;
     }
     /** @type {Date} */
@@ -79,6 +79,7 @@
     }
   }
 
+  /** @type Date? */
   let internalDate = dates[0] || null;
   // TODO: move next month by one
   let activeDate = dates[0] ? new Date(dates[0].valueOf()) : new Date();
@@ -86,7 +87,6 @@
   $: computedStartDate = startDate
     ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0,0,0,0)
     : null;
-  $: internalNavDate = [dates[0]];
 
   const dispatch = createEventDispatcher();
 
@@ -223,13 +223,20 @@
             activeDate = activeDate;
           } 
         }
-        dispatch('date', internalDate);
+        dispatch('date', {
+          value: internalDate,
+          update: 'date',
+          isKeyboard: keyboard
+        });
         break;
     }
     currentView < MODE_MONTH && currentView++;
     transform = TRANSFORM_CONST;  // reset transform
   }
 
+  $: {
+    if (dates.length === 0) internalDate = null;
+  };
   
   function onTransitionOut() {
     viewChanged = false;
