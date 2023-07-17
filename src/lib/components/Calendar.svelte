@@ -6,9 +6,8 @@
   import { scale } from '../utils/transitions.js'
 
   import { MODE_MONTH, MODE_YEAR, MODE_DECADE } from '$lib/utils/constants.js';
-  // FUTURE: implement order
-  // /** @type {number}*/
-  // export let order;
+  /** @type {number} */
+  export let wid; // internal ID
   /** @type {Date[]} */
   export let dates;
   /** @type {Date|null} */
@@ -21,6 +20,8 @@
   export let i18n;
   export let enableTimeToggle = false;
   export let isRange = false;
+  /** @type {number?} */
+  export let hoverDate = null;
   /**
    * @param {string} key
    * @param {boolean} shiftKey
@@ -80,9 +81,11 @@
   }
 
   /** @type Date? */
-  let internalDate = dates[0] || null;
+  let internalDate = dates[wid] || null;
   // TODO: move next month by one
-  let activeDate = dates[0] ? new Date(dates[0].valueOf()) : new Date();
+  let activeDate = wid === 1
+    ? (() => { const d = new Date(dates[0] || new Date()); d.setMonth(d.getMonth()+1); return d })()
+    : new Date(dates[0]?.valueOf() || new Date());
 
   $: computedStartDate = startDate
     ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0,0,0,0)
@@ -263,9 +266,6 @@
     }
   }
 
-  /** @type {number?} */
-  let hoverDate = null;
-
   /**
    * @param {Date?} currDate
    * @returns {function(): void}
@@ -273,6 +273,7 @@
   function wrapHoverDateToggle(currDate = null) {
     return function(/** @type MouseEvent */ event) {
       hoverDate = currDate?.getTime() || null;
+      dispatch('internal_hoverUpdate', hoverDate);
     }
   }
 
@@ -289,9 +290,9 @@
   */
   function isRangeHoverable(timestamp, hoverDate) {
     return hoverDate && times.length === 1 && (
-      (timestamp < hoverDate && times[0] < timestamp)
+      (timestamp <= hoverDate && times[0] <= timestamp)
       ||
-      (timestamp > hoverDate && times[0] > timestamp)
+      (timestamp >= hoverDate && times[0] >= timestamp)
       );
   }
 
@@ -475,12 +476,6 @@
 .std-btn:hover {
   background-color: var(--sdt-btn-bg-hover);
 }
-.is-selected .std-btn,
-.is-selected.in-range .std-btn {
-  background-color: var(--sdt-primary);
-  color: var(--sdt-color-selected, var(--sdt-bg-main));
-  opacity: 0.9;
-}
 .is-selected.in-range .std-btn {
   border-radius: 4px 0 0 4px
 }
@@ -499,7 +494,12 @@
   border-left: 1px solid color-mix(in srgb, white 75%, var(--sdt-primary));
   margin-left: -1px;
 }
-
+.is-selected .std-btn,
+.is-selected.in-range .std-btn {
+  background-color: var(--sdt-primary);
+  color: var(--sdt-color-selected, var(--sdt-bg-main));
+  opacity: 0.9;
+}
 .std-btn-header:hover {
   background-color: var(--sdt-btn-header-bg-hover);
 }

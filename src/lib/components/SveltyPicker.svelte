@@ -6,8 +6,7 @@
 <script>
   /**
    * TODO: handle displayFormat change dynamically
-   * TODO: move 'today' button to slot
-   * TODO: remove clearBtn
+   * TODO: remove todayBtn, clearBtn
    * TODO: fix keyboard navigation (Enter, Esc)
    * TODO: onClear should reset also calendar's inner selection
   */
@@ -93,8 +92,10 @@
   let isFocused = pickerOnly;
   let undoHistory = [...valueArray];
   let currentAutocloseThreshold = 0;
-  let currentValue = computeValue();
-  let displayValue = computeDisplayValue(); 
+  let currentValue = computeStringValue();
+  let displayValue = computeDisplayValue();
+  /** @type {number?} as a timestamp */
+  let calendarHoverDate;
   $: pickerVisible = pickerOnly;  
   $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
   $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
@@ -103,7 +104,7 @@
   $: fadeFn = pickerOnly ? () => ({}) : fade;
 
   // FUTURE:
-  // $: widgetCount = isRange ? [0,1] : [0];
+  $: widgetCount = isRange ? [0,1] : [0];
   let currentMode = startView === STARTVIEW_TIME ? "time" : "date";
   let isMinuteView = false;
   let ref_input = ce_displayElement;
@@ -140,15 +141,15 @@
   }
   $: internalVisibility = pickerOnly ? true : false;
   $: positionPopup = !pickerOnly ? usePosition : () => {};
-  // TODO: 🔍 check this
+  $: isDirty = computeDirty(valueArray);
+  // : 🔍 check this
   $: {
     let valueChanged = false;
-    console.log('hm?' , valueArray, prevValue);
     if (valueArray.join('') !== prevValue.join('')) {
       innerDates = valueArray.map(val => parseDate(val, format, i18n, formatType));
       prevValue = valueArray;
       valueChanged = true;
-      currentValue = computeValue();
+      currentValue = computeStringValue();
       displayValue = computeDisplayValue();
     }
   // TODO: rethink this to prevent cyclical dependency
@@ -166,7 +167,7 @@
             ? "time"
             : "date";
       }
-      currentValue = computeValue();
+      currentValue = computeStringValue();
       onValueSet(true);
     }
     // if (valueChanged && isRange && prevValue.length !== 2) {
@@ -199,8 +200,20 @@
   */
   function computeValue() {
     return isRange 
-        ? (valueArray.length === 2 ? valueArray : null) // for range set value only when full
-        : (valueArray[0] || null);
+      ? (valueArray.length === 2 ? valueArray : null) // for range set value only when full
+      : (valueArray[0] || null);
+  }
+
+  function computeStringValue() {
+    return valueArray.join('');
+  }
+
+  /**
+   * @param {string[]} values
+   * @returns {boolean}
+  */
+  function computeDirty(values) {
+    return values.join('') !== undoHistory.join('');
   }
   
   function resetView() {
@@ -213,15 +226,31 @@
 
   /** @type {string} */
   let eventType; 
+  $: watchEventType(eventType);
+
+  /**
+   * @param {string} eventType
+   */
+  function watchEventType(eventType) {
+    if (eventType === 'date' && resolvedMode === 'datetime' && ((isRange && valueArray.length === 2) || !isRange)) {
+      currentMode = 'time';
+    } else if (eventType === 'hour') {
+      ref_time && ref_time.showMinuteView();
+    } else if (eventType === 'minute' && !isRange && resolvedMode === 'datetime' && autoclose) {
+      currentMode = 'date';
+    }
+  }
 
   /** 
-   * @typedef {{ value: Date?, isKeyboard: boolean}} CalendarDetail
+   * @typedef {object} CalendarDetail
+   * @property {Date?} value
+   * @property {boolean} isKeyboard
+   * @property {number} [dateIndex=0]
    * 
    * @param {CustomEvent<CalendarDetail>} event
    */
   function onDate({ type, detail }) {
-    
-    let { value, isKeyboard } = detail;
+    let { value, isKeyboard, dateIndex } = detail;
     
     if (value && !isRange && innerDates.length) {
       if (
@@ -236,39 +265,41 @@
     // standard
     if (isRange) {
       // need to keep daterange sorted
-      innerDates = value
-        ? (innerDates.length === 2 ? [value] : innerDates.concat(value))
-          .map(date => date.getTime())
-          .sort().map(ts => new Date(ts))
-        : [];
+      if (type === 'date') {
+        innerDates = value
+          ? (innerDates.length === 2 ? [value] : innerDates.concat(value))
+            .map(date => date.getTime())
+            .sort().map(ts => new Date(ts))
+          : [];
+      } else if (value && dateIndex !== undefined) {
+        innerDates[dateIndex] = value;
+      } else {
+        throw new Error('Invalid event type');
+      }
       valueArray = innerDates.map(date => formatDate(date, format, i18n, formatType));
     } else {
       // single select
       innerDates = value ? [value] : [];
       valueArray = value ? [formatDate(value, format, i18n, formatType)] : [];
     }
-    !isKeyboard && tick().then(() => {
+    if (!isKeyboard) {
       eventType = type;
-      if (resolvedMode === 'datetime' && currentMode !== 'time') {
-        currentMode = 'time';
-        return;
-      }
-    })
+    }
   }
 
   /**
    * Set value and hide picker (calls `resetView` inside)
-   * @param {boolean?} doResetView - will be bool or click event
+   * @param {boolean?} [doResetView]
   */
   function onValueSet(doResetView) {
     value = computeValue();
-    currentValue = value;
+    currentValue = computeStringValue();
     undoHistory = [...valueArray];
     displayValue = computeDisplayValue();
+    isDirty = computeDirty(valueArray);
     dispatchInputEvent(true);
     dispatch("change", isRange ? valueArray : (valueArray[0] || null));    // change is dispatched on user interaction
     doResetView && resetView();
-    console.log('vv', value);
   }
 
   function onToday() {
@@ -296,7 +327,7 @@
     prevValue = [];
     innerDates = [];
     currentValue = '';
-    onValueSet(false);
+    onValueSet();
   }
 
   /**
@@ -304,8 +335,8 @@
    * FIXME: Calendar 'inernalDate' is not re-set
    */
    function onCancel() {
-    currentValue = value;
     valueArray = [...undoHistory];
+    currentValue = computeStringValue();
     resetView();
   }
 
@@ -422,6 +453,13 @@
   }
 
   /**
+   * @param {CustomEvent} event
+  */
+  function updateCalendarHoverDate({ detail }) {
+    calendarHoverDate = detail;
+  }
+
+  /**
    * @param {CustomEvent} e
    */
    function onTimeSwitch(e) {
@@ -449,7 +487,7 @@
     id={inputId}
     tabindex="0"
     name={name.endsWith(']') ? name.substring(0, name.length-1) + '_input]' : name + '_input'}
-    class:value-dirty={!autoclose && currentValue !== value}
+    class:value-dirty={!autoclose && isDirty}
     value={displayValue}
     {placeholder} {disabled} {required}
     autocomplete="off"
@@ -475,20 +513,25 @@
     use:positionPopup
     on:mousedown|preventDefault
   >
-  <!-- {#each widgetCount as w (w)} -->
+  <div class="sdt-widget-wrap">
+  {#each widgetCount as w (w)}
+    <div class="sdt-widget">
     {#if currentMode === "date"}
       <Calendar
+        wid={w}
         dates={innerDates}
         {isRange}
         startDate={parsedStartDate}
         endDate={parsedEndDate}
         enableTimeToggle={resolvedMode?.includes("time")}
         initialView={startView > 2 ? 2 : startView}
+        hoverDate={calendarHoverDate}
         bind:this={ref_calendar}
         {i18n}
         {weekStart}
         on:date={onDate}
         on:switch={onModeSwitch}
+        on:internal_hoverUpdate={updateCalendarHoverDate}
       />
       {#if todayBtn || clearBtn}
         <div class="sdt-btn-row">
@@ -511,7 +554,8 @@
       {/if}
     {:else}
       <Time
-        date={innerDates[0]}
+        wid={w}
+        date={innerDates[w]}
         startDate={parsedStartDate}
         endDate={parsedEndDate}
         hasDateComponent={resolvedMode !== "time"}
@@ -526,12 +570,14 @@
         on:time-switch={onTimeSwitch}
       />
     {/if}
-  <!-- {/each} -->
+    </div>
+    {/each}
+  </div>
   {#if !autocloseSupported}
   <slot name="action-row">
     <div class="sdt-btn-row" style="--sdt-justify-btn-row: flex-end">
       <button type="button" class="sdt-action-btn sdt-clear-btn" on:click={onCancel}>Cancel</button>
-      <button type="button" class="sdt-action-btn sdt-today-btn" on:click={onValueSet}>Ok</button>
+      <button type="button" class="sdt-action-btn sdt-today-btn" on:click={() => onValueSet(true)}>Ok</button>
     </div>
   </slot>
   {/if}
@@ -568,11 +614,17 @@
     color: var(--sdt-color);
   }
   /* FUTURE: */
-  /* .std-calendar-wrap.is-range-wrap {
+  .std-calendar-wrap.is-range-wrap {
     width: 560px;
+  }
+  .sdt-widget-wrap {
     display: flex;
     gap: 0.5rem;
-  } */
+    justify-content: stretch;
+  }
+  .sdt-widget {
+    flex: 1;
+  }
   .value-dirty {
     color: color-mix(in srgb, black 50%, currentColor);
   }

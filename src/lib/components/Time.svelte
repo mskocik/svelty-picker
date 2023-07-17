@@ -2,6 +2,8 @@
   import { createEventDispatcher, tick } from 'svelte';
   import { fade } from 'svelte/transition';
 
+  /** @type {number} */
+  export let wid; // internal ID
   /** @type {Date|null} */
   export let date = null;
   /** @type {Date|null} */
@@ -288,7 +290,8 @@
     if (!handleMoveMove) {
       dispatch(isMinuteView ? 'minute' : 'hour', {
         value: innerDate,
-        isKeyboard: e.type === 'keyboard'
+        isKeyboard: e.type === 'keyboard',
+        dateIndex: wid
       });
       if (e.type !== 'keyboard' && !isMinuteView) {
         isMinuteView = true;
