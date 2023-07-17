@@ -1,180 +1,4 @@
-// @ts-nocheck
-
-export const MODE_DECADE = 0;
-export const MODE_YEAR = 1;
-export const MODE_MONTH = 2;
-
-/**
- * 
- * @param {Date} currentDate 
- * @param {Date|null} selectedDate 
- * @param {number} view 
- * @param {i18nType} locale 
- * @param {number} weekStart 
- * @returns {datasetType}
- */
-export function compute(currentDate, selectedDate, view, locale, weekStart) {
-  // years 4 x 3
-  if (view === MODE_DECADE) {
-    let prevTo = 10;  // base is year 2000
-    let nextFrom = 20;
-    const todayMark = -1;
-    const grid = [];
-    let yearRow = [];
-    let currYear = currentDate.getFullYear() - (currentDate.getFullYear() % 10); 
-    currYear -= (currYear % 20 ? 12 : 10);
-    if (currYear % 10) {  // if start is 10
-      prevTo = 12;
-      nextFrom = 22;
-    }
-    for (let i = 0; i < 32; i++) {
-      yearRow.push(currYear + i);
-      if (yearRow.length === 4) {
-        grid.push(yearRow);
-        yearRow = [];
-      }
-    }
-    let selectionMark = null;
-    if (!selectedDate) {
-      selectedDate = new Date();
-    }
-    if (selectedDate.getFullYear() >= currYear) {
-      selectionMark = selectedDate.getFullYear() % currYear;
-    }
-    return {
-      years: grid, todayMark, nextFrom, prevTo, selectionMark
-    }
-  }
-
-  // months 4 x 3
-  if (view === MODE_YEAR) {
-    let grid = [];
-    let monthRow = [];
-    let prevTo = 12;
-    let nextFrom = 24;
-    const ISO = currentDate.toISOString().split('T')[0].substring(0, 8);
-    const dateNormalized = new Date(ISO + '01 00:00:00');
-    const initYear = dateNormalized.getFullYear() - 1;
-    dateNormalized.setFullYear(initYear);
-    let todayMark = 0;
-    for (let y = 0; y < 3; y++) {
-      for (let i = 0; i < 12; i++) {
-        dateNormalized.setMonth(i);
-        monthRow.push(locale.monthsShort[i % 12]);
-        if (monthRow.length === 4) {
-          grid.push(monthRow);
-          monthRow = [];
-        }
-      }
-      dateNormalized.setFullYear(dateNormalized.getFullYear() + 1);
-    }
-    let selectionMark = null;
-    if (!selectedDate) {
-      selectedDate = new Date();
-    }
-    if (selectedDate.getFullYear() - initYear >= 0 && selectedDate.getFullYear() - initYear <= 2) {
-      selectionMark = selectedDate.getMonth() + ((selectedDate.getFullYear() - initYear || 0) * 12);
-    }
-    return {
-      months: grid, todayMark, nextFrom, prevTo, selectionMark
-    }
-  } 
-
-  // days 7x6
-  let d = currentDate || new Date(), // or currently selected date
-      y = d.getFullYear(),
-      m = d.getMonth(),
-      dM = d.getDate(),
-      h = d.getHours(),
-      today = new Date();
-  let prevMonth = new Date(y, m-1, 28, 0, 0, 0, 0),
-      day = utils.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
-  prevMonth.setDate(day);
-  prevMonth.setDate(day - (prevMonth.getDay() - weekStart + 7) % 7);
-
-  let nextMonth = new Date(prevMonth);
-  nextMonth.setDate(nextMonth.getDate() + 42);
-  let nextMonthValue = nextMonth.valueOf();
-
-  let grid = [];
-  let dayRow = [];
-  let todayMark = -1;
-  let selectionMark = null;
-  let prevTo = 0;
-  let nextFrom = 42;
-  let inc = 0;
-  while(prevMonth.valueOf() < nextMonthValue) {
-    inc++;
-    dayRow.push(new Date(prevMonth));
-    if (prevMonth.getFullYear() < y || (prevMonth.getFullYear() === y && prevMonth.getMonth() < m)) {
-      prevTo = inc;
-    } else if (nextFrom === 42 && (prevMonth.getFullYear() > y || (prevMonth.getFullYear() === y && prevMonth.getMonth() > m))) {
-      nextFrom = inc - 1;
-    }
-
-    prevMonth.setDate(prevMonth.getDate() + 1);
-
-
-    if (prevMonth.getFullYear() === today.getFullYear() &&
-      prevMonth.getMonth() === today.getMonth() &&
-      prevMonth.getDate() === today.getDate()
-    ) {
-      todayMark = inc;
-    }
-    if (!selectionMark && selectedDate
-      && prevMonth.getFullYear() === selectedDate.getFullYear()
-      && prevMonth.getMonth() === selectedDate.getMonth()
-      && prevMonth.getDate() === selectedDate.getDate()
-    ) {
-      selectionMark = inc;
-    }
-    
-    if (dayRow.length === 7) {
-      grid.push(dayRow);
-      dayRow = [];
-    }
-  }
-  return {
-    grid, todayMark, prevTo, nextFrom, selectionMark
-  };
-}
-
-/**
- * 
- * @param {number} newPos 
- * @param {number} view 
- * @returns {GridPosition}
- */
-export function moveGrid(newPos, view) {
-  if (newPos < 0) {
-    newPos = 42 + newPos;
-  }
-  return {
-    x: newPos % 7,
-    y: Math.floor(newPos / 7)
-  }
-}
-
-const utils = {
-  isLeapYear: function (/** @type {number} */ year) {
-    return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0))
-  },
-  getDaysInMonth: function (/** @type {number} */year, /** @type {number} */month) {
-    return [31, (utils.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
-  },
-}
-export function isLower(/** @type {Date|string} */ a, /** @type {Date} */b) {
-  if (!(a instanceof Date)) return false;
-  return a.getFullYear() < b.getFullYear()
-    || (a.getMonth() < b.getMonth() || a.getDate() <= b.getDate());
-}
-
-export function isGreater(/** @type {Date|string} */a, /** @type {Date} */b) {
-  if (!(a instanceof Date)) return false;
-  return a.getFullYear() > b.getFullYear()
-    || (a.getMonth() > b.getMonth() || a.getDate() >= b.getDate());
-  
-}
+/** @typedef {import("$lib/i18n").i18nType} i18nType */
 
 /**
  * 
@@ -196,7 +20,7 @@ export function parseDate(date, format, i18n, type) {
     : { date: 'yyyy-mm-dd', datetime: 'yyyy-mm-dd hh:ii', datetime_s: 'yyyy-mm-dd hh:ii:ss' };
   /** @var {{ separators: string[], parts: string[]}} */
   let parsedFormat;
-  let useParsedTime = false;
+  let useParsedTime;
   if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(date)) {
     parsedFormat = formatHelper.parseFormat(commonFormats.date, type);
   } else 
@@ -208,7 +32,7 @@ export function parseDate(date, format, i18n, type) {
   } else
   // specific case when parsing time without 'nonPunctuation' ref #102
   if (/^([01]*\d|2[0-3])([0-5]\d)(?:[ ]([ap][m]|[AP][M]))?$/.test(date)) {
-    useParsedTime = date.match(/^([01]*\d|2[0-3])([0-5]\d)(?:[ ]([ap][m]|[AP][M]))?$/).slice(1).filter(e => e);
+    useParsedTime = date.match(/^([01]*\d|2[0-3])([0-5]\d)(?:[ ]([ap][m]|[AP][M]))?$/)?.slice(1).filter(e => e);
     parsedFormat = formatHelper.parseFormat(format, type);
 
   } else {
@@ -219,11 +43,13 @@ export function parseDate(date, format, i18n, type) {
     : (date && date.toString().match(formatHelper.nonpunctuation) || []);
   date = new Date();  // reset date
   date.setHours(0,0,0,0);
+  /** @type {Record<string, any>} */
   const parsed = {};
   const { setters_order, setters_map } = formatHelper.setters(type);
   let val, part;
   if (parts.length !== parsedFormat.parts.length && parsedFormat.parts.includes('S')) { // specific suffix parsing from string like '14th'
-    const splitSuffix = parts[parsedFormat.parts.indexOf('S') - 1].match(/(\d+)([a-zA-Z]+)/).slice(1,3);
+    const splitSuffix = parts[parsedFormat.parts.indexOf('S') - 1].match(/(\d+)([a-zA-Z]+)/)?.slice(1,3);
+    // @ts-ignore
     parts.splice(parsedFormat.parts.indexOf('S') - 1, 1, ...splitSuffix);
   }
   if (parts.length === parsedFormat.parts.length) {
@@ -289,6 +115,7 @@ export function formatDate(date, format, i18n, type) {
     return '';
   }
   const dateVal = date.getDate();
+  /** @type {Record<string, any>} */
   let val;
   if (type === 'standard') {
     val = {
@@ -337,7 +164,7 @@ export function formatDate(date, format, i18n, type) {
       F: i18n.months[date.getMonth()],
       M: i18n.monthsShort[date.getMonth()],
       n: date.getMonth() + 1,
-      t: utils.getDaysInMonth(date.getFullYear(), date.getMonth()),
+      t: getDaysInMonth(date.getFullYear(), date.getMonth()),
       // day
       j: date.getDate(),
       l: i18n.days[date.getDay()],
@@ -366,18 +193,64 @@ export function formatDate(date, format, i18n, type) {
     throw new Error('Invalid format type.');
   }
   let dateArr = [];
-  format = formatHelper.parseFormat(format, type);
-  for (var i = 0, cnt = format.parts.length; i < cnt; i++) {
-    if (format.separators.length) {
-      dateArr.push(format.separators.shift());
+  const pFormat = formatHelper.parseFormat(format, type);
+  for (var i = 0, cnt = pFormat.parts?.length || 0; i < cnt; i++) {
+    if (pFormat.separators.length) {
+      dateArr.push(pFormat.separators.shift());
     }
-    dateArr.push(val[format.parts[i]]);
+    dateArr.push(val[pFormat.parts[i]]);
   }
-  if (format.separators.length) {
-    dateArr.push(format.separators.shift());
+  if (pFormat.separators.length) {
+    dateArr.push(pFormat.separators.shift());
   }
   return dateArr.join('');
 }
+
+
+/**
+ * @param {number} year
+ * @param {number} month
+ * @returns {number}
+ */
+export function getDaysInMonth(year, month) {
+  const isLeapYear = (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
+  return [31, (isLeapYear ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
+}
+
+/**
+ * Date comparison a < b
+ * 
+ * @param {Date|string} a 
+ * @param {Date} b 
+ * @returns 
+ */
+export function isLower(a, b) {
+  if (!(a instanceof Date)) return false;
+  return a.getFullYear() < b.getFullYear()
+    || (a.getMonth() < b.getMonth() || a.getDate() < b.getDate());
+}
+
+/**
+ * Date comparison a > b
+ * 
+ * @param {Date|string} a 
+ * @param {Date} b 
+ * @returns 
+ */
+export function isGreater(a, b) {
+  if (!(a instanceof Date)) return false;
+  return a.getFullYear() > b.getFullYear()
+    || (a.getMonth() > b.getMonth() || a.getDate() > b.getDate());
+}
+
+/**
+ * @callback MapperFunction
+ * @param {Date} d date
+ * @param {number} v value to be set according to format 
+ * @returns void
+ * 
+ * @typedef {Record<string, MapperFunction>} SetterMap
+ */
 
 const formatHelper = {
   validParts: function(/** @type {string} */ type) {
@@ -400,40 +273,33 @@ const formatHelper = {
       // IE treats \0 as a string end in inputs (truncating the value),
       // so it's a bad format delimiter, anyway
     var separators = format.replace(this.validParts(type), '\0').split('\0'),
-    parts = format.match(this.validParts(type));
+    parts = format.match(this.validParts(type)) || [];
     if (!separators || !separators.length || !parts || parts.length === 0) {
       // throw new Error('Invalid date format.');
       console.warn('invalid date format', separators, parts);
-      parts = [];
     }
     return {separators: separators, parts: parts};
   },
   /**
    * @param {string} type 
-   * @returns {{setters_map: object, setters_order: Array<string>}}
+   * @returns {{setters_map: SetterMap, setters_order: string[]}}
    */
   setters: function(type) {
-    let setters_order, setters_map;
+    /** @type {string[]} */
+    let setters_order
+    /** @type {SetterMap} */
+    let setters_map = {};
     if (type === 'standard') {
       setters_order = ['yyyy', 'yy', 'm', 'mm', 'M', 'MM','d', 'dd', 'D','DD', 'hh', 'h', 'HH', 'H', 'ii', 'i', 'ss', 's', 'S', 'p', 'P', 't'];
       setters_map = {
-        /** @param {Date} d, @param {number} v */
         hh: (d, v) => d.setHours(v),
-        /** @param {Date} d, @param {number} v */
         h: (d, v) => d.setHours(v),
-        /** @param {Date} d, @param {number} v */
         HH: (d, v) =>  d.setHours(v === 12 ? 0 : v),
-        /** @param {Date} d, @param {number} v */
         H: (d, v) => d.setHours(v === 12 ? 0 : v),
-        /** @param {Date} d, @param {number} v */
         i: (d, v) => d.setMinutes(v),
-        /** @param {Date} d, @param {number} v */
         s: (d, v) => d.setSeconds(v),
-        /** @param {Date} d, @param {number} v */
         yyyy: (d, v) => d.setFullYear(v),
-        /** @param {Date} d, @param {number} v */
         yy: (d, v) => d.setFullYear((v < 50 ? 2000 : 1900)  + v),
-        /** @param {Date} d, @param {number} v */
         m: (d, v) => {
           v -= 1;
           while (v < 0) v += 12;
@@ -446,11 +312,8 @@ const formatHelper = {
               d.setDate(d.getDate() - 1);
           return d;
         },
-        /** @param {Date} d, @param {number} v */
         d: (d, v) => d.setDate(v),
-        /** @param {Date} d, @param {number} v */
         p: (d, v) => d.setHours(v === 1 && d.getHours() < 12 ? d.getHours() + 12 : d.getHours()),
-        /** @param {Date} d, @param {number} v */
         t: (d, v) => d.setTime(v),
         mm: ()=>{},
         M: ()=>{},

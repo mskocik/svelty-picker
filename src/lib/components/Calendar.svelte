@@ -1,128 +1,91 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { compute, MODE_MONTH, MODE_YEAR, MODE_DECADE, moveGrid, isLower, isGreater } from '../utils/dateUtils.js';
-  import { scale } from '../utils/utils.js'
+  import { compute } from '$lib/utils/grid.js';
+  import { isLower, isGreater } from '../utils/dateUtils.js';
+  import { scale } from '../utils/transitions.js'
 
-  /** @type {Date|null} */
-  export let date = null;
+  import { MODE_MONTH, MODE_YEAR, MODE_DECADE } from '$lib/utils/constants.js';
+  /** @type {number} */
+  export let wid; // internal ID
+  /** @type {Date[]} */
+  export let dates;
   /** @type {Date|null} */
   export let startDate = null;
   /** @type {Date|null} */
   export let endDate = null;
   export let weekStart = 1;
   export let initialView = MODE_MONTH;
-  /** @type {i18nType} */
+  /** @type {import("$lib/i18n").i18nType} */
   export let i18n;
   export let enableTimeToggle = false;
+  export let isRange = false;
+  /** @type {number?} */
+  export let hoverDate = null;
   /**
    * @param {string} key
    * @param {boolean} shiftKey
    */
   export function handleGridNav(key, shiftKey) {
-    if (!internalDate) {
-      onClick(new Date);
+    if (currentView !== MODE_MONTH) {
+      currentView = MODE_MONTH;
+      viewDelta = 1;
+      activeDate = new Date(internalDate || new Date());
       return;
     }
-    /** @type {GridPosition} pos */
-    let pos, diffSelection;
+    if (!internalDate) {
+      onClick(new Date, { keyboard: true });
+      return;
+    }
+    /** @type {Date} */
+    let dateToSelect = new Date(internalDate);
+
     switch (key) {
       case 'PageDown':
         shiftKey = true;
       case 'ArrowDown':
-        if (shiftKey) return handleShiftNav(activeDate.getFullYear(), activeDate.getMonth() + 1, 1);
-        diffSelection = dataset.selectionMark + 7;
-        if (diffSelection >= dataset.nextFrom) {
-          const tmpDate = new Date(activeDate.getFullYear(), activeDate.getUTCMonth() + 1, 28);
-          let tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
-          onChangeMonth(1);
-          pos = tmpData.selectionMark !== null
-            ? {
-              y: Math.floor((tmpData.selectionMark + 7) / 7),
-              x: (tmpData.selectionMark + 7) % 7
-            }
-            : {
-              y: (diffSelection + 7) % 7 < tmpData.prevTo ? 1 : 0,
-              x: (diffSelection + 7) % 7,
-            }
-          onClick(tmpData.grid[pos.y][pos.x]);
-          return;
+        shiftKey
+          ? dateToSelect.setMonth(internalDate.getMonth() + 1)
+          : dateToSelect.setDate(internalDate.getDate() + 7);
+        // longer to shorter month correction
+        if (shiftKey && dateToSelect.getMonth() === internalDate.getMonth()) {
+          dateToSelect.setDate(0);
         }
-        pos = moveGrid(dataset.selectionMark + 7, currentView);
-        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
-          onChangeMonth(1);
-        }
-        onClick(dataset.grid[pos.y][pos.x]);
+        onClick(dateToSelect, { keyboard: true });
         break;
       case 'PageUp':
         shiftKey = true;
       case 'ArrowUp':
-        if (shiftKey) return handleShiftNav(activeDate.getFullYear(), activeDate.getMonth() - 1, -1);
-        diffSelection = dataset.selectionMark - 7;
-        if (diffSelection <= dataset.prevTo) {
-          // goto prev month
-          const tmpDate = new Date(activeDate.getFullYear() + (activeDate.getMonth() > 0 ? 0 : - 1), activeDate.getMonth() > 0 ? activeDate.getMonth() -1 : 11, 1);
-          const tmpData = compute(tmpDate, internalDate, currentView, i18n, weekStart);
-          onChangeMonth(-1);
-          pos = tmpData.selectionMark !== null
-            ? {
-              x: Math.floor((tmpData.selectionMark -7)  /  7),
-              y: (tmpData.selectionMark - 7) % 7
-            }
-            : {
-              x: 5,
-              y: diffSelection
-            }
-          onClick(tmpData.grid[pos.x][pos.y]);
-          return;
+        shiftKey
+          ? dateToSelect.setMonth(internalDate.getMonth() - 1)
+          : dateToSelect.setDate(internalDate.getDate() - 7);
+        // longer to shorter month correction
+        if (shiftKey && dateToSelect.getMonth() === internalDate.getMonth()) {
+          dateToSelect.setDate(0);
         }
-        pos = moveGrid(dataset.selectionMark - 7, currentView);
-        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
-          onChangeMonth(-1);
-        }
-        onClick(dataset.grid[pos.y][pos.x]);
+        onClick(dateToSelect, { keyboard: true });
         break;
       case 'ArrowLeft':
-        if (shiftKey) return handleShiftNav(activeDate.getFullYear() - 1, activeDate.getMonth(), 1);
-        pos = moveGrid(dataset.selectionMark - 1, currentView);
-        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
-          onChangeMonth(-1);
-        }
-        onClick(dataset.grid[pos.y][pos.x]);
+        shiftKey
+          ? dateToSelect.setFullYear(internalDate.getFullYear() - 1)
+          : dateToSelect.setDate(internalDate.getDate() - 1);
+        onClick(dateToSelect, { keyboard: true });
         break;
       case 'ArrowRight':
-        if (shiftKey) return handleShiftNav(activeDate.getFullYear() + 1, activeDate.getMonth(), 1);
-        pos = moveGrid(dataset.selectionMark + 1, currentView);
-        if (dataset.grid[pos.y][pos.x].getMonth() !== activeDate.getMonth()) {
-          onChangeMonth(1);
-        }
-        onClick(dataset.grid[pos.y][pos.x]);
+        shiftKey
+          ? dateToSelect.setFullYear(internalDate.getFullYear() + 1)
+          : dateToSelect.setDate(internalDate.getDate() + 1);
+        onClick(dateToSelect, { keyboard: true });
         break;
     }
   }
 
-  /**
-   * @param {number} year
-   * @param {number} month
-   * @param {number} monthChange
-   */
-  function handleShiftNav(year, month, monthChange) {
-    let tmpDate;
-    let newDateDay = activeDate.getDate();
-    // required when going back from 31 long month to 30, or 28/29 and to ensure month is changed, not day only
-    do {
-      tmpDate = new Date(year, month, newDateDay);
-      newDateDay--;
-    } while (tmpDate.getMonth() === activeDate.getMonth());
-    const tmpData = compute(tmpDate, tmpDate, currentView, i18n, weekStart);
-    const pickedDate = tmpData.grid[Math.floor(tmpData.selectionMark / 7)][tmpData.selectionMark % 7];
-    if ((endDate && isGreater(pickedDate, endDate)) || (startDate && isLower(pickedDate, startDate))) return;
-    onChangeMonth(monthChange);
-    onClick(pickedDate);
-  }
-
-  let internalDate = date;
-  let activeDate = date ? new Date(date.valueOf()) : new Date();
+  /** @type Date? */
+  let internalDate = dates[wid] || null;
+  // TODO: move next month by one
+  let activeDate = wid === 1
+    ? (() => { const d = new Date(dates[0] || new Date()); d.setMonth(d.getMonth()+1); return d })()
+    : new Date(dates[0]?.valueOf() || new Date());
 
   $: computedStartDate = startDate
     ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0,0,0,0)
@@ -146,18 +109,8 @@
     ? fade
     : (viewDelta !== null ? scale : () => ({}));
 
-  $: {
-    if (date !== internalDate) {
-      internalDate = date;
-      if (date) {
-        activeDate = new Date(date.valueOf())
-      };
-      viewDelta = 1;
-      viewChanged = true;
-      currentView = MODE_MONTH;
-    }
-  }
-  $: dataset = compute(activeDate, internalDate, currentView, i18n, weekStart);
+  $: times = dates.map(date => { date = new Date(date); date.setHours(0,0); return date.getTime() });
+  $: dataset = compute(activeDate, dates, currentView, i18n, weekStart);
   $: dayLabels = weekStart > -1
     ? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 7 + weekStart)
     : i18n.daysMin.slice(weekStart, 7 + weekStart)
@@ -166,7 +119,11 @@
     return dataset.prevTo <= num && num < dataset.nextFrom;
   }
 
-  function isDisabledDate(/** @type {Date} */ date) {
+  /**
+   * @param {Date} date
+   * @retuns {boolean}
+  */
+  function isDisabledDate(date) {
     switch (currentView) {
       case MODE_MONTH:
         if (computedStartDate && computedStartDate > date) return true;
@@ -235,7 +192,7 @@
 
 
   // @ts-ignore
-  function onClick(value) {
+  function onClick(value, { keyboard } = {}) {
     viewDelta = 1;
     viewChanged = true;
     switch (currentView) {
@@ -248,27 +205,46 @@
         activeDate = activeDate;
         break;
       case 2:
-        if (startDate && !isGreater(value, startDate)) return;
-        if (endDate && !isLower(value, endDate)) return;
+        if (startDate && isLower(value, startDate)) return;
+        if (endDate && isGreater(value, endDate)) return;
         const newInternalDate = new Date(value.getFullYear(), value.getMonth(), value.getDate());
         if (internalDate) {
           newInternalDate.setMinutes(internalDate.getMinutes());
           newInternalDate.setHours(internalDate.getHours());
         }
         internalDate = newInternalDate;
-        dispatch('date', internalDate);
+        
+        // on keyboard navigation, always change active view to month with selection
+        if (keyboard) {
+          if (activeDate.getFullYear() !== newInternalDate.getFullYear()
+            || (activeDate.getFullYear() === newInternalDate.getFullYear() 
+              && activeDate.getMonth() !== newInternalDate.getMonth()
+            )
+          ) {
+            activeDate.setFullYear(newInternalDate.getFullYear());
+            activeDate.setMonth(newInternalDate.getMonth());
+            activeDate = activeDate;
+          } 
+        }
+        dispatch('date', {
+          value: internalDate,
+          update: 'date',
+          isKeyboard: keyboard
+        });
         break;
     }
     currentView < MODE_MONTH && currentView++;
     transform = TRANSFORM_CONST;  // reset transform
   }
 
+  $: {
+    if (dates.length === 0) internalDate = null;
+  };
   
   function onTransitionOut() {
     viewChanged = false;
   }
   
-
   function onTimeSwitch() {
     dispatch('switch', 'time');
   }
@@ -290,6 +266,36 @@
     }
   }
 
+  /**
+   * @param {Date?} currDate
+   * @returns {function(): void}
+  */
+  function wrapHoverDateToggle(currDate = null) {
+    return function(/** @type MouseEvent */ event) {
+      hoverDate = currDate?.getTime() || null;
+      dispatch('internal_hoverUpdate', hoverDate);
+    }
+  }
+
+  /**
+   * @param {number} timestamp 
+  */
+  function isInRange(timestamp) {
+    return times.length === 2 ? timestamp >= times[0] && timestamp < times[1] : false;
+  }
+
+  /**
+   * @param {number} timestamp 
+   * @param {number?} hoverDate 
+  */
+  function isRangeHoverable(timestamp, hoverDate) {
+    return hoverDate && times.length === 1 && (
+      (timestamp <= hoverDate && times[0] <= timestamp)
+      ||
+      (timestamp >= hoverDate && times[0] >= timestamp)
+      );
+  }
+
   $: tableCaption = i18n && showCaption(currentView, activeDate);
 
 </script>
@@ -297,7 +303,7 @@
 <div class="sdt-thead-nav">
   <button class="std-btn std-btn-header sdt-toggle-btn" on:click|preventDefault={onSwitchView}>{tableCaption}</button>
   <div class="sdt-nav-btns">
-    {#if enableTimeToggle && internalDate}
+    {#if enableTimeToggle && dates.length}
     <button class="std-btn std-btn-header icon-btn sdt-time-icon" title={i18n.timeView} on:click|preventDefault={onTimeSwitch} >
       <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
     </button>
@@ -321,10 +327,11 @@
       {#each dataset.years as row, i}
       <tr class="sdt-cal-td">
         {#each row as year, j(j)}
-        <td class="sdt-cal-td" class:is-selected={i*4+j === dataset.selectionMark}>
+        {@const idx = i*4+j}
+        <td class="sdt-cal-td" class:is-selected={dataset.selectionMark.includes(idx)}>
           <button
             class="std-btn"
-            class:not-current={!isBetween(i*4+j)}
+            class:not-current={!isBetween(idx)}
             on:click|preventDefault={() => { onClick(year)}}
             disabled={isDisabledDate(new Date(year, activeDate.getMonth(), activeDate.getDate()))}
           >{year}</button>
@@ -344,9 +351,10 @@
       {#each dataset.months as row, i}
       <tr class="sdt-cal-td">
         {#each row as month, j(j)}
-        <td class="sdt-cal-td" class:is-selected={i*4+j === dataset.selectionMark}>
+        {@const idx = i*4+j}
+        <td class="sdt-cal-td" class:is-selected={idx === dataset.selectionMark[0]}>
           <button class="std-btn"
-            class:not-current={!isBetween(i*4+j)}
+            class:not-current={!isBetween(idx)}
             on:click|preventDefault={() => { onClick(month)}}
             disabled={isDisabledDate(new Date(activeDate.getFullYear(), i18n.monthsShort.indexOf(month), activeDate.getDate()))}
           >{month}</button>
@@ -365,17 +373,25 @@
         <th class="sdt-cal-th">{header}</th>
       {/each}
       </tr>
-      {#each dataset.grid as row, i }
+      {#each dataset.days as row, i }
       <tr>
         {#each row as currDate, j(j)}
+        {@const idx = i*7+j}
+        {@const dateTime = currDate.getTime()}
         <td class="sdt-cal-td"
-          class:sdt-today={i*7+j === dataset.todayMark}
-          class:is-selected={i*7+j === dataset.selectionMark}
+          class:sdt-today={idx === dataset.todayMark}
+          class:in-range={isInRange(dateTime)}
+          class:is-selected={times.includes(dateTime)}
+          class:in-range-hover={isRange && isRangeHoverable(dateTime, hoverDate)}
         >
-          <button on:click|preventDefault={() => {onClick(currDate)}}
+          <!-- svelte-ignore a11y-mouse-events-have-key-events -->
+          <button on:click={() => {onClick(currDate)}}
+            on:mouseover={wrapHoverDateToggle(currDate)}
+            on:mouseout={wrapHoverDateToggle()}
+            on:blur on:focus
             class="std-btn  sdt-btn-day"
             class:not-current={!isBetween(i*7+j) }
-            disabled={isDisabledDate(currDate)}
+            disabled={(computedStartDate || endDate) && isDisabledDate(currDate)}
           >{currDate.getDate()}</button>
         </td>
         {/each}
@@ -385,7 +401,6 @@
   </table>
   {/if}
 </div>
-
 
 <style>
 .sdt-cal-td {
@@ -461,7 +476,26 @@
 .std-btn:hover {
   background-color: var(--sdt-btn-bg-hover);
 }
-.is-selected .std-btn {
+.is-selected.in-range .std-btn {
+  border-radius: 4px 0 0 4px
+}
+.in-range .std-btn,
+.in-range-hover .std-btn {
+  background-color: color-mix(in srgb, transparent 75%, var(--sdt-primary));
+  border-radius: 0;
+}
+.in-range:not(.is-selected) .std-btn:hover {
+  background-color: color-mix(in srgb, var(--sdt-btn-bg-hover) 75%, var(--sdt-primary));
+}
+.in-range + .is-selected .std-btn,
+.is-selected + .is-selected .std-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid color-mix(in srgb, white 75%, var(--sdt-primary));
+  margin-left: -1px;
+}
+.is-selected .std-btn,
+.is-selected.in-range .std-btn {
   background-color: var(--sdt-primary);
   color: var(--sdt-color-selected, var(--sdt-bg-main));
   opacity: 0.9;
@@ -509,11 +543,13 @@
 .sdt-svg {
   fill: var(--sdt-color);
 }
-.sdt-today:hover:before {
+.sdt-today:hover:before,
+.in-range.sdt-today:before {
   border-left-color: var(--sdt-primary);
   border-top-color: var(--sdt-primary);
 }
-.is-selected.sdt-today:before {
+.is-selected.sdt-today:before
+ {
   border-left-color: #eee;
   border-top-color: #eee;
 }

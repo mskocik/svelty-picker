@@ -2,6 +2,8 @@
   import { createEventDispatcher, tick } from 'svelte';
   import { fade } from 'svelte/transition';
 
+  /** @type {number} */
+  export let wid; // internal ID
   /** @type {Date|null} */
   export let date = null;
   /** @type {Date|null} */
@@ -11,14 +13,10 @@
   export let minuteIncrement = 1;
   export let showMeridian = false;
   export let hasDateComponent = false;
-  /** @type {i18nType}*/
+  /** @type {import("$lib/i18n").i18nType}*/
   export let i18n;
-  /**
-   * @param {boolean|null} val
-   */
-  export function minuteSwitch(val) {
-    if (val === null) return isMinuteView;
-    isMinuteView = val;
+  export function showMinuteView() {
+    isMinuteView = true;
   }
   /**
    * @param {number} val
@@ -36,6 +34,7 @@
     }
     enableViewToggle = false;
     onClick({
+      type: 'keyboard',
       target: {
         tagName: 'BUTTON',
         dataset: {
@@ -289,9 +288,14 @@
     
     // handle only final click, not mouse move
     if (!handleMoveMove) {
-      dispatch('time', innerDate);
-      isMinuteView && setTimeout(() => { dispatch('close') }, 300);
-      if (!isMinuteView && enableViewToggle) isMinuteView = true;
+      dispatch(isMinuteView ? 'minute' : 'hour', {
+        value: innerDate,
+        isKeyboard: e.type === 'keyboard',
+        dateIndex: wid
+      });
+      if (e.type !== 'keyboard' && !isMinuteView) {
+        isMinuteView = true;
+      }
     }
   }
 
@@ -303,7 +307,10 @@
     const val = parseInt(e.target.dataset.value);
     innerDate.setHours(val);
     innerDate = innerDate;
-    dispatch('time', innerDate);
+    dispatch(isMinuteView ? 'minute' : 'hour', {
+      value: innerDate,
+      isKeyboard: e.type === 'keyboard'
+    });
   }
 
   /**

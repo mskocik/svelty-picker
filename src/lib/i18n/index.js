@@ -4,6 +4,21 @@
  *                                                            */
 //==============================================================
 
+/**
+ * @typedef {object} i18nType
+ * @property {string[]} days
+ * @property {string[]} daysShort
+ * @property {string[]} daysMin
+ * @property {string[]} months
+ * @property {string[]} monthsShort
+ * @property {string[]} meridiem
+ * @property {string[]} suffix
+ * @property {string} todayBtn
+ * @property {string} clearBtn
+ * @property {string} timeView
+ * @property {string} backToDate
+*/
+
 // Czech translation
 export const cz = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
