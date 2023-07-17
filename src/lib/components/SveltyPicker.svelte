@@ -91,7 +91,6 @@
   let currentFormat = format;
   let isFocused = pickerOnly;
   let undoHistory = [...valueArray];
-  let currentAutocloseThreshold = 0;
   let currentValue = computeStringValue();
   let displayValue = computeDisplayValue();
   /** @type {number?} as a timestamp */
@@ -230,7 +229,6 @@
   function resetView() {
     startView = MODE_MONTH;
     isMinuteView = false;
-    currentAutocloseThreshold = 0;
     // postpone it to prevent blink on picker fade
     if (resolvedMode === 'datetime') {
       setTimeout(() => {
@@ -443,10 +441,6 @@
     isMinuteView = false;
   }
 
-  function onTimeClose() {
-    autoclose && resetView();
-  }
-
   function onInputFocus() {
     isFocused = true;
     pickerVisible = true;
@@ -554,25 +548,6 @@
         on:switch={onModeSwitch}
         on:internal_hoverUpdate={updateCalendarHoverDate}
       />
-      {#if todayBtn || clearBtn}
-        <div class="sdt-btn-row">
-          {#if todayBtn}
-            <button type="button"
-              on:click={onToday}
-              class={todayBtnClasses}
-              disabled={isTodayDisabled}
-              >{i18n.todayBtn}</button
-            >
-          {/if}
-          {#if clearBtn && !required}
-            <button type="button"
-              on:click={onClear}
-              class={clearBtnClasses}
-              disabled={innerDates.length === 0}>{i18n.clearBtn}</button
-            >
-          {/if}
-        </div>
-      {/if}
     {:else}
       <Time
         wid={i}
@@ -587,21 +562,34 @@
         on:hour={onDate}
         on:minute={onDate}
         on:switch={onModeSwitch}
-        on:close={onTimeClose}
         on:time-switch={onTimeSwitch}
       />
     {/if}
     </div>
     {/each}
   </div>
-  {#if !autocloseSupported}
-  <slot name="action-row">
-    <div class="sdt-btn-row" style="--sdt-justify-btn-row: flex-end">
+  <slot name="action-row"
+    onCancel={onCancel}
+    onConfirm={() => onValueSet(true)}
+    onClear={onClear}
+    onToday={onToday}
+    isTodayDisabled={isTodayDisabled}
+  >
+    {#if !autocloseSupported}
+    <div class="sdt-btn-row">
+      <span>
         <button type="button" class="sdt-action-btn sdt-clear-btn" on:click={onCancel}>Cancel</button>
         <button type="button" class="sdt-action-btn sdt-today-btn" on:click={() => onValueSet(true)}>Ok</button>
+      </span>
+      {#if todayBtn || clearBtn}
+      <span>
+        {#if todayBtn && currentMode === 'date'}<button type="button" class={todayBtnClasses} on:click={onToday} disabled={isTodayDisabled}>{i18n.todayBtn}</button>{/if}
+        {#if clearBtn}<button type="button" class={clearBtnClasses} on:click={onClear}>{i18n.clearBtn}</button>{/if}
+      </span>
+      {/if}
     </div>
+    {/if}
   </slot>
-  {/if}
   </div> <!-- END: popup -->
 {/if}
 </span>
@@ -658,7 +646,8 @@
     margin-top: 0.5rem;
     display: flex;
     gap: 0.5rem;
-    justify-content: var(--sdt-justify-btn-row, space-evenly);
+    justify-content: space-between;
+    flex-flow: row-reverse;
   }
   .sdt-action-btn {
     padding: 0.25rem 0.5rem;
