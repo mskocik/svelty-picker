@@ -482,6 +482,7 @@
 }
 .sdt-tick[disabled] {
   cursor: not-allowed;
+  color: var(--sdt-disabled-date, #b22222);
 }
 .sdt-tick.outer-tick {
   opacity: 0;
