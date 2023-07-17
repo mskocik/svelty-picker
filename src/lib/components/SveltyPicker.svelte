@@ -44,6 +44,8 @@
   export let mode = 'auto';
   /** @type {?function(Date): boolean} */
   export let disableDatesFn = null;
+
+  export let manualInput = true;
   /** ************************************ 👇 configurable globally */
   /** @type {string} */
   export let theme = config.theme;
@@ -371,6 +373,7 @@
       case "ArrowUp":
       case "ArrowLeft":
       case "ArrowRight":
+        if (manualInput) return;
         e.preventDefault();
         if (isRange) return;
         if (currentMode === "date") {
@@ -386,6 +389,7 @@
         autocommit ? onClear() : onCancel();
         break;
       case "Backspace":
+        if (manualInput) return;
       case "Delete":
         !required && onClear();
         break;
@@ -414,7 +418,24 @@
       case "F5":
         break;
       default:
-        e.preventDefault();
+        !manualInput && e.preventDefault();
+    }
+  }
+
+  /**
+   * @param {{ target: HTMLInputElement}} event 
+  */
+  function onManualInput(event) {
+    const parsedInput = parseDate(event.target.value, displayFormat || format, i18n, displayFormatType || formatType);
+    const formattedInput = formatDate(parsedInput, displayFormat || format, i18n, displayFormatType || formatType);
+    if (formattedInput === event.target.value) {
+      /** @type {CustomEventInit<CalendarDetail>} */
+      onDate(new CustomEvent('date', {
+        detail: {
+          value: parsedInput,
+          isKeyboard: true }
+        }
+      ));
     }
   }
 
@@ -494,7 +515,8 @@
     autocomplete="off"
     inputmode="none"
     class={inputClasses}
-    readonly={isFocused}
+    readonly={isFocused && !manualInput}
+    on:input={manualInput ? onManualInput : () => {}}
     use:inputAction={inputActionParams}
     on:focus={onInputFocus}
     on:blur={onInputBlur}

@@ -33,6 +33,7 @@
   let clearBtn = !true;
   let required = false;
   let autocommit = true;
+  let manualInput = false;
   let i18n = i18ns.en;
 
   $: {
@@ -68,7 +69,7 @@
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate}  {i18n}
       {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autocommit} {minuteIncrement} {startView}
-      {isRange}
+      {isRange} {manualInput}
       on:change={e => console.log('new date', e.detail)}
     >
     </SveltyPicker>
@@ -148,6 +149,10 @@
         
         <div class="line">
           <label><input type="checkbox" name="" id="" bind:checked={autocommit} disabled={pickerOnly}> Auto-commit</label>
+        </div>
+        
+        <div class="line">
+          <label><input type="checkbox" name="" id="" bind:checked={manualInput} disabled={pickerOnly}> Manual input</label>
         </div>
       </div>
     </div>

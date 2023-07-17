@@ -3,9 +3,10 @@ v4.0
 
 - [feat] add `displayFormat` and `displayFormatType` properties to separately control visuals representation and real value (properties `format`, `formatType`)
 - [feat] timepicker - trigger `change` event only on click, not on mousemove
-- [feat] date-range picker - can be enabled by setting `isRange` property
-- [feat] slot[name="action-row"] added
+- [feat] add date-range picker - can be enabled by setting `isRange` property
+- [feat] add slot[name="action-row"]
 - [feat] add prop `disabledDatesFn` to disable dates. `{function(Date): boolean}`
+- [feat] add prop `manualInput` to have ability to set the date manually
 - [breaking] rename `autoclose` to `autocommit` to better reflect functionality it provides. Because it's not only about closing popup.
 - [breaking] removed `positionFn` property
 - [breaking] removed `clearToggle` property (now this functionality - ability to clear the value is controlled by `required` property)

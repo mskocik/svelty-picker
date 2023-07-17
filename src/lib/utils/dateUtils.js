@@ -6,7 +6,7 @@
  * @param {string} format 
  * @param {i18nType} i18n 
  * @param {string} type 
- * @returns 
+ * @returns {Date}
  */
 export function parseDate(date, format, i18n, type) {
   if (date instanceof Date) {
