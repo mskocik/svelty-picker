@@ -13,6 +13,6 @@ export default {
   clearBtnClasses: 'sdt-action-btn sdt-clear-btn',
   todayBtn: true,
   clearBtn: true,
-  autoclose: true,
+  autocommit: true,
   i18n: en
 }

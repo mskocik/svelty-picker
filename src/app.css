@@ -241,7 +241,7 @@ h2.header {
 h3.header {
   @apply text-xl my-4;
 }
-.picker-style {
+.picker {
   @apply border-1 rounded-md border-gray-300 p-1 w-full;
 }
 .dark .picker-style,

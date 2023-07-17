@@ -84,7 +84,6 @@
 
   /** @type Date? */
   let internalDate = dates[wid] || null;
-  // TODO: move next month by one
   let activeDate = wid === 1
     ? (() => { const d = new Date(dates[0] || new Date()); d.setMonth(d.getMonth()+1); return d })()
     : new Date(dates[0]?.valueOf() || new Date());
@@ -130,7 +129,7 @@
       case MODE_MONTH:
         if (computedStartDate && computedStartDate > date) return true;
         if (endDate && endDate <= date) return true;
-        if (additionalDisableFn && additionalDisableFn(date, currentView)) return true;
+        if (additionalDisableFn && additionalDisableFn(date)) return true;
         break;
       case MODE_YEAR:
         if (computedStartDate && computedStartDate.getFullYear() === date.getFullYear() && computedStartDate.getMonth() > date.getMonth()) return true;

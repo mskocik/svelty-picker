@@ -6,11 +6,7 @@
 <script>
   /**
    * TODO: handle displayFormat change dynamically
-   * TODO: remove todayBtn, clearBtn
-   * TODO: fix keyboard navigation (Enter, Esc)
-   * TODO: onClear should reset also calendar's inner selection
   */
-
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { fade } from "svelte/transition";
   import Calendar from "./Calendar.svelte";
@@ -46,7 +42,7 @@
   export let startView = MODE_MONTH;
   /** @type {'auto'|'date'|'datetime'|'time'} */
   export let mode = 'auto';
-  /** @type {?function(Date, number): boolean} */
+  /** @type {?function(Date): boolean} */
   export let disableDatesFn = null;
   /** ************************************ 👇 configurable globally */
   /** @type {string} */
@@ -74,7 +70,7 @@
   /** @type {boolean} */
   export let clearBtn = config.clearBtn;
   /** @type {boolean} */
-  export let autoclose = config.autoclose;
+  export let autocommit = config.autocommit;
   /** @type {import("$lib/i18n").i18nType} */
   export let i18n = config.i18n;
   /** ************************************ actions */
@@ -121,40 +117,28 @@
       currentMode = resolvedMode;
     }
   }
-  // autoclose is supported only for 'date' range picker
-  $: autocloseThreshold = isRange
-    ? 2
-    : (resolvedMode === 'date'
-      ? 1
-      : (resolvedMode === 'datetime'
-        ? 3
-        : 2
-      )
-    );
   /** @type {string} */
   let eventType;
-  $: autocloseSupported = autoclose && ((isRange && resolvedMode === 'date') || !isRange);
-  $: doAutoclose = computeAutoclose(autoclose, isRange, resolvedMode, eventType);
+  $: autocloseSupported = autocommit && ((isRange && resolvedMode === 'date') || !isRange);
+  $: doAutoCommit = computeAutoclose(autocommit, isRange, resolvedMode, eventType);
   $: {  // custom-element ONLY
     if (ce_displayElement) ce_displayElement.readOnly = isFocused;
   }
   $: internalVisibility = pickerOnly ? true : false;
   $: positionPopup = !pickerOnly ? usePosition : () => {};
   $: isDirty = computeDirty(valueArray);
-  // $: doAutoclose
-  // : 🔍 check this
   $: watchValueChange(valueArray);
   $: watchFormatChange(format, displayFormat);
 
   /**
-   * @param {boolean} autoclose
+   * @param {boolean} autoCommit
    * @param {boolean} isRange
    * @param {string} resolvedMode
    * @param {string} eventType
    * @returns {boolean}
    */
-  function computeAutoclose(autoclose, isRange, resolvedMode, eventType) {
-    if (!autoclose) return false; // no doubt
+  function computeAutoclose(autoCommit, isRange, resolvedMode, eventType) {
+    if (!autoCommit) return false; // no doubt
 
     if (resolvedMode === 'datetime' && isRange) return false;
 
@@ -236,7 +220,7 @@
       setTimeout(() => {
         if (!pickerOnly) pickerVisible = false;
          currentMode = "date";
-      }, autoclose ? 300 : 0);
+      }, autocommit ? 300 : 0);
     } else {
       if (!pickerOnly) pickerVisible = false;
     }
@@ -263,7 +247,7 @@
     } else if (eventType === 'hour') {
       // @ts-ignore
       widgetList[lastTimeId].ref.showMinuteView();
-    } else if (eventType === 'minute' && !isRange && resolvedMode === 'datetime' && doAutoclose) {
+    } else if (eventType === 'minute' && !isRange && resolvedMode === 'datetime' && doAutoCommit) {
       // currentMode = 'date';
     }
   }
@@ -313,7 +297,7 @@
       eventType = type;
       watchEventType(type, dateIndex || 0);
     }
-    tick().then(() => doAutoclose && onValueSet(!isKeyboard));
+    tick().then(() => doAutoCommit && onValueSet(!isKeyboard));
   }
 
   /**
@@ -399,7 +383,7 @@
         }
         break;
       case "Escape":
-        autoclose ? onClear() : onCancel();
+        autocommit ? onClear() : onCancel();
         break;
       case "Backspace":
       case "Delete":
@@ -455,7 +439,7 @@
   }
 
   /**
-   * TODO: investigate workflow for this
+   * FUTURE: investigate workflow for this
    * 
    * @param {boolean} dispatchInputEvent
    */
@@ -504,7 +488,7 @@
     id={inputId}
     tabindex="0"
     name={name.endsWith(']') ? name.substring(0, name.length-1) + '_input]' : name + '_input'}
-    class:value-dirty={!autoclose && isDirty}
+    class:value-dirty={!autocommit && isDirty}
     value={displayValue}
     {placeholder} {disabled} {required}
     autocomplete="off"

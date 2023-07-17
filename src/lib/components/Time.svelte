@@ -353,7 +353,9 @@
   </div>
     
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div class="sdt-clock" on:click|preventDefault={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl} on:keypress>
+  <div class="sdt-clock" on:click|preventDefault={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}
+    on:keypress
+  >
     <div class="sdt-middle-dot"></div>
     <div class="sdt-hand-pointer" style={handCss}>
       <div class="sdt-hand-circle"></div>

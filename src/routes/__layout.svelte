@@ -133,6 +133,7 @@
 {/if}
 
 <style windi:preflights:global windi:safelist:global windi:global global>
+  .picker ,
   .picker-style {
     @apply border-1 rounded-md border-gray-300 p-1 w-full;
   }

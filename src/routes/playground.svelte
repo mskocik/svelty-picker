@@ -20,7 +20,7 @@
   let initialDate = null;
   let startDate = null;
   let endDate = null;
-  let pickerOnly = false;
+  let pickerOnly = !false;
   let minuteIncrement = 1;
   let weekStart = 1;
   let startView = MODE_MONTH;
@@ -32,7 +32,7 @@
   let todayBtn = !true;
   let clearBtn = !true;
   let required = false;
-  let autoclose = true;
+  let autocommit = true;
   let i18n = i18ns.en;
 
   $: {
@@ -57,28 +57,31 @@
   </span>
   <span></span>
 </div>
+<div class="my-5 px-5">
+  Your selection: <code>{value ? `⚡${value}⚡` : '🗑️empty'}</code>
+</div>
 <div class="flex flex-col lg:flex-row m-4">
+  
   <div class="w-full lg:w-1/2 mr-1">
     <div class="font-bold text-2">Your component</div>
     {#if !pickerOnly}
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate}  {i18n}
-      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autoclose} {minuteIncrement} {startView}
+      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autocommit} {minuteIncrement} {startView}
       {isRange}
       on:change={e => console.log('new date', e.detail)}
-    ></SveltyPicker>
+    >
+    </SveltyPicker>
     {:else}
     <SveltyPicker inputClasses="picker-style" bind:value
       {disabled} {placeholder} {initialDate} {startDate} {endDate} pickerOnly {i18n}
-      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autoclose} {minuteIncrement} {startView}
+      {weekStart} {format} {formatType} {mode} {todayBtn} {clearBtn} {required} {autocommit} {minuteIncrement} {startView}
       {isRange}
       on:change={e => console.log('new date', e.detail)}
-    ></SveltyPicker>
+    >
+    </SveltyPicker>
     {/if}
 
-    <div class="my-5">
-      Your selection: <code>{value}</code>
-    </div>
 
     <details class="my-5">
       <summary class="font-semibold">Expand options table</summary>
@@ -144,7 +147,7 @@
         </div>
         
         <div class="line">
-          <label><input type="checkbox" name="" id="" bind:checked={autoclose} disabled={pickerOnly}> Autoclose</label>
+          <label><input type="checkbox" name="" id="" bind:checked={autocommit} disabled={pickerOnly}> Auto-commit</label>
         </div>
       </div>
     </div>
