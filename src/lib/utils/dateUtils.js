@@ -354,6 +354,7 @@ const formatHelper = {
               d.setDate(d.getDate() - 1);
           return d;
         },
+        n: (d, v) => d.setMonth(v - 1),
         d: (d, v) => d.setDate(v),
         a: (d, v) => d.setHours(v === 1 ? d.getHours() + 12 : d.getHours()),
         U: (d, v) => d.setTime(v * 1000)
