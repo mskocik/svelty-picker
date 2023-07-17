@@ -103,8 +103,6 @@
   
   $: fadeFn = pickerOnly ? () => ({}) : fade;
 
-  // FUTURE:
-  $: widgetCount = isRange ? [0,1] : [0];
   let currentMode = startView === STARTVIEW_TIME ? "time" : "date";
   let isMinuteView = false;
   let ref_input = ce_displayElement;
@@ -114,10 +112,8 @@
   let inputActionParams = validatorAction || [];
   /** @type {Calendar} */
   let ref_calendar;
-  /** @type {Time} */
-  let ref_time;
   
-  
+  $: widgetList = watchIsRange(isRange);
   $: resolvedMode = computeResolvedMode(mode, format);
   $: {
     if (resolvedMode === 'time' && currentMode !== resolvedMode) {
@@ -224,18 +220,27 @@
     if (resolvedMode !== 'time') currentMode = "date";
   }
 
-  /** @type {string} */
-  let eventType; 
-  $: watchEventType(eventType);
+  /**
+   * @typedef {object} TimeRef
+   * @property {Time?} ref
+   * 
+   * @param {boolean} isRange
+   * @returns {TimeRef[]}
+  */
+  function watchIsRange(isRange) {
+    return isRange ? [{ref: null}, {ref: null}] : [{ref: null}];
+  }
 
   /**
    * @param {string} eventType
+   * @param {number} lastTimeId
    */
-  function watchEventType(eventType) {
+  function watchEventType(eventType, lastTimeId) {
     if (eventType === 'date' && resolvedMode === 'datetime' && ((isRange && valueArray.length === 2) || !isRange)) {
       currentMode = 'time';
     } else if (eventType === 'hour') {
-      ref_time && ref_time.showMinuteView();
+      // @ts-ignore
+      widgetList[lastTimeId].ref.showMinuteView();
     } else if (eventType === 'minute' && !isRange && resolvedMode === 'datetime' && autoclose) {
       currentMode = 'date';
     }
@@ -283,7 +288,8 @@
       valueArray = value ? [formatDate(value, format, i18n, formatType)] : [];
     }
     if (!isKeyboard) {
-      eventType = type;
+      watchEventType(type, dateIndex || 0);
+      // lastTimeId = ;
     }
   }
 
@@ -321,7 +327,6 @@
     onValueSet(true);
   }
 
-  // FIXME: fix
   function onClear() {
     valueArray = [];
     prevValue = [];
@@ -332,7 +337,6 @@
 
   /**
    * Dismiss any edits
-   * FIXME: Calendar 'inernalDate' is not re-set
    */
    function onCancel() {
     valueArray = [...undoHistory];
@@ -365,35 +369,29 @@
         if (currentMode === "date") {
           ref_calendar.handleGridNav(e.key, e.shiftKey);
         } else {
-          ref_time.makeTick(
+          // @ts-ignore
+          widgetList[0].ref.makeTick(
             ["ArrowDown", "ArrowLeft", "PageDown"].includes(e.key) ? -1 : 1
           );
         }
         break;
       case "Escape":
-        if (isFocused) {
-          pickerVisible = false;
-        }
+        autoclose ? onClear() : onCancel();
         break;
       case "Backspace":
       case "Delete":
         !required && onClear();
         break;
       case "Enter":
-        // FIXME: fix enter behaviour
         isFocused && e.preventDefault();
         if (valueArray.length === 0) {
           pickerVisible = false;
           return;
         }
         if (currentMode === "time" && !isMinuteView) {
-          return ref_time.showMinuteView();
+          // @ts-ignore
+          return widgetList[0].ref.showMinuteView();
         }
-        // if (isFocused && resolvedMode === "date") pickerVisible = false;
-        // // TODO: handle change to time on range picker?
-        // if (innerDates && resolvedMode.includes("time")) {
-        //   currentMode = "time";
-        // }
         if (resolvedMode === 'datetime' && currentMode !== 'time') {
           currentMode = 'time';
           return;
@@ -514,11 +512,11 @@
     on:mousedown|preventDefault
   >
   <div class="sdt-widget-wrap">
-  {#each widgetCount as w (w)}
+  {#each widgetList as w, i (i)}
     <div class="sdt-widget">
     {#if currentMode === "date"}
       <Calendar
-        wid={w}
+        wid={i}
         dates={innerDates}
         {isRange}
         startDate={parsedStartDate}
@@ -554,12 +552,12 @@
       {/if}
     {:else}
       <Time
-        wid={w}
-        date={innerDates[w]}
+        wid={i}
+        date={innerDates[i]}
         startDate={parsedStartDate}
         endDate={parsedEndDate}
         hasDateComponent={resolvedMode !== "time"}
-        bind:this={ref_time}
+        bind:this={w.ref}
         showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P') !== null}
         {i18n}
         {minuteIncrement}
