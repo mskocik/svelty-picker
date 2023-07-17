@@ -130,26 +130,53 @@
         : 2
       )
     );
+  /** @type {string} */
+  let eventType;
   $: autocloseSupported = autoclose && ((isRange && resolvedMode === 'date') || !isRange);
-  $: doAutoclose = autocloseSupported && currentAutocloseThreshold === autocloseThreshold;
+  $: doAutoclose = computeAutoclose(autoclose, isRange, resolvedMode, eventType);
   $: {  // custom-element ONLY
     if (ce_displayElement) ce_displayElement.readOnly = isFocused;
   }
   $: internalVisibility = pickerOnly ? true : false;
   $: positionPopup = !pickerOnly ? usePosition : () => {};
   $: isDirty = computeDirty(valueArray);
+  // $: doAutoclose
   // : 🔍 check this
-  $: {
-    let valueChanged = false;
+  $: watchValueChange(valueArray);
+  $: watchFormatChange(format, displayFormat);
+
+  /**
+   * @param {boolean} autoclose
+   * @param {boolean} isRange
+   * @param {string} resolvedMode
+   * @param {string} eventType
+   * @returns {boolean}
+   */
+  function computeAutoclose(autoclose, isRange, resolvedMode, eventType) {
+    if (!autoclose) return false; // no doubt
+
+    if (resolvedMode === 'datetime' && isRange) return false;
+
+    return eventType === 'minute' || resolvedMode === eventType;
+  }
+
+  /**
+   * @param {string[]} valueArray
+   */
+  function watchValueChange(valueArray) {
     if (valueArray.join('') !== prevValue.join('')) {
       innerDates = valueArray.map(val => parseDate(val, format, i18n, formatType));
       prevValue = valueArray;
-      valueChanged = true;
       currentValue = computeStringValue();
       displayValue = computeDisplayValue();
     }
-  // TODO: rethink this to prevent cyclical dependency
-    // update value on format change
+  }
+
+  /**
+   * @param {string} format
+   * @param {string|null} displayFormat - not used, but included to track also its' changes
+   */
+  function watchFormatChange(format, displayFormat) {
     if (currentFormat !== format && innerDates.length) {
       valueArray = innerDates.map(date => formatDate(date, format, i18n, formatType));
       prevValue = valueArray;
@@ -166,20 +193,8 @@
       currentValue = computeStringValue();
       onValueSet(true);
     }
-    // if (valueChanged && isRange && prevValue.length !== 2) {
-    //   valueChanged = false;
-    // }
-    // if (autoclose && ((isRange && resolvedMode === 'date') || !isRange)) {
-    //   value = isRange 
-    //     ? (valueChanged ? prevValue : null) // for range set value only when full
-    //     : (prevValue[0] || null);
-    // }
-    // autoclose && ((isRange && resolvedMode === 'date') || !isRange) && tick().then(() => dispatchInputEvent(valueChanged)); // tick for display value update
   }
 
-  // TODO: isn't this being handled by `resetView`?
-  $: if (!pickerVisible) isMinuteView = false;
-  
   /**
    * Convert value to display value
    * @returns {string}
@@ -216,8 +231,15 @@
     startView = MODE_MONTH;
     isMinuteView = false;
     currentAutocloseThreshold = 0;
-    if (!pickerOnly) pickerVisible = false;
-    if (resolvedMode !== 'time') currentMode = "date";
+    // postpone it to prevent blink on picker fade
+    if (resolvedMode === 'datetime') {
+      setTimeout(() => {
+        if (!pickerOnly) pickerVisible = false;
+         currentMode = "date";
+      }, autoclose ? 300 : 0);
+    } else {
+      if (!pickerOnly) pickerVisible = false;
+    }
   }
 
   /**
@@ -241,8 +263,8 @@
     } else if (eventType === 'hour') {
       // @ts-ignore
       widgetList[lastTimeId].ref.showMinuteView();
-    } else if (eventType === 'minute' && !isRange && resolvedMode === 'datetime' && autoclose) {
-      currentMode = 'date';
+    } else if (eventType === 'minute' && !isRange && resolvedMode === 'datetime' && doAutoclose) {
+      // currentMode = 'date';
     }
   }
 
@@ -288,9 +310,10 @@
       valueArray = value ? [formatDate(value, format, i18n, formatType)] : [];
     }
     if (!isKeyboard) {
+      eventType = type;
       watchEventType(type, dateIndex || 0);
-      // lastTimeId = ;
     }
+    tick().then(() => doAutoclose && onValueSet(!isKeyboard));
   }
 
   /**
@@ -574,8 +597,8 @@
   {#if !autocloseSupported}
   <slot name="action-row">
     <div class="sdt-btn-row" style="--sdt-justify-btn-row: flex-end">
-      <button type="button" class="sdt-action-btn sdt-clear-btn" on:click={onCancel}>Cancel</button>
-      <button type="button" class="sdt-action-btn sdt-today-btn" on:click={() => onValueSet(true)}>Ok</button>
+        <button type="button" class="sdt-action-btn sdt-clear-btn" on:click={onCancel}>Cancel</button>
+        <button type="button" class="sdt-action-btn sdt-today-btn" on:click={() => onValueSet(true)}>Ok</button>
     </div>
   </slot>
   {/if}
