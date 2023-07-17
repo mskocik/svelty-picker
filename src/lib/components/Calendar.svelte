@@ -121,7 +121,7 @@
 
   /**
    * @param {Date} date
-   * @retuns {boolean}
+   * @returns {boolean}
   */
   function isDisabledDate(date) {
     switch (currentView) {
@@ -141,7 +141,10 @@
     return false;
   }
 
-  function onChangeMonth(/** @type {number} */ val) {
+  /**
+   * @param {number} val
+   */
+  function onChangeMonth(val) {
 
     const multiplier = currentView === MODE_DECADE
       ? 120
@@ -149,15 +152,19 @@
       ? 12
       : 1
     )
-    activeDate.setMonth(activeDate.getMonth() + (val*multiplier));
-    activeDate = activeDate;
+    const newActiveDate = new Date(activeDate); // to keep it working with immutable setting, ref #20
+    newActiveDate.setMonth(activeDate.getMonth() + (val*multiplier));
+    activeDate = newActiveDate;
     onMonthTransitionTrigger = null;
     transform = currentView === MODE_DECADE
       ? activeDate.getFullYear() % 20 >= 10 ? TRANSFORM_CONST : TRANSFORM_DECADE_UNEVEN
       : TRANSFORM_CONST;
   }
 
-  function onTransformChangeMonth(/** @type {number} */ val) {
+  /**
+   * @param {number} val
+   */
+  function onTransformChangeMonth(val) {
     if (currentView === MODE_MONTH) {
       return onChangeMonth(val);
     }
