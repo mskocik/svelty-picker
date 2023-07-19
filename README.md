@@ -33,8 +33,6 @@ npm install svelty-picker
 <SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value={myDate}></SveltyPicker>
 ```
 
-Try yourself in [REPL](https://svelte.dev/repl/98fd362aad6049f4b38606820baff0b0?version=3.44.1).
-
 ## 📓 Options
 
 | Property        | Type          | Default       | Description |

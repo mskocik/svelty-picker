@@ -1,0 +1,46 @@
+---
+title: Introduction
+slug: ''
+---
+
+<script>
+    import SveltyPicker from '$lib/components/SveltyPicker.svelte';
+</script>
+
+# 📆 Svelty Picker [![NPM version](https://img.shields.io/npm/v/svelty-picker.svg?style=flat)](https://www.npmjs.org/package/svelty-picker)
+
+Simple date & time picker implemented in svelte. 
+
+Features: 
+- date/time/datetime/range picker mode
+- various formatting options
+- keyboard navigation
+- includes `<input>` element
+- themable
+- customizable disabled dates
+<!-- - validator action for `<input>` using `svelte-use-forms` (optional) -->
+- custom element (in progress)
+
+<div class="flex flex-wrap gap-4">
+    <div>
+        <h4>Date picker</h4>
+        <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true}/> 
+    </div>
+
+    <div>
+        <h4>Time picker</h4>
+        <SveltyPicker mode="time" format="hh:ii" pickerOnly /> 
+    </div>
+    <div>
+        <h4>Date range picker</h4>
+        <SveltyPicker isRange  mode="datetime" pickerOnly/> 
+    </div>
+</div>
+    
+
+
+## ⚙️ Install
+
+```bash
+npm install svelty-picker
+```

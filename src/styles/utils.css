@@ -1,0 +1,11 @@
+.flex {
+    display: flex;
+    gap: 16px;
+}
+.inline-flex {
+    display: inline-flex;
+    gap: 8px;
+}
+.items-center {
+    align-items: center;
+}

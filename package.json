@@ -1,42 +1,58 @@
 {
-  "name": "svelty-picker",
-  "description": "Sweet date/time picker written in svelte",
-  "version": "4.0.0-beta.1",
-  "module": "dist/svelty-picker.js",
+  "name": "kit-test",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
-    "rollup": "rollup -c",
-    "staging": "vite build --mode staging",
-    "package": "svelte-kit package",
+    "build": "vite build && npm run package",
+    "ce": "vite build --mode ce",
     "preview": "vite preview",
-    "prepare": "svelte-kit sync",
-    "check": "svelte-check --tsconfig ./jsconfig.json",
-    "check:watch": "svelte-check --tsconfig ./jsconfig.json --watch",
-    "test": "playwright test",
-    "lint": "eslint ."
+    "package": "svelte-kit sync && svelte-package && publint",
+    "prepublishOnly": "npm run package",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
+    "generate": "node scripts/generate_examples.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
+  "peerDependencies": {
+    "svelte": "^3.53.0 || ^4.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.0.1",
-    "@rollup/plugin-terser": "^0.3.0",
-    "@sveltejs/adapter-static": "^1.0.0-next.37",
-    "@sveltejs/kit": "next",
-    "autoprefixer": "^10.4.7",
-    "eslint": "^8.16.0",
-    "eslint-plugin-svelte3": "^4.0.0",
-    "mdsvex": "^0.10.6",
+    "@bitmachina/highlighter": "1.0.0-alpha.5",
+    "@jridgewell/sourcemap-codec": "https://github.com/xiaoxiangmoe/sourcemap-codec/tarball/main",
+    "@prgm/sveltekit-progress-bar": "^1.0.0",
+    "@sveltejs/adapter-auto": "^2.0.0",
+    "@sveltejs/adapter-static": "^2.0.2",
+    "@sveltejs/kit": "^1.20.4",
+    "@sveltejs/package": "^2.0.0",
+    "@sveltejs/repl": "^0.5.0",
+    "@sveltejs/site-kit": "^5.2.2",
+    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "autoprefixer": "^10.4.14",
+    "mdsvex": "^0.11.0",
+    "postcss": "^8.4.24",
     "postcss-load-config": "^4.0.1",
-    "rollup-plugin-css-only": "^4.3.0",
-    "rollup-plugin-svelte": "^7.1.0",
-    "svelte": "^3.44.0",
-    "svelte-check": "^2.7.1",
-    "svelte-preprocess": "^4.10.7",
-    "svelte-windicss-preprocess": "^4.2.8",
-    "svelte2tsx": "^0.6.0",
-    "typescript": "^4.9.4",
-    "vite": "^3.0.0",
-    "windicss": "^3.5.6"
+    "publint": "^0.1.9",
+    "shiki": "^0.14.3",
+    "svelte": "^4.0.5",
+    "svelte-check": "^3.4.3",
+    "tailwindcss": "^3.3.2",
+    "tslib": "^2.4.1",
+    "typescript": "^5.0.0",
+    "vite": "^4.4.2",
+    "vite-plugin-node-polyfills": "^0.9.0"
   },
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "type": "module",
   "dependencies": {
     "@floating-ui/dom": "^1.4.5"
