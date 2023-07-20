@@ -122,7 +122,7 @@
   /** @type {string} */
   let eventType;
   $: autocloseSupported = autocommit && ((isRange && resolvedMode === 'date') || !isRange);
-  $: doAutoCommit = computeAutoclose(autocommit, isRange, resolvedMode, eventType);
+  $: doAutoCommit = computeAutoclose(autocommit, isRange, resolvedMode, eventType, valueArray);
   $: {  // custom-element ONLY
     if (ce_displayElement) ce_displayElement.readOnly = isFocused;
   }
@@ -139,10 +139,10 @@
    * @param {string} eventType
    * @returns {boolean}
    */
-  function computeAutoclose(autoCommit, isRange, resolvedMode, eventType) {
+  function computeAutoclose(autoCommit, isRange, resolvedMode, eventType, valueArray) {
     if (!autoCommit) return false; // no doubt
 
-    if (resolvedMode === 'datetime' && isRange) return false;
+    if (isRange && (resolvedMode === 'datetime' || valueArray.length !== 2)) return false;
 
     return eventType === 'minute' || resolvedMode === eventType;
   }
@@ -373,7 +373,7 @@
       case "ArrowUp":
       case "ArrowLeft":
       case "ArrowRight":
-        if (manualInput) return;
+        // if (manualInput && ref_input.value) return;
         e.preventDefault();
         if (isRange) return;
         if (currentMode === "date") {
@@ -389,7 +389,7 @@
         autocommit ? onClear() : onCancel();
         break;
       case "Backspace":
-        if (manualInput) return;
+        if (manualInput && !isRange) return;
       case "Delete":
         !required && onClear();
         break;
@@ -426,6 +426,7 @@
    * @param {{ target: HTMLInputElement}} event 
   */
   function onManualInput(event) {
+
     const parsedInput = parseDate(event.target.value, displayFormat || format, i18n, displayFormatType || formatType);
     const formattedInput = formatDate(parsedInput, displayFormat || format, i18n, displayFormatType || formatType);
     if (formattedInput === event.target.value) {
@@ -515,7 +516,7 @@
     autocomplete="off"
     inputmode="none"
     class={inputClasses}
-    readonly={isFocused && !manualInput}
+    readonly={isFocused && !manualInput && !isRange}
     on:input={manualInput ? onManualInput : () => {}}
     use:inputAction={inputActionParams}
     on:focus={onInputFocus}
@@ -530,6 +531,7 @@
   {/if}
 {/if}
 {#if pickerVisible && isFocused }
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="std-calendar-wrap {theme}" class:is-popup={!internalVisibility} class:is-range-wrap={isRange}
     transition:fadeFn|local={{ duration: 200 }}
@@ -583,13 +585,17 @@
     onClear={onClear}
     onToday={onToday}
     isTodayDisabled={isTodayDisabled}
+    currentMode={currentMode}
+    i18n={i18n}
   >
-    {#if !autocloseSupported}
+    {#if !autocloseSupported || true}
     <div class="sdt-btn-row">
+      {#if !autocloseSupported}
       <span>
-        <button type="button" class="sdt-action-btn sdt-clear-btn" on:click={onCancel}>Cancel</button>
-        <button type="button" class="sdt-action-btn sdt-today-btn" on:click={() => onValueSet(true)}>Ok</button>
+        <button type="button" class="sdt-action-btn sdt-clear-btn" on:click={onCancel}>{i18n.cancelBtn}</button>
+        <button type="button" class="sdt-action-btn sdt-today-btn" on:click={() => onValueSet(true)}>{i18n.okBtn}</button>
       </span>
+      {/if}
       {#if todayBtn || clearBtn}
       <span>
         {#if todayBtn && currentMode === 'date'}<button type="button" class={todayBtnClasses} on:click={onToday} disabled={isTodayDisabled}>{i18n.todayBtn}</button>{/if}
@@ -628,7 +634,7 @@
     background-color: var(--sdt-bg-main);
     box-shadow: 0 1px 6px var(--sdt-shadow);
     border-radius: 4px;
-    padding: 0.25rem 0.25rem 0.5rem;
+    padding: 0.5em;
     color: var(--sdt-color);
   }
   /* FUTURE: */
@@ -639,9 +645,11 @@
     display: flex;
     gap: 0.5rem;
     justify-content: stretch;
+    position: relative;
   }
   .sdt-widget {
     flex: 1;
+    min-width: 264px;
   }
   .value-dirty {
     color: color-mix(in srgb, black 50%, currentColor);
@@ -659,16 +667,16 @@
     flex-flow: row-reverse;
   }
   .sdt-action-btn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-    border-radius: 0.2rem;
+    padding: 0.25em 0.5em;
+    font-size: 0.875em;
+    border-radius: 0.2em;
   }
   .sdt-today-btn {
     background-color: var(--sdt-primary);
     color: var(--sdt-today-color, var(--sdt-bg-main));
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-    border-radius: 0.2rem;
+    padding: 0.25em 0.5em;
+    font-size: 0.875em;
+    border-radius: 0.2em;
     border: 1px solid var(--sdt-today-bg);
   }
   .sdt-today-btn[disabled] {
@@ -690,5 +698,25 @@
   .sdt-clear-btn:hover:not([disabled]) {
     background-color: var(--sdt-clear-color);
     color: var(--sdt-clear-hover-color, var(--sdt-bg-main));
+  }
+  .sdt-widget + .sdt-widget:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-color: #eee;
+  }
+  @media screen and (max-width: 560px) {
+    .std-calendar-wrap.std-calendar-wrap.is-range-wrap {
+      width: 280px;
+    }
+    .sdt-widget-wrap {
+      flex-wrap: wrap;
+    }
+    .sdt-widget + .sdt-widget:before {
+      content: none;
+    }
   }
 </style>

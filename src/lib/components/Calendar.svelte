@@ -312,18 +312,18 @@
 
 <div class="sdt-thead-nav">
   <button class="std-btn std-btn-header sdt-toggle-btn" on:click|preventDefault={onSwitchView}>{tableCaption}</button>
+  {#if enableTimeToggle && dates.length}
+  <button class="std-btn std-btn-header icon-btn sdt-time-icon" title={i18n.timeView} on:click|preventDefault={onTimeSwitch} >
+    <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
+  </button>
+  {/if}
+  <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(-1)}>
+    <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
+  </button>
+  <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(1)}>
+    <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
+  </button>
   <div class="sdt-nav-btns">
-    {#if enableTimeToggle && dates.length}
-    <button class="std-btn std-btn-header icon-btn sdt-time-icon" title={i18n.timeView} on:click|preventDefault={onTimeSwitch} >
-      <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
-    </button>
-    {/if}
-    <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(-1)}>
-      <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
-    </button>
-    <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(1)}>
-      <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
-    </button>
   </div>
 </div>
 <div class="sdt-calendar" class:is-grid={viewChanged}>
@@ -388,17 +388,16 @@
         {#each row as currDate, j(j)}
         {@const idx = i*7+j}
         {@const dateTime = currDate.getTime()}
+        <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <td class="sdt-cal-td"
           class:sdt-today={idx === dataset.todayMark}
           class:in-range={isInRange(dateTime)}
           class:is-selected={times.includes(dateTime)}
           class:in-range-hover={isRange && isRangeHoverable(dateTime, hoverDate)}
+          on:mouseover={wrapHoverDateToggle(currDate)}
+          on:mouseout={wrapHoverDateToggle()}
         >
-          <!-- svelte-ignore a11y-mouse-events-have-key-events -->
           <button on:click={() => {onClick(currDate)}}
-            on:mouseover={wrapHoverDateToggle(currDate)}
-            on:mouseout={wrapHoverDateToggle()}
-            on:blur on:focus
             class="std-btn  sdt-btn-day"
             class:not-current={!isBetween(i*7+j) }
             disabled={(computedStartDate || endDate || additionalDisableFn) && isDisabledDate(currDate)}
@@ -413,6 +412,9 @@
 </div>
 
 <style>
+  td,th {
+    padding: 0;
+  }
 .sdt-cal-td {
   padding: 0;
   font-size: 90%;
@@ -420,6 +422,7 @@
   background-color: var(--sdt-bg-main);
 }
 .sdt-cal-th {
+  text-align: center;
   height: 24px;
 }
 .sdt-calendar {
@@ -473,15 +476,15 @@
 .std-btn-header {
   width: auto;
   font-weight: bold;
-  padding: 0.375rem 0.5rem;
+  padding: 0.375em 0.5em;
 }
 .std-btn-header.icon-btn:first-of-type {
-  padding-left: 0.375rem;
-  padding-right: 0.375rem;
+  padding-left: 0.375em;
+  padding-right: 0.375em;
 }
 .std-btn-header.icon-btn {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
 }
 .std-btn:hover {
   background-color: var(--sdt-btn-bg-hover);
@@ -490,13 +493,23 @@
   border-radius: 4px 0 0 4px
 }
 .in-range .std-btn,
-.in-range-hover .std-btn {
+.in-range-hover:not(.is-selected) .std-btn {
   background-color: color-mix(in srgb, transparent 75%, var(--sdt-primary));
   border-radius: 0;
+}
+/* range selection: start */
+.in-range-hover.is-selected:has(+ .in-range-hover) .std-btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.in-range-hover + .in-range-hover.is-selected .std-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 .in-range:not(.is-selected) .std-btn:hover {
   background-color: color-mix(in srgb, var(--sdt-btn-bg-hover) 75%, var(--sdt-primary));
 }
+/* range selection: end */
 .in-range + .is-selected .std-btn,
 .is-selected + .is-selected .std-btn {
   border-top-left-radius: 0;
@@ -514,10 +527,13 @@
   background-color: var(--sdt-btn-header-bg-hover);
 }
 .sdt-time-icon {
-  margin-right: -4px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375em !important;
 }
 .sdt-time-icon svg {
-  margin: 4px 0;
+  height: 1em !important;
+  stroke: initial !important;
 }
 .sdt-tbody-lg {
   background-color: var(--sdt-bg-main);
@@ -527,7 +543,8 @@
 }
 .sdt-thead-nav {
   display: flex;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.25em;
+  align-items: stretch;
 }
 .sdt-nav-btns {
   white-space: nowrap;
@@ -535,6 +552,9 @@
 .sdt-toggle-btn {
   width: 100%;
   text-align: left;
+}
+.sdt-today {
+  position: relative;
 }
 .sdt-today:before {
   box-sizing: border-box;

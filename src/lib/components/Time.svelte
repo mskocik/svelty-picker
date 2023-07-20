@@ -131,8 +131,8 @@
     }
     return pos;
   }
-  $: pos = positions(isMinuteView ? 260 : 220, 130, '00', false, 0);
-  $: innerHours = positions(isMinuteView ? 220 : 140, 130, isMinuteView ? '00' : '12', isMinuteView, 12);
+  $: pos = positions(isMinuteView ? 220 : 180, 110, '00', false, 0);
+  $: innerHours = positions(isMinuteView ? 180 : 120, 110, isMinuteView ? '00' : '12', isMinuteView, 12);
 
   /**
    * 
@@ -353,9 +353,8 @@
   </div>
     
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div class="sdt-clock" on:click|preventDefault={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}
-    on:keypress
-  >
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div class="sdt-clock" on:click|preventDefault={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
     <div class="sdt-middle-dot"></div>
     <div class="sdt-hand-pointer" style={handCss}>
       <div class="sdt-hand-circle"></div>
@@ -367,20 +366,21 @@
         class:is-selected={isSelected(selectedHour, p.val, i)}
       >{p.val}</button>
     {/each}
-      {#each innerHours as p, i}
+    {#each innerHours as p, i}
       <button type="button" style={`left:${p.x}px; top:${p.y}px;`} class="sdt-tick" class:outer-tick={showMeridian && !isMinuteView} transition:fade|local={{duration: 200}}
       data-value={p.val}
       disabled={(startDate || endDate) && isDisabled(p.val, false)}
       class:is-selected={isSelected(isMinuteView ? selectedMinutes : selectedHour, p.val, i)}
       >{p.val}</button>
-      {/each}
+    {/each}
   </div>
 </div>
 
 <style>
 .sdt-timer {
   position: relative;
-  width: 272px;
+  /* width: 272px; */
+  --sdt-clock-size: 220px;
 }
 .sdt-time-head {
   position: relative;
@@ -390,14 +390,14 @@
   margin-bottom: 4px;
 }
 .sdt-time-figure {
-  font-size: 1.5rem;
+  font-size: 1.5em;
   font-weight: bold;
 }
 .sdt-clock {
   margin: auto;
   position: relative;
-  width: 260px;
-  height: 260px;
+  width: var(--sdt-clock-size);
+  height: var(--sdt-clock-size);
   background-color: var(--sdt-clock-bg);
   border-radius: 50%;
   transition: background-color 0.3s;
@@ -409,8 +409,12 @@
   text-align: center;
   border-radius: 4px;
   cursor: pointer;
-  padding: 0 0.375rem;
+  height: 38px;
+  padding: 0 0.375em;
   color: var(--sdt-color);
+}
+.sdt-time-btn > svg {
+  stroke: initial !important;
 }
 .sdt-svg {
   fill: var(--sdt-color);
@@ -425,7 +429,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  padding: 0.375rem;
+  padding: 0.3em;
   opacity: 1 !important;
 }
 .sdt-meridian {
@@ -450,7 +454,7 @@
 }
 .sdt-hand-pointer {
   width: 2px;
-  height: calc(40% + 1px);
+  height: calc(40% - 3px);
   bottom: 50%;
   left: calc(50% - 1px);
   position: absolute;
