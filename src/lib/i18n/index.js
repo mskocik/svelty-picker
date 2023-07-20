@@ -15,6 +15,8 @@
  * @property {string[]} suffix
  * @property {string} todayBtn
  * @property {string} clearBtn
+ * @property {string} okBtn
+ * @property {string} cancelBtn
  * @property {string} timeView
  * @property {string} backToDate
 */
@@ -30,12 +32,11 @@ export const cz = {
   suffix:      ['st', 'nd', 'rd', 'th'],
   todayBtn:    'Dnes',
   clearBtn:    'Smazat',
+  okBtn:       'Ok',
+  cancelBtn:   'Zrušit',
   timeView:    'Zobrazit hodiny',
   backToDate:  'Zpátky na kalendář'
 }
-
-// FUTURE: remove this BC on major version release
-export const cs = cz;
 
 // German translation by emroc GmbH
 export const de = {
@@ -48,6 +49,8 @@ export const de = {
   suffix:      ['', '', '', ''],
   todayBtn:    'Heute',
   clearBtn:    'Zurücksetzen',
+  okBtn:       'Ok',
+  cancelBtn:   'Abbrechen',
   timeView:    'Zeitansicht anzeigen',
   backToDate:  'Zurück zur Kalenderansicht'
 }
@@ -63,6 +66,8 @@ export const en = {
   suffix:      ['st', 'nd', 'rd', 'th'],
   todayBtn:    'Today',
   clearBtn:    'Clear',
+  okBtn:       'Ok',
+  cancelBtn:   'Cancel',
   timeView:    'Show time view',
   backToDate:  'Back to calendar view'
 }
@@ -78,6 +83,8 @@ export const es = {
   suffix:      ['o', '', '', ''],
   todayBtn:    'Hoy',
   clearBtn:    'Borrar',
+  okBtn:       'Aceptar',
+  cancelBtn:   'Cancelar',
   timeView:    'Mostrar hora',
   backToDate:  'Regresar al calendario'
 }
@@ -93,6 +100,8 @@ export const fa = {
   suffix:      ['st', 'nd', 'rd', 'th'],
   todayBtn:    'امروز',
   clearBtn:    'پاک‌کردن',
+  okBtn:       'تایید',
+  cancelBtn:   'لغو',
   timeView:    'نمایش بخش زمان',
   backToDate:  'بازگشت به بخش تقویم'
 }
@@ -108,6 +117,8 @@ export const fr = {
   suffix:      ['er', 'ème', 'ème', 'ème'],
   todayBtn:    'Aujourd\'hui',
   clearBtn:    'Effacer',
+  okBtn:       'OK',
+  cancelBtn:   'Annuler',
   timeView:    'Afficher l\'heure',
   backToDate:  'Retour au calendrier'
 }
@@ -123,6 +134,8 @@ export const hu = {
   suffix:      ['.', '.', '.', '.'],
   todayBtn:    'Ma',
   clearBtn:    'Törlés',
+  okBtn:       'OK',
+  cancelBtn:   'Áthúz',
   timeView:    'Óra nézet',
   backToDate:  'Vissza a naptárhoz'
 };
@@ -138,6 +151,8 @@ export const id = {
   suffix:      ['st', 'nd', 'rd', 'th'],
   todayBtn:    'Hari Ini',
   clearBtn:    'Hapus',
+  okBtn:       'Mengkonfirmasi',
+  cancelBtn:   'Batal',
   timeView:    'Tampilkan tampilan waktu',
   backToDate:  'Kembali ke tampilan kalender'
 }
@@ -153,6 +168,8 @@ export const jp = {
   suffix:      ['', '', '', ''],
   todayBtn:    '今日',
   clearBtn:    'クリア',
+  okBtn:       '確認する',
+  cancelBtn:   'キャンセル',
   timeView:    'タイムを表示',
   backToDate:  'カレンダーに戻る'
 }
@@ -168,6 +185,8 @@ export const nl = {
   suffix:      ['e', 'e', 'e', 'e'],
   todayBtn:    'Vandaag',
   clearBtn:    'Wissen',
+  okBtn:       'OK',
+  cancelBtn:   'Annuleren',
   timeView:    'Uurweergave',
   backToDate:  'Terug naar de kalender'
 };
@@ -183,6 +202,8 @@ export const sk = {
   suffix:      ['st', 'nd', 'rd', 'th'],
   todayBtn:    'Dnes',
   clearBtn:    'Zmazať',
+  okBtn:       'Ok',
+  cancelBtn:   'Zrušiť',
   timeView:    'Zobraziť hodiny',
   backToDate:  'Späť na kalendár'
 }
@@ -198,6 +219,8 @@ export const ko = {
   suffix:      ['', '', '', ''],
   todayBtn:    '오늘',
   clearBtn:    '지우기',
+  okBtn:       '확인하다',
+  cancelBtn:   '취소',
   timeView:    '시계보기',
   backToDate:  '달력보기'
 }
@@ -213,6 +236,8 @@ export const pt_BR = {
   suffix: ['º', 'º', 'º', 'º'],
   todayBtn: 'Hoje',
   clearBtn: 'Limpar',
+  okBtn:     'OK',
+  cancelBtn: 'Cancelar',
   timeView: 'Mostrar hora',
   backToDate: 'Voltar para o calendário'
 }
@@ -228,6 +253,8 @@ export const it = {
   suffix:      ['º', 'º', 'º', 'º'],
   todayBtn:    'Oggi',
   clearBtn:    'Cancella',
+  okBtn:       'Ok',
+  cancelBtn:   'Annulla',
   timeView:    'Mostra orario',
   backToDate:  'Torna alla vista calendario'
 }
