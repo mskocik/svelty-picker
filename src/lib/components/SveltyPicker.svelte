@@ -375,6 +375,7 @@
 />
 {/if}
 {#if pickerVisible && isFocused }
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="std-calendar-wrap is-popup {theme}"
     transition:fadeFn|local={{ duration: 200 }}
