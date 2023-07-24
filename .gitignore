@@ -5,6 +5,7 @@ node_modules
 /dist
 !/dist/svelty-picker
 /.svelte-kit
+/src/routes/test
 /package
 .env
 .env.*
