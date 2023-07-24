@@ -1,0 +1,45 @@
+---
+title: Modes & formats
+---
+
+<script>
+    import Standard from './standard-format.md'
+    import PHP from './php-format.md'
+</script>
+
+### Mode
+
+By `mode` property you can restrict modes in which picker operates. This property can have following values:
+
+- `date` - only date picker
+- `time` - only time picker
+- `datetime` - date & time picker
+- `auto` (default) - mode is determined based on passed `format` property. This basically means you can activate `time` picker mode by setting `displayFormat` (or `format` if those 2 values should be the same) to `hh:ii` for example
+
+*Note:* range-picker is activated by `isRange` property, so you can still set appropriate mode for range-pickers.
+
+### Format
+
+Component has 2 separate format-related properties:
+
+- `format` - defines string representation of selected Date object(s). This string is sent in `change` event or when form is submitted. Default value is `yyyy-mm-dd`
+- `displayFormat` - independent date format controlling how the date is being displayed to the user. When not set, `format` value is being used.
+
+Both propertie also have corresponding _type_ property, ie. `formatType` for `format` and `displayFormatType` for `displayFormat`.
+There are 2 available options for `formatType` props - `standard` (default)  and `php`. And again if `displayFormatType` is undefined, `formatType` is being used as fallback.
+
+<details>
+    <summary >standard format settings: </summary>
+    <div>
+        <Standard />
+    </div>
+</details>
+
+<details>
+    <summary >PHP format settings: </summary>
+    <div>
+        <PHP />
+    </div>
+</details>
+
+

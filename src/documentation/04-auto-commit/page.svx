@@ -1,0 +1,22 @@
+---
+title: Auto-commit changes
+---
+
+Previous versions (below v4) had problem that every interaction triggered change event. This was visible especially when picker was used in `datetime` mode.
+Therefore the whole logic has been reworked and basically we can talk about two modes - "auto commit" and "manual commit".
+
+### Auto-commit mode
+
+For datepicker it's simple. User picks a date, bound value (if any) is updated, `change` event triggered and picker is closed. For time it's
+very similar with the exception that picker closes automatically only on _minute_ selection. So you can change hour many
+times and picker will stay open. Select minutes and it will close. Also  event is triggered etc.
+
+When using keyboard to change date, bound value is not updated immediately, but only on Enter or on input blur. This is 
+very important distinction against manual vaue settings.
+
+### Manual-commit mode
+
+When `autocommit` is set to `false`, buttons 'Ok' and 'Cancel' are shown by default (can be overwritten by custom slot consistent).
+In this mode the main difference is, that value is set and event triggered only on `Enter` key or pressing `Ok` button.
+Pressing `Cancel` or leaving input _resets_ internal state to previous value (if set).
+

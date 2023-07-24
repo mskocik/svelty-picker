@@ -1,0 +1,9 @@
+---
+title: Properties
+---
+
+<script>
+    import Options from './03-options.md'
+</script>
+
+<Options />

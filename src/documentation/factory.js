@@ -1,8 +1,13 @@
 export const factory = {
-  'home': async () => (await (import('./00-getting-started/00-introduction/page.svx'))).default,
-  'hello-world': async () => (await (import('./01-use-cases/00-hello-world/page.svx'))).default,
-  'dynamic-attributes': async () => (await (import('./01-use-cases/01-dynamic-attributes/page.svx'))).default,
-  'styling': async () => (await (import('./01-use-cases/02-styling/page.svx'))).default,
-  'nested-components': async () => (await (import('./01-use-cases/03-nested-components/page.svx'))).default,
-  'html-tags': async () => (await (import('./01-use-cases/04-html-tags/page.svx'))).default
+  'home': async () => (await (import('./00-introduction/page.svx'))).default,
+  'properties': async () => (await (import('./01-properties/page.svx'))).default,
+  'principles': async () => (await (import('./02-principles/page.svx'))).default,
+  'formatting': async () => (await (import('./03-formatting/page.svx'))).default,
+  'auto-commit': async () => (await (import('./04-auto-commit/page.svx'))).default,
+  'disabling-dates': async () => (await (import('./04-disabling-dates/page.svx'))).default,
+  'slots': async () => (await (import('./05-slots/page.svx'))).default,
+  'events': async () => (await (import('./06-events/page.svx'))).default,
+  'theme': async () => (await (import('./07-theme/page.svx'))).default,
+  'localization': async () => (await (import('./08-localization/page.svx'))).default,
+  'global-config': async () => (await (import('./10-global-config/page.svx'))).default
 	}

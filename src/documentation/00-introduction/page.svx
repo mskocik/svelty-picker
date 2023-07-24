@@ -1,0 +1,31 @@
+---
+title: Introduction
+slug: ''
+---
+
+<script>
+    import SveltyPicker from '$lib/components/SveltyPicker.svelte';
+    import Intro from './01-intro.md';
+    import InstallCode from './02-install.md';
+</script>
+
+<Intro />
+
+<div class="flex flex-wrap gap-4 my-10">
+    <div>
+        <h4>Date picker</h4>
+        <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true}/> 
+    </div>
+
+    <div>
+        <h4>Time picker</h4>
+        <SveltyPicker mode="time" format="hh:ii" pickerOnly /> 
+    </div>
+    <div>
+        <h4>Date range picker</h4>
+        <SveltyPicker isRange  mode="datetime" pickerOnly/> 
+    </div>
+</div>
+    
+<InstallCode />
+
