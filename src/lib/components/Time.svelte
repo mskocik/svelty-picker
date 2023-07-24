@@ -398,7 +398,7 @@
   position: relative;
   width: var(--sdt-clock-size);
   height: var(--sdt-clock-size);
-  background-color: var(--sdt-clock-bg);
+  background-color: var(--sdt-clock-bg, #eeeded);
   border-radius: 50%;
   transition: background-color 0.3s;
   overflow: hidden;
@@ -411,19 +411,19 @@
   cursor: pointer;
   height: 38px;
   padding: 0 0.375em;
-  color: var(--sdt-color);
+  color: var(--sdt-color, initial);
 }
 .sdt-time-btn > svg {
   stroke: initial !important;
 }
 .sdt-svg {
-  fill: var(--sdt-color);
+  fill: var(--sdt-color, initial);
 }
 .sdt-time-btn:not(.is-active) {
   opacity: 0.5;
 }
 .sdt-time-btn:hover {
-  background-color: var(--sdt-btn-header-bg-hover);
+  background-color: var(--sdt-btn-header-bg-hover, #dfdfdf);
 }
 .sdt-back-btn {
   position: absolute;
@@ -449,7 +449,7 @@
   height: 6px;
   position: absolute;
   transform: translate(-50%, -50%);
-  background-color: var(--sdt-primary);
+  background-color: var(--sdt-primary, #286090);
   border-radius: 50%;
 }
 .sdt-hand-pointer {
@@ -458,7 +458,7 @@
   bottom: 50%;
   left: calc(50% - 1px);
   position: absolute;
-  background-color: var(--sdt-primary);
+  background-color: var(--sdt-primary, #286090);
   transform-origin: center bottom 0;
   transition: transform 0.3s ease, height 0.15s ease;
 }
@@ -469,7 +469,7 @@
   width: 4px;
   height: 4px;
   background-color: transparent;
-  border: 14px solid var(--sdt-primary);
+  border: 14px solid var(--sdt-primary, #286090);
   border-radius: 50%;
   box-sizing: content-box;
 }
@@ -502,8 +502,8 @@
     background-color: transparent;
   }
   100% {
-    background-color: var(--sdt-primary);
-    color: var(--sdt-color-selected, var(--sdt-bg-main));
+    background-color: var(--sdt-primary, #286090);
+    color: var(--sdt-color-selected, var(--sdt-bg-main, #fff));
   }
 }
 </style>

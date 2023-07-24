@@ -618,31 +618,17 @@
 
 
 <style>
-  .sdt-calendar-colors {
-    --sdt-primary: #286090;
-    --sdt-color: #000;
-    --sdt-bg-main: #fff;
-    --sdt-bg-today: var(--sdt-primary);
-    --sdt-bg-clear: #dc3545;
-    --sdt-today-bg: #1e486d;
-    --sdt-clear-color: #dc3545;
-    --sdt-btn-bg-hover: #eee;
-    --sdt-btn-header-bg-hover: #dfdfdf;
-    --sdt-clock-bg: #eeeded;
-    --sdt-shadow: #ccc;
-    --sdt-disabled-date: #b22222;
-  }
   .std-component-wrap {
     position: relative;
     display: inline;
   }
   .std-calendar-wrap {
     width: 280px;
-    background-color: var(--sdt-bg-main);
-    box-shadow: 0 1px 6px var(--sdt-shadow);
+    background-color: var(--sdt-bg-main, #fff);
+    box-shadow: var(--sdt-wrap-shadow, 0 1px 6px var(--sdt-shadow-color, #ccc));
     border-radius: 4px;
     padding: 0.5em;
-    color: var(--sdt-color);
+    color: var(--sdt-color, initial);
   }
   .std-calendar-wrap.is-range-wrap {
     width: 560px;
@@ -662,7 +648,7 @@
   }
   .std-calendar-wrap.is-popup {
     position: absolute;
-    box-shadow: 0 1px 6px var(--sdt-shadow);
+    box-shadow: 0 1px 6px var(--sdt-shadow-color, #ccc);
     z-index: 100;
   }
   .sdt-btn-row {
@@ -678,8 +664,8 @@
     border-radius: 0.2em;
   }
   .sdt-today-btn {
-    background-color: var(--sdt-primary);
-    color: var(--sdt-today-color, var(--sdt-bg-main));
+    background-color: var(--sdt-primary, #286090);
+    color: var(--sdt-today-color, var(--sdt-bg-main, #fff));
     padding: 0.25em 0.5em;
     font-size: 0.875em;
     border-radius: 0.2em;
@@ -695,15 +681,15 @@
     background-color: var(--sdt-today-bg);
   }
   .sdt-clear-btn {
-    border: 1px solid var(--sdt-clear-color);
-    background-color: transparent;
-    color: var(--sdt-clear-color);
+    border: 1px solid var(--sdt-clear-color, #dc3545);
+    background-color: var(--sdt-clear-bg, transparent);
+    color: var(--sdt-clear-color, #dc3545);
   }
   .sdt-clear-btn:focus,
   .sdt-clear-btn:active:not([disabled]),
   .sdt-clear-btn:hover:not([disabled]) {
-    background-color: var(--sdt-clear-color);
-    color: var(--sdt-clear-hover-color, var(--sdt-bg-main));
+    background-color: var(--sdt-clear-hover-bg, #dc3545);
+    color: var(--sdt-clear-hover-color, var(--sdt-bg-main, #fff));
   }
   .sdt-widget + .sdt-widget:before {
     content: '';
