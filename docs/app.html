@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="/favicon.png" />
+		<link rel="icon" href="/svelty-picker/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<script>
 			const theme = localStorage.getItem('theme');
@@ -11,27 +11,28 @@
 		<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> -->
 		<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"> -->
 		
-		<link rel="modulepreload" href="/_app/immutable/entry/start.25ed1359.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/scheduler.6381a9b9.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/singletons.867dd78f.js">
-		<link rel="modulepreload" href="/_app/immutable/entry/app.c1f3ce4d.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/preload-helper.cf010ec4.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/index.cf31950d.js">
+		<link rel="modulepreload" href="/svelty-picker/_app/immutable/entry/start.aaea6517.js">
+		<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/scheduler.6381a9b9.js">
+		<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/singletons.378744e0.js">
+		<link rel="modulepreload" href="/svelty-picker/_app/immutable/entry/app.2ba7c33f.js">
+		<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/preload-helper.07ba51e7.js">
+		<link rel="modulepreload" href="/svelty-picker/_app/immutable/chunks/index.cf31950d.js">
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div>
 			<script>
 				{
-					__sveltekit_1uv0z4t = {
-						base: "",
+					__sveltekit_8u993l = {
+						assets: "/svelty-picker",
+						base: "/svelty-picker",
 						env: {}
 					};
 
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("/_app/immutable/entry/start.25ed1359.js"),
-						import("/_app/immutable/entry/app.c1f3ce4d.js")
+						import("/svelty-picker/_app/immutable/entry/start.aaea6517.js"),
+						import("/svelty-picker/_app/immutable/entry/app.2ba7c33f.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});

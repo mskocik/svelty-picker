@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+  import { base } from '$app/paths';
 
 	export let pages = [];
 	export let active_section = '';
@@ -19,7 +20,7 @@
 
 				<div class="row" class:active={page.slug === (active_section || '')} class:loading={isLoading}>
 					<a
-						href="/{page.slug}"
+						href="{base}/{page.slug}"
 						class="row"
 						class:active={page.slug === active_section}
 						class:loading={isLoading}
