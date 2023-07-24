@@ -6,6 +6,7 @@
 <script>
   /**
    * TODO: handle displayFormat change dynamically
+   * TODO: properly handle 'clear' when `autocommit` is `false (make it undoable)
   */
   import { createEventDispatcher, onMount, tick } from "svelte";
   import { fade } from "svelte/transition";
@@ -203,7 +204,7 @@
   }
 
   function computeStringValue() {
-    return valueArray.join('');
+    return valueArray.join(',');
   }
 
   /**
@@ -211,7 +212,7 @@
    * @returns {boolean}
   */
   function computeDirty(values) {
-    return values.join('') !== undoHistory.join('');
+    return values.join(',') !== undoHistory.join(',');
   }
   
   function resetView() {
@@ -341,7 +342,7 @@
     prevValue = [];
     innerDates = [];
     currentValue = '';
-    onValueSet();
+    autocommit && onValueSet();
   }
 
   /**
@@ -426,7 +427,8 @@
    * @param {{ target: HTMLInputElement}} event 
   */
   function onManualInput(event) {
-
+    event.preventDefault();
+    event.stopPropagation();
     const parsedInput = parseDate(event.target.value, displayFormat || format, i18n, displayFormatType || formatType);
     const formattedInput = formatDate(parsedInput, displayFormat || format, i18n, displayFormatType || formatType);
     if (formattedInput === event.target.value) {
@@ -472,7 +474,7 @@
       ce_valueElement.dispatchEvent(new Event('input'));
       ce_displayElement.dispatchEvent(new Event('input'));
     }
-    dispatchInputEvent && dispatch("input", value);
+    dispatchInputEvent && dispatch('input', currentValue);
   }
 
   /**
@@ -503,33 +505,38 @@
 </script>
 
 <span class="std-component-wrap">
-{#if !ce_displayElement}
-  <input type="hidden" {name} {value}>
-  {#if !pickerOnly}
-  <input bind:this={ref_input} type={pickerOnly ? "hidden" : "text"}
-    id={inputId}
-    tabindex="0"
-    name={name.endsWith(']') ? name.substring(0, name.length-1) + '_input]' : name + '_input'}
-    class:value-dirty={!autocommit && isDirty}
-    value={displayValue}
-    {placeholder} {disabled} {required}
-    autocomplete="off"
-    inputmode="none"
-    class={inputClasses}
-    readonly={isFocused && !manualInput && !isRange}
-    on:input={manualInput ? onManualInput : () => {}}
-    use:inputAction={inputActionParams}
-    on:focus={onInputFocus}
-    on:blur={onInputBlur}
-    on:click={() => {
-      !pickerVisible && onInputFocus();
-    }}
-    on:input
-    on:change
-    on:keydown={onKeyDown}
-  />
+  <slot name="inputs"
+    value={value} displayValue={displayValue} disabled={disabled} isDirty={isDirty}
+    onKeyDown={onKeyDown} onInputFocus={onInputFocus} onInputBlur={onInputBlur}
+  >
+  {#if !ce_displayElement}
+    <input type="hidden" {name} {value}>
+    {#if !pickerOnly}
+    <input bind:this={ref_input} type="text"
+      id={inputId}
+      tabindex="0"
+      name={name.endsWith(']') ? name.substring(0, name.length-1) + '_input]' : name + '_input'}
+      class:value-dirty={!autocommit && isDirty}
+      value={displayValue}
+      {placeholder} {disabled} {required}
+      autocomplete="off"
+      inputmode="none"
+      class={inputClasses}
+      readonly={isFocused && !manualInput && !isRange}
+      on:input={manualInput ? onManualInput : () => {}}
+      use:inputAction={inputActionParams}
+      on:focus={onInputFocus}
+      on:blur={onInputBlur}
+      on:click={() => {
+        !pickerVisible && onInputFocus();
+      }}
+      on:input
+      on:change
+      on:keydown={onKeyDown}
+    />
+    {/if}
   {/if}
-{/if}
+  </slot>
 {#if pickerVisible && isFocused }
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
@@ -637,7 +644,6 @@
     padding: 0.5em;
     color: var(--sdt-color);
   }
-  /* FUTURE: */
   .std-calendar-wrap.is-range-wrap {
     width: 560px;
   }
@@ -652,7 +658,7 @@
     min-width: 264px;
   }
   .value-dirty {
-    color: color-mix(in srgb, black 50%, currentColor);
+    color: color-mix(in srgb, black 20%, white);
   }
   .std-calendar-wrap.is-popup {
     position: absolute;

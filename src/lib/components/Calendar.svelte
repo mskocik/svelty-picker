@@ -112,9 +112,7 @@
 
   $: times = dates.map(date => { date = new Date(date); date.setHours(0,0); return date.getTime() });
   $: dataset = compute(activeDate, dates, currentView, i18n, weekStart);
-  $: dayLabels = weekStart > -1
-    ? i18n.daysMin.concat(i18n.daysMin).slice(weekStart, 7 + weekStart)
-    : i18n.daysMin.slice(weekStart, 7 + weekStart)
+  $: dayLabels =  i18n.daysMin.concat(...i18n.daysMin.slice(1)).slice(weekStart, 7 + weekStart);
 
   function isBetween(/** @type {number} */num) {
     return dataset.prevTo <= num && num < dataset.nextFrom;
@@ -419,7 +417,7 @@
   padding: 0;
   font-size: 90%;
   text-align: center;
-  background-color: var(--sdt-bg-main);
+  background-color: var(--sdt-bg-main);;
 }
 .sdt-cal-th {
   text-align: center;
@@ -439,6 +437,7 @@
 .sdt-table {
   width: 100%;
   border-collapse: collapse;
+  margin: 0;
 }
 .sdt-table-height {
   height: 222px;

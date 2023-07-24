@@ -21,7 +21,9 @@
  * @property {string} backToDate
 */
 
-// Czech translation
+/**
+ * @type {i18nType} Czech translation
+ */
 export const cz = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -38,7 +40,9 @@ export const cz = {
   backToDate:  'Zpátky na kalendář'
 }
 
-// German translation by emroc GmbH
+/**
+ * @type {i18nType} German translation by emroc GmbH
+ */
 export const de = {
   days:        ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
   daysShort:   ['Son', 'Mon', 'Die', 'Mie', 'Don', 'Fre', 'Sam', 'Son'],
@@ -55,7 +59,9 @@ export const de = {
   backToDate:  'Zurück zur Kalenderansicht'
 }
 
-// English translation
+/**
+ * @type {i18nType} English translation
+ */
 export const en = {
   days:        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
   daysShort:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -72,7 +78,11 @@ export const en = {
   backToDate:  'Back to calendar view'
 }
 
-// Spanish translation by markoan
+
+/**
+ * @type {i18nType} Spanish translation by markoan
+ */
+
 export const es = {
   days:        ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
   daysShort:   ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
@@ -89,7 +99,9 @@ export const es = {
   backToDate:  'Regresar al calendario'
 }
 
-// Persian (Farsi) translation by sadegh19b
+/**
+ * @type {i18nType} Persian (Farsi) translation by sadegh19b
+ */
 export const fa = {
   days:        ['یکشنبه', 'دوشنبه', 'سه‌شنبه‌', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه', 'یکشنبه'],
   daysShort:   ['یکش', 'دوش', 'سه‌ش', 'چهار', 'پنج', 'جمع', 'شنب', 'یکش'],
@@ -106,7 +118,9 @@ export const fa = {
   backToDate:  'بازگشت به بخش تقویم'
 }
 
-// French translation by Tuditi
+/**
+ * @type {i18nType} French translation by Tuditi
+ */
 export const fr = {
   days:        ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
   daysShort:   ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
@@ -123,7 +137,9 @@ export const fr = {
   backToDate:  'Retour au calendrier'
 }
 
-// Hungarian translation by Tuditi
+/**
+ * @type {i18nType} Hungarian translation by Tuditi
+ */
 export const hu = {
   days:        ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'],
   daysShort:   ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo', 'V'],
@@ -140,7 +156,9 @@ export const hu = {
   backToDate:  'Vissza a naptárhoz'
 };
 
-// Indonesian translation
+/**
+ * @type {i18nType} Indonesian translation
+ */
 export const id = {
   days:        ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
   daysShort:   ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
@@ -157,7 +175,9 @@ export const id = {
   backToDate:  'Kembali ke tampilan kalender'
 }
 
-// Japanese translation by aska
+/**
+ * @type {i18nType} Japanese translation by aska
+ */
 export const jp = {
   days:        ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日'],
   daysShort:   ['日曜', '月曜', '火曜', '水曜', '木曜', '金曜', '土曜', '日曜'],
@@ -174,7 +194,9 @@ export const jp = {
   backToDate:  'カレンダーに戻る'
 }
 
-// Dutch Translation by Tuditi
+/**
+ * @type {i18nType} Dutch Translation by Tuditi
+ */
 export const nl = {
   days:        ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'],
   daysShort:   ['Zon', 'Maa', 'Din', 'Woe', 'Don', 'Vri', 'Zat', 'Zon'],
@@ -191,7 +213,9 @@ export const nl = {
   backToDate:  'Terug naar de kalender'
 };
 
-// Slovak Translation
+/**
+ * @type {i18nType} Slovak Translation
+ */
 export const sk = {
   days:        ['Nedeľa', 'Pondelok', 'Utorok', 'Streda', 'Štvrtok', 'Piatok', 'Sobota', 'Nedeľa'],
   daysShort:   ['Ned', 'Pon', 'Uto', 'Str', 'Štv', 'Pia', 'Sob', 'Ned'],
@@ -208,7 +232,9 @@ export const sk = {
   backToDate:  'Späť na kalendár'
 }
 
-// Korean translation
+/**
+ * @type {i18nType} Korean translation
+ */
 export const ko = {
   days:        ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
   daysShort:   ['일', '월', '화', '수', '목', '금', '토', '일'],
@@ -225,7 +251,9 @@ export const ko = {
   backToDate:  '달력보기'
 }
 
-// Brazilian portuguese translation by IgorDalepiane
+/**
+ * @type {i18nType} Brazilian portuguese translation by IgorDalepiane
+ */
 export const pt_BR = {
   days: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
   daysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
@@ -242,7 +270,9 @@ export const pt_BR = {
   backToDate: 'Voltar para o calendário'
 }
 
-// italian translation by MarkNerdi
+/**
+ * @type {i18nType} italian translation by MarkNerdi
+ */
 export const it = {
   days:        ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'],
   daysShort:   ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'],
