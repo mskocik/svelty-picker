@@ -24,7 +24,6 @@ ul {
   margin: var(--spacing-4) auto var(--spacing-18);
   box-shadow: var(--shadow-elevation-medium);
   overflow-x: auto;
-  max-width: var(--max-width-full);
 }
 
 .highlight-line {

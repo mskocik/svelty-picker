@@ -2,4 +2,28 @@
 title: Theme
 ---
 
-> TODO...
+Component exposes following CSS variables to customize it's appearance as you can see through whole in example below or on the homepage.
+
+```css
+:root {
+    --sdt-bg-main: #fff;
+    --sdt-shadow-color: #ccc;
+    --sdt-color: #000;
+    --sdt-primary: #286090;
+    --sdt-disabled-date: #b22222;
+    --sdt-disabled-date-bg: var(--sdt-bg-main);
+    --sdt-btn-bg-hover: #eee;
+    --sdt-btn-header-bg-hover: #dfdfdf;
+    --sdt-color-selected: var(--sdt-bg-main);
+    --sdt-today-indicator: #ccc;
+    --sdt-clock-bg: #eeeded;
+    /* action buttons */
+    --sdt-today-bg: #1e486d;
+    --sdt-today-color: var(--sdt-bg-main);
+    --sdt-clear-color: #dc3545;
+    --sdt-clear-bg: transparent;
+    --sdt-clear-hover-color: var(--sdt-bg-main);
+}
+```
+
+You can play with them here:

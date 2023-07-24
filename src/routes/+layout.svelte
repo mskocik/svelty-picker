@@ -40,7 +40,6 @@
   
   onDestroy(() => {
     !isWide && typeof document !== 'undefined' && document.removeEventListener('click', outsideNavClick);
-    theme.subscribe(val => console.log('Theme val', val));
   });
 
   function outsideNavClick(e) {
@@ -67,10 +66,11 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" />
           </svg>
-          <span class="leading-4">Menu</span>
+          <span class="leading-4 hidden sm:block">Menu</span>
         </button>
       </div>
-      <a href="{base}/" class="home-link flex-1 lg:flex-none text-center lg:text-left">📅 Svelty Picker</a>
+      <a href="{base}/" class="home-link flex-1 lg:flex-none text-center lg:text-left">
+        <span class="hidden sm:inline">📅</span> Svelty Picker</a>
     </div>
     <div class="flex items-center">
       <a class="inline-flex" href="https://github.com/mskocik/svelty-picker" target="_blank" rel="noreferrer" title="GitHub repository">

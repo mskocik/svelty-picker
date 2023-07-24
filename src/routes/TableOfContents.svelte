@@ -44,15 +44,6 @@
 		margin: 0 0 1em 0;
 	}
 
-	.section-title {
-		display: block;
-		padding: 0 0 0.8rem 0;
-		font: 400 var(--sk-text-xs) var(--sk-font);
-		text-transform: uppercase;
-		letter-spacing: 0.12em;
-		font-weight: 700;
-	}
-
 	div {
 		display: flex;
 		flex-direction: row;
@@ -82,12 +73,5 @@
 	}
 	a:hover {
 		color: var(--sk-text-1);
-	}
-
-	.repl-link {
-		flex: 0 1 auto;
-		font-size: 1.2rem;
-		font-weight: 700;
-		margin-right: 2.5rem;
 	}
 </style>
