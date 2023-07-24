@@ -16,7 +16,8 @@ const config = {
     adapter: adapter({
       pages: 'docs',
       assets: 'docs',
-      strict: false
+      strict: false,
+      trailingSlash: false
     }),
     paths: {
       base: !production ? "" : "/svelty-picker",

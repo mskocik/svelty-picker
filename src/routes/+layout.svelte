@@ -10,8 +10,8 @@
   import { ProgressBar } from '@prgm/sveltekit-progress-bar'
   import ThemeToggle from "./ThemeToggle.svelte";
 
-    /** @type {import('./$types').LayoutData} */
-    export let data = [];
+  /** @type {import('./$types').LayoutData} */
+  export let data = [];
 
   const theme = writable(null);
 
