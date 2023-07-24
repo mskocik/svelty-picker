@@ -1,7 +1,7 @@
 {
   "name": "svelty-picker",
   "description": "Sweet date/time picker written in svelte",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run package",
@@ -17,6 +17,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
+    },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "default": "./dist/i18n/index.js"
     }
   },
   "files": [
