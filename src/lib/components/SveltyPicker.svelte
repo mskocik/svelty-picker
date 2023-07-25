@@ -669,7 +669,7 @@
     padding: 0.25em 0.5em;
     font-size: 0.875em;
     border-radius: 0.2em;
-    border: 1px solid var(--sdt-today-bg);
+    border: 1px solid var(--sdt-today-bg, #286090);
   }
   .sdt-today-btn[disabled] {
     opacity: 0.5;
@@ -678,7 +678,7 @@
   .sdt-today-btn:focus,
   .sdt-today-btn:active,
   .sdt-today-btn:hover:not([disabled]) {
-    background-color: var(--sdt-today-bg);
+    background-color: var(--sdt-today-bg, #286090);
   }
   .sdt-clear-btn {
     border: 1px solid var(--sdt-clear-color, #dc3545);

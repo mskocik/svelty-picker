@@ -467,6 +467,7 @@
 }
 .sdt-btn-day {
   max-height: 32px;
+  height: 32px;
 }
 .std-btn[disabled] {
   cursor: not-allowed;
