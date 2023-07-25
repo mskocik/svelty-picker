@@ -1,7 +1,7 @@
 <script>
 	import SveltyPicker from 'svelty-picker';
 
-	let initialDate = '2023-07-19';
+	let initialDate = new Date();
 	let startDate = '2023-07-04';
 	let endDate = '2023-07-28';
 
@@ -20,3 +20,8 @@ Restricted selection list:<br>
 
 
 
+<style>
+	.my-4 {
+		margin: 16px 0;
+	}
+</style>

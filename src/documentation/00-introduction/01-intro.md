@@ -10,4 +10,4 @@ Features:
 - themable
 - customizable disabled dates
 <!-- - validator action for `<input>` using `svelte-use-forms` (optional) -->
-- custom element (in progress)
+- custom element
