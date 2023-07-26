@@ -130,6 +130,7 @@
   $: internalVisibility = pickerOnly ? true : false;
   $: positionPopup = !pickerOnly ? usePosition : () => {};
   $: isDirty = computeDirty(valueArray);
+  $: watchExternalValueChange(value);
   $: watchValueChange(valueArray);
   $: watchFormatChange(format, displayFormat);
 
@@ -157,6 +158,16 @@
       prevValue = valueArray;
       currentValue = computeStringValue();
       displayValue = computeDisplayValue();
+    } 
+  }
+
+  /**
+   * @param {string} value
+   */
+  function watchExternalValueChange(value) {
+    if (currentValue !== value) {
+      valueArray = (value || '').split(',');
+      undoHistory = valueArray;
     }
   }
 
