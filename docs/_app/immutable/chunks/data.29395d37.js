@@ -173,7 +173,7 @@ Selected value: {value}<br>
 </style>`}]},{title:"Disabling dates",slug:"disabling-dates",files:[{name:"App.svelte",type:"svelte",content:`<script>
 	import SveltyPicker from 'svelty-picker';
 
-	let initialDate = '2023-07-19';
+	let initialDate = new Date();
 	let startDate = '2023-07-04';
 	let endDate = '2023-07-28';
 
@@ -192,7 +192,11 @@ Restricted selection list:<br>
 
 
 
-`}]},{title:"Slots",slug:"slots",files:[{name:"App.svelte",type:"svelte",content:`<script>
+<style>
+	.my-4 {
+		margin: 16px 0;
+	}
+</style>`}]},{title:"Slots",slug:"slots",files:[{name:"App.svelte",type:"svelte",content:`<script>
 	import SveltyPicker from 'svelty-picker';
 
 	let value;
