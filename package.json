@@ -21,6 +21,10 @@
     "./i18n": {
       "types": "./dist/i18n/index.d.ts",
       "default": "./dist/i18n/index.js"
+    },
+    "./element": {
+      "types": "./dist/utils/custom-element.d.ts",
+      "default": "./dist/utils/custom-element.js"
     }
   },
   "files": [
