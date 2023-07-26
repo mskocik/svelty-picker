@@ -46,7 +46,7 @@
   /** @type {?function(Date): boolean} */
   export let disableDatesFn = null;
 
-  export let manualInput = true;
+  export let manualInput = false;
   /** ************************************ 👇 configurable globally */
   /** @type {string} */
   export let theme = config.theme;
