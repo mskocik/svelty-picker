@@ -309,16 +309,16 @@
 </script>
 
 <div class="sdt-thead-nav">
-  <button class="std-btn std-btn-header sdt-toggle-btn" on:click|preventDefault={onSwitchView}>{tableCaption}</button>
+  <button type="button" class="std-btn std-btn-header sdt-toggle-btn" on:click={onSwitchView}>{tableCaption}</button>
   {#if enableTimeToggle && dates.length}
-  <button class="std-btn std-btn-header icon-btn sdt-time-icon" title={i18n.timeView} on:click|preventDefault={onTimeSwitch} >
+  <button type="button" class="std-btn std-btn-header icon-btn sdt-time-icon" title={i18n.timeView} on:click={onTimeSwitch} >
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
   </button>
   {/if}
-  <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(-1)}>
+  <button type="button" class="std-btn std-btn-header icon-btn" on:click={() => onTransformChangeMonth(-1)}>
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
   </button>
-  <button class="std-btn std-btn-header icon-btn" on:click|preventDefault={() => onTransformChangeMonth(1)}>
+  <button type="button" class="std-btn std-btn-header icon-btn" on:click={() => onTransformChangeMonth(1)}>
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
   </button>
   <div class="sdt-nav-btns">
@@ -337,10 +337,10 @@
         {#each row as year, j(j)}
         {@const idx = i*4+j}
         <td class="sdt-cal-td" class:is-selected={dataset.selectionMark.includes(idx)}>
-          <button
+          <button type="button"
             class="std-btn"
             class:not-current={!isBetween(idx)}
-            on:click|preventDefault={() => { onClick(year)}}
+            on:click={() => { onClick(year)}}
             disabled={isDisabledDate(new Date(year, activeDate.getMonth(), activeDate.getDate()))}
           >{year}</button>
         </td>
@@ -361,9 +361,9 @@
         {#each row as month, j(j)}
         {@const idx = i*4+j}
         <td class="sdt-cal-td" class:is-selected={idx === dataset.selectionMark[0]}>
-          <button class="std-btn"
+          <button class="std-btn" type="button"
             class:not-current={!isBetween(idx)}
-            on:click|preventDefault={() => { onClick(month)}}
+            on:click={() => { onClick(month)}}
             disabled={isDisabledDate(new Date(activeDate.getFullYear(), i18n.monthsShort.indexOf(month), activeDate.getDate()))}
           >{month}</button>
         </td>
@@ -395,7 +395,7 @@
           on:mouseover={wrapHoverDateToggle(currDate)}
           on:mouseout={wrapHoverDateToggle()}
         >
-          <button on:click={() => {onClick(currDate)}}
+          <button on:click={() => {onClick(currDate)}} type="button"
             class="std-btn  sdt-btn-day"
             class:not-current={!isBetween(i*7+j) }
             disabled={(computedStartDate || endDate || additionalDisableFn) && isDisabledDate(currDate)}
