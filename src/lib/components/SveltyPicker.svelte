@@ -154,7 +154,7 @@
    */
   function watchValueChange(valueArray) {
     if (valueArray.join('') !== prevValue.join('')) {
-      innerDates = valueArray.map(val => parseDate(val, format, i18n, formatType));
+      innerDates = valueArray.filter(e => e).map(val => parseDate(val, format, i18n, formatType));
       prevValue = valueArray;
       currentValue = computeStringValue();
       displayValue = computeDisplayValue();
