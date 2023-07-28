@@ -138,6 +138,25 @@ export const fr = {
 }
 
 /**
+ * @type {i18nType} Croatian translation by AntonioStipic
+ */
+export const hr = {
+  days:        ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota', 'Nedjelja'],
+  daysShort:   ['Ned', 'Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned'],
+  daysMin:     ['Ne', 'Po', 'Ut', 'Sr', 'Čt', 'Pt', 'Su', 'Ne'],
+  months:      ['Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj', 'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'],
+  monthsShort: ['Sij', 'Vel', 'Ožu', 'Tra', 'Svi', 'Lip', 'Srp', 'Kol', 'Ruj', 'Lis', 'Stu', 'Pro'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['', '', '', ''],
+  todayBtn:    'Danas',
+  clearBtn:    'Očisti',
+  okBtn:       'OK',
+  cancelBtn:   'Prekid',
+  timeView:    'Prikaži vrijeme',
+  backToDate:  'Nazad na kalendar'
+}
+
+/**
  * @type {i18nType} Hungarian translation by Tuditi
  */
 export const hu = {
@@ -291,5 +310,5 @@ export const it = {
 
 // always keep it sorted alphabetically
 export default {
-  cz, de, en, es, fr, hu, id, it, jp, ko, nl, pt_BR, sk
+  cz, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk
 }
