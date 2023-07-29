@@ -212,8 +212,7 @@
         activeDate = activeDate;
         break;
       case 2:
-        if (startDate && isLower(value, startDate)) return;
-        if (endDate && isGreater(value, endDate)) return;
+        if (isDisabledDate(value)) return;
         if (additionalDisableFn && additionalDisableFn(value)) return;
         const newInternalDate = new Date(value.getFullYear(), value.getMonth(), value.getDate());
         if (internalDate) {
