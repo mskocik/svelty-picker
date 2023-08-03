@@ -162,11 +162,12 @@
   }
 
   /**
-   * @param {string} value
+   * @param {string} passedValue
    */
-  function watchExternalValueChange(value) {
-    if (currentValue !== value) {
-      valueArray = (value || '').split(',');
+  function watchExternalValueChange(passedValue) {
+    const stringValue = Array.isArray(passedValue) ? passedValue.join(',') : passedValue;
+    if (currentValue !== stringValue) {
+      valueArray = (stringValue || '').split(',');
       undoHistory = valueArray;
     }
   }
