@@ -308,7 +308,26 @@ export const it = {
   backToDate:  'Torna alla vista calendario'
 }
 
+/**
+ * @type {i18nType} Turkish translation by semih-ky
+ */
+export const tr = {
+  days:        ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'],
+  daysShort:   ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
+  daysMin:     ['Pa', 'Pz', 'Sa', 'Ça', 'Pe', 'Cu', 'Cm', 'Pa'],
+  months:      ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'], 
+  monthsShort: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
+  meridiem:    ['öö', 'ös'],
+  suffix:      ['.', '.', '.', '.'],
+  todayBtn:    'Bugün',
+  clearBtn:    'Temizle',
+  okBtn:       'Ok',
+  cancelBtn:   'İptal',
+  timeView:    'Zaman görünümünü göster',
+  backToDate:  'Takvim görünümüne geri dön'
+}
+
 // always keep it sorted alphabetically
 export default {
-  cz, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk
+  cz, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, tr
 }
