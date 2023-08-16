@@ -329,5 +329,5 @@ export const tr = {
 
 // always keep it sorted alphabetically
 export default {
-  cz, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, tr, sk
+  cz, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, tr
 }
