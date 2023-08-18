@@ -327,7 +327,26 @@ export const tr = {
   backToDate:  'Takvim görünümüne geri dön'
 }
 
+/**
+ * @type {i18nType} Swedish translation by brantsrasmus
+ */
+export const sv = {
+  days:        ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'],
+  daysShort:   ['Sön', 'Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'],
+  daysMin:     ['Sö', 'Må', 'Ti', 'On', 'To', 'Fr', 'Lö', 'Sö'],
+  months:      ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'],
+  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['.', '.', '.', '.'],
+  todayBtn:    'Idag',
+  clearBtn:    'Rensa',
+  okBtn:       'Ok',
+  cancelBtn:   'Avbryt',
+  timeView:    'Visa tid',
+  backToDate:  'Tillbaka till kalender'
+}
+
 // always keep it sorted alphabetically
 export default {
-  cz, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, tr
+  cz, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, tr
 }
