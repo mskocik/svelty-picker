@@ -346,7 +346,26 @@ export const sv = {
   backToDate:  'Tillbaka till kalender'
 }
 
+/**
+ * @type {i18nType} Danish translation by brantsrasmus
+ */
+export const da = {
+  days:        ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'],
+  daysShort:   ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'],
+  daysMin:     ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø', 'Sø'],
+  months:      ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December'],
+  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['.', '.', '.', '.'],
+  todayBtn:    'I dag',
+  clearBtn:    'Slet',
+  okBtn:       'Ok',
+  cancelBtn:   'Annuller',
+  timeView:    'Vis tid',
+  backToDate:  'Tilbage til kalenderen'
+}
+
 // always keep it sorted alphabetically
 export default {
-  cz, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, tr
+  cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, tr
 }
