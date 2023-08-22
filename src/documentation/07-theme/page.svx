@@ -8,7 +8,10 @@ Component exposes following CSS variables to customize it's appearance as you ca
 :root {
     --sdt-bg-main: #fff;
     --sdt-shadow-color: #ccc;
+    --sdt-wrap-shadow: 0 1px 6px var(--sdt-shadow-color);
+    --sdt-radius: 4px;
     --sdt-color: #000;
+    --sdt-header-color: #000;
     --sdt-primary: #286090;
     --sdt-disabled-date: #b22222;
     --sdt-disabled-date-bg: var(--sdt-bg-main);
@@ -17,6 +20,7 @@ Component exposes following CSS variables to customize it's appearance as you ca
     --sdt-color-selected: var(--sdt-bg-main);
     --sdt-today-indicator: #ccc;
     --sdt-clock-bg: #eeeded;
+    --sdt-table-bg: transparent;
     /* action buttons */
     --sdt-today-bg: #1e486d;
     --sdt-today-color: var(--sdt-bg-main);

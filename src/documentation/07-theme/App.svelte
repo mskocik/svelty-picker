@@ -8,7 +8,7 @@ The picker's mode responds to website light/dark mode setting.
 <style>
 	:global(.dark) {
 		--sdt-bg-main: #585858;
-		--sdt-shadow-color: #ccc;
+		--sdt-shadow-color: #777;
 		--sdt-color: #eee;
 		--sdt-primary: #e1ac4a;
 		--sdt-disabled-date: #b22222;

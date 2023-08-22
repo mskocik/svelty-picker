@@ -417,7 +417,7 @@
   padding: 0;
   font-size: 90%;
   text-align: center;
-  background-color: var(--sdt-bg-main, #fff);
+  /* background-color: var(--sdt-bg-main, #fff); */
 }
 .sdt-cal-th {
   text-align: center;
@@ -438,6 +438,7 @@
   width: 100%;
   border-collapse: collapse;
   margin: 0;
+  background-color: var(--sdt-table-bg, transparent);
 }
 .sdt-table-height {
   height: 222px;
@@ -478,6 +479,7 @@
   width: auto;
   font-weight: bold;
   padding: 0.375em 0.5em;
+  color: var(--sdt-header-color, var(--sdt-color, initial));
 }
 .std-btn-header.icon-btn:first-of-type {
   padding-left: 0.375em;
@@ -574,7 +576,7 @@
   z-index: 2;
 }
 .sdt-svg {
-  fill: var(--sdt-color, initial);
+  fill: var(--sdt-header-color, inital);
 }
 .sdt-today:hover:before,
 .in-range.sdt-today:before {

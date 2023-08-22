@@ -638,7 +638,7 @@
     width: 280px;
     background-color: var(--sdt-bg-main, #fff);
     box-shadow: var(--sdt-wrap-shadow, 0 1px 6px var(--sdt-shadow-color, #ccc));
-    border-radius: 4px;
+    border-radius: var(--sdt-radius, 4px);
     padding: 0.5em;
     color: var(--sdt-color, initial);
   }

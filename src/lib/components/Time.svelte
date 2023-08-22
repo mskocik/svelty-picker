@@ -411,13 +411,13 @@
   cursor: pointer;
   height: 38px;
   padding: 0 0.375em;
-  color: var(--sdt-color, initial);
+  color: var(--sdt-header-color, inital);
 }
 .sdt-time-btn > svg {
   stroke: initial !important;
 }
 .sdt-svg {
-  fill: var(--sdt-color, initial);
+  fill: var(--sdt-header-color, inital);
 }
 .sdt-time-btn:not(.is-active) {
   opacity: 0.5;
