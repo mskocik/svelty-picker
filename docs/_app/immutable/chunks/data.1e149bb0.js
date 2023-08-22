@@ -173,7 +173,6 @@ Selected value: {value}<br>
 </style>`}]},{title:"Disabling dates",slug:"disabling-dates",files:[{name:"App.svelte",type:"svelte",content:`<script>
 	import SveltyPicker from 'svelty-picker';
 
-	let initialDate = new Date();
 	let startDate = '2023-07-04';
 	let endDate = '2023-07-28';
 
@@ -184,11 +183,11 @@ Selected value: {value}<br>
 <\/script>
 
 Restricted selection list:<br>
-<SveltyPicker {startDate} {endDate} {initialDate}/>
+<SveltyPicker {startDate} {endDate} placeholder="Only July is allowed"/>
 
 <div class="my-4"></div>
 
-<SveltyPicker disableDatesFn={disableWeekends}/>
+<SveltyPicker disableDatesFn={disableWeekends} placeholder="Weekends are disabled"/>
 
 
 
@@ -293,7 +292,7 @@ The picker's mode responds to website light/dark mode setting.
 <style>
 	:global(.dark) {
 		--sdt-bg-main: #585858;
-		--sdt-shadow-color: #ccc;
+		--sdt-shadow-color: #777;
 		--sdt-color: #eee;
 		--sdt-primary: #e1ac4a;
 		--sdt-disabled-date: #b22222;

@@ -3,8 +3,6 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
-console.log(import.meta.NODE_ENV, process.NODE_ENV)
-
 export default ({ mode }) => {
 	return mode === 'ce'
 		? defineConfig({
