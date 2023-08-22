@@ -1,8 +1,16 @@
 ---
-title: Localization
+title: Localization X
 ---
 
+<script>
+    import * as i18n from '$lib/i18n/index.js';
+
+    const keys = Object.keys(i18n).filter(k => k !== 'default').join(' | ');
+</script>
+
 By default date picker uses english locale. And at the moment there is only few locales available 
-(PRs for additional locales are more than welcome). 
+(PRs for additional locales are more than welcome).
+
+Available locales: <code>{keys}</code>
 
 Setting locale is perfect use case for using [global configuration](/global-config).
