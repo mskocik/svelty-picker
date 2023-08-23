@@ -11,6 +11,8 @@ Component exposes following CSS variables to customize it's appearance as you ca
     --sdt-wrap-shadow: 0 1px 6px var(--sdt-shadow-color);
     --sdt-radius: 4px;
     --sdt-color: #000;
+    --sdt-color-selected: #fff;
+    --sdt-color-time: inherit; /** optionaly separate color for time picker */
     --sdt-header-color: #000;
     --sdt-primary: #286090;
     --sdt-disabled-date: #b22222;

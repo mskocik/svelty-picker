@@ -3,13 +3,14 @@
 </script>
 
 The picker's mode responds to website light/dark mode setting.  
-<SveltyPicker pickerOnly />
+<SveltyPicker pickerOnly mode="datetime" />
 
 <style>
 	:global(.dark) {
 		--sdt-bg-main: #585858;
 		--sdt-shadow-color: #777;
 		--sdt-color: #eee;
+		--sdt-header-color: #eee;
 		--sdt-primary: #e1ac4a;
 		--sdt-disabled-date: #b22222;
 		--sdt-disabled-date-bg: var(--sdt-bg-main);

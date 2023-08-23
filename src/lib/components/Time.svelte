@@ -388,6 +388,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 4px;
+  color: var(--sdt-header-color, initial);
 }
 .sdt-time-figure {
   font-size: 1.5em;
@@ -485,6 +486,7 @@
   cursor: pointer;
   background-color: transparent;
   transition: all 0.3s;
+  color: var(--sdt-color-time, inherit);
 }
 .sdt-tick[disabled] {
   cursor: not-allowed;
