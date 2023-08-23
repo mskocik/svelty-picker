@@ -287,13 +287,14 @@ Restricted selection list:<br>
 <\/script>
 
 The picker's mode responds to website light/dark mode setting.  
-<SveltyPicker pickerOnly />
+<SveltyPicker pickerOnly mode="datetime" />
 
 <style>
 	:global(.dark) {
 		--sdt-bg-main: #585858;
 		--sdt-shadow-color: #777;
 		--sdt-color: #eee;
+		--sdt-header-color: #eee;
 		--sdt-primary: #e1ac4a;
 		--sdt-disabled-date: #b22222;
 		--sdt-disabled-date-bg: var(--sdt-bg-main);
@@ -330,7 +331,7 @@ The picker's mode responds to website light/dark mode setting.
 		--sdt-clear-hover-color: #fff;
 		--sdt-clear-hover-bg: #dc3545;
 	}
-</style>`}]},{title:"Localization",slug:"localization",files:[{name:"App.svelte",type:"svelte",content:`<script>
+</style>`}]},{title:"Localization X",slug:"localization",files:[{name:"App.svelte",type:"svelte",content:`<script>
 	import SveltyPicker, { config } from 'svelty-picker';
 	import { de, jp } from 'svelty-picker/i18n';
 
