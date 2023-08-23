@@ -201,8 +201,8 @@
   */
   function computeDisplayValue() {
     return innerDates
+      .sort((date1, date2) => date1 - date2)
       .map(innerDate => formatDate(innerDate, displayFormat || format, i18n, displayFormatType || formatType))
-      .sort()
       .join(' - ');
   }
 
