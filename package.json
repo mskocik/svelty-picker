@@ -16,8 +16,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js",
-      "svelte": "./dist/index.js"
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./i18n": {
       "types": "./dist/i18n/index.d.ts",
