@@ -1,4 +1,4 @@
-import { formatDate, parseDate } from "./dateUtils";
+import { formatDate, parseDate } from "./dateUtils.js";
 
 /**
  * @typedef {object} ValueInit
