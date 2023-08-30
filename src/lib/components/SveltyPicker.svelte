@@ -1,5 +1,5 @@
 <script context="module">
-  import settings from "../settings";
+  import settings from "../settings.js";
   export const config = settings;
 </script>
 
@@ -12,10 +12,10 @@
   import { fade } from "svelte/transition";
   import Calendar from "./Calendar.svelte";
   import Time from "./Time.svelte";
-  import { formatDate, parseDate } from "$lib/utils/dateUtils";
+  import { formatDate, parseDate } from "$lib/utils/dateUtils.js";
   import { usePosition } from "$lib/utils/actions.js";
-  import { computeResolvedMode, initProps } from "$lib/utils/state";
-  import { MODE_MONTH, STARTVIEW_TIME } from "$lib/utils/constants";
+  import { computeResolvedMode, initProps } from "$lib/utils/state.js";
+  import { MODE_MONTH, STARTVIEW_TIME } from "$lib/utils/constants.js";
 
   // html
   export let inputId = '';

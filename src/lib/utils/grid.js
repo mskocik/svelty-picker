@@ -1,6 +1,6 @@
 
-import { MODE_YEAR, MODE_DECADE } from "./constants";
-import { getDaysInMonth } from "./dateUtils";
+import { MODE_YEAR, MODE_DECADE } from "./constants.js";
+import { getDaysInMonth } from "./dateUtils.js";
 
 /**
  * @typedef {object} Dataset
