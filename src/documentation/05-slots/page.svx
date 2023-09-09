@@ -24,7 +24,7 @@ For better picture what parts of picker are overrideable by slots there is rough
 ```
 As can be seen in code above there are 2 available slots. Event handlers have prefix `on`.
 
-### inputs
+### inputs slot
 
 There are mutliple exposed props to be able to fully replace default implementation
 
@@ -36,7 +36,7 @@ There are mutliple exposed props to be able to fully replace default implementat
 - `onInputFocus` - focus handler - shows popup
 - `onInputBlur` - hides popup if active
 
-### action-row
+### action-row slot
 
 And here again, all props and handlers needed to recreate even the default implementation*
 
@@ -50,5 +50,5 @@ And here again, all props and handlers needed to recreate even the default imple
 
 * Default implementation relies also on `isRange` and `autocommit` props, which you will probably provide yourself if needed.
 
-In examples below default slot implementation is being shown.
+In examples below slot implementation _similar_ to default is being shown.
 
