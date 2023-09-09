@@ -201,7 +201,7 @@ Restricted selection list:<br>
 	let value;
 	let autocommit = false;
 <\/script>
-<SveltyPicker bind:value {autocommit}>
+<SveltyPicker bind:value {autocommit} displayFormat="mm/dd/yyyy">
   <svelte:fragment slot="inputs"
     let:value
     let:displayValue
@@ -210,9 +210,8 @@ Restricted selection list:<br>
     let:onInputBlur
     let:onKeyDown
   >
-    <input type="text" {value} readonly>
-    <input type="text" value={displayValue}
-			on:click={onInputBlur}
+    <input type="text" {value} readonly placeholder="Custom value input" on:focus={e => e.target.nextElementSibling.focus()}>
+    <input type="text" value={displayValue} placeholder="Custom dislay input"
 			on:keydown={onKeyDown} on:focus={onInputFocus} on:blur={onInputBlur}
 		>
   
