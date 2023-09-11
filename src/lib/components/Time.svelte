@@ -135,7 +135,7 @@
   $: innerHours = positions(isMinuteView ? 180 : 120, 110, isMinuteView ? '00' : '12', isMinuteView, 12);
 
   /**
-   *
+   * 
    * @param {number} value
    * @param {boolean} asMeridian
    */
@@ -196,7 +196,7 @@
         return startDate.getHours() === innerDate.getHours() && startDate.getMinutes() > val;
       }
       return startDate.getHours() > val;
-    }
+    } 
     if (endDate
       && endDate.getDate()     === innerDate.getDate()
       && endDate.getMonth()    === innerDate.getMonth()
@@ -229,7 +229,7 @@
 
       innerDate[setter](val);
     } else if (isMinuteView) {
-      // compute it out of x,y
+      // compute it out of x,y 
       const rect = clockEl.getBoundingClientRect();
       const clientX = e.clientX - rect.left;
       const clientY = e.clientY - rect.top;
@@ -285,7 +285,7 @@
       innerDate.setMinutes(degree);
     }
     innerDate = innerDate;
-
+    
     // handle only final click, not mouse move
     if (!handleMoveMove) {
       dispatch(isMinuteView ? 'minute' : 'hour', {
@@ -329,7 +329,7 @@
 </script>
 
 <div class="sdt-timer" in:fade={{duration: 200}}>
-
+  
   <div class="sdt-time-head">
     {#if hasDateComponent}
     <button type="button" class="sdt-time-btn sdt-back-btn" title={i18n.backToDate} on:click={onModeSwitch}>
@@ -351,7 +351,7 @@
     </div>
     {/if}
   </div>
-
+    
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="sdt-clock" on:click|preventDefault={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
@@ -360,7 +360,7 @@
       <div class="sdt-hand-circle"></div>
     </div>
     {#each pos as p, i(p.val)}
-      <button type="button" style={`left:${p.x}px; top:${p.y}px`} class="sdt-tick" class:outer-tick={isMinuteView} transition:fade|local={{duration: 200}}
+      <button type="button" style={`left:${p.x}px; top:${p.y}px;`} class="sdt-tick" class:outer-tick={isMinuteView} transition:fade|local={{duration: 200}}
         data-value={p.val}
         disabled={(startDate || endDate) && innerDate && isDisabled(p.val, false)}
         class:is-selected={isSelected(selectedHour, p.val, i)}
@@ -412,19 +412,19 @@
   cursor: pointer;
   height: 38px;
   padding: 0 0.375em;
-  color: var(--sdt-header-color, inital);
+  color: var(--sdt-header-color, initial);
 }
 .sdt-time-btn > svg {
   stroke: initial !important;
 }
 .sdt-svg {
-  fill: var(--sdt-header-color, inital);
+  fill: var(--sdt-header-color, initial);
 }
 .sdt-time-btn:not(.is-active) {
   opacity: 0.5;
 }
 .sdt-time-btn:hover {
-  background-color: var(--sdt-btn-header-bg-hover, #dfdfdf);
+  background-color: var(--sdt-header-btn-bg-hover, #dfdfdf);
 }
 .sdt-back-btn {
   position: absolute;
@@ -450,7 +450,7 @@
   height: 6px;
   position: absolute;
   transform: translate(-50%, -50%);
-  background-color: var(--sdt-primary, #286090);
+  background-color: var(--sdt-clock-selected-bg, #286090);
   border-radius: 50%;
 }
 .sdt-hand-pointer {
@@ -459,7 +459,7 @@
   bottom: 50%;
   left: calc(50% - 1px);
   position: absolute;
-  background-color: var(--sdt-primary, #286090);
+  background-color: var(--sdt-clock-selected-bg, #286090);
   transform-origin: center bottom 0;
   transition: transform 0.3s ease, height 0.15s ease;
 }
@@ -470,7 +470,7 @@
   width: 4px;
   height: 4px;
   background-color: transparent;
-  border: 14px solid var(--sdt-primary, #286090);
+  border: 14px solid var(--sdt-clock-selected-bg, #286090);
   border-radius: 50%;
   box-sizing: content-box;
 }
@@ -484,13 +484,18 @@
   border-radius: 50%;
   line-height: 20px;
   cursor: pointer;
-  background-color: transparent;
+  background-color: var(--sdt-clock-time-bg);
   transition: all 0.3s;
-  color: var(--sdt-color-time, inherit);
+  color: var(--sdt-clock-color, inherit);
+}
+.sdt-tick:hover {
+	color: var(--sdt-clock-color-hover);
+	background-color: var(--sdt-clock-time-bg-hover);
 }
 .sdt-tick[disabled] {
   cursor: not-allowed;
-  color: var(--sdt-disabled-date, #b22222);
+  color: var(--sdt-clock-disabled, #b22222);
+  background-color: var(--sdt-clock-disabled-bg, var(--sdt-clock-bg,#eeeded));
 }
 .sdt-tick.outer-tick {
   opacity: 0;
@@ -504,7 +509,7 @@
     background-color: transparent;
   }
   100% {
-    background-color: var(--sdt-primary, #286090);
+    background-color: var(--sdt-clock-selected-bg, #286090);
     color: var(--sdt-color-selected, var(--sdt-bg-main, #fff));
   }
 }

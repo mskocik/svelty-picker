@@ -171,7 +171,6 @@
     onMonthTransitionTrigger = () => {
       onChangeMonth(val)
     };
-
     if (currentView === MODE_DECADE) {
       transform = transform === TRANSFORM_DECADE_UNEVEN
         ? (val === -1
@@ -395,7 +394,7 @@
           on:mouseout={wrapHoverDateToggle()}
         >
           <button on:click={() => {onClick(currDate)}} type="button"
-            class="std-btn  sdt-btn-day"
+            class="std-btn sdt-btn-day"
             class:not-current={!isBetween(i*7+j) }
             disabled={(computedStartDate || endDate || additionalDisableFn) && isDisabledDate(currDate)}
           >{currDate.getDate()}</button>
@@ -472,8 +471,8 @@
 .std-btn[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
-  color: var(--sdt-disabled-date, #b22222);
-  background-color: var(--sdt-disabled-date-bg, var(--sdt-bg-main, #fff));
+  color: var(--sdt-table-disabled-date, #b22222);
+  background-color: var(--sdt-table-disabled-date-bg, var(--sdt-bg-main, #fff));
 }
 .std-btn-header {
   width: auto;
@@ -490,14 +489,14 @@
   padding-right: 0.25em;
 }
 .std-btn:hover {
-  background-color: var(--sdt-btn-bg-hover, #eee);
+  background-color: var(--sdt-table-data-bg-hover, #eee);
 }
 .is-selected.in-range .std-btn {
   border-radius: 4px 0 0 4px
 }
 .in-range .std-btn,
 .in-range-hover:not(.is-selected) .std-btn {
-  background-color: color-mix(in srgb, transparent 75%, var(--sdt-primary, #286090));
+  background-color: color-mix(in srgb, transparent 75%, var(--sdt-bg-selected, #286090));
   border-radius: 0;
 }
 /* range selection: start */
@@ -510,7 +509,7 @@
   border-bottom-left-radius: 0;
 }
 .in-range:not(.is-selected) .std-btn:hover {
-  background-color: color-mix(in srgb, var(--sdt-btn-bg-hover, #eee) 75%, var(--sdt-primary, #286090));
+  background-color: color-mix(in srgb, var(--sdt-table-data-bg-hover, #eee) 75%, var(--sdt-bg-selected, #286090));
 }
 /* range selection: end */
 .in-range + .is-selected .std-btn,
@@ -519,17 +518,17 @@
   border-bottom-left-radius: 0;
 }
 .is-selected + .is-selected .std-btn {
-  border-left: 1px solid color-mix(in srgb, white 75%, var(--sdt-primary, #286090));
+  border-left: 1px solid color-mix(in srgb, white 75%, var(--sdt-table-selected-bg, #286090));
   margin-left: -1px;
 }
 .is-selected .std-btn,
 .is-selected.in-range .std-btn {
-  background-color: var(--sdt-primary, #286090);
+  background-color: var(--sdt-table-selected-bg, #286090);
   color: var(--sdt-color-selected, var(--sdt-bg-main, #fff));
   opacity: 0.9;
 }
 .std-btn-header:hover {
-  background-color: var(--sdt-btn-header-bg-hover, #dfdfdf);
+  background-color: var(--sdt-header-btn-bg-hover, #dfdfdf);
 }
 .sdt-time-icon {
   display: inline-flex;
@@ -567,8 +566,8 @@
   content: '';
   margin-left: 4px;
   margin-top: 4px;
-  border-left: 4px solid var(--sdt-today-indicator, #ccc);
-  border-top: 4px solid var(--sdt-today-indicator, #ccc);
+  border-left: 4px solid var(--sdt-table-today-indicator, #ccc);
+  border-top: 4px solid var(--sdt-table-today-indicator, #ccc);
   border-bottom: 4px solid transparent;
   border-right: 4px solid transparent;
   border-radius: 2px;
@@ -576,12 +575,12 @@
   z-index: 2;
 }
 .sdt-svg {
-  fill: var(--sdt-header-color, inital);
+  fill: var(--sdt-header-color, initial);
 }
 .sdt-today:hover:before,
 .in-range.sdt-today:before {
-  border-left-color: var(--sdt-primary, #286090);
-  border-top-color: var(--sdt-primary, #286090);
+  border-left-color: var(--sdt-bg-selected, #286090);
+  border-top-color: var(--sdt-bg-selected, #286090);
 }
 .is-selected.sdt-today:before
  {
