@@ -1,6 +1,6 @@
 /*
 
-!IMPORTANT: The tokens for light and dark mode are duplicated, if you change a token for dark mode, 
+!IMPORTANT: The tokens for light and dark mode are duplicated, if you change a token for dark mode,
 !you should change that for the other dark mode too
 
 */
@@ -157,7 +157,7 @@
 		--toggle-dark: none;
 		--toggle-light: block;
 
-		
+
 		--sdt-bg-main: #fff;
 		--sdt-shadow-color: #ccc;
 		--sdt-color: inherit;
@@ -243,7 +243,7 @@
 		--toggle-dark: none;
 		--toggle-light: block;
 
-		
+
 		/* picker */
 		--sdt-bg-main: #fff;
 		--sdt-shadow-color: #ccc;
@@ -270,7 +270,7 @@
 		color-scheme: dark;
 
 		--sk-back-3-hsl: 0, 0%, 14%;
-		--sk-back-1: hsl(0, 0%, 10%); 
+		--sk-back-1: hsl(0, 0%, 10%);
 		--sk-back-2: hsl(0, 0%, 18%);
 		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(0, 0%, 22%);
@@ -311,7 +311,7 @@
 		--toggle-dark: block;
 		--toggle-light: none;
 
-		
+
 		--sdt-bg-main: #585858;
 		--sdt-shadow-color: #ccc;
 		--sdt-color: #eee;

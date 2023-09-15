@@ -2,7 +2,7 @@
 	import SveltyPicker from 'svelty-picker';
 </script>
 
-The picker's mode responds to website light/dark mode setting.  
+The picker's mode responds to website light/dark mode setting.
 <SveltyPicker pickerOnly mode="datetime" />
 
 <style>

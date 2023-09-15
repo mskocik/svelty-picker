@@ -12,18 +12,18 @@ import { getDaysInMonth } from "./dateUtils.js";
  * @property {number} todayMark
  * @property {number} prevTo
  * @property {number} nextFrom
- * 
+ *
  * @typedef {import("$lib/i18n").i18nType} i18nType
  */
 
 /**
  * Compute view grid content based on given 'currentView' property
- * 
- * @param {Date} currentDate 
- * @param {Date[]} selectedDates 
- * @param {number} view 
- * @param {i18nType} locale 
- * @param {number} weekStart 
+ *
+ * @param {Date} currentDate
+ * @param {Date[]} selectedDates
+ * @param {number} view
+ * @param {i18nType} locale
+ * @param {number} weekStart
  * @returns {Dataset}
  */
 export function compute(currentDate, selectedDates, view, locale, weekStart) {
@@ -36,7 +36,7 @@ export function compute(currentDate, selectedDates, view, locale, weekStart) {
     const todayMark = -1;
     const grid = [];
     let yearRow = [];
-    let currYear = currentDate.getFullYear() - (currentDate.getFullYear() % 10); 
+    let currYear = currentDate.getFullYear() - (currentDate.getFullYear() % 10);
     currYear -= (currYear % 20 ? 12 : 10);
     if (currYear % 10) {  // if start is 10
       prevTo = 12;
@@ -99,7 +99,7 @@ export function compute(currentDate, selectedDates, view, locale, weekStart) {
     return {
       months: grid, todayMark, nextFrom, prevTo, selectionMark
     }
-  } 
+  }
 
   /** ************************************ MONTH */
   /** ************************************ days 7x6 */
@@ -149,11 +149,11 @@ export function compute(currentDate, selectedDates, view, locale, weekStart) {
         if (prevMonth.getFullYear() === s.getFullYear()
         && prevMonth.getMonth() === s.getMonth()
         && prevMonth.getDate() === s.getDate()
-        ) 
+        )
           selectionMark.push(inc);
       })
     }
-    
+
     if (dayRow.length === 7) {
       grid.push(dayRow);
       dayRow = [];

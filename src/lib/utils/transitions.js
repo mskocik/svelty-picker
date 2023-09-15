@@ -2,14 +2,14 @@ import { cubicOut } from 'svelte/easing';
 
 
 /**
- * 
+ *
  * @typedef {object} ScaleParams
  * @property {number} duration
  * @property {number} start
  * @property {number} opacity
  * @property {number|undefined} end
- * 
- * @param {HTMLElement} node 
+ *
+ * @param {HTMLElement} node
  * @param {ScaleParams | import('svelte/transition').FadeParams} params
  * @returns {import('svelte/transition').TransitionConfig}
  */

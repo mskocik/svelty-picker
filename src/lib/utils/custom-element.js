@@ -163,7 +163,7 @@ class PickerElement extends HTMLElement {
     if (this.picker && oldValue !== newValue) {
       this.picker.$set({ [formatProp(name)]: formatValue(name, newValue) });
     }
-  } 
+  }
 
   connectedCallback() {
     setTimeout(() => this.init());
@@ -216,7 +216,7 @@ class PickerElement extends HTMLElement {
 
 /**
  * Define custom element
- * 
+ *
  * @param {string} name name of custom element
  * @param {object} component `SveltyPicker` component
  * @param {config} globalConfig globally available config

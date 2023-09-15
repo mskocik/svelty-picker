@@ -14,22 +14,22 @@ available if needed.
 ```js
 /**
  * String -> date
- * 
- * @param {Date|string} date 
- * @param {string} format 
- * @param {i18nType} i18n 
- * @param {string} type 
+ *
+ * @param {Date|string} date
+ * @param {string} format
+ * @param {i18nType} i18n
+ * @param {string} type
  * @returns {Date}
  */
 export function parseDate(date, format, i18n, type) { /* ... */}
 
 /**
  * Date -> string
- * 
- * @param {Date} date 
- * @param {string} format 
- * @param {i18nType} i18n 
- * @param {string} type 
+ *
+ * @param {Date} date
+ * @param {string} format
+ * @param {i18nType} i18n
+ * @param {string} type
  * @returns {string}
  */
 export function formatDate(date, format, i18n, type) { /* ... */}

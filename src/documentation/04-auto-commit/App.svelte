@@ -5,14 +5,14 @@
 	let activeMode = 'date';
 	let isRange = false;
 	let autocommit = false;
-	
+
 	$: format = activeMode === 'date'
 		? 'yyyy-mm-dd'
 		: (activeMode === 'time'
 			? 'hh:ii'
 			: 'yyyy-mm-dd hh:ii'
 		);
-	
+
 	let value;
 </script>
 

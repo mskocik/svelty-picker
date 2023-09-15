@@ -88,7 +88,7 @@
   const dispatch = createEventDispatcher();
 
   let { valueArray, prevValue, innerDates } = initProps(value, initialDate, format, i18n, formatType);
-  
+
   let currentFormat = format;
   let isFocused = pickerOnly;
   let undoHistory = [...valueArray];
@@ -96,11 +96,11 @@
   let displayValue = computeDisplayValue();
   /** @type {number?} as a timestamp */
   let calendarHoverDate;
-  $: pickerVisible = pickerOnly;  
+  $: pickerVisible = pickerOnly;
   $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
   $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
   $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
-  
+
   $: fadeFn = pickerOnly ? () => ({}) : fade;
 
   let currentMode = startView === STARTVIEW_TIME ? "time" : "date";
@@ -112,7 +112,7 @@
   let inputActionParams = validatorAction || [];
   /** @type {Calendar} */
   let ref_calendar;
-  
+
   $: widgetList = watchIsRange(isRange);
   $: resolvedMode = computeResolvedMode(mode, format);
   $: {
@@ -158,7 +158,7 @@
       prevValue = valueArray;
       currentValue = computeStringValue();
       displayValue = computeDisplayValue();
-    } 
+    }
   }
 
   /**
@@ -210,7 +210,7 @@
    * @returns {string[]|string|null}
   */
   function computeValue() {
-    return isRange 
+    return isRange
       ? (valueArray.length === 2 ? valueArray : null) // for range set value only when full
       : (valueArray[0] || null);
   }
@@ -226,7 +226,7 @@
   function computeDirty(values) {
     return values.join(',') !== undoHistory.join(',');
   }
-  
+
   function resetView() {
     startView = MODE_MONTH;
     isMinuteView = false;
@@ -244,7 +244,7 @@
   /**
    * @typedef {object} TimeRef
    * @property {Time?} ref
-   * 
+   *
    * @param {boolean} isRange
    * @returns {TimeRef[]}
   */
@@ -267,17 +267,17 @@
     }
   }
 
-  /** 
+  /**
    * @typedef {object} CalendarDetail
    * @property {Date?} value
    * @property {boolean} isKeyboard
    * @property {number} [dateIndex=0]
-   * 
+   *
    * @param {CustomEvent<CalendarDetail>} event
    */
   function onDate({ type, detail }) {
     let { value, isKeyboard, dateIndex } = detail;
-    
+
     if (value && !isRange && innerDates.length) {
       if (
         innerDates[0].getFullYear() === value.getFullYear() &&
@@ -366,7 +366,7 @@
     resetView();
   }
 
-  /** 
+  /**
    * @param {KeyboardEvent} e
    */
   function onKeyDown(e) {
@@ -436,7 +436,7 @@
   }
 
   /**
-   * @param {{ target: HTMLInputElement}} event 
+   * @param {{ target: HTMLInputElement}} event
   */
   function onManualInput(event) {
     event.preventDefault();
@@ -476,7 +476,7 @@
 
   /**
    * FUTURE: investigate workflow for this
-   * 
+   *
    * @param {boolean} dispatchInputEvent
    */
   function dispatchInputEvent(dispatchInputEvent) {

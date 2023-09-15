@@ -45,7 +45,7 @@ And here again, all props and handlers needed to recreate even the default imple
 - `onClear` - clears current selection
 - `onToday` - selects today date
 - `isTodayDisabled` - useful when you use `startDate` or `endDate` or `disableDatesFn` to disable dates. Serves for disabled 'Today' button
-- `currentMode` - returns currently active mode: `date` or `time` 
+- `currentMode` - returns currently active mode: `date` or `time`
 - `i18n` - current locale
 
 * Default implementation relies also on `isRange` and `autocommit` props, which you will probably provide yourself if needed.

@@ -1,9 +1,9 @@
 <script>
 	import SveltyPicker from 'svelty-picker';
-  
+
 	let log = '';
-	let counter = 0; 
-  
+	let counter = 0;
+
 	function logEvent(e) {
 		counter++;
 		log = `#${counter} event: ${e.type}${e.type !== 'blur' ? '; value: ' + e.detail : ''}\n`

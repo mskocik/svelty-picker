@@ -11,7 +11,7 @@ For datepicker it's simple. User picks a date, bound value (if any) is updated, 
 very similar with the exception that picker closes automatically only on _minute_ selection. So you can change hour many
 times and picker will stay open. Select minutes and it will close. Also  event is triggered etc.
 
-When using keyboard to change date, bound value is not updated immediately, but only on Enter or on input blur. This is 
+When using keyboard to change date, bound value is not updated immediately, but only on Enter or on input blur. This is
 very important distinction against manual vaue settings.
 
 ### Manual-commit mode

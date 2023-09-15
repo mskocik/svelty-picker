@@ -8,7 +8,7 @@ export function usePosition(node) {
   if (node?.previousElementSibling === null) return;
   /** @type Element */
   const prevElement = node?.previousElementSibling;
-  const removeFloating = autoUpdate(prevElement, node, () => 
+  const removeFloating = autoUpdate(prevElement, node, () =>
     computePosition(prevElement, node, {
       placement: 'bottom-start',
       middleware: [

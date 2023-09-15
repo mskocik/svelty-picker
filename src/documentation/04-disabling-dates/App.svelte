@@ -5,7 +5,7 @@
 	let endDate = '2023-07-28';
 
 	function disableWeekends(date) {
-		
+
 		return date.getDay() === 0 || date.getDay() === 6
 	}
 </script>

@@ -4,7 +4,7 @@
 	let valueDefault;
 	let valueDifferent;
 	let valueTimeOnly;
-	
+
 </script>
 
 
@@ -26,5 +26,5 @@
 			Time only format:<br>Internal value: <code>{valueTimeOnly}</code>
 		</h4>
 		<SveltyPicker bind:value={valueTimeOnly} format="hh:ii" displayFormat="HH:ii P"/>
-	</div> 
+	</div>
 </div>

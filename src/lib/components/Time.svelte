@@ -135,7 +135,7 @@
   $: innerHours = positions(isMinuteView ? 180 : 120, 110, isMinuteView ? '00' : '12', isMinuteView, 12);
 
   /**
-   * 
+   *
    * @param {number} value
    * @param {boolean} asMeridian
    */
@@ -196,7 +196,7 @@
         return startDate.getHours() === innerDate.getHours() && startDate.getMinutes() > val;
       }
       return startDate.getHours() > val;
-    } 
+    }
     if (endDate
       && endDate.getDate()     === innerDate.getDate()
       && endDate.getMonth()    === innerDate.getMonth()
@@ -229,7 +229,7 @@
 
       innerDate[setter](val);
     } else if (isMinuteView) {
-      // compute it out of x,y 
+      // compute it out of x,y
       const rect = clockEl.getBoundingClientRect();
       const clientX = e.clientX - rect.left;
       const clientY = e.clientY - rect.top;
@@ -285,7 +285,7 @@
       innerDate.setMinutes(degree);
     }
     innerDate = innerDate;
-    
+
     // handle only final click, not mouse move
     if (!handleMoveMove) {
       dispatch(isMinuteView ? 'minute' : 'hour', {
@@ -329,7 +329,7 @@
 </script>
 
 <div class="sdt-timer" in:fade={{duration: 200}}>
-  
+
   <div class="sdt-time-head">
     {#if hasDateComponent}
     <button type="button" class="sdt-time-btn sdt-back-btn" title={i18n.backToDate} on:click={onModeSwitch}>
@@ -351,7 +351,7 @@
     </div>
     {/if}
   </div>
-    
+
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="sdt-clock" on:click|preventDefault={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>

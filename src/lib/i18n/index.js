@@ -315,7 +315,7 @@ export const tr = {
   days:        ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'],
   daysShort:   ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
   daysMin:     ['Pa', 'Pz', 'Sa', 'Ça', 'Pe', 'Cu', 'Cm', 'Pa'],
-  months:      ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'], 
+  months:      ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
   monthsShort: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
   meridiem:    ['öö', 'ös'],
   suffix:      ['.', '.', '.', '.'],

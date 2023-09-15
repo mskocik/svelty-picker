@@ -171,7 +171,7 @@
     onMonthTransitionTrigger = () => {
       onChangeMonth(val)
     };
-    
+
     if (currentView === MODE_DECADE) {
       transform = transform === TRANSFORM_DECADE_UNEVEN
         ? (val === -1
@@ -220,18 +220,18 @@
           newInternalDate.setHours(internalDate.getHours());
         }
         internalDate = newInternalDate;
-        
+
         // on keyboard navigation, always change active view to month with selection
         if (keyboard) {
           if (activeDate.getFullYear() !== newInternalDate.getFullYear()
-            || (activeDate.getFullYear() === newInternalDate.getFullYear() 
+            || (activeDate.getFullYear() === newInternalDate.getFullYear()
               && activeDate.getMonth() !== newInternalDate.getMonth()
             )
           ) {
             activeDate.setFullYear(newInternalDate.getFullYear());
             activeDate.setMonth(newInternalDate.getMonth());
             activeDate = activeDate;
-          } 
+          }
         }
         dispatch('date', {
           value: internalDate,
@@ -247,11 +247,11 @@
   $: {
     if (dates.length === 0) internalDate = null;
   };
-  
+
   function onTransitionOut() {
     viewChanged = false;
   }
-  
+
   function onTimeSwitch() {
     dispatch('switch', 'time');
   }
@@ -285,15 +285,15 @@
   }
 
   /**
-   * @param {number} timestamp 
+   * @param {number} timestamp
   */
   function isInRange(timestamp) {
     return times.length === 2 ? timestamp >= times[0] && timestamp < times[1] : false;
   }
 
   /**
-   * @param {number} timestamp 
-   * @param {number?} hoverDate 
+   * @param {number} timestamp
+   * @param {number?} hoverDate
   */
   function isRangeHoverable(timestamp, hoverDate) {
     return hoverDate && times.length === 1 && (
@@ -346,7 +346,7 @@
         {/each}
       </tr>
       {/each}
-    </tbody>  
+    </tbody>
   </table>
   {/if}
   {#if currentView === MODE_YEAR}

@@ -17,7 +17,7 @@
     <input type="text" value={displayValue} placeholder="Custom dislay input"
 			on:keydown={onKeyDown} on:focus={onInputFocus} on:blur={onInputBlur}
 		>
-  
+
 	</svelte:fragment>
 	<svelte:fragment slot="action-row"
 		let:i18n

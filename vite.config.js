@@ -31,7 +31,7 @@ export default ({ mode }) => {
 			plugins: [nodePolyfills({
 				protocolImports: false
 			}), sveltekit()],
-			
+
 			optimizeDeps: {
 				exclude: ['@sveltejs/site-kit', '@sveltejs/repl']
 			},

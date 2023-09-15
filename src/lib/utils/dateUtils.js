@@ -1,11 +1,11 @@
 /** @typedef {import("$lib/i18n").i18nType} i18nType */
 
 /**
- * 
- * @param {Date|string} date 
- * @param {string} format 
- * @param {i18nType} i18n 
- * @param {string} type 
+ *
+ * @param {Date|string} date
+ * @param {string} format
+ * @param {i18nType} i18n
+ * @param {string} type
  * @returns {Date}
  */
 export function parseDate(date, format, i18n, type) {
@@ -23,10 +23,10 @@ export function parseDate(date, format, i18n, type) {
   let useParsedTime;
   if (/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(date)) {
     parsedFormat = formatHelper.parseFormat(commonFormats.date, type);
-  } else 
+  } else
   if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}$/.test(date)) {
     parsedFormat = formatHelper.parseFormat(commonFormats.datetime, type);
-  } else 
+  } else
   if (/^\d{4}\-\d{1,2}\-\d{1,2}[T ]\d{1,2}\:\d{1,2}\:\d{1,2}[Z]{0,1}$/.test(date)) {
     parsedFormat = formatHelper.parseFormat(commonFormats.datetime_s, type);
   } else
@@ -104,10 +104,10 @@ export function parseDate(date, format, i18n, type) {
 }
 
 /**
- * @param {Date} date 
- * @param {string} format 
- * @param {i18nType} i18n 
- * @param {string} type 
+ * @param {Date} date
+ * @param {string} format
+ * @param {i18nType} i18n
+ * @param {string} type
  * @returns {string} date' string representation
  */
 export function formatDate(date, format, i18n, type) {
@@ -219,10 +219,10 @@ export function getDaysInMonth(year, month) {
 
 /**
  * Date comparison a < b
- * 
- * @param {Date|string} a 
- * @param {Date} b 
- * @returns 
+ *
+ * @param {Date|string} a
+ * @param {Date} b
+ * @returns
  */
 export function isLower(a, b) {
   if (!(a instanceof Date)) return false;
@@ -232,10 +232,10 @@ export function isLower(a, b) {
 
 /**
  * Date comparison a > b
- * 
- * @param {Date|string} a 
- * @param {Date} b 
- * @returns 
+ *
+ * @param {Date|string} a
+ * @param {Date} b
+ * @returns
  */
 export function isGreater(a, b) {
   if (!(a instanceof Date)) return false;
@@ -246,9 +246,9 @@ export function isGreater(a, b) {
 /**
  * @callback MapperFunction
  * @param {Date} d date
- * @param {number} v value to be set according to format 
+ * @param {number} v value to be set according to format
  * @returns void
- * 
+ *
  * @typedef {Record<string, MapperFunction>} SetterMap
  */
 
@@ -264,9 +264,9 @@ const formatHelper = {
   },
   nonpunctuation: /[^ -\/:-@\[-`{-~\t\n\rTZ]+/g,
   /**
-   * 
-   * @param {string} format 
-   * @param {string} type 
+   *
+   * @param {string} format
+   * @param {string} type
    * @returns {{ separators: string[], parts: string[]} }
    */
   parseFormat: function (/** @type {string} */ format, /** @type {string} */ type) {
@@ -281,7 +281,7 @@ const formatHelper = {
     return {separators: separators, parts: parts};
   },
   /**
-   * @param {string} type 
+   * @param {string} type
    * @returns {{setters_map: SetterMap, setters_order: string[]}}
    */
   setters: function(type) {

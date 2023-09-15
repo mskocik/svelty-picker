@@ -2,7 +2,7 @@
 title: Disabling dates
 ---
 
-Restricting selectable is supported by `startDate` and `endDate` properties. You can provide `string` or `Date`. 
+Restricting selectable is supported by `startDate` and `endDate` properties. You can provide `string` or `Date`.
 When `string` is passed, it must match `format` of given Svelty-picker. These border dates are *INCLUDED* in allowed date range.
 
 It is recommended to pass `strings` and not `Dates` to these properties. When datetime is passed, time range will be restricted as well if applicable.

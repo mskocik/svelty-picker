@@ -8,7 +8,7 @@ title: Localization X
     const keys = Object.keys(i18n).filter(k => k !== 'default').join(' | ');
 </script>
 
-By default date picker uses english locale. And at the moment there is only few locales available 
+By default date picker uses english locale. And at the moment there is only few locales available
 (PRs for additional locales are more than welcome).
 
 Available locales: <code>{keys}</code>

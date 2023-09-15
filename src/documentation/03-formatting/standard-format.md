@@ -1,12 +1,12 @@
 ### Standard format settings:
 
-| Format | Description                                                                      | Example                                
+| Format | Description                                                                      | Example
 |--------|----------------------------------------------------------------------------------|--------------------------------------
 | `d`    | day of the month without leading zeros                                           | 1 to 31
 | `dd`   | day of the month, 2 digits with leading zeros                                    | 01 to 31
 | `D`    | short textual representation of a weekday (i18n.daysShort)                       | Mon through Sun
 | `DD`   | long textual representation of a weekday (i18n.days)                             | Sunday through Saturday
-| `S`    | English ordinal suffix for the day of the month, (i18n.suffix)                   | st, nd, rd or th. Works well with `d` 
+| `S`    | English ordinal suffix for the day of the month, (i18n.suffix)                   | st, nd, rd or th. Works well with `d`
 | `m`    | numeric representation of month without leading zeros                            | 1 to 12
 | `mm`   | numeric representation of the month, 2 digits with leading zeros                 | 01 to 12
 | `M`    | short textual representation of a month, three letters (i18n.monthsShort)        | Jan through Dec
