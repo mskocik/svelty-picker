@@ -88,7 +88,6 @@
   const dispatch = createEventDispatcher();
 
   let { valueArray, prevValue, innerDates } = initProps(value, initialDate, format, i18n, formatType);
-
   let currentFormat = format;
   let isFocused = pickerOnly;
   let undoHistory = [...valueArray];
@@ -112,7 +111,6 @@
   let inputActionParams = validatorAction || [];
   /** @type {Calendar} */
   let ref_calendar;
-
   $: widgetList = watchIsRange(isRange);
   $: resolvedMode = computeResolvedMode(mode, format);
   $: {
@@ -226,7 +224,6 @@
   function computeDirty(values) {
     return values.join(',') !== undoHistory.join(',');
   }
-
   function resetView() {
     startView = MODE_MONTH;
     isMinuteView = false;
@@ -277,7 +274,6 @@
    */
   function onDate({ type, detail }) {
     let { value, isKeyboard, dateIndex } = detail;
-
     if (value && !isRange && innerDates.length) {
       if (
         innerDates[0].getFullYear() === value.getFullYear() &&
@@ -676,7 +672,7 @@
     border-radius: 0.2em;
   }
   .sdt-today-btn {
-    background-color: var(--sdt-primary, #286090);
+    background-color: var(--sdt-bg-selected, #286090);
     color: var(--sdt-today-color, var(--sdt-bg-main, #fff));
     padding: 0.25em 0.5em;
     font-size: 0.875em;

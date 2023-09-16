@@ -1,343 +1,377 @@
 /*
 
-!IMPORTANT: The tokens for light and dark mode are duplicated, if you change a token for dark mode,
+!IMPORTANT: The tokens for light and dark mode are duplicated, if you change a token for dark mode, 
 !you should change that for the other dark mode too
 
 */
 
 :root {
-	--sk-back-h: 206;
-	--sk-selection-color: hsla(204, 100%, 63%, 0.3);
-	--sk-focus-outline: 0 0 0 2px hsla(var(--sk-theme-1-hsl), 0.6);
+  --sk-back-h: 206;
+  --sk-selection-color: hsla(204, 100%, 63%, 0.3);
+  --sk-focus-outline: 0 0 0 2px hsla(var(--sk-theme-1-hsl), 0.6);
 
-	/* Base colors */
-	--sk-theme-1: var(--sk-theme-1-hsl);
-	--sk-theme-2: var(--sk-theme-2-hsl);
-	--sk-theme-3: var(--sk-theme-3-hsl);
+  /* Base colors */
+  --sk-theme-1: var(--sk-theme-1-hsl);
+  --sk-theme-2: var(--sk-theme-2-hsl);
+  --sk-theme-3: var(--sk-theme-3-hsl);
 
-	--sk-text-warning: hsl(var(--sk-text-warning-hsl));
+  --sk-text-warning: hsl(var(--sk-text-warning-hsl));
 
-	/* dimensions */
-	--sk-nav-height: 6rem;
-	--sk-page-padding-top: 6rem;
-	--sk-page-padding-bottom: 6rem;
-	--sk-page-padding-side: 2.4rem;
-	--sk-thick-border-width: 0.3rem;
-	--sk-border-radius: 0.4rem;
-	--sk-page-main-width: 80rem;
+  /* dimensions */
+  --sk-nav-height: 6rem;
+  --sk-page-padding-top: 6rem;
+  --sk-page-padding-bottom: 6rem;
+  --sk-page-padding-side: 2.4rem;
+  --sk-thick-border-width: 0.3rem;
+  --sk-border-radius: 0.4rem;
+  --sk-page-main-width: 80rem;
 
-	/* typography */
-	--sk-font: 'Overpass', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-		Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-	--sk-font-mono: 'Fira Mono', monospace;
-	--sk-text-xxl: 3.6rem;
-	--sk-text-xl: 3rem;
-	--sk-text-l: 2.4rem;
-	--sk-text-m: 2rem;
-	--sk-text-s: 1.6rem;
-	--sk-text-xs: 1.3rem;
-	--sk-line-max-width: 84rem;
-	--m: 10px;
+  /* typography */
+  --sk-font: 'Overpass', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --sk-font-mono: 'Fira Mono', monospace;
+  --sk-text-xxl: 3.6rem;
+  --sk-text-xl: 3rem;
+  --sk-text-l: 2.4rem;
+  --sk-text-m: 2rem;
+  --sk-text-s: 1.6rem;
+  --sk-text-xs: 1.3rem;
+  --sk-line-max-width: 84rem;
+  --m: 10px;
 }
 
 @media only screen and (prefers-color-scheme: dark) {
-	:root {
-		color-scheme: dark;
+  :root {
+    color-scheme: dark;
 
-		--sk-back-3-hsl: 0, 0%, 14%;
-		--sk-back-1: hsl(0, 0%, 10%);
-		--sk-back-2: hsl(0, 0%, 18%);
-		--sk-back-3: hsl(var(--sk-back-3-hsl));
-		--sk-back-4: hsl(0, 0%, 22%);
-		--sk-back-5: hsl(0, 0%, 40%);
-		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
-		/* --sk-theme-1-hsl: hsl(0, 59%, 29%); */
-		--sk-theme-1-hsl: hsl(38.77deg 71.8% 58.64%);
-		--sk-theme-2-hsl: 240, 8%, 44%;
-		--sk-theme-3-hsl: 204, 100%, 63%;
-		--sk-text-1: hsl(0, 0%, 90%);
-		--sk-text-2: hsl(0, 0%, 80%);
-		--sk-text-3: hsl(0, 0%, 65%);
-		--sk-text-4: hsl(0, 0%, 45%);
-		--sk-text-translucent: hsla(0, 0%, 100%, 0.9);
-		--sk-scrollbar: rgba(255, 255, 255, 0.3);
+    --sk-back-3-hsl: 0, 0%, 14%;
+    --sk-back-1: hsl(0, 0%, 10%);
+    --sk-back-2: hsl(0, 0%, 18%);
+    --sk-back-3: hsl(var(--sk-back-3-hsl));
+    --sk-back-4: hsl(0, 0%, 22%);
+    --sk-back-5: hsl(0, 0%, 40%);
+    --sk-back-translucent: hsla(0, 0%, 100%, 0.1);
+    /* --sk-theme-1-hsl: hsl(0, 59%, 29%); */
+    --sk-theme-1-hsl: hsl(38.77deg 71.8% 58.64%);
+    --sk-theme-2-hsl: 240, 8%, 44%;
+    --sk-theme-3-hsl: 204, 100%, 63%;
+    --sk-text-1: hsl(0, 0%, 90%);
+    --sk-text-2: hsl(0, 0%, 80%);
+    --sk-text-3: hsl(0, 0%, 65%);
+    --sk-text-4: hsl(0, 0%, 45%);
+    --sk-text-translucent: hsla(0, 0%, 100%, 0.9);
+    --sk-scrollbar: rgba(255, 255, 255, 0.3);
 
-		--sk-back-3-hsl: 0, 0%, 14%;
-		--sk-theme-1-variant: hsl(202, 88%, 66%);
-		--sk-theme-2-variant: hsl(240, 8%, 35%);
-		--sk-theme-3-variant: hsl(204, 100%, 50%);
+    --sk-back-3-hsl: 0, 0%, 14%;
+    --sk-theme-1-variant: hsl(202, 88%, 66%);
+    --sk-theme-2-variant: hsl(240, 8%, 35%);
+    --sk-theme-3-variant: hsl(204, 100%, 50%);
 
-		--sk-text-warning-hsl: 32, 67%, 56%;
+    --sk-text-warning-hsl: 32, 67%, 56%;
 
-		--sk-code-ts-bg: var(--sk-back-2);
-		--sk-code-bg: var(--sk-back-3);
-		--sk-code-base: hsl(45, 7%, 75%);
-		--sk-code-comment: hsl(0, 0%, 55%);
-		--sk-code-keyword: hsl(204, 88%, 65%);
-		--sk-code-function: hsl(19, 67%, 75%);
-		--sk-code-string: hsl(41, 37%, 68%);
-		--sk-code-number: hsl(120, 100%, 25%);
-		--sk-code-template-string: hsl(2, 80%, 47%);
-		--sk-code-tags: var(--sk-code-function);
-		--sk-code-important: var(--sk-code-string);
-		--sk-code-diff-base: hsla(0, 0%, 100%, 0.5);
-		--sk-code-diff-inserted: hsl(120, 46%, 48%);
-		--sk-code-diff-removed: hsl(2, 64%, 70%);
+    --sk-code-ts-bg: var(--sk-back-2);
+    --sk-code-bg: var(--sk-back-3);
+    --sk-code-base: hsl(45, 7%, 75%);
+    --sk-code-comment: hsl(0, 0%, 55%);
+    --sk-code-keyword: hsl(204, 88%, 65%);
+    --sk-code-function: hsl(19, 67%, 75%);
+    --sk-code-string: hsl(41, 37%, 68%);
+    --sk-code-number: hsl(120, 100%, 25%);
+    --sk-code-template-string: hsl(2, 80%, 47%);
+    --sk-code-tags: var(--sk-code-function);
+    --sk-code-important: var(--sk-code-string);
+    --sk-code-diff-base: hsla(0, 0%, 100%, 0.5);
+    --sk-code-diff-inserted: hsl(120, 46%, 48%);
+    --sk-code-diff-removed: hsl(2, 64%, 70%);
 
-		--toggle-dark: block;
-		--toggle-light: none;
+    --toggle-dark: block;
+    --toggle-light: none;
 
-		--sdt-bg-main: #585858;
-		--sdt-shadow-color: #333;
-		--sdt-color: #eee;
-		--sdt-header-color: #eee;
-		--sdt-primary: #e1ac4a;
-		--sdt-disabled-date: #b22222;
-		--sdt-disabled-date-bg: var(--sdt-bg-main);
-		--sdt-btn-bg-hover: #777;
-		--sdt-btn-header-bg-hover: #777;
-		--sdt-color-selected: #fff;
-		--sdt-today-indicator: #ccc;
+    --sdt-bg-main: #585858;
+    --sdt-shadow-color: #333;
+    --sdt-color: #eee;
+    --sdt-clock-color: var(--sdt-color);
+    --sdt-clock-color-hover: var(--sdt-color);
+    --sdt-clock-time-bg: transparent;
+    --sdt-clock-time-bg-hover: transparent;
+    --sdt-clock-disabled: #b22222;
+    --sdt-clock-disabled-bg: var(--sdt-bg-main);
+    --sdt-clock-selected-bg: var(--sdt-bg-selected);
+    --sdt-header-color: #eee;
+    --sdt-bg-selected: #e1ac4a;
+    --sdt-table-disabled-date: #b22222;
+    --sdt-table-disabled-date-bg: var(--sdt-bg-main);
+    --sdt-table-data-bg-hover: #777;
+    --sdt-table-selected-bg: var(--sdt-bg-selected);
+    --sdt-header-btn-bg-hover: #777;
+    --sdt-color-selected: #fff;
+    --sdt-table-today-indicator: #ccc;
 
-		--sdt-clock-bg: #999;
+    --sdt-clock-bg: #999;
 
-		/* custom buttons */
-		--sdt-today-bg: #e4a124;
-		--sdt-today-color: #fff;
-		--sdt-clear-color: #666;
-		--sdt-clear-bg: #ddd;
-		--sdt-clear-hover-color: #fff;
-		--sdt-clear-hover-bg: #dc3545;
-	}
+    /* custom buttons */
+    --sdt-today-bg: #e4a124;
+    --sdt-today-color: #fff;
+    --sdt-clear-color: #666;
+    --sdt-clear-bg: #ddd;
+    --sdt-clear-hover-color: #fff;
+    --sdt-clear-hover-bg: #dc3545;
+  }
 
-	html.light {
-		color-scheme: light;
+  html.light {
+    color-scheme: light;
 
-		--sk-back-3-hsl: 206, 64%, 98%;
-		--sk-back-1: hsl(0, 0%, 100%);
-		--sk-back-2: hsl(0, 0%, 100%); /* same as sk-back-1 in light mode, different in dark mode */
-		--sk-back-3: hsl(var(--sk-back-3-hsl));
-		--sk-back-4: hsl(206, 44%, 93%);
-		--sk-back-5: hsl(206, 20%, 80%);
-		--sk-theme-1-hsl: 15, 100%, 50%;
-		--sk-theme-2-hsl: 240, 8%, 44%;
-		--sk-theme-3-hsl: 204, 100%, 63%;
-		--sk-text-1: hsl(0, 0%, 13%);
-		--sk-text-2: hsl(0, 0%, 27%);
-		--sk-text-3: var(--sk-theme-2);
-		--sk-text-4: hsl(0, 0%, 65%);
-		--sk-scrollbar: rgba(0, 0, 0, 0.3);
+    --sk-back-3-hsl: 206, 64%, 98%;
+    --sk-back-1: hsl(0, 0%, 100%);
+    --sk-back-2: hsl(0, 0%, 100%);
+    /* same as sk-back-1 in light mode, different in dark mode */
+    --sk-back-3: hsl(var(--sk-back-3-hsl));
+    --sk-back-4: hsl(206, 44%, 93%);
+    --sk-back-5: hsl(206, 20%, 80%);
+    --sk-theme-1-hsl: 15, 100%, 50%;
+    --sk-theme-2-hsl: 240, 8%, 44%;
+    --sk-theme-3-hsl: 204, 100%, 63%;
+    --sk-text-1: hsl(0, 0%, 13%);
+    --sk-text-2: hsl(0, 0%, 27%);
+    --sk-text-3: var(--sk-theme-2);
+    --sk-text-4: hsl(0, 0%, 65%);
+    --sk-scrollbar: rgba(0, 0, 0, 0.3);
 
-		/* same in light mode, different in dark mode */
-		--sk-theme-1-variant: hsl(202, 100%, 40%);
-		--sk-theme-2-variant: hsl(240, 8%, 44%);
-		--sk-theme-3-variant: hsl(204, 100%, 63%);
+    /* same in light mode, different in dark mode */
+    --sk-theme-1-variant: hsl(202, 100%, 40%);
+    --sk-theme-2-variant: hsl(240, 8%, 44%);
+    --sk-theme-3-variant: hsl(204, 100%, 63%);
 
-		--sk-code-bg: var(--sk-back-3);
-		--sk-code-ts-bg: var(--sk-back-1);
-		--sk-code-base: hsl(45, 7%, 35%);
-		--sk-code-comment: hsl(0, 0%, 41%);
-		--sk-code-keyword: hsl(204, 88%, 35%);
-		--sk-code-function: hsl(19, 67%, 44%);
-		--sk-code-string: hsl(41, 37%, 38%);
-		--sk-code-number: hsl(120, 100%, 25%);
-		--sk-code-template-string: hsl(2, 80%, 47%);
-		--sk-code-tags: var(--sk-code-function);
-		--sk-code-important: var(--sk-code-string);
-		--sk-code-diff-base: hsla(0, 0%, 0%, 0.6);
-		--sk-code-diff-inserted: hsl(120, 100%, 25%);
-		--sk-code-diff-removed: hsl(2, 80%, 47%);
+    --sk-code-bg: var(--sk-back-3);
+    --sk-code-ts-bg: var(--sk-back-1);
+    --sk-code-base: hsl(45, 7%, 35%);
+    --sk-code-comment: hsl(0, 0%, 41%);
+    --sk-code-keyword: hsl(204, 88%, 35%);
+    --sk-code-function: hsl(19, 67%, 44%);
+    --sk-code-string: hsl(41, 37%, 38%);
+    --sk-code-number: hsl(120, 100%, 25%);
+    --sk-code-template-string: hsl(2, 80%, 47%);
+    --sk-code-tags: var(--sk-code-function);
+    --sk-code-important: var(--sk-code-string);
+    --sk-code-diff-base: hsla(0, 0%, 0%, 0.6);
+    --sk-code-diff-inserted: hsl(120, 100%, 25%);
+    --sk-code-diff-removed: hsl(2, 80%, 47%);
 
-		--sk-text-warning-hsl: 32, 95%, 44%;
+    --sk-text-warning-hsl: 32, 95%, 44%;
 
-		/* used for coloured backgrounds e.g. blockquotes */
-		--sk-back-translucent: hsla(0, 0%, 0%, 0.1);
-		--sk-text-translucent: hsla(0, 0%, 0%, 0.7);
+    /* used for coloured backgrounds e.g. blockquotes */
+    --sk-back-translucent: hsla(0, 0%, 0%, 0.1);
+    --sk-text-translucent: hsla(0, 0%, 0%, 0.7);
 
-		--toggle-dark: none;
-		--toggle-light: block;
+    --toggle-dark: none;
+    --toggle-light: block;
 
 
-		--sdt-bg-main: #fff;
-		--sdt-shadow-color: #ccc;
-		--sdt-color: inherit;
-		--sdt-header-color: #000;
-		--sdt-primary: #286090;
-		--sdt-disabled-date: #b22222;
-		--sdt-disabled-date-bg: var(--sdt-bg-main);
-		--sdt-btn-bg-hover: #eee;
-		--sdt-btn-header-bg-hover: #dfdfdf;
-		--sdt-color-selected: #fff;
-		--sdt-today-indicator: #ccc;
-		--sdt-clock-bg: #eeeded;
-		/* custom buttons */
-		--sdt-today-bg: #1e486d;
-		--sdt-today-color: #fff;
-		--sdt-clear-color: #dc3545;
-		--sdt-clear-bg: #fff;
-		--sdt-clear-hover-color: #fff;
-		--sdt-clear-hover-bg: #dc3545;
-	}
+    --sdt-bg-main: #fff;
+    --sdt-shadow-color: #ccc;
+    --sdt-color: inherit;
+    --sdt-clock-color: var(--sdt-color);
+    --sdt-clock-color-hover: var(--sdt-color);
+    --sdt-clock-time-bg: transparent;
+    --sdt-clock-time-bg-hover: transparent;
+    --sdt-clock-disabled: #b22222;
+    --sdt-clock-disabled-bg: var(--sdt-bg-main);
+    --sdt-header-color: #000;
+    --sdt-bg-selected: #286090;
+    --sdt-clock-selected-bg: var(--sdt-bg-selected);
+    --sdt-table-disabled-date: #b22222;
+    --sdt-table-disabled-date-bg: var(--sdt-bg-main);
+    --sdt-table-data-bg-hover: #eee;
+    --sdt-table-selected-bg: var(--sdt-bg-selected);
+    --sdt-header-btn-bg-hover: #dfdfdf;
+    --sdt-color-selected: #fff;
+    --sdt-table-today-indicator: #ccc;
+    --sdt-clock-bg: #eeeded;
+    /* custom buttons */
+    --sdt-today-bg: #1e486d;
+    --sdt-today-color: #fff;
+    --sdt-clear-color: #dc3545;
+    --sdt-clear-bg: #fff;
+    --sdt-clear-hover-color: #fff;
+    --sdt-clear-hover-bg: #dc3545;
+  }
 }
 
 @media screen and (min-width: 480px) {
-	:root {
-		--sk-page-padding-side: 3.2rem;
-	}
+  :root {
+    --sk-page-padding-side: 3.2rem;
+  }
 }
 
 @media screen and (min-width: 768px) {
-	:root {
-		--sk-text-xxl: 5.4rem;
-		--sk-text-xl: 3.6rem;
-		--sk-page-padding-top: 8rem;
-		--sk-page-padding-side: 4.8rem;
-	}
+  :root {
+    --sk-text-xxl: 5.4rem;
+    --sk-text-xl: 3.6rem;
+    --sk-page-padding-top: 8rem;
+    --sk-page-padding-side: 4.8rem;
+  }
 }
 
 @media screen and (prefers-color-scheme: light) {
-	:root {
-		color-scheme: light;
+  :root {
+    color-scheme: light;
 
-		--sk-back-3-hsl: 206, 64%, 98%;
-		--sk-back-1: hsl(0, 0%, 100%);
-		--sk-back-2: hsl(0, 0%, 100%); /* same as sk-back-1 in light mode, different in dark mode */
-		--sk-back-3: hsl(var(--sk-back-3-hsl));
-		--sk-back-4: hsl(206, 44%, 93%);
-		--sk-back-5: hsl(206, 20%, 80%);
-		--sk-theme-1-hsl: 15, 100%, 50%;
-		--sk-theme-2-hsl: 240, 8%, 44%;
-		--sk-theme-3-hsl: 204, 100%, 63%;
-		--sk-text-1: hsl(0, 0%, 13%);
-		--sk-text-2: hsl(0, 0%, 27%);
-		--sk-text-3: var(--sk-theme-2);
-		--sk-text-4: hsl(0, 0%, 65%);
-		--sk-scrollbar: rgba(0, 0, 0, 0.3);
+    --sk-back-3-hsl: 206, 64%, 98%;
+    --sk-back-1: hsl(0, 0%, 100%);
+    --sk-back-2: hsl(0, 0%, 100%);
+    /* same as sk-back-1 in light mode, different in dark mode */
+    --sk-back-3: hsl(var(--sk-back-3-hsl));
+    --sk-back-4: hsl(206, 44%, 93%);
+    --sk-back-5: hsl(206, 20%, 80%);
+    --sk-theme-1-hsl: 15, 100%, 50%;
+    --sk-theme-2-hsl: 240, 8%, 44%;
+    --sk-theme-3-hsl: 204, 100%, 63%;
+    --sk-text-1: hsl(0, 0%, 13%);
+    --sk-text-2: hsl(0, 0%, 27%);
+    --sk-text-3: var(--sk-theme-2);
+    --sk-text-4: hsl(0, 0%, 65%);
+    --sk-scrollbar: rgba(0, 0, 0, 0.3);
 
-		/* same in light mode, different in dark mode */
-		--sk-theme-1-variant: hsl(202, 100%, 40%);
-		--sk-theme-2-variant: hsl(240, 8%, 44%);
-		--sk-theme-3-variant: hsl(204, 100%, 63%);
+    /* same in light mode, different in dark mode */
+    --sk-theme-1-variant: hsl(202, 100%, 40%);
+    --sk-theme-2-variant: hsl(240, 8%, 44%);
+    --sk-theme-3-variant: hsl(204, 100%, 63%);
 
-		--sk-code-bg: var(--sk-back-3);
-		--sk-code-ts-bg: var(--sk-back-1);
-		--sk-code-base: hsl(45, 7%, 35%);
-		--sk-code-comment: hsl(0, 0%, 41%);
-		--sk-code-keyword: hsl(204, 88%, 35%);
-		--sk-code-function: hsl(19, 67%, 44%);
-		--sk-code-string: hsl(41, 37%, 38%);
-		--sk-code-number: hsl(120, 100%, 25%);
-		--sk-code-template-string: hsl(2, 80%, 47%);
-		--sk-code-tags: var(--sk-code-function);
-		--sk-code-important: var(--sk-code-string);
-		--sk-code-diff-base: hsla(0, 0%, 0%, 0.4);
-		--sk-code-diff-inserted: hsl(120, 100%, 25%);
-		--sk-code-diff-removed: hsl(2, 80%, 47%);
+    --sk-code-bg: var(--sk-back-3);
+    --sk-code-ts-bg: var(--sk-back-1);
+    --sk-code-base: hsl(45, 7%, 35%);
+    --sk-code-comment: hsl(0, 0%, 41%);
+    --sk-code-keyword: hsl(204, 88%, 35%);
+    --sk-code-function: hsl(19, 67%, 44%);
+    --sk-code-string: hsl(41, 37%, 38%);
+    --sk-code-number: hsl(120, 100%, 25%);
+    --sk-code-template-string: hsl(2, 80%, 47%);
+    --sk-code-tags: var(--sk-code-function);
+    --sk-code-important: var(--sk-code-string);
+    --sk-code-diff-base: hsla(0, 0%, 0%, 0.4);
+    --sk-code-diff-inserted: hsl(120, 100%, 25%);
+    --sk-code-diff-removed: hsl(2, 80%, 47%);
 
-		--sk-text-warning-hsl: 32, 95%, 44%;
+    --sk-text-warning-hsl: 32, 95%, 44%;
 
-		/* used for coloured backgrounds e.g. blockquotes */
-		--sk-back-translucent: hsla(0, 0%, 0%, 0.1);
-		--sk-text-translucent: hsla(0, 0%, 0%, 0.7);
+    /* used for coloured backgrounds e.g. blockquotes */
+    --sk-back-translucent: hsla(0, 0%, 0%, 0.1);
+    --sk-text-translucent: hsla(0, 0%, 0%, 0.7);
 
-		--toggle-dark: none;
-		--toggle-light: block;
-
-
-		/* picker */
-		--sdt-bg-main: #fff;
-		--sdt-shadow-color: #ccc;
-		--sdt-color: inherit;
-		--sdt-header-color: inherit;
-		--sdt-primary: #286090;
-		--sdt-disabled-date: #b22222;
-		--sdt-disabled-date-bg: var(--sdt-bg-main);
-		--sdt-btn-bg-hover: #eee;
-		--sdt-btn-header-bg-hover: #dfdfdf;
-		--sdt-color-selected: #fff;
-		--sdt-today-indicator: #ccc;
-		--sdt-clock-bg: #eeeded;
-		/* custom buttons */
-		--sdt-today-bg: #1e486d;
-		--sdt-today-color: #fff;
-		--sdt-clear-color: #dc3545;
-		--sdt-clear-bg: #fff;
-		--sdt-clear-hover-color: #fff;
-		--sdt-clear-hover-bg: #dc3545;
-	}
-
-	html.dark {
-		color-scheme: dark;
-
-		--sk-back-3-hsl: 0, 0%, 14%;
-		--sk-back-1: hsl(0, 0%, 10%);
-		--sk-back-2: hsl(0, 0%, 18%);
-		--sk-back-3: hsl(var(--sk-back-3-hsl));
-		--sk-back-4: hsl(0, 0%, 22%);
-		--sk-back-5: hsl(0, 0%, 40%);
-		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
-		--sk-theme-1-hsl: 15, 100%, 55%;
-		--sk-theme-2-hsl: 240, 8%, 44%;
-		--sk-theme-3-hsl: 204, 100%, 63%;
-		--sk-text-1: hsl(0, 0%, 90%);
-		--sk-text-2: hsl(0, 0%, 80%);
-		--sk-text-3: hsl(0, 0%, 65%);
-		--sk-text-4: hsl(0, 0%, 45%);
-		--sk-text-translucent: hsla(0, 0%, 100%, 0.9);
-		--sk-scrollbar: rgba(255, 255, 255, 0.3);
-
-		--sk-back-3-hsl: 0, 0%, 14%;
-		--sk-theme-1-variant: hsl(202, 100%, 40%);
-		--sk-theme-2-variant: hsl(240, 8%, 35%);
-		--sk-theme-3-variant: hsl(204, 100%, 50%);
-
-		--sk-text-warning-hsl: 32, 67%, 56%;
-
-		--sk-code-ts-bg: var(--sk-back-2);
-		--sk-code-bg: var(--sk-back-3);
-		--sk-code-base: hsl(45, 7%, 75%);
-		--sk-code-comment: hsl(0, 0%, 55%);
-		--sk-code-keyword: hsl(204, 88%, 65%);
-		--sk-code-function: hsl(19, 67%, 75%);
-		--sk-code-string: hsl(41, 37%, 68%);
-		--sk-code-number: hsl(120, 100%, 25%);
-		--sk-code-template-string: hsl(2, 80%, 47%);
-		--sk-code-tags: var(--sk-code-function);
-		--sk-code-important: var(--sk-code-string);
-		--sk-code-diff-base: hsla(0, 0%, 100%, 0.5);
-		--sk-code-diff-inserted: hsl(120, 46%, 48%);
-		--sk-code-diff-removed: hsl(2, 64%, 70%);
-
-		--toggle-dark: block;
-		--toggle-light: none;
+    --toggle-dark: none;
+    --toggle-light: block;
 
 
-		--sdt-bg-main: #585858;
-		--sdt-shadow-color: #ccc;
-		--sdt-color: #eee;
-		--sdt-header-color: #eee;
-		--sdt-primary: #126cbb;
-		--sdt-disabled-date: #b22222;
-		--sdt-disabled-date-bg: var(--sdt-bg-main);
-		--sdt-btn-bg-hover: #777;
-		--sdt-btn-header-bg-hover: #777;
-		--sdt-color-selected: #fff;
-		--sdt-today-indicator: #ccc;
-		--sdt-clock-bg: #999;
-		/* custom buttons */
-		--sdt-today-bg: #1e486d;
-		--sdt-today-color: #fff;
-		--sdt-clear-color: #666;
-		--sdt-clear-bg: #ddd;
-		--sdt-clear-hover-color: #fff;
-		--sdt-clear-hover-bg: #dc3545;
-	}
+    /* picker */
+    --sdt-bg-main: #fff;
+    --sdt-shadow-color: #ccc;
+    --sdt-color: inherit;
+    --sdt-clock-color: var(--sdt-color);
+    --sdt-clock-color-hover: var(--sdt-color);
+    --sdt-clock-time-bg: transparent;
+    --sdt-clock-time-bg-hover: transparent;
+    --sdt-clock-disabled: #b22222;
+    --sdt-clock-disabled-bg: var(--sdt-bg-main);
+    --sdt-header-color: inherit;
+    --sdt-bg-selected: #286090;
+    --sdt-clock-selected-bg: var(--sdt-bg-selected);
+    --sdt-table-disabled-date: #b22222;
+    --sdt-table-disabled-date-bg: var(--sdt-bg-main);
+    --sdt-table-data-bg-hover: #eee;
+    --sdt-table-selected-bg: var(--sdt-bg-selected);
+    --sdt-header-btn-bg-hover: #dfdfdf;
+    --sdt-color-selected: #fff;
+    --sdt-table-today-indicator: #ccc;
+    --sdt-clock-bg: #eeeded;
+    /* custom buttons */
+    --sdt-today-bg: #1e486d;
+    --sdt-today-color: #fff;
+    --sdt-clear-color: #dc3545;
+    --sdt-clear-bg: #fff;
+    --sdt-clear-hover-color: #fff;
+    --sdt-clear-hover-bg: #dc3545;
+  }
+
+  html.dark {
+    color-scheme: dark;
+
+    --sk-back-3-hsl: 0, 0%, 14%;
+    --sk-back-1: hsl(0, 0%, 10%);
+    --sk-back-2: hsl(0, 0%, 18%);
+    --sk-back-3: hsl(var(--sk-back-3-hsl));
+    --sk-back-4: hsl(0, 0%, 22%);
+    --sk-back-5: hsl(0, 0%, 40%);
+    --sk-back-translucent: hsla(0, 0%, 100%, 0.1);
+    --sk-theme-1-hsl: 15, 100%, 55%;
+    --sk-theme-2-hsl: 240, 8%, 44%;
+    --sk-theme-3-hsl: 204, 100%, 63%;
+    --sk-text-1: hsl(0, 0%, 90%);
+    --sk-text-2: hsl(0, 0%, 80%);
+    --sk-text-3: hsl(0, 0%, 65%);
+    --sk-text-4: hsl(0, 0%, 45%);
+    --sk-text-translucent: hsla(0, 0%, 100%, 0.9);
+    --sk-scrollbar: rgba(255, 255, 255, 0.3);
+
+    --sk-back-3-hsl: 0, 0%, 14%;
+    --sk-theme-1-variant: hsl(202, 100%, 40%);
+    --sk-theme-2-variant: hsl(240, 8%, 35%);
+    --sk-theme-3-variant: hsl(204, 100%, 50%);
+
+    --sk-text-warning-hsl: 32, 67%, 56%;
+
+    --sk-code-ts-bg: var(--sk-back-2);
+    --sk-code-bg: var(--sk-back-3);
+    --sk-code-base: hsl(45, 7%, 75%);
+    --sk-code-comment: hsl(0, 0%, 55%);
+    --sk-code-keyword: hsl(204, 88%, 65%);
+    --sk-code-function: hsl(19, 67%, 75%);
+    --sk-code-string: hsl(41, 37%, 68%);
+    --sk-code-number: hsl(120, 100%, 25%);
+    --sk-code-template-string: hsl(2, 80%, 47%);
+    --sk-code-tags: var(--sk-code-function);
+    --sk-code-important: var(--sk-code-string);
+    --sk-code-diff-base: hsla(0, 0%, 100%, 0.5);
+    --sk-code-diff-inserted: hsl(120, 46%, 48%);
+    --sk-code-diff-removed: hsl(2, 64%, 70%);
+
+    --toggle-dark: block;
+    --toggle-light: none;
+
+
+    --sdt-bg-main: #585858;
+    --sdt-shadow-color: #ccc;
+    --sdt-color: #eee;
+    --sdt-clock-color: var(--sdt-color);
+    --sdt-clock-color-hover: var(--sdt-color);
+    --sdt-clock-time-bg: transparent;
+    --sdt-clock-time-bg-hover: transparent;
+    --sdt-clock-disabled: #b22222;
+    --sdt-clock-disabled-bg: var(--sdt-bg-main);
+    --sdt-header-color: #eee;
+    --sdt-bg-selected: #126cbb;
+    --sdt-clock-selected-bg: var(--sdt-bg-selected);
+    --sdt-table-disabled-date: #b22222;
+    --sdt-table-disabled-date-bg: var(--sdt-bg-main);
+    --sdt-table-data-bg-hover: #777;
+    --sdt-table-selected-bg: var(--sdt-bg-selected);
+    --sdt-header-btn-bg-hover: #777;
+    --sdt-color-selected: #fff;
+    --sdt-table-today-indicator: #ccc;
+    --sdt-clock-bg: #999;
+    /* custom buttons */
+    --sdt-today-bg: #1e486d;
+    --sdt-today-color: #fff;
+    --sdt-clear-color: #666;
+    --sdt-clear-bg: #ddd;
+    --sdt-clear-hover-color: #fff;
+    --sdt-clear-hover-bg: #dc3545;
+  }
 }
 
 .light-toggle {
-    display: var(--toggle-light);
-  }
+  display: var(--toggle-light);
+}
 
 .dark-toggle {
-	display: var(--toggle-dark);
+  display: var(--toggle-dark);
 }
