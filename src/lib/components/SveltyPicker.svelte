@@ -74,6 +74,8 @@
   export let clearBtn = config.clearBtn;
   /** @type {boolean} */
   export let autocommit = config.autocommit;
+  /** @type {boolean} */
+  export let hourOnly = config.hourOnly;
   /** @type {import("$lib/i18n").i18nType} */
   export let i18n = config.i18n;
   /** ************************************ actions */
@@ -585,6 +587,7 @@
         showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P') !== null}
         {i18n}
         {minuteIncrement}
+        {hourOnly}
         on:hour={onDate}
         on:minute={onDate}
         on:switch={onModeSwitch}

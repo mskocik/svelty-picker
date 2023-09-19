@@ -10,6 +10,7 @@
   export let startDate = null;
   /** @type {Date|null} */
   export let endDate = null;
+  export let hourOnly = false;
   export let minuteIncrement = 1;
   export let showMeridian = false;
   export let hasDateComponent = false;
@@ -293,7 +294,7 @@
         isKeyboard: e.type === 'keyboard',
         dateIndex: wid
       });
-      if (e.type !== 'keyboard' && !isMinuteView) {
+      if (e.type !== 'keyboard' && !isMinuteView && !hourOnly) {
         isMinuteView = true;
       }
     }
@@ -340,11 +341,13 @@
       class:is-active={!isMinuteView}
       on:click={() => isMinuteView = false}
     >{view(selectedHour, showMeridian)}</button>
+    {#if !hourOnly}
     <span>:</span>
     <button type="button" class="sdt-time-btn sdt-time-figure"
       class:is-active={isMinuteView}
       on:click={() => isMinuteView = true}
     >{view(selectedMinutes, false)}</button>
+    {/if}
     {#if showMeridian}
     <div class="sdt-meridian">
       <button type="button" class="sdt-time-btn sdt-time-figure is-active" on:click={onSwitchMeridian} data-value={isPM ? selectedHour % 12 : selectedHour + 12}>{isPM ? 'PM' : 'AM'}</button>
