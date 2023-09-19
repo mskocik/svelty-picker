@@ -365,7 +365,26 @@ export const da = {
   backToDate:  'Tilbage til kalenderen'
 }
 
+/**
+ * @type {i18nType} Thai translation by kodaicoder
+ */
+export const th = {
+  days:        ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์'],
+  daysShort:   ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.'],
+  daysMin:     ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.'],
+  months:      ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+  monthsShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['', '', '', ''],
+  todayBtn:    'วันนี้',
+  clearBtn:    'ล้างข้อมูล',
+  okBtn:       'ยืนยัน',
+  cancelBtn:   'ปิด',
+  timeView:    'แสดงหน้าเลือกเวลา',
+  backToDate:  'กลับไปหน้าปฏิทิน'
+}
+
 // always keep it sorted alphabetically
 export default {
-  cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, tr
+  cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, th, tr
 }
