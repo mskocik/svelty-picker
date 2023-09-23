@@ -123,7 +123,7 @@
   /** @type {string} */
   let eventType;
   $: autocloseSupported = autocommit && ((isRange && resolvedMode === 'date') || !isRange);
-  $: doAutoCommit = computeAutoclose(autocommit, isRange, resolvedMode, eventType, valueArray);
+  $: doAutoCommit = computeAutoclose(autocommit, isRange, resolvedMode, eventType, valueArray, hourOnly);
   $: {  // custom-element ONLY
     if (ce_displayElement) ce_displayElement.readOnly = isFocused;
   }
@@ -141,12 +141,12 @@
    * @param {string} eventType
    * @returns {boolean}
    */
-  function computeAutoclose(autoCommit, isRange, resolvedMode, eventType, valueArray) {
+  function computeAutoclose(autoCommit, isRange, resolvedMode, eventType, valueArray, hourOnly) {
     if (!autoCommit) return false; // no doubt
 
     if (isRange && (resolvedMode === 'datetime' || valueArray.length !== 2)) return false;
 
-    return eventType === 'minute' || resolvedMode === eventType;
+    return eventType === 'minute' || resolvedMode === eventType || (hourOnly && eventType === 'hour');
   }
 
   /**
@@ -258,7 +258,7 @@
   function watchEventType(eventType, lastTimeId) {
     if (eventType === 'date' && resolvedMode === 'datetime' && ((isRange && valueArray.length === 2) || !isRange)) {
       currentMode = 'time';
-    } else if (eventType === 'hour') {
+    } else if (eventType === 'hour' && !hourOnly) {
       // @ts-ignore
       widgetList[lastTimeId].ref.showMinuteView();
     } else if (eventType === 'minute' && !isRange && resolvedMode === 'datetime' && doAutoCommit) {
