@@ -2,10 +2,21 @@
 title: Events
 ---
 
-Component emits `input`, `change` and `blur` events.
+Component emits `input`, `change`, `dateChange` and `blur` events.
 
 - `input` is dispatched on `<input>` element therefore you can get current value like from every native event:
 - `change` event is using Svelte's `eventDispatcher`, therefore triggered event contains `detail` property
+- `dateChange` event is dispatched on date change as well as `change` event, but with more data on `detail` property:
+
+```js
+{   // event.detail property
+    value: string | string[] | null     // array for range
+    dateValue: Date | Date[] | null     // array for range
+    displayValue: string
+    valueFormat: string
+    displayFormat: string
+}
+```
 
 For custom element:
 

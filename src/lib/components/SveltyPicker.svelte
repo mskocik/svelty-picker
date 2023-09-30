@@ -90,6 +90,8 @@
   const dispatch = createEventDispatcher();
 
   let { valueArray, prevValue, innerDates } = initProps(value, initialDate, format, i18n, formatType);
+  // properly set value from initialDate
+  if (!value && initialDate) value = isRange ? valueArray : valueArray[0];
   let currentFormat = format;
   let isFocused = pickerOnly;
   let undoHistory = [...valueArray];
@@ -325,6 +327,13 @@
     isDirty = computeDirty(valueArray);
     dispatchInputEvent(true);
     dispatch("change", isRange ? valueArray : (valueArray[0] || null));    // change is dispatched on user interaction
+    dispatch("dateChange", {
+      value: isRange ? valueArray : (valueArray[0] || null),
+      dateValue: isRange ? innerDates : (innerDates[0] || null),
+      displayValue: displayValue,
+      valueFormat: format,
+      displayFormat: displayFormat
+    });
     doResetView && resetView();
   }
 
