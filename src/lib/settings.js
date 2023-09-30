@@ -11,6 +11,7 @@ export default {
   inputClasses: '',
   todayBtnClasses: 'sdt-action-btn sdt-today-btn',
   clearBtnClasses: 'sdt-action-btn sdt-clear-btn',
+  hourOnly: false,
   todayBtn: true,
   clearBtn: true,
   autocommit: true,

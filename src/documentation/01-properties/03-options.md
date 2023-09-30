@@ -19,6 +19,7 @@
 | formatType      | `string`                    | `'standard'`      | Format type (`standard` or `php`) |
 | displayFormat          | `string`             | `null`            | Display format of entered date/time.  |
 | displayFormatType      | `string`             | `null`            | Display format type (`standard` or `php`) |
+| hourOnly        | `bool`                      | `false`           | Only allow hour selection for the time portion of the datetime selection
 | minuteIncrement | `number`                    | `1`               | number in range `1-60` to set the increment of minutes choosable |
 | weekStart       | `number`                    | `1`               | number in range `0-6` to select first day of the week. Sunday is `0` |
 | inputClasses    | `string`                    | `""`              | input css class string |
