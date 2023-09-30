@@ -136,7 +136,7 @@
   $: innerHours = positions(isMinuteView ? 180 : 120, 110, isMinuteView ? '00' : '12', isMinuteView, 12);
 
   /**
-   * 
+   *
    * @param {number} value
    * @param {boolean} asMeridian
    */
@@ -197,7 +197,7 @@
         return startDate.getHours() === innerDate.getHours() && startDate.getMinutes() > val;
       }
       return startDate.getHours() > val;
-    } 
+    }
     if (endDate
       && endDate.getDate()     === innerDate.getDate()
       && endDate.getMonth()    === innerDate.getMonth()
@@ -230,7 +230,7 @@
 
       innerDate[setter](val);
     } else if (isMinuteView) {
-      // compute it out of x,y 
+      // compute it out of x,y
       const rect = clockEl.getBoundingClientRect();
       const clientX = e.clientX - rect.left;
       const clientY = e.clientY - rect.top;
@@ -286,7 +286,7 @@
       innerDate.setMinutes(degree);
     }
     innerDate = innerDate;
-    
+
     // handle only final click, not mouse move
     if (!handleMoveMove) {
       dispatch(isMinuteView ? 'minute' : 'hour', {
@@ -310,7 +310,8 @@
     innerDate = innerDate;
     dispatch(isMinuteView ? 'minute' : 'hour', {
       value: innerDate,
-      isKeyboard: e.type === 'keyboard'
+      // isKeyboard: e.type === 'keyboard'
+      isKeyboard: true
     });
   }
 
@@ -330,31 +331,38 @@
 </script>
 
 <div class="sdt-timer" in:fade={{duration: 200}}>
-  
   <div class="sdt-time-head">
     {#if hasDateComponent}
     <button type="button" class="sdt-time-btn sdt-back-btn" title={i18n.backToDate} on:click={onModeSwitch}>
       <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill-rule="evenodd" d="M6.75 0a.75.75 0 01.75.75V3h9V.75a.75.75 0 011.5 0V3h2.75c.966 0 1.75.784 1.75 1.75v16a1.75 1.75 0 01-1.75 1.75H3.25a1.75 1.75 0 01-1.75-1.75v-16C1.5 3.784 2.284 3 3.25 3H6V.75A.75.75 0 016.75 0zm-3.5 4.5a.25.25 0 00-.25.25V8h18V4.75a.25.25 0 00-.25-.25H3.25zM21 9.5H3v11.25c0 .138.112.25.25.25h17.5a.25.25 0 00.25-.25V9.5z"></path></svg>
     </button>
     {/if}
+    {#if !hourOnly}
     <button type="button" class="sdt-time-btn sdt-time-figure"
       class:is-active={!isMinuteView}
       on:click={() => isMinuteView = false}
     >{view(selectedHour, showMeridian)}</button>
-    {#if !hourOnly}
     <span>:</span>
     <button type="button" class="sdt-time-btn sdt-time-figure"
       class:is-active={isMinuteView}
       on:click={() => isMinuteView = true}
     >{view(selectedMinutes, false)}</button>
+    {:else}
+    <span class="sdt-time-figure">{view(selectedHour, showMeridian)}</span>
+      {#if showMeridian}
+      <span class="sdt-time-figure">{(isPM ? i18n.meridiem[1] : i18n.meridiem[0]).toUpperCase()}</span>
+      {:else}
+      <span>:</span>
+      <span class="sdt-time-figure">00</span>
+      {/if}
     {/if}
     {#if showMeridian}
     <div class="sdt-meridian">
-      <button type="button" class="sdt-time-btn sdt-time-figure is-active" on:click={onSwitchMeridian} data-value={isPM ? selectedHour % 12 : selectedHour + 12}>{isPM ? 'PM' : 'AM'}</button>
+      <button type="button" class="sdt-time-btn sdt-time-figure is-active" on:click={onSwitchMeridian} data-value={isPM ? selectedHour % 12 : selectedHour + 12}>{isPM ? i18n.meridiem[1] : i18n.meridiem[0]}</button>
     </div>
     {/if}
   </div>
-    
+
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="sdt-clock" on:click|preventDefault={onClick} on:mousedown={onToggleMove} on:mousemove={e => { handleMoveMove && onClick(e) }} on:mouseup={onToggleMove} bind:this={clockEl}>
@@ -396,6 +404,10 @@
 .sdt-time-figure {
   font-size: 1.5em;
   font-weight: bold;
+  padding: 0 0.375em;
+}
+.sdt-time-figure + .sdt-time-figure {
+  margin-left: -12px;
 }
 .sdt-clock {
   margin: auto;
@@ -439,7 +451,7 @@
 .sdt-meridian {
   position: absolute;
   top: 0;
-  right: 40px;
+  right: 0;
   display: flex;
 }
 .sdt-meridian .sdt-time-btn {
