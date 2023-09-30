@@ -610,8 +610,8 @@
     <div class="sdt-btn-row">
       {#if !autocloseSupported}
       <span>
-        <button type="button" class="sdt-action-btn sdt-clear-btn" on:click={onCancel}>{i18n.cancelBtn}</button>
-        <button type="button" class="sdt-action-btn sdt-today-btn" on:click={() => onValueSet(true)}>{i18n.okBtn}</button>
+        <button type="button" class={clearBtnClasses} on:click={onCancel}>{i18n.cancelBtn}</button>
+        <button type="button" class={todayBtnClasses} on:click={() => onValueSet(true)}>{i18n.okBtn}</button>
       </span>
       {/if}
       {#if todayBtn || clearBtn}
