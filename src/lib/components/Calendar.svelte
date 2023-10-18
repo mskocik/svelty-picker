@@ -85,7 +85,12 @@
   /** @type Date? */
   let internalDate = dates[wid] || null;
   let activeDate = wid === 1
-    ? (() => { const d = new Date(dates[0] || new Date()); d.setMonth(d.getMonth()+1); return d })()
+    ? (() => {
+      if (dates.length === 2 && dates[1]) return dates[1];
+      const d = new Date(dates[0] || new Date());
+      d.setMonth(d.getMonth()+1);   // by default move second calendar by 1 month
+      return d;
+    })()
     : new Date(dates[0]?.valueOf() || new Date());
 
   $: computedStartDate = startDate
