@@ -73,6 +73,8 @@
   /** @type {boolean} */
   export let clearBtn = config.clearBtn;
   /** @type {boolean} */
+  export let clearToggle = config.clearToggle;
+  /** @type {boolean} */
   export let autocommit = config.autocommit;
   /** @type {boolean} */
   export let hourOnly = config.hourOnly;
@@ -283,8 +285,7 @@
         innerDates[0].getFullYear() === value.getFullYear() &&
         innerDates[0].getMonth() === value.getMonth() &&
         innerDates[0].getDate() === value.getDate() &&
-        resolvedMode === "date" &&
-        !required
+        resolvedMode === "date" && !required && clearToggle
       )
         value = null;
     }

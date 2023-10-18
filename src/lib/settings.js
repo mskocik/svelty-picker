@@ -14,6 +14,7 @@ export default {
   hourOnly: false,
   todayBtn: true,
   clearBtn: true,
+  clearToggle: true,
   autocommit: true,
   i18n: en
 }
