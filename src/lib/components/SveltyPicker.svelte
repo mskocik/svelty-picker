@@ -371,6 +371,7 @@
     valueArray = [...undoHistory];
     currentValue = computeStringValue();
     resetView();
+    dispatch('cancel');
   }
 
   /**
