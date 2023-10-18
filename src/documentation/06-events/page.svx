@@ -2,11 +2,12 @@
 title: Events
 ---
 
-Component emits `input`, `change`, `dateChange` and `blur` events.
+Component emits `input`, `change`, `dateChange`, `cancel` and `blur` events.
 
 - `input` is dispatched on `<input>` element therefore you can get current value like from every native event:
 - `change` event is using Svelte's `eventDispatcher`, therefore triggered event contains `detail` property
 - `dateChange` event is dispatched on date change as well as `change` event, but with more data on `detail` property:
+- `cancel` event is dispatched when "Cancel" button is pressed (which resets any changes that were not confirmed. Typically when `autocommit` is set to `false`)
 
 ```js
 {   // event.detail property
