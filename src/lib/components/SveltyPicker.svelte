@@ -300,8 +300,11 @@
           : [];
       } else if (value && dateIndex !== undefined) {
         innerDates[dateIndex] = value;
+      } else if (type === 'datetime') {
+        innerDates[0] = value;
+        innerDates[1] = value;
       } else {
-        throw new Error('Invalid event type');
+        throw new Error(`Unhandled event type: '${type}'`);
       }
       valueArray = innerDates.map(date => formatDate(date, format, i18n, formatType));
     } else {
