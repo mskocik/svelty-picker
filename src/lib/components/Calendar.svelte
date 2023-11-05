@@ -158,6 +158,7 @@
       : 1
     )
     const newActiveDate = new Date(activeDate); // to keep it working with immutable setting, ref #20
+    newActiveDate.getDate() > 28 ? newActiveDate.setDate(newActiveDate.getDate() - 3) : newActiveDate;
     newActiveDate.setMonth(activeDate.getMonth() + (val*multiplier));
     activeDate = newActiveDate;
     onMonthTransitionTrigger = null;
