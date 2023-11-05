@@ -234,6 +234,7 @@
             )
           ) {
             activeDate.setFullYear(newInternalDate.getFullYear());
+            activeDate.getDate() > 28 && activeDate.setDate(28);  // safe value to prevent month skip, ref #146
             activeDate.setMonth(newInternalDate.getMonth());
             activeDate = activeDate;
           }
