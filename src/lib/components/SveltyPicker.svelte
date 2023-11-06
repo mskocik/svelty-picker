@@ -88,6 +88,8 @@
   export let ce_valueElement = null;
   /** @type {HTMLInputElement|null} */
   export let ce_displayElement = null;
+  /** @type {Function|null} */
+  export let positionResolver = usePosition;
 
   const dispatch = createEventDispatcher();
 
@@ -132,7 +134,7 @@
     if (ce_displayElement) ce_displayElement.readOnly = isFocused;
   }
   $: internalVisibility = pickerOnly ? true : false;
-  $: positionPopup = !pickerOnly ? usePosition : () => {};
+  $: positionPopup = !pickerOnly ? positionResolver : () => {};
   $: isDirty = computeDirty(valueArray);
   $: watchExternalValueChange(value);
   $: watchValueChange(valueArray);

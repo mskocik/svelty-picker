@@ -31,3 +31,4 @@
 | autocommit      | `bool`                      | `true`            | Whether date/time selection is automatic or manual |
 | i18n            | `object`                    | `en`              | localization object, english is by default |
 | validatorAction | `array`                     | `null`            | Bind validator action for inner `<input>` element. Designed to be used with `svelte-use-form`.
+| positionResolver | `function`                 | internal          | Action which resolves floating position of picker. Default one uses `@floating-ui` under the hood. So you can use this library for your custom position resolver function

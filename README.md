@@ -1,12 +1,12 @@
 # 📆 Svelty Picker [![NPM version](https://img.shields.io/npm/v/svelty-picker.svg?style=flat)](https://www.npmjs.org/package/svelty-picker)
 
-Simple date & time picker implemented in svelte. 
+Simple date & time picker implemented in svelte.
 
-Features: 
+Features:
 - date/time/datetime/range picker mode
 - various formatting options
 - keyboard navigation
-- replacable slots 
+- replacable slots
 - themable
 - customizable disabled dates
 <!-- - validator action for `<input>` using `svelte-use-forms` (optional) -->
@@ -52,6 +52,7 @@ npm install svelty-picker
 | autocommit       | `bool`        | `true`        | Whether date/time selection is automatic or manual |
 | i18n            | `object`      | `en`          | localization object, english is by default |
 | validatorAction | `array`       | `null`        | Bind validator action for inner `<input>` element. Designed to be used with `svelte-use-form`.
+| positionResolver | `function`   | internal      | Action which resolves floating position of picker. Default one uses `@floating-ui` under the hood. So you can use this library for your custom position resolver function
 
 ### Documentation
 
