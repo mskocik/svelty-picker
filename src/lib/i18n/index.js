@@ -384,7 +384,24 @@ export const th = {
   backToDate:  'กลับไปหน้าปฏิทิน'
 }
 
+/**
+ * @type {i18nType} Chinese Simplified translation by shiroko <hhx.xxm@gmail.com>
+ */
+export const zh_CN = {
+  days:        ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
+  daysShort:   ['周日', '周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+  daysMin:     ['日', '一', '二', '三', '四', '五', '六', '日'],
+  months:      ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  meridiem:    ['上午', '下午'],
+  suffix:      ['', '', '', ''],
+  todayBtn:    '今天',
+  clearBtn:    '清空',
+  timeView:    '显示时间选择',
+  backToDate:  '回退到日历选项卡'
+}
+
 // always keep it sorted alphabetically
 export default {
-  cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, th, tr
+  cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, th, tr, zh_CN
 }
