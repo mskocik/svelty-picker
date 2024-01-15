@@ -401,7 +401,26 @@ export const zh_CN = {
   backToDate:  '回退到日历选项卡'
 }
 
+/**
+ * @type {i18nType} Arabic translation by Amine Laaraf
+ */
+export const ar = {
+  days: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'],
+  daysShort: ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد'],
+  daysMin: ['أح', 'اث', 'ثل', 'أر', 'خم', 'جم', 'سب', 'أح'],
+  months: ['يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+  monthsShort: ['ينا', 'فبر', 'مار', 'إبر', 'ماي', 'يون', 'يول', 'أغس', 'سبت', 'أكت', 'نوف', 'ديس'],
+  meridiem: ['صباح', 'مساء'],
+  suffix: ['', '', '', ''],
+  todayBtn: 'اليوم',
+  clearBtn: 'مسح',
+  okBtn: 'تأكيد',
+  cancelBtn: 'إلغاء',
+  timeView: 'عرض الوقت',
+  backToDate: 'العودة إلى عرض التقويم'
+}
+
 // always keep it sorted alphabetically
 export default {
-  cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, th, tr, zh_CN
+  ar, cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, th, tr, zh_CN
 }
