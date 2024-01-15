@@ -525,12 +525,12 @@
   border-bottom-left-radius: 0;
 }
 .is-selected + .is-selected .std-btn {
-  border-left: 1px solid color-mix(in srgb, white 75%, var(--sdt-table-selected-bg, #286090));
+  border-left: 1px solid color-mix(in srgb, white 75%, var(--sdt-table-selected-bg, var(--sdt-bg-selected, #286090)));
   margin-left: -1px;
 }
 .is-selected .std-btn,
 .is-selected.in-range .std-btn {
-  background-color: var(--sdt-table-selected-bg, #286090);
+  background-color: var(--sdt-table-selected-bg, var(--sdt-bg-selected, #286090));
   color: var(--sdt-color-selected, var(--sdt-bg-main, #fff));
   opacity: 0.9;
 }
