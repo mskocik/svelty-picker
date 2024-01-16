@@ -14,7 +14,7 @@ Component exposes following CSS variables to customize it's appearance as you ca
   --sdt-color: #000; /** data to select(e.g date/time) text color (except header & buttons) */
   --sdt-color-selected: #fff; /** selected data(e.g date/time) text color */
   --sdt-header-color: #000; /** header items color (e.g. text & buttons) */
-  --sdt-btn-header-bg-hover: #dfdfdf; /** header items hover background color */
+  --sdt-header-btn-bg-hover: #dfdfdf; /** header items hover background color */
   --sdt-bg-selected: #286090; /** selected data(e.g date/time) background color */
 
   /* action buttons */
