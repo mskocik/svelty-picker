@@ -135,13 +135,52 @@
         if (additionalDisableFn && additionalDisableFn(date)) return true;
         break;
       case MODE_YEAR:
-        if (computedStartDate && computedStartDate.getFullYear() === date.getFullYear() && computedStartDate.getMonth() > date.getMonth()) return true;
-        if (endDate && endDate.getFullYear() === date.getFullYear() && endDate.getMonth() < date.getMonth()) return true;
+        const dateYear = date.getFullYear();
+        const startYear = computedStartDate?.getFullYear();
+        const endYear = endDate?.getFullYear();
+        if (computedStartDate) {
+          if (
+            (startYear === dateYear && computedStartDate.getMonth() > date.getMonth())
+            || (startYear > dateYear)
+          ) return true;
+        }
+        if (endDate) {
+          if (
+            (endYear === dateYear && endDate.getMonth() < date.getMonth())
+            || endYear < dateYear
+          ) return true;
+        }
         break;
       case MODE_DECADE:
         if (computedStartDate && computedStartDate.getFullYear() > date.getFullYear()) return true;
         if (endDate && endDate.getFullYear() < date.getFullYear()) return true;
         break;
+    }
+    return false;
+  }
+
+  /**
+   *
+   * @param {Date} date
+   * @param {number} direction
+   * @param {number} mode
+   */
+  function disableButtonNav(date, direction, mode) {
+    console.log(direction, date.getFullYear() * 100, date.getMonth() + direction);
+    const compareToEndDate = direction === 1;
+    const dateToCompare = compareToEndDate ? endDate : computedStartDate;
+    if (dateToCompare) {
+      if (mode === MODE_DECADE) return compareToEndDate
+        ? date.getFullYear() + (direction *10) > dateToCompare.getFullYear()
+        : date.getFullYear() + (direction *10)< dateToCompare.getFullYear();
+      if (mode === MODE_YEAR) {
+        return compareToEndDate
+          ? date.getFullYear() + direction > dateToCompare.getFullYear()
+          : date.getFullYear() + direction < dateToCompare.getFullYear();
+      }
+      return compareToEndDate
+        ? date.getFullYear() * 100 + date.getMonth() + direction > dateToCompare.getFullYear() * 100 + dateToCompare.getMonth()
+        : date.getFullYear() * 100 + date.getMonth() + direction < dateToCompare.getFullYear() * 100 + dateToCompare.getMonth();
     }
     return false;
   }
@@ -320,10 +359,14 @@
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
   </button>
   {/if}
-  <button type="button" class="std-btn std-btn-header icon-btn" on:click={() => onTransformChangeMonth(-1)}>
+  <button type="button" class="std-btn std-btn-header icon-btn" on:click={() => onTransformChangeMonth(-1)}
+    disabled={disableButtonNav(activeDate, -1, currentView)}
+  >
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
   </button>
-  <button type="button" class="std-btn std-btn-header icon-btn" on:click={() => onTransformChangeMonth(1)}>
+  <button type="button" class="std-btn std-btn-header icon-btn" on:click={() => onTransformChangeMonth(1)}
+    disabled={disableButtonNav(activeDate, 1, currentView)}
+  >
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
   </button>
   <div class="sdt-nav-btns">
