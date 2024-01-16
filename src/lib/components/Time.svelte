@@ -465,7 +465,7 @@
   height: 6px;
   position: absolute;
   transform: translate(-50%, -50%);
-  background-color: var(--sdt-clock-selected-bg, #286090);
+  background-color: var(--sdt-clock-selected-bg, var(--sdt-bg-selected, #286090));
   border-radius: 50%;
 }
 .sdt-hand-pointer {
@@ -474,7 +474,7 @@
   bottom: 50%;
   left: calc(50% - 1px);
   position: absolute;
-  background-color: var(--sdt-clock-selected-bg, #286090);
+  background-color: var(--sdt-clock-selected-bg, var(--sdt-bg-selected, #286090));
   transform-origin: center bottom 0;
   transition: transform 0.3s ease, height 0.15s ease;
 }
@@ -485,10 +485,11 @@
   width: 4px;
   height: 4px;
   background-color: transparent;
-  border: 14px solid var(--sdt-clock-selected-bg, #286090);
+  border: 14px solid var(--sdt-clock-selected-bg, var(--sdt-bg-selected, #286090));
   border-radius: 50%;
   box-sizing: content-box;
 }
+
 .sdt-tick {
   position: absolute;
   width: 30px;
@@ -524,7 +525,7 @@
     background-color: transparent;
   }
   100% {
-    background-color: var(--sdt-clock-selected-bg, #286090);
+    background-color: var(--sdt-clock-selected-bg, var(--sdt-bg-selected, #286090));
     color: var(--sdt-color-selected, var(--sdt-bg-main, #fff));
   }
 }
