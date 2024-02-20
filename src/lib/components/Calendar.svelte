@@ -86,7 +86,9 @@
   let internalDate = dates[wid] || null;
   let activeDate = wid === 1
     ? (() => {
-      if (dates.length === 2 && dates[1]) return dates[1];
+      //if the end date is set, and the month/year is different from the start month/year
+      // then return that, otherwise return the month succeeding the start date
+      if (dates.length === 2 && dates[1] && (dates[0].getMonth() != dates[1].getMonth() || dates[0].getFullYear() != dates[1].getFullYear())) return dates[1];
       const d = new Date(dates[0] || new Date());
       d.setMonth(d.getMonth()+1);   // by default move second calendar by 1 month
       return d;
