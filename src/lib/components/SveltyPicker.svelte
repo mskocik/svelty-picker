@@ -348,17 +348,29 @@
     const innerDate = innerDates[0] || now;
     onDate(new CustomEvent(resolvedMode, {
       detail: {
+        dateIndex: 0,
         value: new Date(
           now.getFullYear(),
           now.getMonth(),
           now.getDate(),
-          innerDate.getHours(),
-          innerDate.getMinutes(),
+        	isRange ? 0 : innerDate.getHours(),
+          isRange ? 0 : innerDate.getMinutes(),
           0
         ),
         isKeyboard: false
       }
     }));
+    if (isRange) {
+			onDate(
+				new CustomEvent(resolvedMode, {
+					detail: {
+						dateIndex: 1,
+						value: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
+						isKeyboard: false
+					}
+				})
+			);
+		}
     onValueSet(true);
   }
 
