@@ -168,7 +168,6 @@
    * @param {number} mode
    */
   function disableButtonNav(date, direction, mode) {
-    console.log(direction, date.getFullYear() * 100, date.getMonth() + direction);
     const compareToEndDate = direction === 1;
     const dateToCompare = compareToEndDate ? endDate : computedStartDate;
     if (dateToCompare) {
