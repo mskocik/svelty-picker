@@ -225,7 +225,17 @@
         val += 12;
       }
       if (isMinuteView && minuteIncrement !== 1) {
-        val = val > selectedMinutes ? selectedMinutes + minuteIncrement : selectedMinutes - minuteIncrement;
+        if (e.isKeyboard) {
+          val = val > selectedMinutes ? selectedMinutes + minuteIncrement : selectedMinutes - minuteIncrement;
+        } else if (val % minuteIncrement !== 0) {
+          // interpolate click to nearest 'possible' value
+          const diff = val % minuteIncrement;
+          const prev = val - diff;
+          const next = prev + minuteIncrement;
+          val = next - val < val - prev
+            ? next
+            : prev;
+        }
       }
 
       innerDate[setter](val);
@@ -235,6 +245,7 @@
       const clientX = e.clientX - rect.left;
       const clientY = e.clientY - rect.top;
       const cntX = 130, cntY = 130;
+      const cntX = 110, cntY = 110;
       let quadrant = null;
       if (clientX > cntX) {
         quadrant = clientY > cntY ? 2 : 1
