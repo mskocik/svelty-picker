@@ -558,7 +558,7 @@
       value={displayValue}
       {placeholder} {disabled} {required}
       autocomplete="off"
-      inputmode="none"
+      inputmode={manualInput ? 'text' : 'none'}
       class={inputClasses}
       readonly={isFocused && !manualInput && !isRange}
       on:input={manualInput ? onManualInput : () => {}}
