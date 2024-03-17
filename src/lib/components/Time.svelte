@@ -244,7 +244,6 @@
       const rect = clockEl.getBoundingClientRect();
       const clientX = e.clientX - rect.left;
       const clientY = e.clientY - rect.top;
-      const cntX = 130, cntY = 130;
       const cntX = 110, cntY = 110;
       let quadrant = null;
       if (clientX > cntX) {
