@@ -1,6 +1,6 @@
 import { mdsvex } from "mdsvex";
 import mdsvexConfig from "./mdsvex.config.js";
-import { vitePreprocess } from "@sveltejs/kit/vite";
+// import { vitePreprocess } from "@sveltejs/kit/vite";
 import adapter from "@sveltejs/adapter-static";
 
 const production = process.env.NODE_ENV === "production";
@@ -24,7 +24,7 @@ const config = {
     }
   },
 
-  preprocess: [vitePreprocess({}), mdsvex(mdsvexConfig)],
+  preprocess: [mdsvex(mdsvexConfig)],
 };
 
 export default config;
