@@ -171,7 +171,7 @@ export function formatDate(date, format, i18n, type) {
       D: i18n.daysShort[date.getDay()],
       w: date.getDay(), // 0 -> 6
       N: (date.getDay() === 0 ? 7 : date.getDay()),       // 1 -> 7
-      S:    (dateVal % 10 && dateVal % 10 <= i18n.suffix.length ? i18n.suffix[dateVal % 10 - 1] : i18n.suffix[i18n.suffix.length -1 ]),
+      S: (dateVal % 10 && dateVal % 10 < 4 && (dateVal < 10 || dateVal > 14) ? i18n.suffix[dateVal % 10 - 1] : i18n.suffix[i18n.suffix.length -1 ]),
       // hour
       a: (i18n.meridiem.length === 2 ? i18n.meridiem[date.getHours() < 12 ? 0 : 1] : ''),
       g: (date.getHours() % 12 === 0 ? 12 : date.getHours() % 12),
