@@ -489,6 +489,15 @@
     isMinuteView = false;
   }
 
+  let inputMode = manualInput ? 'text' : 'none';
+
+  function onInputClick() {
+    if (manualInput && isFocused) inputMode = inputMode === 'text'
+      ? 'none'
+      : 'text';
+    !pickerVisible && onInputFocus();
+  }
+
   function onInputFocus() {
     isFocused = true;
     pickerVisible = true;
@@ -536,7 +545,7 @@
     if (ce_displayElement) {
       ce_displayElement.onfocus = onInputFocus;
       ce_displayElement.onblur = onInputBlur;
-      ce_displayElement.onclick = () => !pickerVisible && onInputFocus();
+      ce_displayElement.onclick = onInputClick;
       ce_displayElement.onkeydown = onKeyDown;
     }
   });
@@ -558,16 +567,14 @@
       value={displayValue}
       {placeholder} {disabled} {required}
       autocomplete="off"
-      inputmode={manualInput ? 'text' : 'none'}
+      inputmode={inputMode}
       class={inputClasses}
       readonly={isFocused && !manualInput && !isRange}
       on:input={manualInput ? onManualInput : () => {}}
       use:inputAction={inputActionParams}
       on:focus={onInputFocus}
       on:blur={onInputBlur}
-      on:click={() => {
-        !pickerVisible && onInputFocus();
-      }}
+      on:click={onInputClick}
       on:input
       on:change
       on:keydown={onKeyDown}
