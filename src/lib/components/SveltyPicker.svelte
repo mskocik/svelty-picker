@@ -318,7 +318,7 @@
       eventType = type;
       watchEventType(type, dateIndex || 0);
     }
-    tick().then(() => doAutoCommit && onValueSet(!isKeyboard));
+    tick().then(() => (doAutoCommit || (autocommit && pickerOnly)) && onValueSet(!isKeyboard));
   }
 
   /**
