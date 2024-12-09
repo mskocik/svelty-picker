@@ -1,205 +1,175 @@
-<script context="module">
+<script module>
   import settings from "../settings.js";
   export const config = settings;
 </script>
 
 <script>
-  /**
-   * TODO: handle displayFormat change dynamically
-   * TODO: properly handle 'clear' when `autocommit` is `false (make it undoable)
-  */
-  import { createEventDispatcher, onMount, tick } from "svelte";
+  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
+  import { SvelteDate } from "svelte/reactivity";
   import Calendar from "./Calendar.svelte";
   import Time from "./Time.svelte";
   import { formatDate, parseDate } from "$lib/utils/dateUtils.js";
   import { usePosition } from "$lib/utils/actions.js";
   import { computeResolvedMode, initProps } from "$lib/utils/state.js";
-  import { MODE_MONTH, STARTVIEW_TIME } from "$lib/utils/constants.js";
+  import { MODE_MONTH } from "$lib/utils/constants.js";
 
-  // html
-  export let inputId = '';
-  /** @type {string} */
-  export let name = "date";
-  /** @type {boolean} */
-  export let disabled = false;
-  /** @type {string|null} */
-  export let placeholder = null;
-  /** @type {boolean} */
-  export let required = false;
-  /** @type {string|string[]|null} */
-  export let value = null;
-  /** @type {Date|Date[]|null} */
-  export let initialDate = null;
-  /** @type {boolean }*/
-  export let isRange = false;
-  /** @type {Date | string | null} */
-  export let startDate = null;
-  /** @type {Date | string | null} */
-  export let endDate = null;
-  /** @type {boolean} */
-  export let pickerOnly = false;
-  /** @type {number} */
-  export let startView = MODE_MONTH;
-  /** @type {'auto'|'date'|'datetime'|'time'} */
-  export let mode = 'auto';
-  /** @type {?function(Date): boolean} */
-  export let disableDatesFn = null;
+  /**
+   * @type {{
+   *  inputId?: string,
+   *  name?: string,
+   *  disabled?: boolean,
+   *  placeholder?: string|null|undefined,
+   *  required?: boolean,
+   *  value?: string|string[]|null|undefined,
+   *  isRange?: boolean,
+   *  startDate?: Date | string | null,
+   *  endDate?: Date | string | null,
+   *  pickerOnly?: boolean,
+   *  startView?: number,
+   *  mode?: 'auto'|'date'|'datetime'|'time',
+   *  disableDatesFn?: (currentDate: Date) => boolean,
+   *  manualInput?: boolean, theme?: string,
+   *  format?: string,
+   *  formatType?: string,
+   *  displayFormat?: string|null,
+   *  displayFormatType?: string|null,
+   *  minuteIncrement?: number,
+   *  weekStart?: number,
+   *  inputClasses?: string,
+   *  todayBtnClasses?: string,
+   *  clearBtnClasses?: string,
+   *  todayBtn?: boolean,
+   *  clearBtn?: boolean,
+   *  clearToggle?: boolean,
+   *  autocommit?: boolean,
+   *  hourOnly?: boolean,
+   *  i18n?: import("$lib/i18n/index.js").i18nType,
+   *  validatorAction?: Array<any>|null,
+   *  ce_valueElement?: HTMLInputElement|null,
+   *  ce_displayElement?: HTMLInputElement|null,
+   *  positionResolver?: Function|null,
+   *  onChange?: (value: string|string[]) => void,
+   *  onDateChange?: (prop: {
+   *    value: string|string[],
+   *    dateValue: Date|Date[],
+   *    displayValue: string,
+   *    valueFormat: string,
+   *    displayFormat: string,
+   *    event: 'date'|'hour'|'minute'|'datetime'
+   *  }) => void,
+   *  onCancel?: () => void,
+   *  onBlur?: () => void,
+   *  onInput?: (currentValue: string) => void,
+   *  actionRow?: import('svelte').Snippet<[
+   *    autocloseSupported: boolean,
+   *    todayBtnClasses: string,
+   *    clearBtnClasses: string,
+   *    onCancel: function,
+   *    onConfirm: function,
+   *    onClear: function,
+   *    onToday: function,
+   *    isTodayDisabled: boolean,
+   *    i18n: import('$lib/i18n/index.js').i18nType,
+   *    currentMode: string
+   *  ]>}
+   * } */
+  let {
+    inputId = '',
+    name = "date",
+    disabled = false,
+    placeholder = null,
+    required = false,
+    value = $bindable(),
+    isRange = false,
+    startDate = null,
+    endDate = null,
+    pickerOnly = false,
+    startView = MODE_MONTH,
+    mode = 'auto',
+    disableDatesFn = null,
+    manualInput = false,
+    theme = config.theme,
+    format = config.format,
+    formatType = config.formatType,
+    displayFormat = config.displayFormat,
+    displayFormatType = config.displayFormatType,
+    minuteIncrement = config.minuteIncrement,
+    weekStart = config.weekStart,
+    inputClasses = config.inputClasses,
+    todayBtnClasses = config.todayBtnClasses,
+    clearBtnClasses = config.clearBtnClasses,
+    todayBtn = config.todayBtn,
+    clearBtn = config.clearBtn,
+    clearToggle = config.clearToggle,
+    autocommit = config.autocommit,
+    hourOnly = config.hourOnly,
+    i18n = config.i18n,
+    validatorAction = null,
+    ce_valueElement = null,
+    ce_displayElement = null,
+    positionResolver = usePosition,
+    onChange,
+    onDateChange,
+    onCancel,
+    onInput,
+    onBlur,
+    actionRow = action_row
+  } = $props();
 
-  export let manualInput = false;
-  /** ************************************ 👇 configurable globally */
-  /** @type {string} */
-  export let theme = config.theme;
-  /** @type {string} */
-  export let format = config.format;
-  /** @type {string} */
-  export let formatType = config.formatType;
-  /** @type {string|null} */
-  export let displayFormat = config.displayFormat;
-  /** @type {string|null} */
-  export let displayFormatType = config.displayFormatType;
-  /** @type {number} */
-  export let minuteIncrement = config.minuteIncrement;
-  /** @type {number} */
-  export let weekStart = config.weekStart;
-  /** @type {string} */
-  export let inputClasses = config.inputClasses;
-  /** @type {string} */
-  export let todayBtnClasses = config.todayBtnClasses;
-  /** @type {string} */
-  export let clearBtnClasses = config.clearBtnClasses;
-  /** @type {boolean} */
-  export let todayBtn = config.todayBtn;
-  /** @type {boolean} */
-  export let clearBtn = config.clearBtn;
-  /** @type {boolean} */
-  export let clearToggle = config.clearToggle;
-  /** @type {boolean} */
-  export let autocommit = config.autocommit;
-  /** @type {boolean} */
-  export let hourOnly = config.hourOnly;
-  /** @type {import("$lib/i18n").i18nType} */
-  export let i18n = config.i18n;
-  /** ************************************ actions */
-  /** @type {Array<any>|null} */
-  export let validatorAction = null;
-  /** ************************************ custom-element elements */
-  /** @type {HTMLInputElement|null} */
-  export let ce_valueElement = null;
-  /** @type {HTMLInputElement|null} */
-  export let ce_displayElement = null;
-  /** @type {Function|null} */
-  export let positionResolver = usePosition;
+  if (isRange && Array.isArray(value) === false) console.warn('[svelty-picker] value property must be an array for range picker');
 
-  const dispatch = createEventDispatcher();
-
-  let { valueArray, prevValue, innerDates } = initProps(value, initialDate, format, i18n, formatType);
-  // properly set value from initialDate
-  if (!value && initialDate) value = isRange ? valueArray : valueArray[0];
+  const { iDates, iValues, iValueCombined} = initProps(value, format, i18n, formatType);
+  /** @type {string} concated by `join()` */
+  let prev_value = iValueCombined;
+  let value_array = $state(iValues);
+  let innerDates = $state(iDates.map(date => new SvelteDate(date)));
+  // svelte-ignore state_referenced_locally
+  let undoHistory = $state(iValues);
+  /** @type {string} @computed */
+  let value_form = $derived(value_array.length ? value_array.join(',') : null);
+  let value_display = $state(computeDisplayValue());
+  // svelte-ignore state_referenced_locally
   let currentFormat = format;
-  let isFocused = pickerOnly;
-  let undoHistory = [...valueArray];
-  let currentValue = computeStringValue();
-  let displayValue = computeDisplayValue();
+  let currentDisplayFormat = displayFormat;
   /** @type {number?} as a timestamp */
-  let calendarHoverDate;
-  $: pickerVisible = pickerOnly;
-  $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
-  $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
-  $: isTodayDisabled = (parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date());
+  let calendarHoverDate = $state(null);
+  let parsedStartDate = $derived(startDate ? parseDate(startDate, format, i18n, formatType) : null);
+  let parsedEndDate = $derived(endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null);
+  let isTodayDisabled = $derived((parsedStartDate && parsedStartDate > new Date()) || (parsedEndDate && parsedEndDate < new Date()));
+  let input_name = $derived(name.endsWith(']') ? name.substring(0, name.length-1) + '_input]' : name + '_input');
 
-  $: fadeFn = pickerOnly ? () => ({}) : fade;
-
-  let currentMode = startView === STARTVIEW_TIME ? "time" : "date";
-  let isMinuteView = false;
-  let ref_input = ce_displayElement;
+  let initiallyResolvedMode = computeResolvedMode(mode, format);
+  let resolvedMode = $state(initiallyResolvedMode);
+  /** @type {'date'|'time'} */
+  let currentMode = $state(initiallyResolvedMode === 'time' ? "time" : "date");
+  /**
+   * @type {Array<{ ref: import('./Time.svelte').default }>}
+   */
+  let widgetList = $state(
+    isRange
+      ? [{ref: null}, {ref: null}]
+      : [{ref: null}]
+  );
+  /** @type {'date'|'datetime'|'hour'|'minute'}*/
+  let lastEventType = $state('date');
+  let autocloseSupported = $derived(autocommit && ((isRange && resolvedMode === 'date') || !isRange));
+  /** popup visibility state */
+  let isFocused = $state(pickerOnly);
+  let pickerVisible = $state(pickerOnly);
+  let fadeFn = pickerOnly ? () => ({}) : fade;
+  let internalVisibility = $derived(pickerOnly ? true : false);
+  /** actions */
   /** @type {function|function} */
   let inputAction = validatorAction ? validatorAction.shift() : () => {};
   /** @type {any} */
   let inputActionParams = validatorAction || [];
+  let positionPopup = $derived(!pickerOnly ? positionResolver : () => {});
+  let isDirty = $derived(autocommit ? false : value_array.join() !== undoHistory.join());
+  /** refs */
   /** @type {Calendar} */
   let ref_calendar;
-  $: widgetList = watchIsRange(isRange);
-  $: resolvedMode = computeResolvedMode(mode, format);
-  $: {
-    if (resolvedMode === 'time' && currentMode !== resolvedMode) {
-      currentMode = resolvedMode;
-    }
-  }
-  /** @type {string} */
-  let eventType;
-  $: autocloseSupported = autocommit && ((isRange && resolvedMode === 'date') || !isRange);
-  $: doAutoCommit = computeAutoclose(autocommit, isRange, resolvedMode, eventType, valueArray, hourOnly);
-  $: {  // custom-element ONLY
-    if (ce_displayElement) ce_displayElement.readOnly = isFocused;
-  }
-  $: internalVisibility = pickerOnly ? true : false;
-  $: positionPopup = !pickerOnly ? positionResolver : () => {};
-  $: isDirty = computeDirty(valueArray);
-  $: watchExternalValueChange(value);
-  $: watchValueChange(valueArray);
-  $: watchFormatChange(format, displayFormat);
-
-  /**
-   * @param {boolean} autoCommit
-   * @param {boolean} isRange
-   * @param {string} resolvedMode
-   * @param {string} eventType
-   * @returns {boolean}
-   */
-  function computeAutoclose(autoCommit, isRange, resolvedMode, eventType, valueArray, hourOnly) {
-    if (!autoCommit) return false; // no doubt
-
-    if (isRange && (resolvedMode === 'datetime' || valueArray.length !== 2)) return false;
-
-    return eventType === 'minute' || resolvedMode === eventType || (hourOnly && eventType === 'hour');
-  }
-
-  /**
-   * @param {string[]} valueArray
-   */
-  function watchValueChange(valueArray) {
-    if (valueArray.join('') !== prevValue.join('')) {
-      innerDates = valueArray.filter(e => e).map(val => parseDate(val, format, i18n, formatType));
-      prevValue = valueArray;
-      currentValue = computeStringValue();
-      displayValue = computeDisplayValue();
-    }
-  }
-
-  /**
-   * @param {string} passedValue
-   */
-  function watchExternalValueChange(passedValue) {
-    const stringValue = Array.isArray(passedValue) ? passedValue.join(',') : passedValue;
-    if (currentValue !== stringValue) {
-      valueArray = (stringValue || '').split(',');
-      undoHistory = valueArray;
-    }
-  }
-
-  /**
-   * @param {string} format
-   * @param {string|null} displayFormat - not used, but included to track also its' changes
-   */
-  function watchFormatChange(format, displayFormat) {
-    if (currentFormat !== format && innerDates.length) {
-      valueArray = innerDates.map(date => formatDate(date, format, i18n, formatType));
-      prevValue = valueArray;
-      displayValue = computeDisplayValue();
-      currentFormat = format;
-      if (mode === "auto") {
-        resolvedMode =
-          format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
-            ? "datetime"
-            : format.match(/g|hh?|ii?/i)
-            ? "time"
-            : "date";
-      }
-      currentValue = computeStringValue();
-      onValueSet(true);
-    }
-  }
+  let ref_input = ce_displayElement;
 
   /**
    * Convert value to display value
@@ -207,7 +177,7 @@
   */
   function computeDisplayValue() {
     return innerDates
-      .sort((date1, date2) => date1 - date2)
+      .sort((date1, date2) => date1.getTime() - date2.getTime())
       .map(innerDate => formatDate(innerDate, displayFormat || format, i18n, displayFormatType || formatType))
       .join(' - ');
   }
@@ -217,180 +187,192 @@
   */
   function computeValue() {
     return isRange
-      ? (valueArray.length === 2 ? valueArray : null) // for range set value only when full
-      : (valueArray[0] || null);
-  }
-
-  function computeStringValue() {
-    return valueArray.join(',');
+      ? (value_array.length === 2 ? value_array : null) // for range set value only when full
+      : (value_array[0] || null);
   }
 
   /**
-   * @param {string[]} values
-   * @returns {boolean}
-  */
-  function computeDirty(values) {
-    return values.join(',') !== undoHistory.join(',');
-  }
-  function resetView() {
-    startView = MODE_MONTH;
-    isMinuteView = false;
-    // postpone it to prevent blink on picker fade
-    if (resolvedMode === 'datetime') {
-      setTimeout(() => {
-        if (!pickerOnly) pickerVisible = false;
-         currentMode = "date";
-      }, autocommit ? 300 : 0);
-    } else {
-      if (!pickerOnly) pickerVisible = false;
-    }
-  }
-
-  /**
-   * @typedef {object} TimeRef
-   * @property {Time?} ref
-   *
-   * @param {boolean} isRange
-   * @returns {TimeRef[]}
-  */
-  function watchIsRange(isRange) {
-    return isRange ? [{ref: null}, {ref: null}] : [{ref: null}];
-  }
-
-  /**
-   * @param {string} eventType
-   * @param {number} lastTimeId
+   * @param {import('$lib/types/internal.js').UpdateProp} updateProp
    */
-  function watchEventType(eventType, lastTimeId) {
-    if (eventType === 'date' && resolvedMode === 'datetime' && ((isRange && valueArray.length === 2) || !isRange)) {
-      currentMode = 'time';
-    } else if (eventType === 'hour' && !hourOnly) {
-      // @ts-ignore
-      widgetList[lastTimeId].ref.showMinuteView();
-    } else if (eventType === 'minute' && !isRange && resolvedMode === 'datetime' && doAutoCommit) {
-      // currentMode = 'date';
-    }
-  }
-
-  /**
-   * @typedef {object} CalendarDetail
-   * @property {Date?} value
-   * @property {boolean} isKeyboard
-   * @property {number} [dateIndex=0]
-   *
-   * @param {CustomEvent<CalendarDetail>} event
-   */
-  function onDate({ type, detail }) {
-    let { value, isKeyboard, dateIndex } = detail;
-    if (value && !isRange && innerDates.length) {
+  function onDate({ type, date, isKeyboard, dateIndex = 0 }) {
+    if (date && !isRange && innerDates.length) {
       if (
-        innerDates[0].getFullYear() === value.getFullYear() &&
-        innerDates[0].getMonth() === value.getMonth() &&
-        innerDates[0].getDate() === value.getDate() &&
+        innerDates[0].getFullYear() === date.getFullYear() &&
+        innerDates[0].getMonth() === date.getMonth() &&
+        innerDates[0].getDate() === date.getDate() &&
         resolvedMode === "date" && !required && clearToggle
       )
-        value = null;
+        date = null;
     }
     // standard
     if (isRange) {
       // need to keep daterange sorted
       if (type === 'date') {
-        innerDates = value
-          ? (innerDates.length === 2 ? [value] : innerDates.concat(value))
+        innerDates = date
+          ? (innerDates.length === 2 ? [new SvelteDate(date)] : innerDates.concat(new SvelteDate(date)))
             .map(date => date.getTime())
-            .sort().map(ts => new Date(ts))
+            .sort().map(ts => new SvelteDate(ts))
           : [];
-      } else if (value && dateIndex !== undefined) {
-        innerDates[dateIndex] = value;
+      } else if (date && dateIndex !== undefined) {
+        innerDates[dateIndex] = new SvelteDate(date);
       } else if (type === 'datetime') {
-        innerDates[0] = value;
-        innerDates[1] = value;
+        innerDates[0] = new SvelteDate(date);
+        innerDates[1] = new SvelteDate(date);
       } else {
         throw new Error(`Unhandled event type: '${type}'`);
       }
-      valueArray = innerDates.map(date => formatDate(date, format, i18n, formatType));
+      value_array = innerDates.map(date => formatDate(date, format, i18n, formatType));
     } else {
       // single select
-      innerDates = value ? [value] : [];
-      valueArray = value ? [formatDate(value, format, i18n, formatType)] : [];
+      innerDates = date
+        ? [new SvelteDate(date)]
+        : [];
+      value_array = date
+        ? [formatDate(date, format, i18n, formatType)]
+        : [];
     }
-    if (!isKeyboard) {
-      eventType = type;
-      watchEventType(type, dateIndex || 0);
-    }
-    tick().then(() => (doAutoCommit || (autocommit && pickerOnly)) && onValueSet(!isKeyboard));
+    lastEventType = type;
+    shouldEmitChange(type) && setValueAndEmitEvents();
+    wrapInteraction(type, isKeyboard, dateIndex);
   }
 
   /**
-   * Set value and hide picker (calls `resetView` inside)
-   * @param {boolean?} [doResetView]
-  */
-  function onValueSet(doResetView) {
-    value = computeValue();
-    currentValue = computeStringValue();
-    undoHistory = [...valueArray];
-    displayValue = computeDisplayValue();
-    isDirty = computeDirty(valueArray);
-    dispatchInputEvent(true);
-    dispatch("change", isRange ? valueArray : (valueArray[0] || null));    // change is dispatched on user interaction
-    dispatch("dateChange", {
-      value: isRange ? valueArray : (valueArray[0] || null),
-      dateValue: isRange ? innerDates : (innerDates[0] || null),
-      displayValue: displayValue,
-      valueFormat: format,
-      displayFormat: displayFormat
-    });
-    doResetView && resetView();
+   * Previously as doAutoCommit
+   *
+   * @param {'date'|'datetime'|'hour'|'minute'} event
+   */
+  function shouldEmitChange(event) {
+    if (!autocommit || (isRange && resolvedMode.includes('time'))) return false; // no doubt
+
+    if (isRange && (resolvedMode === 'datetime' || value_array.length !== 2)) return false;
+
+    return event === 'minute'
+      || event === resolvedMode
+      || (event === 'hour' && hourOnly)
+      || (pickerOnly) //  here we need to emit on every change, because there is no 'blur' action
+    ;
   }
 
+  function setValueAndEmitEvents() {
+    prev_value = value_array.join();
+    undoHistory = [...value_array];
+    value_display = computeDisplayValue();
+    value = computeValue();
+    // events
+    dispatchInputEvent(true);
+    onChange?.(isRange ? value_array : (value_array[0] || null));    // change is dispatched on user interaction
+    onDateChange?.({
+      value: isRange ? value_array : (value_array[0] || null),
+      dateValue: isRange ? innerDates : (innerDates[0] || null),
+      displayValue: value_display,
+      valueFormat: format,
+      displayFormat: displayFormat,
+      event: lastEventType
+    });
+  }
+
+
+  function resetView() {
+    startView = MODE_MONTH;
+    if (resolvedMode === 'datetime') {
+      setTimeout(() => {
+        if (!pickerOnly) pickerVisible = false;
+         currentMode = "date";
+      }, autocommit ? 300 : 0);
+    } else if (!pickerOnly) pickerVisible = false;
+  }
+
+
+  /**
+   * Should list all cases, when resetView should NOT be called
+   *
+   * @param {'date'|'datetime'|'hour'|'minute'} type
+   * @param {boolean} isKeyboardEvent
+   * @param {number} dateIndex
+   */
+  function wrapInteraction(type, isKeyboardEvent, dateIndex) {
+    if (isKeyboardEvent && lastKeyPressed !== 'Enter') return;
+    if (type === 'hour' && !hourOnly) {
+      widgetList[dateIndex].ref.showMinuteView();
+      return;
+    }
+
+    console.log('a', resolvedMode, type, currentMode);
+
+    const doAutoCommit = shouldEmitChange(type);
+
+    if (resolvedMode === 'datetime') {
+      if (type === 'minute' && !isRange && resolvedMode === 'datetime' && doAutoCommit) {
+        // intentionally empty, because under these conditions we want to reset view
+      } else {
+        if (type === 'date' && ((isRange && value_array.length === 2) || !isRange)) {
+          currentMode = 'time';
+        }
+        return; // prevent reset
+      }
+    }
+
+    doAutoCommit && !isKeyboardEvent && resetView();
+  }
+
+  // TODO: check the 'datetime' type for 'datetime' range
   function onToday() {
     const now = new Date();
-    const innerDate = innerDates[0] || now;
-    onDate(new CustomEvent(resolvedMode, {
-      detail: {
-        dateIndex: 0,
-        value: new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate(),
-        	isRange ? 0 : innerDate.getHours(),
-          isRange ? 0 : innerDate.getMinutes(),
-          0
-        ),
-        isKeyboard: false
-      }
-    }));
+    onDate({
+      type: isRange ? 'datetime' : 'date',
+      dateIndex: 0,
+      date: new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        0,
+        0,
+        0
+      ),
+      isKeyboard: false
+    });
     if (isRange) {
-			onDate(
-				new CustomEvent(resolvedMode, {
-					detail: {
-						dateIndex: 1,
-						value: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
-						isKeyboard: false
-					}
-				})
-			);
+			onDate({
+        type: isRange ? 'datetime' : 'date',
+        dateIndex: 1,
+        date: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
+        isKeyboard: false
+      });
 		}
-    onValueSet(true);
+    shouldEmitChange('date') === false && setValueAndEmitEvents();
+    resolvedMode === 'date' && resetView();
   }
 
   function onClear() {
-    valueArray = [];
-    prevValue = [];
     innerDates = [];
-    currentValue = '';
-    autocommit && onValueSet();
+    value_array = [];
+    prev_value = null;
+    setValueAndEmitEvents();
+  }
+
+  /**
+   * pressing 'Ok' button
+   */
+   function onConfirm() {
+    const stringValue = Array.isArray(value) ? value.join() : (value || null);
+    console.log('confirm!', prev_value, stringValue);
+    if (prev_value !== stringValue || (autocommit === false || isRange)) {
+      setValueAndEmitEvents();
+    }
+    resetView();
   }
 
   /**
    * Dismiss any edits
    */
-   function onCancel() {
-    valueArray = [...undoHistory];
-    currentValue = computeStringValue();
+   function onCancelFn() {
+    value_array = [...undoHistory];
+    // currentValue = computeStringValue();
     resetView();
-    dispatch('cancel');
+    onCancel?.();
   }
+
+  let lastKeyPressed = null;
 
   /**
    * @param {KeyboardEvent} e
@@ -405,6 +387,7 @@
       e.preventDefault();
       return;
     }
+    lastKeyPressed = e.key;
     switch (e.key) {
       case "PageDown":
       case "PageUp":
@@ -425,7 +408,7 @@
         }
         break;
       case "Escape":
-        autocommit ? onClear() : onCancel();
+        autocommit ? onClear() : onCancelFn();
         break;
       case "Backspace":
         if (manualInput && !isRange) return;
@@ -434,19 +417,18 @@
         break;
       case "Enter":
         isFocused && e.preventDefault();
-        if (valueArray.length === 0) {
+        if (value_array.length === 0) {
           pickerVisible = false;
           return;
         }
-        if (currentMode === "time" && !isMinuteView) {
-          // @ts-ignore
+        if (currentMode === "time" && lastEventType === 'hour') {
           return widgetList[0].ref.showMinuteView();
         }
         if (resolvedMode === 'datetime' && currentMode !== 'time') {
           currentMode = 'time';
           return;
         }
-        onValueSet(resolvedMode === 'date' || (resolvedMode.includes('time') && isMinuteView)); // just temporary
+        onConfirm();
 
         break;
       case "Tab":
@@ -462,7 +444,7 @@
   }
 
   /**
-   * @param {{ target: HTMLInputElement}} event
+   * @param {Event & { target: HTMLInputElement}} event
   */
   function onManualInput(event) {
     event.preventDefault();
@@ -470,26 +452,23 @@
     const parsedInput = parseDate(event.target.value, displayFormat || format, i18n, displayFormatType || formatType);
     const formattedInput = formatDate(parsedInput, displayFormat || format, i18n, displayFormatType || formatType);
     if (formattedInput === event.target.value) {
-      /** @type {CustomEventInit<CalendarDetail>} */
-      onDate(new CustomEvent('date', {
-        detail: {
-          value: parsedInput,
-          isKeyboard: true }
-        }
-      ));
+      onDate({
+          type: 'date',
+          date: parsedInput,
+          isKeyboard: true
+      });
     }
   }
 
   /**
-   * @param {CustomEvent} e
+   * @param {'date'|'time'} mode
    */
-  function onModeSwitch(e) {
+  function onModeSwitch(mode) {
     startView = MODE_MONTH;
-    currentMode = e.detail;
-    isMinuteView = false;
+    currentMode = mode;
   }
 
-  let inputMode = manualInput ? 'text' : 'none';
+  let inputMode = $state(manualInput ? 'text' : 'none');
 
   function onInputClick() {
     if (manualInput && isFocused) inputMode = inputMode === 'text'
@@ -505,37 +484,35 @@
 
   function onInputBlur() {
     isFocused = false;
-    autocloseSupported ? onValueSet(false) : onCancel();
-    !ce_displayElement && dispatch("blur");
+    if (autocloseSupported) {
+      onConfirm();
+    } else {
+      onCancelFn();
+    }
+    !ce_displayElement && onBlur?.();
   }
 
   /**
    * FUTURE: investigate workflow for this
+   * TODO: emit event for native input!
    *
    * @param {boolean} dispatchInputEvent
    */
   function dispatchInputEvent(dispatchInputEvent) {
     if (ce_valueElement && ce_displayElement) {
-      ce_valueElement.value = valueArray.join(',') || '';
-      ce_displayElement.value = displayValue;
+      ce_valueElement.value = value_array.join(',') || '';
+      ce_displayElement.value = value_display;
       ce_valueElement.dispatchEvent(new Event('input'));
       ce_displayElement.dispatchEvent(new Event('input'));
     }
-    dispatchInputEvent && dispatch('input', currentValue);
+    dispatchInputEvent && onInput?.(value_form);
   }
 
   /**
-   * @param {CustomEvent} event
+   * @param {number} date
   */
-  function updateCalendarHoverDate({ detail }) {
-    calendarHoverDate = detail;
-  }
-
-  /**
-   * @param {CustomEvent} e
-   */
-   function onTimeSwitch(e) {
-    isMinuteView = e.detail;
+  function updateCalendarHoverDate(date) {
+    calendarHoverDate = date;
   }
 
   /**
@@ -549,46 +526,148 @@
       ce_displayElement.onkeydown = onKeyDown;
     }
   });
+
+  /**
+   * effects: parent reactivity listeners
+   */
+
+  /**
+   * @param {string|string[]|null} passedValue
+   */
+   function watch_value(passedValue) {
+    const stringValue = Array.isArray(passedValue) ? passedValue.join() : (passedValue || null);
+    if (prev_value !== stringValue) {
+      value_array = passedValue
+        ? (Array.isArray(passedValue)
+          ? passedValue
+          : [passedValue]
+        )
+        : [];
+      innerDates = value_array
+        .map(val => new SvelteDate(parseDate(val, format, i18n, formatType)));
+      undoHistory = value_array;
+      prev_value = stringValue;
+    }
+  }
+
+  /**
+   * @param {string} format
+   * @param {string|null} displayFormat - not used, but included to track also its' changes
+   */
+  function watch_formats(format, displayFormat) {
+    if (currentDisplayFormat !== displayFormat) {
+      currentDisplayFormat = displayFormat;
+      value_display = computeDisplayValue();
+    }
+    if (currentFormat !== format && innerDates.length) {
+      currentFormat = format;
+      value_array = innerDates.map(date => formatDate(date, format, i18n, formatType));
+      prev_value = value_array.join();
+      if (currentDisplayFormat === null && currentDisplayFormat === displayFormat) {
+        value_display = computeDisplayValue();
+      }
+      if (mode === "auto") {
+        resolvedMode =
+          format.match(/g|hh?|ii?/i) && format.match(/y|m|d/i)
+            ? "datetime"
+            : format.match(/g|hh?|ii?/i)
+            ? "time"
+            : "date";
+        if (resolvedMode === 'time' && currentMode !== 'time') {
+          currentMode = 'time';
+        }
+      }
+      setValueAndEmitEvents();
+    }
+  }
+
+  $effect(() => watch_value(value));
+  $effect(() => watch_formats(format, displayFormat));
 </script>
 
-<span class="std-component-wrap">
-  <slot name="inputs"
-    value={value} displayValue={displayValue} disabled={disabled} isDirty={isDirty}
-    onKeyDown={onKeyDown} onInputFocus={onInputFocus} onInputBlur={onInputBlur}
-  >
+{#snippet action_row(autocloseSupported, todayBtnClasses, clearBtnClasses, onCancel, onConfirm, onClear, onToday, isTodayDisabled, i18n, currentMode)}
+  {#if !autocloseSupported || true}
+    <div class="sdt-btn-row">
+      {#if !autocloseSupported}
+      <span>
+        <button
+          type="button"
+          class={clearBtnClasses}
+          onclick={onCancel}
+        >
+          {i18n.cancelBtn}
+        </button>
+        <button
+          type="button"
+          class={todayBtnClasses}
+          onclick={onConfirm}
+        >
+          {i18n.okBtn}
+        </button>
+      </span>
+      {/if}
+      {#if todayBtn || clearBtn}
+      <span>
+        {#if todayBtn && currentMode === 'date'}
+          <button
+            type="button"
+            class={todayBtnClasses}
+            onclick={onToday}
+            disabled={isTodayDisabled}
+          >
+            {i18n.todayBtn}
+          </button>
+        {/if}
+        {#if clearBtn}
+          <button
+            type="button"
+            class={clearBtnClasses}
+            onclick={onClear}
+          >
+            {i18n.clearBtn}
+          </button>
+        {/if}
+      </span>
+      {/if}
+    </div>
+  {/if}
+{/snippet}
+
+<span class="sdt-component-wrap">
   {#if !ce_displayElement}
     <input type="hidden" {name} {value}>
     {#if !pickerOnly}
     <input bind:this={ref_input} type="text"
       id={inputId}
       tabindex="0"
-      name={name.endsWith(']') ? name.substring(0, name.length-1) + '_input]' : name + '_input'}
-      class:value-dirty={!autocommit && isDirty}
-      value={displayValue}
-      {placeholder} {disabled} {required}
+      name={input_name}
+      class={inputClasses}
+      class:value-dirty={isDirty}
+      value={value_display}
+      {placeholder}
+      {disabled}
+      {required}
       autocomplete="off"
       inputmode={inputMode}
-      class={inputClasses}
       readonly={isFocused && !manualInput && !isRange}
-      on:input={manualInput ? onManualInput : () => {}}
+      oninput={manualInput ? onManualInput : () => {}}
+      onfocus={onInputFocus}
+      onblur={onInputBlur}
+      onclick={onInputClick}
+      onkeydown={onKeyDown}
       use:inputAction={inputActionParams}
-      on:focus={onInputFocus}
-      on:blur={onInputBlur}
-      on:click={onInputClick}
-      on:input
-      on:change
-      on:keydown={onKeyDown}
     />
     {/if}
   {/if}
-  </slot>
 {#if pickerVisible && isFocused }
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
-    class="std-calendar-wrap {theme}" class:is-popup={!internalVisibility} class:is-range-wrap={isRange}
-    transition:fadeFn|local={{ duration: 200 }}
+    class="sdt-calendar-wrap {theme}"
+    class:is-popup={!internalVisibility}
+    class:is-range-wrap={isRange}
+    transition:fadeFn={{ duration: 200 }}
+    onmousedown={e => e.preventDefault() }
     use:positionPopup
-    on:mousedown|preventDefault
   >
   <div class="sdt-widget-wrap">
   {#each widgetList as w, i (i)}
@@ -607,15 +686,15 @@
         bind:this={ref_calendar}
         {i18n}
         {weekStart}
-        on:date={onDate}
-        on:switch={onModeSwitch}
-        on:internal_hoverUpdate={updateCalendarHoverDate}
+        onupdate={onDate}
+        onswitch={onModeSwitch}
+        onhoverupdate={updateCalendarHoverDate}
       />
     {:else}
       <Time
         wid={i}
-        date={innerDates[i]}
-        startDate={parsedStartDate}
+        date={innerDates[i] || null}
+        startDate={isRange && i === 1 ? innerDates[0] : parsedStartDate}
         endDate={parsedEndDate}
         hasDateComponent={resolvedMode !== "time"}
         bind:this={w.ref}
@@ -623,52 +702,25 @@
         {i18n}
         {minuteIncrement}
         {hourOnly}
-        on:hour={onDate}
-        on:minute={onDate}
-        on:switch={onModeSwitch}
-        on:time-switch={onTimeSwitch}
+        onupdate={onDate}
+        onswitch={onModeSwitch}
       />
     {/if}
     </div>
     {/each}
   </div>
-  <slot name="action-row"
-    onCancel={onCancel}
-    onConfirm={() => onValueSet(true)}
-    onClear={onClear}
-    onToday={onToday}
-    isTodayDisabled={isTodayDisabled}
-    currentMode={currentMode}
-    i18n={i18n}
-  >
-    {#if !autocloseSupported || true}
-    <div class="sdt-btn-row">
-      {#if !autocloseSupported}
-      <span>
-        <button type="button" class={clearBtnClasses} on:click={onCancel}>{i18n.cancelBtn}</button>
-        <button type="button" class={todayBtnClasses} on:click={() => onValueSet(true)}>{i18n.okBtn}</button>
-      </span>
-      {/if}
-      {#if todayBtn || clearBtn}
-      <span>
-        {#if todayBtn && currentMode === 'date'}<button type="button" class={todayBtnClasses} on:click={onToday} disabled={isTodayDisabled}>{i18n.todayBtn}</button>{/if}
-        {#if clearBtn}<button type="button" class={clearBtnClasses} on:click={onClear}>{i18n.clearBtn}</button>{/if}
-      </span>
-      {/if}
-    </div>
-    {/if}
-  </slot>
+  {@render actionRow(autocloseSupported, todayBtnClasses, clearBtnClasses, onCancelFn, onConfirm, onClear, onToday, isTodayDisabled, i18n, currentMode)}
   </div> <!-- END: popup -->
 {/if}
 </span>
 
 
 <style>
-  .std-component-wrap {
+  .sdt-component-wrap {
     position: relative;
     display: inline;
   }
-  .std-calendar-wrap {
+  .sdt-calendar-wrap {
     width: 280px;
     background-color: var(--sdt-bg-main, #fff);
     box-shadow: var(--sdt-wrap-shadow, 0 1px 6px var(--sdt-shadow-color, #ccc));
@@ -676,7 +728,7 @@
     padding: 0.5em;
     color: var(--sdt-color, initial);
   }
-  .std-calendar-wrap.is-range-wrap {
+  .sdt-calendar-wrap.is-range-wrap {
     width: 560px;
   }
   .sdt-widget-wrap {
@@ -692,7 +744,7 @@
   .value-dirty {
     color: color-mix(in srgb, black 20%, white);
   }
-  .std-calendar-wrap.is-popup {
+  .sdt-calendar-wrap.is-popup {
     position: absolute;
     box-shadow: 0 1px 6px var(--sdt-shadow-color, #ccc);
     z-index: 100;
@@ -747,7 +799,7 @@
     background-color: #eee;
   }
   @media screen and (max-width: 560px) {
-    .std-calendar-wrap.std-calendar-wrap.is-range-wrap {
+    .sdt-calendar-wrap.is-range-wrap {
       width: 280px;
     }
     .sdt-widget-wrap {

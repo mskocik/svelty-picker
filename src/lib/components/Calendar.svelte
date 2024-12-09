@@ -1,29 +1,46 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
   import { compute } from '$lib/utils/grid.js';
-  import { isLower, isGreater } from '../utils/dateUtils.js';
   import { scale } from '../utils/transitions.js'
 
   import { MODE_MONTH, MODE_YEAR, MODE_DECADE } from '$lib/utils/constants.js';
-  /** @type {number} */
-  export let wid; // internal ID
-  /** @type {Date[]} */
-  export let dates;
-  /** @type {Date|null} */
-  export let startDate = null;
-  /** @type {Date|null} */
-  export let endDate = null;
-  export let weekStart = 1;
-  export let initialView = MODE_MONTH;
-  /** @type {import("$lib/i18n").i18nType} */
-  export let i18n;
-  export let enableTimeToggle = false;
-  export let isRange = false;
-  /** @type {number?} */
-  export let hoverDate = null;
-  /** @type {?function(Date): boolean} */
-  export let additionalDisableFn;
+  import { SvelteDate } from 'svelte/reactivity';
+
+
+  /**
+   * @type {{
+   *  wid?: number
+   *  dates: Date[],
+   *  startDate?: Date|null,
+   *  endDate?: Date|null,
+   *  weekStart?: number,
+   *  initialView?: any,
+   *  i18n: import("$lib/i18n/index.js").i18nType,
+   *  enableTimeToggle?: boolean,
+   *  isRange?: boolean,
+   *  hoverDate?: number?,
+   *  additionalDisableFn?: ?function(Date): boolean,
+   *  onupdate?: (prop: import('$lib/types/internal.js').UpdateProp) => void
+   *  onswitch?: (mode: string) => void
+   *  onhoverupdate?: (date: number|null) => void
+   * }}
+   */
+  let {
+    wid = 0,
+    dates = [],
+    startDate = null,
+    endDate = null,
+    weekStart = 1,
+    initialView = MODE_MONTH,
+    i18n,
+    enableTimeToggle = false,
+    isRange = false,
+    hoverDate = $bindable(null),
+    additionalDisableFn,
+    onupdate,
+    onswitch,
+    onhoverupdate,
+  } = $props();
   /**
    * @param {string} key
    * @param {boolean} shiftKey
@@ -32,7 +49,7 @@
     if (currentView !== MODE_MONTH) {
       currentView = MODE_MONTH;
       viewDelta = 1;
-      activeDate = new Date(internalDate || new Date());
+      activeDate = new SvelteDate(internalDate || new Date());
       return;
     }
     if (!internalDate) {
@@ -84,42 +101,59 @@
 
   /** @type Date? */
   let internalDate = dates[wid] || null;
-  let activeDate = wid === 1
+  /** @type {SvelteDate} */
+  let activeDate = $state(wid === 1
     ? (() => {
       //if the end date is set, and the month/year is different from the start month/year
       // then return that, otherwise return the month succeeding the start date
-      if (dates.length === 2 && dates[1] && (dates[0].getMonth() != dates[1].getMonth() || dates[0].getFullYear() != dates[1].getFullYear())) return dates[1];
+      if (dates.length === 2 && dates[1]
+        && (dates[0].getMonth() != dates[1].getMonth()
+          || dates[0].getFullYear() != dates[1].getFullYear()
+        )
+      ) return new SvelteDate(dates[1]);
+
       const d = new Date(dates[0] || new Date());
       d.setMonth(d.getMonth()+1);   // by default move second calendar by 1 month
-      return d;
+      return new SvelteDate(d);
     })()
-    : new Date(dates[0]?.valueOf() || new Date());
+    : new SvelteDate(dates[0]?.valueOf() || new Date())
+  );
 
-  $: computedStartDate = startDate
-    ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0,0,0,0)
-    : null;
+  let computedStartDate = $derived(startDate
+    ? new SvelteDate(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0,0,0,0)
+    : null
+  );
 
-  const dispatch = createEventDispatcher();
-
-  let currentView = initialView;
-  let viewDelta = -2;
-  let viewChanged = false;
+  let currentView = $state(initialView);
+  let viewDelta = $state(-2);
+  let viewChanged = $state(false);
   let duration = 400;
-  $: start = viewDelta < 1 ? 1.5 : 0.5;
-  $: end = viewDelta < 1 ? 1 : 1.5;
+  let start = $derived(viewDelta < 1 ? 1.5 : 0.5);
+  let end = $derived(viewDelta < 1 ? 1 : 1.5);
   const TRANSFORM_CONST = 222;
   const TRANSFORM_DECADE_UNEVEN = 148;  // in decade view, transform constants values are changing
-  let transform = TRANSFORM_CONST;  // month +/- constant
+  let transform = $state(TRANSFORM_CONST);  // month +/- constant
   /** @type {Function|null} */
-  let onMonthTransitionTrigger = null;
+  let onMonthTransitionTrigger = $state(null);
 
-  $: swapTransition = viewDelta === -2
+  /**
+   * @type {(node: HTMLElement, props: {
+   *    duration: number,
+   *    start: number,
+   *    end?: number,
+   *    opacity?: number,
+   *    delay?: number
+   *  }) => import('svelte/transition').TransitionConfig}
+   */
+  let swapTransition = $derived(viewDelta === -2
     ? fade
-    : (viewDelta !== null ? scale : () => ({}));
+    : (viewDelta !== null ? scale : () => ({}))
+  );
 
-  $: times = dates.map(date => { date = new Date(date); date.setHours(0,0); return date.getTime() });
-  $: dataset = compute(activeDate, dates, currentView, i18n, weekStart);
-  $: dayLabels =  i18n.daysMin.concat(...i18n.daysMin.slice(1)).slice(weekStart, 7 + weekStart);
+  let times = $derived(dates.map(date => { date = new Date(date); date.setHours(0,0); return date.getTime() }));
+  let dataset = $derived(compute(activeDate, dates, currentView, i18n, weekStart));
+  let dayLabels = $derived(i18n.daysMin.concat(...i18n.daysMin.slice(1)).slice(weekStart, 7 + weekStart));
+  let tableCaption = $derived(i18n && showCaption(currentView, activeDate));
 
   function isBetween(/** @type {number} */num) {
     return dataset.prevTo <= num && num < dataset.nextFrom;
@@ -197,10 +231,15 @@
       ? 12
       : 1
     )
-    const newActiveDate = new Date(activeDate); // to keep it working with immutable setting, ref #20
-    newActiveDate.getDate() > 28 ? newActiveDate.setDate(newActiveDate.getDate() - 3) : newActiveDate;
-    newActiveDate.setMonth(activeDate.getMonth() + (val*multiplier));
-    activeDate = newActiveDate;
+    // NOTE: since `immutable` settings is ignored in rune mode, this is obsolete
+    // const newActiveDate = new Date(activeDate); // to keep it working with immutable setting, ref #20
+    // newActiveDate.getDate() > 28 ? newActiveDate.setDate(newActiveDate.getDate() - 3) : newActiveDate;
+    // newActiveDate.setMonth(activeDate.getMonth() + (val*multiplier));
+    // activeDate = new SvelteDate(newActiveDate);
+    if (activeDate.getDate() > 28) {
+      activeDate.setDate(activeDate.getDate() - 3)
+    };
+    activeDate.setMonth(activeDate.getMonth() + (val*multiplier));
     onMonthTransitionTrigger = null;
     transform = currentView === MODE_DECADE
       ? activeDate.getFullYear() % 20 >= 10 ? TRANSFORM_CONST : TRANSFORM_DECADE_UNEVEN
@@ -279,9 +318,9 @@
             activeDate = activeDate;
           }
         }
-        dispatch('date', {
-          value: internalDate,
-          update: 'date',
+        onupdate?.({
+          type: 'date',
+          date: internalDate,
           isKeyboard: keyboard
         });
         break;
@@ -290,16 +329,16 @@
     transform = TRANSFORM_CONST;  // reset transform
   }
 
-  $: {
+  $effect(() => {
     if (dates.length === 0) internalDate = null;
-  };
+  })
 
   function onTransitionOut() {
     viewChanged = false;
   }
 
   function onTimeSwitch() {
-    dispatch('switch', 'time');
+    onswitch?.('time');
   }
 
   /**
@@ -326,7 +365,7 @@
   function wrapHoverDateToggle(currDate = null) {
     return function(/** @type MouseEvent */ event) {
       hoverDate = currDate?.getTime() || null;
-      dispatch('internal_hoverUpdate', hoverDate);
+      onhoverupdate?.(hoverDate);
     }
   }
 
@@ -349,23 +388,38 @@
       );
   }
 
-  $: tableCaption = i18n && showCaption(currentView, activeDate);
 
 </script>
 
 <div class="sdt-thead-nav">
-  <button type="button" class="std-btn std-btn-header sdt-toggle-btn" on:click={onSwitchView}>{tableCaption}</button>
+  <button type="button" class="std-btn std-btn-header sdt-toggle-btn" onclick={onSwitchView}>{tableCaption}</button>
   {#if enableTimeToggle && dates.length}
-  <button type="button" class="std-btn std-btn-header icon-btn sdt-time-icon" title={i18n.timeView} on:click={onTimeSwitch} >
+  <button
+    type="button"
+    class="std-btn std-btn-header icon-btn sdt-time-icon"
+    title={i18n.timeView}
+    aria-label={i18n.timeView}
+    onclick={onTimeSwitch}
+  >
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z"></path></svg>
   </button>
   {/if}
-  <button type="button" class="std-btn std-btn-header icon-btn" on:click={() => onTransformChangeMonth(-1)}
+  <button
+    type="button"
+    class="std-btn std-btn-header icon-btn"
+    title={i18n.months[(activeDate.getMonth()-1) % 12]}
+    aria-label={i18n.months[(activeDate.getMonth()-1) % 12]}
+    onclick={() => onTransformChangeMonth(-1)}
     disabled={disableButtonNav(activeDate, -1, currentView)}
   >
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z"></path></svg>
   </button>
-  <button type="button" class="std-btn std-btn-header icon-btn" on:click={() => onTransformChangeMonth(1)}
+  <button
+    type="button"
+    class="std-btn std-btn-header icon-btn"
+    title={i18n.months[(activeDate.getMonth()+1) % 12]}
+    aria-label={i18n.months[(activeDate.getMonth()+1) % 12]}
+    onclick={() => onTransformChangeMonth(1)}
     disabled={disableButtonNav(activeDate, 1, currentView)}
   >
     <svg class="sdt-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24"><path d="M4.427 7.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 7H4.604a.25.25 0 00-.177.427z"></path></svg>
@@ -376,10 +430,10 @@
 <div class="sdt-calendar" class:is-grid={viewChanged}>
   {#if currentView === MODE_DECADE}
   <table class="sdt-table" style="max-height: 221px; height: 221px">
-    <tbody in:swapTransition={{duration: duration, start: start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1}} on:outroend={onTransitionOut}
+    <tbody in:swapTransition={{duration: duration, start: start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition={{duration, end, start: 1}} onoutroend={onTransitionOut}
       style={`transform: translateY(-${transform}px); color: red`}
       class:animate-transition={onMonthTransitionTrigger ? true : false}
-      on:transitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
+      ontransitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
     >
       {#each dataset.years as row, i}
       <tr class="sdt-cal-td">
@@ -389,7 +443,7 @@
           <button type="button"
             class="std-btn"
             class:not-current={!isBetween(idx)}
-            on:click={() => { onClick(year)}}
+            onclick={() => { onClick(year)}}
             disabled={isDisabledDate(new Date(year, activeDate.getMonth(), activeDate.getDate()))}
           >{year}</button>
         </td>
@@ -401,9 +455,9 @@
   {/if}
   {#if currentView === MODE_YEAR}
   <table class="sdt-table">
-    <tbody in:swapTransition={{duration, start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1 }} on:outroend={onTransitionOut} style={`transform: translateY(-${transform}px)`}
+    <tbody in:swapTransition={{duration, start, opacity: 1}} class="sdt-tbody-lg" out:swapTransition|local={{duration, end, start: 1 }} onoutroend={onTransitionOut} style={`transform: translateY(-${transform}px)`}
       class:animate-transition={onMonthTransitionTrigger ? true : false}
-      on:transitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
+      ontransitionend={() => onMonthTransitionTrigger && onMonthTransitionTrigger()}
     >
       {#each dataset.months as row, i}
       <tr class="sdt-cal-td">
@@ -412,7 +466,7 @@
         <td class="sdt-cal-td" class:is-selected={idx === dataset.selectionMark[0]}>
           <button class="std-btn" type="button"
             class:not-current={!isBetween(idx)}
-            on:click={() => { onClick(month)}}
+            onclick={() => { onClick(month)}}
             disabled={isDisabledDate(new Date(activeDate.getFullYear(), i18n.monthsShort.indexOf(month), activeDate.getDate()))}
           >{month}</button>
         </td>
@@ -424,7 +478,7 @@
   {/if}
   {#if currentView === MODE_MONTH}
   <table class="sdt-table sdt-table-height">
-    <tbody in:swapTransition={{duration, start: 0.5, opacity: 1}} out:swapTransition|local={{duration, start: Math.abs(viewDelta)}} on:outroend={onTransitionOut}>
+    <tbody in:swapTransition={{duration, start: 0.5, opacity: 1}} out:swapTransition={{duration, start: Math.abs(viewDelta)}} onoutroend={onTransitionOut}>
       <tr class="sdt-cal-td">
       {#each dayLabels as header}
         <th class="sdt-cal-th">{header}</th>
@@ -435,16 +489,16 @@
         {#each row as currDate, j(j)}
         {@const idx = i*7+j}
         {@const dateTime = currDate.getTime()}
-        <!-- svelte-ignore a11y-mouse-events-have-key-events -->
+        <!-- svelte-ignore a11y_mouse_events_have_key_events -->
         <td class="sdt-cal-td"
           class:sdt-today={idx === dataset.todayMark}
           class:in-range={isInRange(dateTime)}
           class:is-selected={times.includes(dateTime)}
           class:in-range-hover={isRange && isRangeHoverable(dateTime, hoverDate)}
-          on:mouseover={wrapHoverDateToggle(currDate)}
-          on:mouseout={wrapHoverDateToggle()}
+          onmouseover={wrapHoverDateToggle(currDate)}
+          onmouseout={wrapHoverDateToggle()}
         >
-          <button on:click={() => {onClick(currDate)}} type="button"
+          <button onclick={() => {onClick(currDate)}} type="button"
             class="std-btn sdt-btn-day"
             class:not-current={!isBetween(i*7+j) }
             disabled={(computedStartDate || endDate || additionalDisableFn) && isDisabledDate(currDate)}
@@ -551,7 +605,7 @@
   border-radius: 0;
 }
 /* range selection: start */
-.in-range-hover.is-selected:has(+ .in-range-hover) .std-btn {
+:global(.in-range-hover.is-selected:has(+ .in-range-hover) .std-btn) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
