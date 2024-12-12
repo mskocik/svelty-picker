@@ -40,6 +40,9 @@ export const ar_DZ = {
   backToDate: 'العودة إلى عرض التقويم'
 };
 
+/**
+ * @type {i18nType} Arabic translation by Amine Laaraf
+ */
 export const ar_MR = {
   days: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'],
   daysShort: ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد'],
@@ -56,6 +59,9 @@ export const ar_MR = {
   backToDate: 'العودة إلى عرض التقويم'
 };
 
+/**
+ * @type {i18nType} Arabic translation by Amine Laaraf
+ */
 export const ar_YE = {
   days: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'],
   daysShort: ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد'],
@@ -448,11 +454,17 @@ export const zh_CN = {
   suffix:      ['', '', '', ''],
   todayBtn:    '今天',
   clearBtn:    '清空',
+  okBtn:       '好的',
+  cancelBtn:   '取消',
   timeView:    '显示时间选择',
   backToDate:  '回退到日历选项卡'
 }
 
-// always keep it sorted alphabetically
+/**
+ * IMPORTANT: always keep it sorted alphabetically
+ *
+ * @type {Record<string, i18nType>}
+ */
 export default {
   ar_DZ, ar_MR, ar_YE, cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, th, tr, zh_CN
 }

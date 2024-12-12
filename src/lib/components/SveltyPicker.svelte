@@ -23,7 +23,7 @@
   export let name = "date";
   /** @type {boolean} */
   export let disabled = false;
-  /** @type {string|null|undefined} */
+  /** @type {string|null} */
   export let placeholder = null;
   /** @type {boolean} */
   export let required = false;
