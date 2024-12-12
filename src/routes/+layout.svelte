@@ -119,7 +119,7 @@
       <span class="hidden sm:inline">📅</span> Svelty Picker
     </a>
     <div class="header-buttons">
-      <a class="inline-flex" href="https://github.com/mskocik/svelty-picker" target="_blank" rel="noreferrer" title="GitHub repository">
+      <a class="inline-flex" href="https://github.com/mskocik/svelty-picker" target="_blank" rel="noreferrer" aria-label="GitHub repository">
         <svg width="36px" height="36px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32" data-v-8ff9b2e6=""><path fill="currentColor" fill-rule="evenodd" d="M16 2a14 14 0 0 0-4.43 27.28c.7.13 1-.3 1-.67v-2.38c-3.89.84-4.71-1.88-4.71-1.88a3.71 3.71 0 0 0-1.62-2.05c-1.27-.86.1-.85.1-.85a2.94 2.94 0 0 1 2.14 1.45a3 3 0 0 0 4.08 1.16a2.93 2.93 0 0 1 .88-1.87c-3.1-.36-6.37-1.56-6.37-6.92a5.4 5.4 0 0 1 1.44-3.76a5 5 0 0 1 .14-3.7s1.17-.38 3.85 1.43a13.3 13.3 0 0 1 7 0c2.67-1.81 3.84-1.43 3.84-1.43a5 5 0 0 1 .14 3.7a5.4 5.4 0 0 1 1.44 3.76c0 5.38-3.27 6.56-6.39 6.91a3.33 3.33 0 0 1 .95 2.59v3.84c0 .46.25.81 1 .67A14 14 0 0 0 16 2Z"/></svg>
       </a>
       <button class="inline-flex text-xl p-2 theme-toggle" onclick="{toggleTheme}" aria-label="Switch theme">
@@ -159,7 +159,7 @@
       </aside>
       <div class="w-100" style="display: flex;flex-wrap: none;">
         <div class="main-container vp-doc">
-          {@render children()}
+          {@render children?.()}
         </div>
         <div class="page-nav">
           {#if page_nav.length}
@@ -184,23 +184,6 @@
 </div>
 
 <style>
-  .docs-brand {
-    padding: 32px 0 ;
-    color: var(--vp-c-brand-1);
-    & b {
-      font-weight: 700;
-    }
-    & svg {
-      fill: var(--vp-c-text-1);
-    }
-  }
-  .header-link {
-    font-size: 26px;
-    padding: 0 12px;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
   .w-100 {
     width: 100%;
   }

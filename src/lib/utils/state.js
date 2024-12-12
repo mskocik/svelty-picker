@@ -3,7 +3,7 @@ import { formatDate, parseDate } from "./dateUtils.js";
 /**
  * @typedef {object} ValueInit
  * @property {string[]} iValues
- * @property {?string} iValueCombined
+ * @property {string|null} iValueCombined
  * @property {Date[]} iDates
  */
 

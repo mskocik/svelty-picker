@@ -19,16 +19,16 @@
    *  inputId?: string,
    *  name?: string,
    *  disabled?: boolean,
-   *  placeholder?: string|null|undefined,
+   *  placeholder?: string|null,
    *  required?: boolean,
-   *  value?: string|string[]|null|undefined,
+   *  value?: string|string[]|null,
    *  isRange?: boolean,
    *  startDate?: Date | string | null,
    *  endDate?: Date | string | null,
    *  pickerOnly?: boolean,
    *  startView?: number,
    *  mode?: 'auto'|'date'|'datetime'|'time',
-   *  disableDatesFn?: (currentDate: Date) => boolean,
+   *  disableDatesFn?: ((currentDate: Date) => boolean) | null,
    *  manualInput?: boolean, theme?: string,
    *  format?: string,
    *  formatType?: string,
@@ -48,19 +48,19 @@
    *  validatorAction?: Array<any>|null,
    *  ce_valueElement?: HTMLInputElement|null,
    *  ce_displayElement?: HTMLInputElement|null,
-   *  positionResolver?: Function|null,
-   *  onChange?: (value: string|string[]) => void,
+   *  positionResolver?: Function,
+   *  onChange?: (value: string|string[]|null) => void,
    *  onDateChange?: (prop: {
-   *    value: string|string[],
-   *    dateValue: Date|Date[],
+   *    value: string|string[]|null,
+   *    dateValue: Date|Date[]|null,
    *    displayValue: string,
    *    valueFormat: string,
-   *    displayFormat: string,
+   *    displayFormat: string | null,
    *    event: 'date'|'hour'|'minute'|'datetime'
    *  }) => void,
    *  onCancel?: () => void,
    *  onBlur?: () => void,
-   *  onInput?: (currentValue: string) => void,
+   *  onInput?: (currentValue: string|null) => void,
    *  actionRow?: import('svelte').Snippet<[
    *    autocloseSupported: boolean,
    *    todayBtnClasses: string,
@@ -69,7 +69,7 @@
    *    onConfirm: function,
    *    onClear: function,
    *    onToday: function,
-   *    isTodayDisabled: boolean,
+   *    isTodayDisabled: boolean|null,
    *    i18n: import('$lib/i18n/index.js').i18nType,
    *    currentMode: string
    *  ]>}
@@ -80,7 +80,7 @@
     disabled = false,
     placeholder = null,
     required = false,
-    value = $bindable(),
+    value = $bindable(null),
     isRange = false,
     startDate = null,
     endDate = null,
@@ -120,13 +120,13 @@
   if (isRange && Array.isArray(value) === false) console.warn('[svelty-picker] value property must be an array for range picker');
 
   const { iDates, iValues, iValueCombined} = initProps(value, format, i18n, formatType);
-  /** @type {string} concated by `join()` */
+  /** @type {string|null} concated by `join()` */
   let prev_value = iValueCombined;
   let value_array = $state(iValues);
   let innerDates = $state(iDates.map(date => new SvelteDate(date)));
   // svelte-ignore state_referenced_locally
   let undoHistory = $state(iValues);
-  /** @type {string} @computed */
+  /** @type {string|null} @computed */
   let value_form = $derived(value_array.length ? value_array.join(',') : null);
   let value_display = $state(computeDisplayValue());
   // svelte-ignore state_referenced_locally
@@ -146,6 +146,7 @@
   /**
    * @type {Array<{ ref: import('./Time.svelte').default }>}
    */
+  // @ts-ignore
   let widgetList = $state(
     isRange
       ? [{ref: null}, {ref: null}]
@@ -202,6 +203,7 @@
         innerDates[0].getDate() === date.getDate() &&
         resolvedMode === "date" && !required && clearToggle
       )
+        // @ts-ignore
         date = null;
     }
     // standard

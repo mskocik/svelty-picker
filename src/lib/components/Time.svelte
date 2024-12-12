@@ -6,16 +6,15 @@
    * @type {{
    *  wid?: number
    *  date?: Date,
-   *  startDate?: Date,
-   *  endDate?: Date,
+   *  startDate?: Date|null,
+   *  endDate?: Date|null,
    *  hourOnly?: boolean,
    *  minuteIncrement?: number,
    *  showMeridian?: boolean,
    *  hasDateComponent?: boolean,
-   *  i18n?: import("$lib/i18n/index.js").i18nType,
-   *  ontime?: (date: Date) => void,
-   *  onupdate?: (updateProp: import('$lib/types/internal.js').UpdateProp) => void,
-   *  onswitch?: (date: string) => void,
+   *  i18n: import("$lib/i18n/index.js").i18nType,
+   *  onupdate: (updateProp: import('$lib/types/internal.js').UpdateProp) => void,
+   *  onswitch: (date: string) => void,
    * }}
    */
 
@@ -70,7 +69,11 @@
   let handleMoveMove = $state(false);
   let enableViewToggle = $state(true);
   /** @type {SvelteDate} */
-  let innerDate = $state(null);
+  let innerDate = $state(function() {
+    const date = new SvelteDate();
+    date.setHours(0,0);
+    return date;
+  }());
   watch_date(date);
 
   let selectedHour = $derived(innerDate?.getHours() || 0);
@@ -99,7 +102,9 @@
     } else if (!passedValue) {
       isMinuteView = false;
       if (!innerDate) {
-        innerDate = new SvelteDate();
+        const date = new SvelteDate();
+        date.setHours(0,0);
+        innerDate = date;
       } else {
         innerDate.setHours(0, 0);
       }

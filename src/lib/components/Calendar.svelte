@@ -182,13 +182,13 @@
         const dateYear = date.getFullYear();
         const startYear = computedStartDate?.getFullYear();
         const endYear = endDate?.getFullYear();
-        if (computedStartDate) {
+        if (startYear && computedStartDate) {
           if (
             (startYear === dateYear && computedStartDate.getMonth() > date.getMonth())
             || (startYear > dateYear)
           ) return true;
         }
-        if (endDate) {
+        if (endYear && endDate) {
           if (
             (endYear === dateYear && endDate.getMonth() < date.getMonth())
             || endYear < dateYear
