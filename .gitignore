@@ -26,4 +26,4 @@ vite.config.ts.timestamp-*
 /__old
 /docs
 *.todo
-/src/pages/test
+src/routes/test/*
