@@ -168,8 +168,8 @@
   let isDirty = $derived(autocommit ? false : value_array.join() !== undoHistory.join());
   /** refs */
   /** @type {Calendar} */
+  // svelte-ignore non_reactive_update
   let ref_calendar;
-  let ref_input = ce_displayElement;
 
   /**
    * Convert value to display value
@@ -395,7 +395,6 @@
       case "ArrowUp":
       case "ArrowLeft":
       case "ArrowRight":
-        // if (manualInput && ref_input.value) return;
         e.preventDefault();
         if (isRange) return;
         if (currentMode === "date") {
@@ -457,6 +456,7 @@
           date: parsedInput,
           isKeyboard: true
       });
+      ref_calendar.focusDate(parsedInput);
     }
   }
 
@@ -637,7 +637,7 @@
   {#if !ce_displayElement}
     <input type="hidden" {name} {value}>
     {#if !pickerOnly}
-    <input bind:this={ref_input} type="text"
+    <input  type="text"
       id={inputId}
       tabindex="0"
       name={input_name}

@@ -99,6 +99,14 @@
     }
   }
 
+  /**
+   * @param {Date|SvelteDate} date
+   */
+  export function focusDate(date) {
+    activeDate.setTime(date.getTime());
+    internalDate = new Date(date.getTime());
+  }
+
   /** @type Date? */
   let internalDate = dates[wid] || null;
   /** @type {SvelteDate} */
