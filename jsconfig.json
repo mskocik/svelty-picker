@@ -6,6 +6,10 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
-		"moduleResolution": "bundler"
+		"allowJs": true,
+		"checkJs": true,
+		"moduleResolution": "bundler",
+		"strictNullChecks": true,
+		"exactOptionalPropertyTypes": true
 	}
 }
