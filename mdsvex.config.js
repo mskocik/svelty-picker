@@ -1,18 +1,25 @@
-import { defineMDSveXConfig as defineConfig } from "mdsvex";
-import { createHighlighter } from "@bitmachina/highlighter";
-import highlighter from './src/utils/markdown.js';
+import { defineMDSveXConfig } from 'mdsvex';
+import highlighter from './src/utils/codeHighlighter.js';
+import autolinkHeadings from 'rehype-autolink-headings';
+import slugPlugin from 'rehype-slug';
 
-const config = defineConfig({
-  extensions: [".svelte.md", ".md", ".svx"],
-  smartypants: {
-    dashes: "oldschool",
-  },
+// const __dirname = resolve();
+
+const config = defineMDSveXConfig({
+  extensions: ['.svelte.md'],
   highlight: {
-    // highlighter: await createHighlighter({ theme: "css-variables" }),
-    highlighter: highlighter
+    highlighter,
   },
-  remarkPlugins: [],
-  rehypePlugins: [],
+  rehypePlugins: [
+    slugPlugin,
+    [
+      autolinkHeadings,
+      {
+        behavior: 'wrap',
+      },
+    ],
+  ]
+  // layout: join(__dirname, './src/lib/components/MarkdownLayout.svelte'),
 });
 
 export default config;

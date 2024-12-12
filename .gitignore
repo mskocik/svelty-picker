@@ -1,14 +1,29 @@
-.DS_Store
 node_modules
-/build
-/_old
-/dist
-!/dist/svelty-picker
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
 /.svelte-kit
-/src/routes/test
-/package
+/build
+/dist
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
 .env
 .env.*
 !.env.example
+!.env.test
+
+# Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+/__old
+/docs
+*.todo
+/src/pages/test
