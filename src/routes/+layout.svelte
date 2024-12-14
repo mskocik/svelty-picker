@@ -6,9 +6,8 @@
   import './../style/doc.css';
   import './../style/style.css';
 
-  import { onDestroy, onMount, setContext } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { stopPropagation } from 'svelte/legacy';
   import { afterNavigate } from '$app/navigation';
 
   /** @type {{children?: import('svelte').Snippet}} */
@@ -29,7 +28,6 @@
 
   function onNavToggle() {
     navToggle = !navToggle;
-    // document[navToggle ? 'addEventListener' : 'removeEventListener']('click', outsideNavClick)
   }
 
   const navigation = {
@@ -45,8 +43,6 @@
     '/global-config': 'Global config',
     '/migration-guide': 'Migration guide'
   }
-
-  setContext('navigation', navigation);
 
   let page_nav = $state([]);
 
@@ -70,6 +66,7 @@
     const newmode = mode === 'dark' ? 'light' : 'dark';
     document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add(newmode);
+    localStorage.setItem('theme', newmode);
     mode = newmode;
   }
 
