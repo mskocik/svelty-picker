@@ -29,10 +29,11 @@
 		</style>
 		<script>
 			let mode = 'light';
-			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			const storedTheme = localStorage.getItem('theme');
+			if (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 				mode = 'dark';
 			}
-			document.documentElement.classList.add(mode);
+			document.documentElement.classList.add(storedTheme || mode);
 		</script>
 		%sveltekit.head%
 	</head>
