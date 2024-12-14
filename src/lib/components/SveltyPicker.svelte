@@ -299,8 +299,6 @@
       return;
     }
 
-    console.log('a', resolvedMode, type, currentMode);
-
     const doAutoCommit = shouldEmitChange(type);
 
     if (resolvedMode === 'datetime') {
@@ -357,7 +355,6 @@
    */
    function onConfirm() {
     const stringValue = Array.isArray(value) ? value.join() : (value || null);
-    console.log('confirm!', prev_value, stringValue);
     if (prev_value !== stringValue || (autocommit === false || isRange)) {
       setValueAndEmitEvents();
     }
