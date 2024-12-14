@@ -1,3 +1,14 @@
+<script>
+  import SveltyPicker, { formatDate, parseDate } from '$lib';
+  import { en } from '$lib/i18n';
+
+	let date = $state((() => {
+		let initDate = new Date();
+		initDate.setHours(0,0,0);
+		return initDate;
+	})());
+</script>
+
 # Working with dates
 
 Although library works internally `Date` objects, `value` property must be `string` or `string[]` when in daterange mode.
@@ -43,4 +54,45 @@ export function formatDate(date, format, i18n, type) { /* ... */}
   </details>
 </blockquote>
 
+### Example
 
+`date` variable value: {date}
+<SveltyPicker
+  mode="date"
+  format="yyyy/mm/dd"
+  bind:value={
+    () => {
+      return formatDate(date, 'yyyy/mm/dd', en, 'standard');
+    },
+    (v) => {
+      date = v ? parseDate(v, 'yyyy/mm/dd', en, 'standard') : null;
+    }
+  }
+/>
+
+```svelte
+<script>
+  import SveltyPicker, { formatDate, parseDate } from 'svelty-picker';
+  import { en} from 'svelty-picker/i18n';
+
+	let date = $state((() => {
+		let initDate = new Date();
+		initDate.setHours(0,0,0);
+		return initDate;
+	})());
+</script>
+
+Selected date: {date}
+<SveltyPicker
+  mode="date"
+  format="yyyy/mm/dd"
+  bind:value={
+    () => {
+      return formatDate(date, 'yyyy/mm/dd', en, 'standard');
+    },
+    (v) => {
+      date = v ? parseDate(v, 'yyyy/mm/dd', en, 'standard') : null;
+    }
+  }
+/>
+```
