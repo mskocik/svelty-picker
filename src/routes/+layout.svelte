@@ -53,7 +53,8 @@
       newNav.push({
         // @ts-ignore
         anchor: link.href,
-        text: link.textContent
+        text: link.textContent,
+        sublink: link.parentElement?.tagName === 'H3'
       });
     });
     page_nav = newNav
@@ -163,7 +164,7 @@
             On this page
             <ul class="nav">
               {#each page_nav as link}
-              <li class="link-item"><a href="{link.anchor}" class="link">{link.text}</a></li>
+              <li class="link-item" class:sublink={link.sublink}><a href="{link.anchor}" class="link">{link.text}</a></li>
               {/each}
 
             </ul>
@@ -215,6 +216,9 @@
   }
   .link-item {
     padding: 4px 10px;
+  }
+  .sublink {
+    padding-left: 20px;
   }
   .link {
     font-weight: 500;

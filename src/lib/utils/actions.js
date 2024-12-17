@@ -5,11 +5,11 @@ import { computePosition, autoUpdate, shift, flip } from '@floating-ui/dom';
  * @returns void
  */
 export function usePosition(node) {
-  if (node?.previousElementSibling === null) return;
-  /** @type Element */
-  const prevElement = node?.previousElementSibling;
-  const removeFloating = autoUpdate(prevElement, node, () =>
-    computePosition(prevElement, node, {
+  const inputElement = node.parentElement?.querySelector('input[type=text]');
+  if (!inputElement) return;
+
+  const removeFloating = autoUpdate(inputElement, node, () =>
+    computePosition(inputElement, node, {
       placement: 'bottom-start',
       middleware: [
         shift({

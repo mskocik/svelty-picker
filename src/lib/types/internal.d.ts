@@ -4,3 +4,12 @@ export type UpdateProp = {
     isKeyboard: boolean,
     dateIndex?: number
 }
+
+export type DateChange = {
+    value: string|string[]|null,
+    dateValue: Date|Date[]|null,
+    displayValue: string,
+    valueFormat: string,
+    displayFormat: string | null,
+    event: 'date'|'hour'|'minute'|'datetime'
+}

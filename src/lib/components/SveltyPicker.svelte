@@ -50,18 +50,11 @@
    *  ce_displayElement?: HTMLInputElement|null,
    *  positionResolver?: Function,
    *  onChange?: (value: string|string[]|null) => void,
-   *  onDateChange?: (prop: {
-   *    value: string|string[]|null,
-   *    dateValue: Date|Date[]|null,
-   *    displayValue: string,
-   *    valueFormat: string,
-   *    displayFormat: string | null,
-   *    event: 'date'|'hour'|'minute'|'datetime'
-   *  }) => void,
+   *  onDateChange?: (prop: import('$lib/types/internal.js').DateChange) => void,
    *  onCancel?: () => void,
    *  onBlur?: () => void,
    *  onInput?: (currentValue: string|null) => void,
-   *  actionRow?: import('svelte').Snippet<[
+   *  actionRow?: import('svelte').Snippet<[props: {
    *    autocloseSupported: boolean,
    *    todayBtnClasses: string,
    *    clearBtnClasses: string,
@@ -72,8 +65,9 @@
    *    isTodayDisabled: boolean|null,
    *    i18n: import('$lib/i18n/index.js').i18nType,
    *    currentMode: string
-   *  ]>}
-   * } */
+   *  } ]>,
+   *  children?: import('svelte').Snippet
+   * }} */
   let {
     inputId = '',
     name = "date",
@@ -114,7 +108,8 @@
     onCancel,
     onInput,
     onBlur,
-    actionRow = action_row
+    actionRow = action_row,
+    children
   } = $props();
 
   if (isRange && Array.isArray(value) === false) console.warn('[svelty-picker] value property must be an array for range picker');
@@ -584,7 +579,18 @@
   $effect(() => watch_formats(format, displayFormat));
 </script>
 
-{#snippet action_row(autocloseSupported, todayBtnClasses, clearBtnClasses, onCancel, onConfirm, onClear, onToday, isTodayDisabled, i18n, currentMode)}
+{#snippet action_row({
+  autocloseSupported,
+  todayBtnClasses,
+  clearBtnClasses,
+  onCancel,
+  onConfirm,
+  onClear,
+  onToday,
+  isTodayDisabled,
+  i18n,
+  currentMode
+})}
   {#if !autocloseSupported || true}
     <div class="sdt-btn-row">
       {#if !autocloseSupported}
@@ -632,7 +638,15 @@
   {/if}
 {/snippet}
 
-<span class="sdt-component-wrap">
+<div
+  class="sdt-component-wrap"
+  class:picker-active={pickerVisible}
+>
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="sdt-input-wrap" style="border: 3px dashed orange; position: relative"
+    onclick={onInputClick}
+  >
   {#if !ce_displayElement}
     <input type="hidden" {name} {value}>
     {#if !pickerOnly}
@@ -652,12 +666,13 @@
       oninput={manualInput ? onManualInput : () => {}}
       onfocus={onInputFocus}
       onblur={onInputBlur}
-      onclick={onInputClick}
       onkeydown={onKeyDown}
       use:inputAction={inputActionParams}
     />
     {/if}
   {/if}
+  {@render children?.()}
+  </div>
 {#if pickerVisible && isFocused }
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
@@ -708,16 +723,20 @@
     </div>
     {/each}
   </div>
-  {@render actionRow(autocloseSupported, todayBtnClasses, clearBtnClasses, onCancelFn, onConfirm, onClear, onToday, isTodayDisabled, i18n, currentMode)}
+  {@render actionRow({ autocloseSupported, todayBtnClasses, clearBtnClasses, onCancel: onCancelFn, onConfirm, onClear, onToday, isTodayDisabled, i18n, currentMode })}
   </div> <!-- END: popup -->
 {/if}
-</span>
+</div>
 
 
 <style>
   .sdt-component-wrap {
     position: relative;
-    display: inline;
+    display: inline-block;
+  }
+  .sdt-input-wrap {
+    position: relative;
+    display: contents;
   }
   .sdt-calendar-wrap {
     width: 280px;
