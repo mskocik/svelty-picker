@@ -328,26 +328,64 @@ export const ko = {
 }
 
 /**
- * @type {i18nType} Brazilian portuguese translation by IgorDalepiane
+ * @type {i18nType} Latin translation by PSYCHONOISE <psychonoise@breakcorn.ru>
  */
-export const pt_BR = {
-  days: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
-  daysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-  daysMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sá', 'Do'],
-  months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-  monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-  meridiem: ['am', 'pm'],
-  suffix: ['º', 'º', 'º', 'º'],
-  todayBtn: 'Hoje',
-  clearBtn: 'Limpar',
-  okBtn:     'OK',
-  cancelBtn: 'Cancelar',
-  timeView: 'Mostrar hora',
-  backToDate: 'Voltar para o calendário'
+export const la = {
+  days:        ['Solis dies', 'Lunae dies', 'Martis dies', 'Mercuri dies', 'Jovis dies', 'Veneris dies', 'Saturni dies', 'Solis dies'],
+  daysShort:   ['Sol', 'Lun', 'Mar', 'Mer', 'Jov', 'Ven', 'Sat', 'Sol'],
+  daysMin:     ['So', 'Lu', 'Ma', 'Me', 'Jo', 'Ve', 'Sa', 'So'],
+  months:      ['Januarius', 'Februarius', 'Martius', 'Aprilis', 'Maius', 'Iunius', 'Iulius', 'Augustus', 'September', 'October', 'November', 'December'],
+  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Qui', 'Sex', 'Sep', 'Oct', 'Nov', 'Dec'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['us', 'us', 'us', 'us'],
+  todayBtn:    'Hodie',
+  clearBtn:    'Patet',
+  okBtn:       'ОК',
+  cancelBtn:   'Cancel',
+  timeView:    'Ostende tempus visum',
+  backToDate:  'Ad visum calendarium'
 }
 
 /**
- * @type {i18nType} italian translation by MarkNerdi
+ * @type {i18nType} Brazilian portuguese translation by IgorDalepiane
+ */
+export const pt_BR = {
+  days:        ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
+  daysShort:   ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+  daysMin:     ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sá', 'Do'],
+  months:      ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+  meridiem:    ['am', 'pm'],
+  suffix:      ['º', 'º', 'º', 'º'],
+  todayBtn:    'Hoje',
+  clearBtn:    'Limpar',
+  okBtn:       'OK',
+  cancelBtn:   'Cancelar',
+  timeView:    'Mostrar hora',
+  backToDate:  'Voltar para o calendário'
+}
+
+/**
+ * @type {i18nType} Russian translation by PSYCHONOISE <psychonoise@breakcorn.ru>
+ */
+export const ru = {
+  days:        ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+  daysShort:   ['Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт', 'Вск'],
+  daysMin:     ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+  months:      ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+  monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июль', 'Авг', 'Сен', 'Окт', 'Ноябрь', 'Дек'],
+  meridiem:    ['AM', 'PM'],
+  suffix:      ['.', '.', '.', '.'],
+  todayBtn:    'Сегодня',
+  clearBtn:    'Очистить',
+  okBtn:       'ОК',
+  cancelBtn:   'Отмена',
+  timeView:    'Показать вид времени',
+  backToDate:  'Вернуться к виду календаря'
+}
+
+/**
+ * @type {i18nType} Italian translation by MarkNerdi
  */
 export const it = {
   days:        ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'],
@@ -466,5 +504,5 @@ export const zh_CN = {
  * @type {Record<string, i18nType>}
  */
 export default {
-  ar_DZ, ar_MR, ar_YE, cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, nl, pt_BR, sk, sv, th, tr, zh_CN
+  ar_DZ, ar_MR, ar_YE, cz, da, de, en, es, fr, hr, hu, id, it, jp, ko, la, nl, pt_BR, ru, sk, sv, th, tr, zh_CN
 }
