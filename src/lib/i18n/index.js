@@ -331,7 +331,7 @@ export const ko = {
  * @type {i18nType} Latin translation by PSYCHONOISE <psychonoise@breakcorn.ru>
  */
 export const la = {
-  days:        ['Solis dies', 'Lunae dies', 'Martis dies', 'Mercuri dies', 'Jovis dies', 'Veneris dies', 'Saturni dies', 'Solis dies'],
+  days:        ['Solis', 'Lunae', 'Martis', 'Mercuri', 'Jovis', 'Veneris', 'Saturni', 'Solis'],
   daysShort:   ['Sol', 'Lun', 'Mar', 'Mer', 'Jov', 'Ven', 'Sat', 'Sol'],
   daysMin:     ['So', 'Lu', 'Ma', 'Me', 'Jo', 'Ve', 'Sa', 'So'],
   months:      ['Januarius', 'Februarius', 'Martius', 'Aprilis', 'Maius', 'Iunius', 'Iulius', 'Augustus', 'September', 'October', 'November', 'December'],
