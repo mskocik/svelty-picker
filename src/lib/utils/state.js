@@ -26,7 +26,7 @@ export function initProps(value, format, i18n, formatType) {
     : [];
 
   // strip seconds if present in initial value
-  valueArray = valueArray.map(value => value.replace(/(:\d+).*/, "$1"));
+  valueArray = valueArray.map(value => value.replace(/(:\d+):\d+(.*)/, "$1$2"));
 
   return {
     iValues: valueArray,
