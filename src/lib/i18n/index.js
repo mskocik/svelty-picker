@@ -350,19 +350,19 @@ export const la = {
  * @type {i18nType} Brazilian portuguese translation by IgorDalepiane
  */
 export const pt_BR = {
-  days:        ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
-  daysShort:   ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-  daysMin:     ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sá', 'Do'],
-  months:      ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  days: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'],
+  daysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+  daysMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sá', 'Do'],
+  months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
   monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-  meridiem:    ['am', 'pm'],
-  suffix:      ['º', 'º', 'º', 'º'],
-  todayBtn:    'Hoje',
-  clearBtn:    'Limpar',
-  okBtn:       'OK',
-  cancelBtn:   'Cancelar',
-  timeView:    'Mostrar hora',
-  backToDate:  'Voltar para o calendário'
+  meridiem: ['am', 'pm'],
+  suffix: ['º', 'º', 'º', 'º'],
+  todayBtn: 'Hoje',
+  clearBtn: 'Limpar',
+  okBtn:     'OK',
+  cancelBtn: 'Cancelar',
+  timeView: 'Mostrar hora',
+  backToDate: 'Voltar para o calendário'
 }
 
 /**
