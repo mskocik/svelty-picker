@@ -117,7 +117,11 @@
     ? fade
     : (viewDelta !== null ? scale : () => ({}));
 
-  $: times = dates.map(date => { date = new Date(date); date.setHours(0,0); return date.getTime() });
+  $: times = dates.map(date => {
+    date = new Date(date);
+    date.setHours(0,0);
+    return date.getTime() - (date.getTime() % 100000) // remove seconds from timestamp
+  });
   $: dataset = compute(activeDate, dates, currentView, i18n, weekStart);
   $: dayLabels =  i18n.daysMin.concat(...i18n.daysMin.slice(1)).slice(weekStart, 7 + weekStart);
 
