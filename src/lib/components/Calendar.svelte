@@ -158,7 +158,11 @@
     : (viewDelta !== null ? scale : () => ({}))
   );
 
-  let times = $derived(dates.map(date => { date = new Date(date); date.setHours(0,0); return date.getTime() }));
+  let times = $derived(dates.map(date => {
+    date = new Date(date);
+    date.setHours(0,0,0,0);
+    return date.getTime();
+  }));
   let dataset = $derived(compute(activeDate, dates, currentView, i18n, weekStart));
   let dayLabels = $derived(i18n.daysMin.concat(...i18n.daysMin.slice(1)).slice(weekStart, 7 + weekStart));
   let tableCaption = $derived(i18n && showCaption(currentView, activeDate));
