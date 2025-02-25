@@ -163,7 +163,7 @@
     date.setHours(0,0,0,0);
     return date.getTime();
   }));
-  let dataset = $derived(compute(activeDate, dates, currentView, i18n, weekStart));
+  let dataset = $derived(compute(activeDate, $state.snapshot(dates), currentView, i18n, weekStart));
   let dayLabels = $derived(i18n.daysMin.concat(...i18n.daysMin.slice(1)).slice(weekStart, 7 + weekStart));
   let tableCaption = $derived(i18n && showCaption(currentView, activeDate));
 
@@ -284,7 +284,7 @@
   }
 
   function onSwitchView() {
-    viewDelta = -1
+    viewDelta = -1;
     viewChanged = true;
     currentView && currentView--;
     if (currentView === MODE_DECADE) {
