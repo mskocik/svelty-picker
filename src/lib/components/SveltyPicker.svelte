@@ -31,12 +31,16 @@
   export let value = null;
   /** @type {Date|Date[]|null} */
   export let initialDate = null;
-  /** @type {boolean }*/
+  /** @type {boolean} */
   export let isRange = false;
   /** @type {Date | string | null} */
   export let startDate = null;
   /** @type {Date | string | null} */
   export let endDate = null;
+  /** @type {number | null} */
+  export let startHour = null;
+  /** @type {number | null} */
+  export let endHour = null;
   /** @type {boolean} */
   export let pickerOnly = false;
   /** @type {number} */
@@ -45,7 +49,11 @@
   export let mode = 'auto';
   /** @type {?function(Date): boolean} */
   export let disableDatesFn = null;
-
+  /** @type {boolean} */
+  export let closeOnEscape = false;
+  /** @type {boolean} */
+  export let tabThrough = false;
+  /** @type {boolean} */
   export let manualInput = false;
   /** ************************************ 👇 configurable globally */
   /** @type {string} */
@@ -103,6 +111,8 @@
   let displayValue = computeDisplayValue();
   /** @type {number?} as a timestamp */
   let calendarHoverDate;
+  /** @type {boolean} */
+  let wasPickerVisible = false;
   $: pickerVisible = pickerOnly;
   $: parsedStartDate = startDate ? parseDate(startDate, format, i18n, formatType) : null;
   $: parsedEndDate = endDate ? new Date(parseDate(endDate, format, i18n, formatType).setSeconds(1)) : null;
@@ -396,6 +406,15 @@
    * @param {KeyboardEvent} e
    */
   function onKeyDown(e) {
+    if (closeOnEscape && e.key === 'Escape') {
+      e.preventDefault();
+      if (pickerVisible) {
+        wasPickerVisible = true;
+        e.stopPropagation();
+        resetView();
+      }
+      return;
+    }
     if (!pickerVisible) {
       ["Backspace", "Delete"].includes(e.key) && !required && onClear();
       if (e.key === 'Enter') onInputFocus();
@@ -452,12 +471,27 @@
       case "Tab":
         if (pickerVisible) {
           pickerVisible = false;
-          e.preventDefault();
+          if (!tabThrough) {
+            e.preventDefault();
+          }
         }
+        break;
       case "F5":
         break;
       default:
         !manualInput && e.preventDefault();
+    }
+  }
+
+  /**
+   * @param {KeyboardEvent} e
+   */
+  function onKeyUp(e) {
+    if (closeOnEscape && e.key === 'Escape' && wasPickerVisible) {
+      e.preventDefault();
+      e.stopPropagation();  
+      wasPickerVisible = false;
+      return;
     }
   }
 
@@ -578,6 +612,7 @@
       on:input
       on:change
       on:keydown={onKeyDown}
+      on:keyup={onKeyUp}
     />
     {/if}
   {/if}
@@ -617,6 +652,8 @@
         date={innerDates[i]}
         startDate={parsedStartDate}
         endDate={parsedEndDate}
+        {startHour}
+        {endHour}
         hasDateComponent={resolvedMode !== "time"}
         bind:this={w.ref}
         showMeridian={format.match(formatType === 'php' ? 'a|A' : 'p|P') !== null}
