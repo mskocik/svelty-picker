@@ -1,6 +1,8 @@
 {
 	"name": "svelty-picker",
 	"description": "Sweet date/time picker written in svelte",
+	"repository": "mskocik/svelty-picker",
+	"homepage": "https://svelty-picker.vercel.app",
 	"version": "6.1.5",
 	"scripts": {
 		"dev": "vite dev",
