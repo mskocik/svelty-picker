@@ -541,6 +541,7 @@
         .map(val => new SvelteDate(parseDate(val, format, i18n, formatType)));
       undoHistory = value_array;
       prev_value = stringValue;
+      value_display = computeDisplayValue();
     }
   }
 
